@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<Filterchain>
+	<Filter_0 value="ImageAccumulator">
+		<Enable value="1" />
+		<NB_of_images value="4" />
+		<Method_to_use value="0" />
+	</Filter_0>
+	<Filter_1 value="SubtractAllPlanes">
+		<enable value="1" />
+		<Plane_1 value="3" />
+		<Plane_2 value="5" />
+		<Plane_3 value="0" />
+		<Invert_plane_1 value="0" />
+		<Invert_plane_2 value="1" />
+		<Invert_plane_3 value="0" />
+		<Weight_Plane_1 value="1.000000" />
+		<Weight_Plane_2 value="1.250000" />
+		<Weight_Plane_3 value="1.000000" />
+	</Filter_1>
+	<Filter_2 value="Morphology">
+		<Enable value="1" />
+		<Morphology_type value="4" />
+		<Kernel_type value="0" />
+		<Iteration value="2" />
+		<Kernel_size value="2" />
+	</Filter_2>
+	<Filter_3 value="Blurr">
+		<Enable value="1" />
+		<Type value="1" />
+		<Kernel_size value="6" />
+	</Filter_3>
+	<Filter_4 value="Sobel">
+		<Enable value="0" />
+		<Convert_to_uchar value="1" />
+		<use_pixel_intensity_correction value="0" />
+		<Delta value="0.000000" />
+		<Scale value="1.000000" />
+		<pixel_correction_power value="1.000000" />
+		<Size value="1" />
+	</Filter_4>
+	<Filter_5 value="StatsThreshold">
+		<Enable value="1" />
+		<Min_thresh value="0" />
+		<Mean_multiplier value="1.500000" />
+		<Standard_deviation_multiplier value="1.000000" />
+	</Filter_5>
+	<Filter_6 value="Morphology">
+		<Enable value="0" />
+		<Morphology_type value="4" />
+		<Kernel_type value="0" />
+		<Iteration value="1" />
+		<Kernel_size value="2" />
+	</Filter_6>
+	<Filter_7 value="TorpedoesDetector">
+		<Enable value="1" />
+		<Debug_contour value="1" />
+		<Sensibility value="0.050000" />
+		<Minimum Area value="150.000000" />
+		<Angle value="0.750000" />
+		<Median multp. value="2.000000" />
+		<PCA Ratio max value="2.500000" />
+		<PCA Ratio min value="1.000000" />
+	</Filter_7>
+</Filterchain>

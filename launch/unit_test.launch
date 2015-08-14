@@ -1,0 +1,3 @@
+<launch>
+	<node name="foo" pkg="vision_server" type="unit_test.py" />
+</launch>

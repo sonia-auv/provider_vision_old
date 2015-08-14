@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<Filterchain>
+	<Filter_0 value="Rotate">
+		<Rotation_type value="3" />
+		<enable value="true" />
+	</Filter_0>
+	<Filter_1 value="Rotate">
+		<Rotation_type value="3" />
+		<enable value="true" />
+	</Filter_1>
+	<Filter_2 value="Dilate">
+		<Enable value="true" />
+		<Height value="1" />
+		<Iteration value="1" />
+		<Kernel_type value="0" />
+		<Square_kernel value="true" />
+		<Test3 value="0" />
+		<Width value="3" />
+		<enable value="true" />
+	</Filter_2>
+	<Filter_3 value="SubtractAllPlanes">
+		<Enable value="false" />
+		<Invert value="" />
+		<Invert_plane_1 value="true" />
+		<Invert_plane_2 value="false" />
+		<Invert_plane_3 value="false" />
+		<Plane_1 value="1" />
+		<Plane_2 value="1" />
+		<Plane_3 value="0" />
+		<Weight_Plane_1 value="1.000000" />
+		<Weight_Plane_2 value="1.000000" />
+		<Weight_Plane_3 value="1.000000" />
+		<enable value="true" />
+	</Filter_3>
+	<Filter_4 value="Blurr">
+		<Enable value="true" />
+		<Kernel_size value="5" />
+		<Type value="2" />
+		<enable value="true" />
+		<kernel_size value="1" />
+		<test value="2" />
+	</Filter_4>
+	<Filter_5 value="Sobel">
+		<Convert_to_uchar value="false" />
+		<Delta value="1.000000" />
+		<Enable value="true" />
+		<Scale value="1.000000" />
+		<Size value="1" />
+		<pixel_correction_power value="1.700000" />
+		<use_pixel_intensity_correction value="false" />
+	</Filter_5>
+	<Filter_6 value="StatsThreshold">
+		<Enable value="true" />
+		<Mean_multiplier value="1.000000" />
+		<Min_thresh value="0" />
+		<Standard_deviation_multiplier value="0.900000" />
+	</Filter_6>
+	<Filter_7 value="Threshold">
+		<Enable value="false" />
+		<Max_value value="100" />
+		<Threshold_type value="1" />
+	</Filter_7>
+	<Filter_8 value="Erode">
+		<Enable value="true" />
+		<Height value="1" />
+		<Iteration value="1" />
+		<Kernel_type value="0" />
+		<Square_kernel value="true" />
+		<Test2 value="0" />
+		<Width value="1" />
+		<enable value="true" />
+	</Filter_8>
+	<Filter_9 value="Dilate">
+		<Enable value="true" />
+		<Height value="1" />
+		<Iteration value="1" />
+		<Kernel_type value="0" />
+		<Square_kernel value="true" />
+		<Test3 value="0" />
+		<Width value="2" />
+		<enable value="true" />
+	</Filter_9>
+	<Filter_10 value="SubmarineFrameMasker">
+		<Enable value="true" />
+		<Rotation_type value="3" />
+	</Filter_10>
+	<Filter_11 value="DeloreanDetector">
+		<Debug_contour value="true" />
+		<Diff_from_ratio_target value="0.300000" />
+		<Enable value="true" />
+		<Enable_Bottom_mask value="false" />
+		<Min_area value="1000.000000" />
+		<Pair_distance_maximum value="99" />
+		<Ratio_target value="0.700000" />
+	</Filter_11>
+</Filterchain>

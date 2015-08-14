@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<Filterchain>
+	<Filter_0 value="Blurr">
+		<Debug_contour value="false" />
+		<Enable value="true" />
+		<Kernel_size value="8" />
+		<Look_for_Rectangle value="false" />
+		<Min_area value="99.990000" />
+		<Type value="2" />
+		<enable value="true" />
+		<kernel_size value="1" />
+		<test value="2" />
+	</Filter_0>
+	<Filter_1 value="InRange">
+		<Enable value="true" />
+		<HighH value="147" />
+		<HighS value="255" />
+		<HighV value="171" />
+		<LowH value="114" />
+		<LowS value="53" />
+		<LowV value="66" />
+	</Filter_1>
+	<Filter_2 value="Morphology">
+		<Enable value="true" />
+		<Iteration value="1" />
+		<Kernel_size value="1" />
+		<Kernel_type value="0" />
+		<Morphology_type value="3" />
+	</Filter_2>
+	<Filter_3 value="Morphology">
+		<Enable value="true" />
+		<Iteration value="1" />
+		<Kernel_size value="4" />
+		<Kernel_type value="0" />
+		<Morphology_type value="4" />
+	</Filter_3>
+	<Filter_4 value="ConvexHull">
+		<Enable value="true" />
+		<Method value="3" />
+		<Mode value="0" />
+	</Filter_4>
+	<Filter_5 value="ObjectFinder">
+		<Debug_contour value="true" />
+		<Diff_from_angle_target value="10.000000" />
+		<Diff_from_ratio_target value="1.000000" />
+		<Enable value="true" />
+		<ID value="" />
+		<Look_for_Rectangle value="false" />
+		<Min_area value="60.990000" />
+		<Ratio_target value="0.300000" />
+		<angle_target value="0.000000" />
+		<spec1 value="" />
+		<spec2 value="" />
+	</Filter_5>
+</Filterchain>

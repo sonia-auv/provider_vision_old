@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<camera_list>
+	<camera>
+		<cameraID name="bottom" GUID="0814436200006065"/>
+		<undistordMatrix path="bottom_undistord.xml"/>
+	</camera>
+	<camera>
+		<cameraID name="bottom_spare" GUID="081443620000605d"/>
+		<undistordMatrix path="bottom_undistord.xml"/>
+	</camera>
+	<camera>
+		<cameraID name="frontTest" GUID="000a4701120a888f"/>
+	</camera>
+	<camera>
+		<cameraID name="bottomTest" GUID="000a4701120a888e"/>
+	</camera>
+	<camera>
+		<cameraID name="front_guppy" GUID="a4701120a8890"/>
+	</camera>
+	<camera>
+		<cameraID name="bottom_guppy" GUID="2892819690326160d"/>
+	</camera>
+	<camera>
+		<cameraID name="other_guppy1" GUID="2892819690326158d"/>
+	</camera>
+	<camera>
+		<cameraID name="other_guppy2" GUID="582164340023517245d"/>
+	</camera>
+</camera_list>

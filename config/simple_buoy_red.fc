@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<Filterchain>
+	<Filter_0 value="ImageAccumulator">
+		<Enable value="1" />
+		<NB_of_images value="3" />
+		<Method_to_use value="0" />
+	</Filter_0>
+	<Filter_1 value="SubtractAllPlanes">
+		<enable value="1" />
+		<Plane_1 value="3" />
+		<Plane_2 value="1" />
+		<Plane_3 value="3" />
+		<Invert_plane_1 value="0" />
+		<Invert_plane_2 value="0" />
+		<Invert_plane_3 value="1" />
+		<Weight_Plane_1 value="1.000000" />
+		<Weight_Plane_2 value="2.000000" />
+		<Weight_Plane_3 value="1.000000" />
+	</Filter_1>
+	<Filter_2 value="WhiteNoiseTakedown">
+		<Enable value="1" />
+		<LowB value="0" />
+		<HighB value="255" />
+		<LowG value="0" />
+		<HighG value="255" />
+		<LowR value="0" />
+		<HighR value="255" />
+		<Channel_view value="0" />
+	</Filter_2>
+	<Filter_3 value="Blurr">
+		<Enable value="1" />
+		<Type value="2" />
+		<Kernel_size value="7" />
+	</Filter_3>
+	<Filter_4 value="StatsThreshold">
+		<Enable value="1" />
+		<Min_thresh value="0" />
+		<Mean_multiplier value="5.000000" />
+		<Standard_deviation_multiplier value="4.000000" />
+	</Filter_4>
+	<Filter_5 value="Threshold">
+		<Enable value="0" />
+		<Threshold_type value="1" />
+		<Max_value value="100" />
+	</Filter_5>
+	<Filter_6 value="Dilate">
+		<Enable value="0" />
+		<Square_kernel value="1" />
+		<Kernel_type value="0" />
+		<Width value="1" />
+		<Height value="1" />
+		<Iteration value="1" />
+	</Filter_6>
+	<Filter_7 value="Erode">
+		<Enable value="0" />
+		<Square_kernel value="1" />
+		<Kernel_type value="0" />
+		<Width value="1" />
+		<Height value="1" />
+		<Iteration value="1" />
+	</Filter_7>
+	<Filter_8 value="BuoySingle">
+		<Enable value="0" />
+		<Debug_contour value="1" />
+		<Eliminate_same_x value="0" />
+		<Detect_red value="1" />
+		<Buoy value="buoy_red:" />
+		<Min_area value="200.000000" />
+		<Max_ratio value="25.000000" />
+		<Min_percent value="50.000000" />
+		<Min_x_difference value="0.000000" />
+		<Ratio_for_angle_check value="50.000000" />
+		<horizontal_max_angle value="50.000000" />
+	</Filter_8>
+	<Filter_9 value="ObjectFinder">
+		<Enable value="1" />
+		<Debug_contour value="1" />
+		<Look_for_Rectangle value="0" />
+		<disable_ratio_check value="1" />
+		<disable_angle_check value="1" />
+		<Use_convex_hull value="1" />
+		<Vote_most_centered value="1" />
+		<Vote_most_upright value="0" />
+		<Vote_less_diff_from_target_ratio value="1" />
+		<Vote_length value="0" />
+		<Vote_higher value="0" />
+		<ID value="buoy_red:" />
+		<spec1 value="red" />
+		<spec2 value="blue" />
+		<Min_area value="200.000000" />
+		<Ratio_target value="1.000000" />
+		<Diff_from_ratio_target value="0.100000" />
+		<angle_target value="0.000000" />
+		<Diff_from_angle_target value="30.000000" />
+		<Min_percent_filled value="50.000000" />
+		<Contour_retreval value="1" />
+	</Filter_9>
+</Filterchain>

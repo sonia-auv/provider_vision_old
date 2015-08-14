@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<Filterchain>
+	<Filter_0 value="Scharr">
+		<Convert_to_uchar value="true" />
+		<Delta value="0.000000" />
+		<Enable value="false" />
+		<Scale value="1.000000" />
+		<pixel_correction_power value="1.000000" />
+		<use_pixel_intensity_correction value="false" />
+	</Filter_0>
+	<Filter_1 value="Threshold">
+		<Enable value="false" />
+		<Max_value value="100" />
+		<Threshold_type value="1" />
+	</Filter_1>
+	<Filter_2 value="LSDFiltering">
+		<Debug_over_image value="false" />
+		<Enable value="false" />
+		<Scale value="0.800000" />
+	</Filter_2>
+</Filterchain>

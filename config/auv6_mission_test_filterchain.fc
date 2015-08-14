@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<Filterchain>
+	<Filter_0 value="MissionTestFakeString">
+		<Enable value="true" />
+		<String_to_return value="buoy:10,20,30,40,50,red," />
+	</Filter_0>
+</Filterchain>

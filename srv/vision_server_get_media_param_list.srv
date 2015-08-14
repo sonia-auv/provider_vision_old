@@ -1,0 +1,6 @@
+# returns a list of param available by the media.
+string media_name
+
+---
+
+string list
