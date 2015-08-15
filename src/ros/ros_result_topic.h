@@ -19,7 +19,7 @@
 #include <CLDate.h>
 #include <HTSmartPtr.h>
 #include <vision_server/filterchain_return_message.h>
-#include "utils/constants.h"
+#include "config.h"
 
 namespace vision_server {
 

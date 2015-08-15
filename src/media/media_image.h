@@ -16,7 +16,7 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
-#include "utils/constants.h"
+#include "config.h"
 #include "media/media.h"
 
 namespace vision_server {

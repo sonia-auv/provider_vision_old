@@ -18,7 +18,7 @@
 #include "media/media.h"
 #include "media/cam_driver.h"
 #include "media/cam_camera_dc1394.h"
-#include "utils/constants.h"
+#include "config.h"
 #include "dc1394/dc1394.h"
 
 namespace vision_server {

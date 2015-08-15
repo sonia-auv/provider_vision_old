@@ -28,7 +28,7 @@
 #include "ros/ros_manager.h"
 
 #include "ros/ros_callback_manager.h"
-#include "utils/constants.h"
+#include "config.h"
 #include "server/acquisition_loop.h"
 
 namespace vision_server {

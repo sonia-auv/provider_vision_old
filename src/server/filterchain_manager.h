@@ -30,7 +30,7 @@
 #include "vision_server/vision_server_get_media_from_execution.h"
 #include "vision_server/vision_server_set_filterchain_filter_observer.h"
 #include <lib_vision/filter.h>
-#include "utils/constants.h"
+#include "config.h"
 #include "utils/camera_id.h"
 #include "ros/ros_manager.h"
 

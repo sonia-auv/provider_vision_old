@@ -17,7 +17,7 @@
 #include "media/media.h"
 #include "media/cam_driver.h"
 #include "media/cam_webcam.h"
-#include "utils/constants.h"
+#include "config.h"
 
 namespace vision_server {
 

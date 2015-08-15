@@ -14,7 +14,7 @@
 // I N C L U D E   F I L E S
 
 #include <opencv2/opencv.hpp>
-#include "utils/constants.h"
+#include "config.h"
 #include "media/media.h"
 #include "media/cam_driver.h"
 #include "media/camera.h"

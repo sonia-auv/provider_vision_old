@@ -12,9 +12,9 @@
 
 #include <CLTimer.h>
 #include <CLDate.h>
-#include "CLString.h"
 #include "server/acquisition_loop.h"
 #include <lib_atlas/sys/fsinfo.h>
+#include <lib_atlas/config.h>
 
 namespace vision_server {
 
@@ -124,7 +124,7 @@ bool AcquisitionLoop::StartRecording(const std::string &filename) {
     CLString dateString;
     CLDate dateObj;
     dateObj.GetDateAndTimeNoSpace(dateString);
-    filepath = kLogPath + std::string{dateString} + ".avi";
+    filepath = atlas::kLogPath + std::string{dateString} + ".avi";
     ROS_INFO_NAMED(LOOP_TAG, "Starting video on %s", filepath.c_str());
   }
 

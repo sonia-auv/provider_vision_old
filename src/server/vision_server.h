@@ -18,7 +18,7 @@
 #include <vision_server/vision_server_execute_cmd.h>
 #include <vision_server/vision_server_get_information_list.h>
 #include "media/media.h"
-#include "utils/constants.h"
+#include "config.h"
 #include "ros/ros_manager.h"
 #include "ros/ros_callback_manager.h"
 #include "server/camera_manager.h"

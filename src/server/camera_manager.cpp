@@ -11,6 +11,7 @@
 // I N C L U D E   F I L E S
 
 #include "server/camera_manager.h"
+#include <lib_atlas/config.h>
 
 namespace vision_server {
 
@@ -21,8 +22,8 @@ namespace vision_server {
 //
 CameraManager::CameraManager(ROSManager &manager)
     : ROSCallbackManager(),
-      _config(std::string(getenv("SONIA_WORKSPACE_ROOT")) +
-              std::string("/ros/src/vision_server/config/")) {
+      _config( atlas::kWorkspaceRoot +
+              std::string("/src/vision_server/config/")) {
   auto base_node_name = std::string{VISION_NODE_NAME};
 
   RegisterService<vision_server_get_media_param::Request,

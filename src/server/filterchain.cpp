@@ -12,7 +12,7 @@
 
 #include <utils/pugixml.h>
 #include "server/filterchain.h"
-#include "utils/constants.h"
+#include "config.h"
 #include <ros/ros.h>
 
 namespace vision_server {

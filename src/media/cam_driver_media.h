@@ -17,7 +17,7 @@
 #include "media/media.h"
 #include "media/cam_driver.h"
 #include "media/cam_webcam.h"
-#include "utils/constants.h"
+#include "config.h"
 
 #include "media/media_image.h"
 #include "media/media_video.h"

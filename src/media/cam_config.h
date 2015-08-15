@@ -16,7 +16,7 @@
 #include <iostream>
 
 #include "utils/camera_id.h"
-#include "utils/constants.h"
+#include "config.h"
 #include "CLList.h"
 
 namespace vision_server {

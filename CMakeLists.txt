@@ -141,5 +141,5 @@ target_link_libraries( vision_server_node
 
 # As we use this folder on our project, we want it to be created before runtime.
 add_custom_command( TARGET vision_server_node
-    PRE_BUILD COMMAND mkdir -p "$ENV{SONIA_WORKSPACE_ROOT}/log"
+    PRE_BUILD COMMAND mkdir -p "$ENV{ROS_SONIA_WS}/log"
 )

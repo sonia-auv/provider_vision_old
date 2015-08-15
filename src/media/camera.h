@@ -15,7 +15,7 @@
 
 #include "HTThread.h"
 #include "CLMutex.h"
-#include "utils/constants.h"
+#include "config.h"
 
 #include "media/cam_config.h"
 #include "media/media.h"

@@ -18,7 +18,7 @@
 #include <HTThread.h>
 #include <CLMutex.h>
 #include "media/media.h"
-#include "utils/constants.h"
+#include "config.h"
 
 #include "ros/ros_result_topic.h"
 #include "ros/ros_image_topic.h"

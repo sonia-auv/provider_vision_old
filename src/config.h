@@ -14,6 +14,7 @@
 // I N C L U D E   F I L E S
 
 #include <vision_server/image_feed.h>
+#include <lib_atlas/config.h>
 
 #define VISION_NODE_NAME "/vision_server/"
 
@@ -37,10 +38,11 @@ enum FEATURE {
 
 enum STATUS { OPEN, CLOSE, STREAMING, ERROR };
 
-const auto kConfigPath = getenv("SONIA_WORKSPACE_ROOT") +
-                         std::string{"/src/provider_vision/config/"};
+const auto kProjectPath = atlas::kWorkspaceRoot +
+    std::string{"/src/provider_vision/"};
 
-const auto kLogPath = getenv("SONIA_WORKSPACE_ROOT") + std::string{"/ros/log/"};
+const auto kConfigPath = kProjectPath +
+    std::string{"/config/"};
 
 const auto kFilterchainExt = ".fc";
 

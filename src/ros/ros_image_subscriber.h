@@ -19,7 +19,7 @@
 #include <CLMutex.h>
 #include <HTSmartPtr.h>
 #include <vision_server/image_feed.h>
-#include "utils/constants.h"
+#include "config.h"
 
 namespace vision_server {
 
