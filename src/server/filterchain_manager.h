@@ -16,29 +16,25 @@
 // I N C L U D E   F I L E S
 
 #include <functional>
-#include <CLList.h>
-#include "vision_server/vision_server_copy_filterchain.h"
-#include "vision_server/vision_server_manage_filterchain.h"
-#include "vision_server/vision_server_get_filterchain_filter_param.h"
-#include "vision_server/vision_server_set_filterchain_filter_param.h"
-#include "vision_server/vision_server_get_filterchain_filter_all_param.h"
-#include "vision_server/vision_server_get_filterchain_filter.h"
-#include "vision_server/vision_server_manage_filterchain_filter.h"
-#include "vision_server/vision_server_save_filterchain.h"
-#include "vision_server/vision_server_set_filterchain_filter_order.h"
-#include "vision_server/vision_server_get_filterchain_from_execution.h"
-#include "vision_server/vision_server_get_media_from_execution.h"
-#include "vision_server/vision_server_set_filterchain_filter_observer.h"
+#include <lib_atlas/ros/service_server_manager.h>
 #include <lib_vision/filter.h>
+#include <vision_server/vision_server_copy_filterchain.h>
+#include <vision_server/vision_server_manage_filterchain.h>
+#include <vision_server/vision_server_get_filterchain_filter_param.h>
+#include <vision_server/vision_server_set_filterchain_filter_param.h>
+#include <vision_server/vision_server_get_filterchain_filter_all_param.h>
+#include <vision_server/vision_server_get_filterchain_filter.h>
+#include <vision_server/vision_server_manage_filterchain_filter.h>
+#include <vision_server/vision_server_save_filterchain.h>
+#include <vision_server/vision_server_set_filterchain_filter_order.h>
+#include <vision_server/vision_server_get_filterchain_from_execution.h>
+#include <vision_server/vision_server_get_media_from_execution.h>
+#include <vision_server/vision_server_set_filterchain_filter_observer.h>
 #include "config.h"
 #include "utils/camera_id.h"
-
-#include "ros/ros_callback_manager.h"
 #include "server/filterchain.h"
 
 namespace vision_server {
-
-using namespace vision_server;
 
 //==============================================================================
 // C L A S S E S
@@ -49,12 +45,12 @@ using namespace vision_server;
  * to each Filterchain in addition to being charged of opening and closing them.
  * Also offers ROS services to allow filterchain managing.
  */
-class FilterchainManager : public ROSCallbackManager<FilterchainManager> {
+class FilterchainManager : public atlas::ServiceServerManager<FilterchainManager> {
  public:
   //==========================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
-  FilterchainManager();
+  explicit FilterchainManager(const ros::NodeHandle &node_handle);
 
   ~FilterchainManager();
 

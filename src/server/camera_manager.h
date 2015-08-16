@@ -13,20 +13,15 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
-#include <CLTime.h>
-#include <CLDate.h>
-#include <HTSmartPtr.h>
-#include <CLList.h>
-#include <CLMap.h>
+#include <lib_atlas/ros/service_server_manager.h>
 #include <vision_server/vision_server_get_media_param.h>
 #include <vision_server/vision_server_set_media_param.h>
+#include "config.h"
 #include "media/cam_driver.h"
 #include "media/cam_driver_dc1394.h"
 #include "media/cam_driver_webcam.h"
 #include "media/cam_config.h"
 #include "media/cam_driver_media.h"
-#include "ros/ros_callback_manager.h"
-#include "config.h"
 #include "server/acquisition_loop.h"
 
 namespace vision_server {
@@ -42,7 +37,7 @@ namespace vision_server {
  * It is also the provider of acquisition loop ptr.
  * It has the responsibility of creating/destructing them.
  */
-class CameraManager : public ROSCallbackManager<CameraManager> {
+class CameraManager : public atlas::ServiceServerManager<CameraManager> {
  public:
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
@@ -52,7 +47,7 @@ class CameraManager : public ROSCallbackManager<CameraManager> {
   //==========================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
-  CameraManager();
+  explicit CameraManager(const ros::NodeHandle &node_handle);
 
   virtual ~CameraManager();
 

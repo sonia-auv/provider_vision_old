@@ -20,19 +20,17 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-CameraManager::CameraManager()
-    : ROSCallbackManager(),
+CameraManager::CameraManager(const ros::NodeHandle &node_handle)
+    : atlas::ServiceServerManager<CameraManager>(node_handle),
       _config( atlas::kWorkspaceRoot +
               std::string("/src/vision_server/config/")) {
   auto base_node_name = std::string{VISION_NODE_NAME};
 
-  RegisterService<vision_server_get_media_param::Request,
-                  vision_server_get_media_param::Response>(
+  RegisterService<vision_server_get_media_param>(
       base_node_name + "vision_server_get_media_param_list",
       &CameraManager::CallbackGetCMD, *this);
 
-  RegisterService<vision_server_set_media_param::Request,
-                  vision_server_set_media_param::Response>(
+  RegisterService<vision_server_set_media_param>(
       base_node_name + "vision_server_set_media_param_list",
       &CameraManager::CallbackSetCMD, *this);
 

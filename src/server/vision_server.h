@@ -13,13 +13,11 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
-#include <CLMutex.h>
-#include <HTSmartPtr.h>
+#include <lib_atlas/ros/service_server_manager.h>
 #include <vision_server/vision_server_execute_cmd.h>
 #include <vision_server/vision_server_get_information_list.h>
 #include "media/media.h"
 #include "config.h"
-#include "ros/ros_callback_manager.h"
 #include "server/camera_manager.h"
 #include "server/filterchain_manager.h"
 #include "server/execution.h"
@@ -41,12 +39,12 @@ namespace vision_server {
  * filterchain and filter)
  * and the start/stop execution.
  */
-class VisionServer : public ROSCallbackManager<VisionServer> {
+class VisionServer : public atlas::ServiceServerManager<VisionServer> {
  public:
   //============================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
-  VisionServer();
+  explicit VisionServer(const ros::NodeHandle &node_handle);
 
   ~VisionServer();
 

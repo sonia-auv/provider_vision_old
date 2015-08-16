@@ -24,73 +24,61 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-FilterchainManager::FilterchainManager()
-    : ROSCallbackManager(), FILTERCHAIN_MANAGER_TAG("FILTERCHAIN_MANAGER") {
+FilterchainManager::FilterchainManager(const ros::NodeHandle &node_handle)
+    : atlas::ServiceServerManager<FilterchainManager>(node_handle), FILTERCHAIN_MANAGER_TAG("FILTERCHAIN_MANAGER") {
   std::cout << "Initialising FilterchainManager..." << std::endl;
   std::cout << "FilterchainList XML path : " << kConfigPath << std::endl;
 
-  this->ListAvailableFilterchains();
+  ListAvailableFilterchains();
 
   // création des node ROS pour les services de gestion des fc
   auto base_node_name = std::string{VISION_NODE_NAME};
 
-  RegisterService<vision_server_copy_filterchain::Request,
-                  vision_server_copy_filterchain::Response>(
+  RegisterService<vision_server_copy_filterchain>(
       base_node_name + "vision_server_copy_filterchain",
       &FilterchainManager::CallbackCopyFc, *this);
 
-  RegisterService<vision_server_get_filterchain_filter_all_param::Request,
-                  vision_server_get_filterchain_filter_all_param::Response>(
+  RegisterService<vision_server_get_filterchain_filter_all_param>(
       base_node_name + "vision_server_get_filterchain_filter_all_param",
       &FilterchainManager::CallbackGetFilterAllParam, *this);
 
-  RegisterService<vision_server_get_filterchain_filter_param::Request,
-                  vision_server_get_filterchain_filter_param::Response>(
+  RegisterService<vision_server_get_filterchain_filter_param>(
       base_node_name + "vision_server_get_filterchain_filter_param",
       &FilterchainManager::CallbackGetFilterParam, *this);
 
-  RegisterService<vision_server_set_filterchain_filter_param::Request,
-                  vision_server_set_filterchain_filter_param::Response>(
+  RegisterService<vision_server_set_filterchain_filter_param>(
       base_node_name + "vision_server_set_filterchain_filter_param",
       &FilterchainManager::CallbackSetFilterParam, *this);
 
-  RegisterService<vision_server_get_filterchain_filter::Request,
-                  vision_server_get_filterchain_filter::Response>(
+  RegisterService<vision_server_get_filterchain_filter>(
       base_node_name + "vision_server_get_filterchain_filter",
       &FilterchainManager::CallbackGetFilter, *this);
 
-  RegisterService<vision_server_manage_filterchain_filter::Request,
-                  vision_server_manage_filterchain_filter::Response>(
+  RegisterService<vision_server_manage_filterchain_filter>(
       base_node_name + "vision_server_manage_filterchain_filter",
       &FilterchainManager::CallbackManageFilter, *this);
 
-  RegisterService<vision_server_manage_filterchain::Request,
-                  vision_server_manage_filterchain::Response>(
+  RegisterService<vision_server_manage_filterchain>(
       base_node_name + "vision_server_manage_filterchain",
       &FilterchainManager::CallbackManageFc, *this);
 
-  RegisterService<vision_server_save_filterchain::Request,
-                  vision_server_save_filterchain::Response>(
+  RegisterService<vision_server_save_filterchain>(
       base_node_name + "vision_server_save_filterchain",
       &FilterchainManager::CallbackSaveFc, *this);
 
-  RegisterService<vision_server_set_filterchain_filter_order::Request,
-                  vision_server_set_filterchain_filter_order::Response>(
+  RegisterService<vision_server_set_filterchain_filter_order>(
       base_node_name + "vision_server_set_filterchain_filter_order",
       &FilterchainManager::CallbackSetFcOrder, *this);
 
-  RegisterService<vision_server_get_filterchain_from_execution::Request,
-                  vision_server_get_filterchain_from_execution::Response>(
+  RegisterService<vision_server_get_filterchain_from_execution>(
       base_node_name + "vision_server_get_filterchain_from_execution",
       &FilterchainManager::CallbackGetFcFromExec, *this);
 
-  RegisterService<vision_server_get_media_from_execution::Request,
-                  vision_server_get_media_from_execution::Response>(
+  RegisterService<vision_server_get_media_from_execution>(
       base_node_name + "vision_server_get_media_from_execution",
       &FilterchainManager::CallbackGetMediaFromExec, *this);
 
-  RegisterService<vision_server_set_filterchain_filter_observer::Request,
-                  vision_server_set_filterchain_filter_observer::Response>(
+  RegisterService<vision_server_set_filterchain_filter_observer>(
       base_node_name + "vision_server_set_filterchain_filter_observer",
       &FilterchainManager::CallbackSetObserver, *this);
 

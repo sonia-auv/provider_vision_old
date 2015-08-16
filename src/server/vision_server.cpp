@@ -19,19 +19,17 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-VisionServer::VisionServer()
-    : ROSCallbackManager(),
-      _camera_manager(),
-      _filterchain_manager() {
+VisionServer::VisionServer(const ros::NodeHandle &node_handle)
+    : atlas::ServiceServerManager<VisionServer>(node_handle),
+      _camera_manager(node_handle),
+      _filterchain_manager(node_handle) {
   auto base_node_name = std::string{VISION_NODE_NAME};
 
-  RegisterService<vision_server_execute_cmd::Request,
-                  vision_server_execute_cmd::Response>(
+  RegisterService<vision_server_execute_cmd>(
       base_node_name + "vision_server_execute_cmd",
       &VisionServer::CallbackExecutionCMD, *this);
 
-  RegisterService<vision_server_get_information_list::Request,
-                  vision_server_get_information_list::Response>(
+  RegisterService<vision_server_get_information_list>(
       base_node_name + "vision_server_get_information_list",
       &VisionServer::CallbackInfoListCMD, *this);
 

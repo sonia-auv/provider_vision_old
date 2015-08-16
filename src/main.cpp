@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
   ros::NodeHandle nhl;
   ros::Rate loop_rate(15);
 
-  vision_server::VisionServer vision_server;
+  vision_server::VisionServer vision_server{nhl};
 
   while (ros::ok()) {
     ros::spinOnce();
