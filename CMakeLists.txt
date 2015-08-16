@@ -12,11 +12,11 @@ cmake_minimum_required( VERSION 2.8.3 )
 
 project( lib_vision )
 
-if( NOT CMAKE_BUILD_TYPE )
+if ( NOT CMAKE_BUILD_TYPE )
   set( CMAKE_BUILD_TYPE Debug CACHE STRING
       "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
       FORCE )
-endif( NOT CMAKE_BUILD_TYPE )
+endif ( NOT CMAKE_BUILD_TYPE )
 
 set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++1y " )
 set( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++1y -O3" )
@@ -25,20 +25,18 @@ set( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++1y -O3" )
 # C A T K I N   C O N F I G U R A T I O N
 
 find_package( catkin REQUIRED COMPONENTS
-  std_msgs
-  roscpp
+    roscpp
+    cv_bridge
 )
 
 catkin_package(
-  CATKIN_DEPENDS std_msgs roscpp
-  INCLUDE_DIRS src
-  LIBRARIES sonia_vision
+    INCLUDE_DIRS src
+    LIBRARIES sonia_vision
+    CATKIN_DEPENDS roscpp cv_bridge
 )
 
 #===============================================================================
 # O T H E R   P A C K A G E S   D E P E N D E N C I E S
-
-find_package( OpenCV REQUIRED )
 
 # Fann libraries is actually a set of other libs, list them here.
 set( fann_LIBRARIES
@@ -59,9 +57,9 @@ file( GLOB_RECURSE lib_vision_SRC_FILES "${lib_vision_SRC_DIR}/*.cpp" )
 
 # Include all the directories where source can be found.
 include_directories(
-  /usr/local/include/vitals
-  ${lib_vision_SRC_DIR}
-  ${catkin_INCLUDE_DIRS}
+    /usr/local/include/vitals
+    ${lib_vision_SRC_DIR}
+    ${catkin_INCLUDE_DIRS}
 )
 
 #===============================================================================
@@ -71,13 +69,13 @@ set( TARGET_NAME sonia_vision )
 
 add_library( ${TARGET_NAME} ${lib_vision_SRC_FILES} )
 target_link_libraries( ${TARGET_NAME}
-  ${roscpp_LIBRARIES}
-  ${fann_LIBRARIES}
+    ${catkin_LIBRARIES}
+    ${fann_LIBRARIES}
 )
 
-SET_TARGET_PROPERTIES( ${TARGET_NAME}
-  PROPERTIES
-  LINKER_LANGUAGE CXX
+set_target_properties( ${TARGET_NAME}
+    PROPERTIES
+    LINKER_LANGUAGE CXX
 )
 
 install( TARGETS ${TARGET_NAME}
@@ -87,8 +85,8 @@ install( TARGETS ${TARGET_NAME}
 )
 
 install(
-  DIRECTORY ${lib_vision_SRC_DIR}/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-  FILES_MATCHING PATTERN "*.h*"
-  PATTERN ".git" EXCLUDE
+    DIRECTORY ${lib_vision_SRC_DIR}/${PROJECT_NAME}/
+    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+    FILES_MATCHING PATTERN "*.h*"
+    PATTERN ".git" EXCLUDE
 )
