@@ -32,7 +32,6 @@
 #include <lib_vision/filter.h>
 #include "config.h"
 #include "utils/camera_id.h"
-#include "ros/ros_manager.h"
 
 #include "ros/ros_callback_manager.h"
 #include "server/filterchain.h"
@@ -55,7 +54,7 @@ class FilterchainManager : public ROSCallbackManager<FilterchainManager> {
   //==========================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
-  FilterchainManager(ROSManager &manager);
+  FilterchainManager();
 
   ~FilterchainManager();
 

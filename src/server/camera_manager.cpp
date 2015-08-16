@@ -20,7 +20,7 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-CameraManager::CameraManager(ROSManager &manager)
+CameraManager::CameraManager()
     : ROSCallbackManager(),
       _config( atlas::kWorkspaceRoot +
               std::string("/src/vision_server/config/")) {

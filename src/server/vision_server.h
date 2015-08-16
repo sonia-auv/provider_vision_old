@@ -19,7 +19,6 @@
 #include <vision_server/vision_server_get_information_list.h>
 #include "media/media.h"
 #include "config.h"
-#include "ros/ros_manager.h"
 #include "ros/ros_callback_manager.h"
 #include "server/camera_manager.h"
 #include "server/filterchain_manager.h"
@@ -47,7 +46,7 @@ class VisionServer : public ROSCallbackManager<VisionServer> {
   //============================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
-  VisionServer(ROSManager ros_manager);
+  VisionServer();
 
   ~VisionServer();
 
@@ -119,8 +118,6 @@ class VisionServer : public ROSCallbackManager<VisionServer> {
 
   //==========================================================================
   // P R I V A T E   M E M B E R S
-
-  ROSManager _ros_manager;
 
   CameraManager _camera_manager;
 

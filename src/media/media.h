@@ -15,8 +15,8 @@
 
 #include <HTSmartPtr.h>
 #include <opencv2/core/core.hpp>
-#include "ros/ros_manager.h"
 #include "utils/camera_id.h"
+#include "config.h"
 
 namespace vision_server {
 

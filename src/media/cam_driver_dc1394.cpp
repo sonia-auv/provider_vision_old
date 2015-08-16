@@ -12,6 +12,7 @@
 
 #include <string>
 #include <vector>
+#include <ros/ros.h>
 #include "media/cam_driver_dc1394.h"
 
 namespace vision_server {
@@ -67,10 +68,6 @@ bool CAMDriverDC1394::StartCamera(CameraID id) {
     ROS_ERROR_NAMED(DRIVER_TAG, "DID NOT START %s", id.GetFullName());
   }
   return false;
-  if (camera_dc1394 == nullptr) {
-    ROS_ERROR_NAMED(DRIVER_TAG, "Could not find camera %s", id.GetFullName());
-    return false;
-  }
 }
 
 //------------------------------------------------------------------------------

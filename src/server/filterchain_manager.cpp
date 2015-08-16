@@ -24,7 +24,7 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-FilterchainManager::FilterchainManager(ROSManager &manager)
+FilterchainManager::FilterchainManager()
     : ROSCallbackManager(), FILTERCHAIN_MANAGER_TAG("FILTERCHAIN_MANAGER") {
   std::cout << "Initialising FilterchainManager..." << std::endl;
   std::cout << "FilterchainList XML path : " << kConfigPath << std::endl;

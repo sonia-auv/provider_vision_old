@@ -11,6 +11,7 @@
 // I N C L U D E   F I L E S
 
 #include <string>
+#include <ros/ros.h>
 #include "media/cam_camera_dc1394.h"
 
 namespace vision_server {

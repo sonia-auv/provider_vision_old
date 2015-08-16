@@ -25,8 +25,6 @@
 #include "media/cam_driver_webcam.h"
 #include "media/cam_config.h"
 #include "media/cam_driver_media.h"
-#include "ros/ros_manager.h"
-
 #include "ros/ros_callback_manager.h"
 #include "config.h"
 #include "server/acquisition_loop.h"
@@ -54,7 +52,7 @@ class CameraManager : public ROSCallbackManager<CameraManager> {
   //==========================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
-  CameraManager(ROSManager &manager);
+  CameraManager();
 
   virtual ~CameraManager();
 
@@ -118,10 +116,6 @@ class CameraManager : public ROSCallbackManager<CameraManager> {
    */
   bool CallbackSetCMD(vision_server_set_media_param::Request &rqst,
                       vision_server_set_media_param::Response &rep);
-
-  /**
-   * Logger
-   */
 
   /**
    * Config object. To register/read cameras config.

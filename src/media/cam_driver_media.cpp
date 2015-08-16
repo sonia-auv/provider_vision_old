@@ -12,6 +12,7 @@
 
 #include <string>
 #include <vector>
+#include <ros/ros.h>
 #include "media/cam_driver_media.h"
 
 namespace vision_server {

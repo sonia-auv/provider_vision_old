@@ -12,9 +12,9 @@
 
 #include <CLTimer.h>
 #include <CLDate.h>
+#include <ros/ros.h>
 #include "server/acquisition_loop.h"
 #include <lib_atlas/sys/fsinfo.h>
-#include <lib_atlas/config.h>
 
 namespace vision_server {
 

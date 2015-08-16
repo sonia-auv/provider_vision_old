@@ -19,11 +19,10 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-VisionServer::VisionServer(ROSManager ros_manager)
+VisionServer::VisionServer()
     : ROSCallbackManager(),
-      _ros_manager(ros_manager),
-      _camera_manager(ros_manager),
-      _filterchain_manager(ros_manager) {
+      _camera_manager(),
+      _filterchain_manager() {
   auto base_node_name = std::string{VISION_NODE_NAME};
 
   RegisterService<vision_server_execute_cmd::Request,
