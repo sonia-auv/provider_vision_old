@@ -27,9 +27,6 @@ CAMCameraDC1394::CAMCameraDC1394(dc1394camera_t *camera, CameraID id)
       _is_transmitting(false),
       _video_mode(DC1394_VIDEO_MODE_800x600_YUV422),
       CAM_TAG("[DC1394 Camera]") {
-  // name = id.GetName();
-  _cam_access.Create();
-  _timer_acces.Create();
   _status = CLOSE;
   _undistortion_is_enable = _id._camUndistordMatrices.IsCorrectionEnable();
 
@@ -40,8 +37,6 @@ CAMCameraDC1394::CAMCameraDC1394(dc1394camera_t *camera, CameraID id)
 //------------------------------------------------------------------------------
 //
 CAMCameraDC1394::~CAMCameraDC1394() {
-  _cam_access.Destroy();
-  _timer_acces.Destroy();
   dc1394_camera_free(_dc1394_camera);
 }
 
@@ -54,7 +49,7 @@ bool CAMCameraDC1394::Open() {
   dc1394error_t err;
   bool init_result = true;
 
-  CLMutex::Guard guard(_cam_access);
+  std::lock_guard<std::mutex> guard(_cam_access);
 
   if (!SetFormat7()) {
     ROS_ERROR_NAMED(CAM_TAG,
@@ -85,7 +80,7 @@ bool CAMCameraDC1394::Open() {
 //------------------------------------------------------------------------------
 //
 bool CAMCameraDC1394::Close() {
-  CLMutex::Guard guard(_cam_access);
+  std::lock_guard<std::mutex> guard(_cam_access);
 
   bool close_result = true;
   if (_is_transmitting) close_result = Stop();
@@ -106,7 +101,7 @@ bool CAMCameraDC1394::Close() {
 //------------------------------------------------------------------------------
 //
 bool CAMCameraDC1394::Start() {
-  _cam_access.Take();
+  _cam_access.lock();
   dc1394error_t error =
       dc1394_video_set_transmission(_dc1394_camera, DC1394_ON);
   if (error != DC1394_SUCCESS) {
@@ -116,7 +111,7 @@ bool CAMCameraDC1394::Start() {
     _status = ERROR;
     return false;
   }
-  _cam_access.Release();
+  _cam_access.unlock();
   SetCameraParams();
 
   _is_transmitting = true;
@@ -127,7 +122,7 @@ bool CAMCameraDC1394::Start() {
 //------------------------------------------------------------------------------
 //
 bool CAMCameraDC1394::Stop() {
-  CLMutex::Guard guard(_cam_access);
+  std::lock_guard<std::mutex> guard(_cam_access);
 
   dc1394error_t error =
       dc1394_video_set_transmission(_dc1394_camera, DC1394_OFF);
@@ -142,8 +137,7 @@ bool CAMCameraDC1394::Stop() {
   _is_transmitting = false;
   _status = OPEN;
   // Here stopping timer just in case... Should already be closed....
-  CLMutex::Guard guard2(_timer_acces);
-  _acquisition_timer.Stop();
+  std::lock_guard<std::mutex> guard2(_timer_acces);
   return true;
 }
 
@@ -160,18 +154,19 @@ bool CAMCameraDC1394::NextImage(cv::Mat &img) {
   // std::cout << "Blue Red: " << blue << " " << red << std::endl;
   /// END TEST
 
-  CLMutex::Guard guard(_cam_access);
+  std::lock_guard<std::mutex> guard(_cam_access);
 
-  _timer_acces.Take(3);
-  _acquisition_timer.Start();
-  _timer_acces.Release();
+  _timer_acces.lock();
+  _acquisition_timer.sleep(3);
+  _acquisition_timer.start();
+  _timer_acces.unlock();
 
   error = dc1394_capture_dequeue(_dc1394_camera, DC1394_CAPTURE_POLICY_WAIT,
                                  &frame);
 
-  _timer_acces.Take(3);
-  _acquisition_timer.Stop();
-  _timer_acces.Release();
+  _timer_acces.lock();
+  atlas::MilliTimer::sleep(3);
+  _timer_acces.unlock();
 
   /// Here we take exactly the camera1394 method... it works so... :P
   if (error != DC1394_SUCCESS || frame == nullptr) {
@@ -214,7 +209,7 @@ bool CAMCameraDC1394::NextImage(cv::Mat &img) {
 //------------------------------------------------------------------------------
 //
 bool CAMCameraDC1394::SetFeature(FEATURE feat, float value) {
-  CLMutex::Guard guard(_cam_access);
+  std::lock_guard<std::mutex> guard(_cam_access);
   dc1394error_t error;
   uint32_t blue, red;
   switch (feat) {
@@ -309,7 +304,7 @@ bool CAMCameraDC1394::SetFeature(FEATURE feat, float value) {
 //------------------------------------------------------------------------------
 //
 float CAMCameraDC1394::GetFeature(FEATURE feat) {
-  CLMutex::Guard guard(_cam_access);
+  std::lock_guard<std::mutex> guard(_cam_access);
   dc1394error_t error;
   uint32_t blue, red;
   dc1394feature_mode_t mode;
@@ -508,35 +503,35 @@ bool CAMCameraDC1394::SetCameraParams() {
   if (std::string(_dc1394_camera->vendor).compare(std::string("AVT")) == 0) {
     ROS_INFO_NAMED(CAM_TAG, "Setting parameters for guppy");
     retVal &= SetFeature(GAIN_AUTO, 0.0f);
-    CLTimer::Delay(100);
+    atlas::MilliTimer::sleep(100);
     retVal &= SetFeature(GAIN, 420.0f);
-    CLTimer::Delay(100);
+    atlas::MilliTimer::sleep(100);
     retVal &= SetFeature(SHUTTER_AUTO, 0.0f);
-    CLTimer::Delay(100);
+    atlas::MilliTimer::sleep(100);
     retVal &= SetFeature(SHUTTER, 32.0f);
-    CLTimer::Delay(100);
+    atlas::MilliTimer::sleep(100);
     retVal &= SetFeature(WHITE_BALANCE_AUTO, 0.0f);
-    CLTimer::Delay(100);
+    atlas::MilliTimer::sleep(100);
     retVal &= SetFeature(WHITE_BALANCE_BLUE, 381.0f);
-    CLTimer::Delay(100);
+    atlas::MilliTimer::sleep(100);
     retVal &= SetFeature(WHITE_BALANCE_RED, 568.0f);
-    CLTimer::Delay(100);
+    atlas::MilliTimer::sleep(100);
   } else {  // We have a unibrain
     ROS_INFO_NAMED(CAM_TAG, "Setting parameters for unibrain");
     retVal &= SetFeature(GAIN_AUTO, 0.0f);
-    CLTimer::Delay(100);
+    atlas::MilliTimer::sleep(100);
     retVal &= SetFeature(GAIN, 350.0f);
-    CLTimer::Delay(100);
+    atlas::MilliTimer::sleep(100);
     retVal &= SetFeature(SHUTTER_AUTO, 0.0f);  // SET TO MANUAL
-    CLTimer::Delay(100);
+    atlas::MilliTimer::sleep(100);
     retVal &= SetFeature(SHUTTER, 500.0f);
-    CLTimer::Delay(100);
+    atlas::MilliTimer::sleep(100);
     retVal &= SetFeature(WHITE_BALANCE_AUTO, 0.0f);
-    CLTimer::Delay(100);
+    atlas::MilliTimer::sleep(100);
     retVal &= SetFeature(WHITE_BALANCE_BLUE, 412.0f);
-    CLTimer::Delay(100);
+    atlas::MilliTimer::sleep(100);
     retVal &= SetFeature(WHITE_BALANCE_RED, 511.0f);
-    CLTimer::Delay(100);
+    atlas::MilliTimer::sleep(100);
   }
 
   return retVal;

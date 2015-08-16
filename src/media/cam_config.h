@@ -17,7 +17,6 @@
 
 #include "utils/camera_id.h"
 #include "config.h"
-#include "CLList.h"
 
 namespace vision_server {
 
@@ -43,7 +42,7 @@ class CAMConfig {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  const CLList<CameraConfig> GetConfigList();
+  const std::vector<CameraConfig> GetConfigList();
 
   /**
    * Return a pointer to an cameraConfig structure.
@@ -57,7 +56,7 @@ class CAMConfig {
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
-  CLList<CameraConfig> _list;
+  std::vector<CameraConfig> _list;
 };
 
 }  // namespace vision_server

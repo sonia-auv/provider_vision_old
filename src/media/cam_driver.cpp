@@ -20,11 +20,10 @@ namespace vision_server {
 //------------------------------------------------------------------------------
 //
 CAMDriver::CAMDriver(const CAMConfig config) : _config(config) {
-  _driver_access.Create();
 }
 
 //------------------------------------------------------------------------------
 //
-CAMDriver::~CAMDriver() { _driver_access.Destroy(); }
+CAMDriver::~CAMDriver() {}
 
 }  // namespace vision_server

@@ -12,7 +12,6 @@
 
 #include <assert.h>
 #include <std_msgs/String.h>
-#include <CLTimer.h>
 #include <lib_atlas/typedef.h>
 #include "server/execution.h"
 
@@ -28,9 +27,9 @@ static const char *EXEC_TAG = "[EXECUTION]";
 
 //------------------------------------------------------------------------------
 //
-vision_server::Execution::Execution(
+Execution::Execution(
     atlas::NodeHandlePtr node_handle,
-    vision_server::AcquisitionLoop::Ptr acquisition_loop,
+    std::shared_ptr<AcquisitionLoop> acquisition_loop,
     Filterchain *filterchain, const std::string &execName)
     : _acquisition_loop(acquisition_loop),
       _filterchain_to_process(filterchain),
@@ -45,21 +44,19 @@ vision_server::Execution::Execution(
   result_publisher_ =
       node_handle->advertise<std_msgs::String>(_exec_name + "_result", 50);
 
-  _newest_image_mutex.Create();
-
-  if (_acquisition_loop.IsNotNull())
+  if (_acquisition_loop.get() != nullptr)
     _camera_id = _acquisition_loop->GetMediaID();
 }
 
 //------------------------------------------------------------------------------
 //
-vision_server::Execution::~Execution() {
+Execution::~Execution() {
   if (_state == RUNNING) StopExec();
   // No need to destroy _image_topic, it is a smart pointer
   ROS_INFO_NAMED(EXEC_TAG, "Destroying execution");
   unsigned int tries = 0;
-  while (_newest_image_mutex.IsLocked()) {
-    CLTimer::Delay(20);
+  while (!_newest_image_mutex.try_lock()) {
+    atlas::MilliTimer::sleep(20);
     tries++;
     if (tries > 100) {
       ROS_WARN_NAMED(EXEC_TAG,
@@ -67,7 +64,6 @@ vision_server::Execution::~Execution() {
       tries = 0;
     }
   }
-  _newest_image_mutex.Destroy();
 }
 
 //==============================================================================
@@ -75,9 +71,9 @@ vision_server::Execution::~Execution() {
 
 //------------------------------------------------------------------------------
 //
-vision_server::Execution::ERROR vision_server::Execution::StartExec() {
+Execution::ERROR Execution::StartExec() {
   ERROR status = ERROR::FAILURE_TO_START;
-  if (_acquisition_loop.IsNull()) {
+  if (_acquisition_loop.get() != nullptr) {
     ROS_ERROR_NAMED(EXEC_TAG, "Acquisition loop is null!");
     return status;
   }
@@ -87,18 +83,7 @@ vision_server::Execution::ERROR vision_server::Execution::StartExec() {
     return status;
   }
 
-  if (_acquisition_loop->RegisterExecution(*this)) {
-    ROS_INFO_NAMED(EXEC_TAG,
-                   "%s is attached to the acquisition loop that run on %s",
-                   _filterchain_to_process->GetName().c_str(),
-                   _camera_id.GetName().c_str());
-  } else {
-    ROS_INFO_NAMED(EXEC_TAG,
-                   "%s is NOT attached to the acquisition loop that run on %s",
-                   _filterchain_to_process->GetName().c_str(),
-                   _camera_id.GetName().c_str());
-    return status;
-  }
+  _acquisition_loop->Attach(*this);
 
   // Attach to the acquisition loop to receive notification from a new image.
   _filterchain_to_process->InitFilters();
@@ -110,30 +95,24 @@ vision_server::Execution::ERROR vision_server::Execution::StartExec() {
   status = ERROR::SUCCESS;
 
   // Start thread!
-  Start();
+  start();
 
   return status;
 }
 
 //------------------------------------------------------------------------------
 //
-vision_server::Execution::ERROR vision_server::Execution::StopExec() {
+Execution::ERROR Execution::StopExec() {
   ERROR status = ERROR::FAILURE_TO_CLOSE;
 
-  CLMutex::Guard guard(_newest_image_mutex);
-  // Do not act on it for now... simply log it...
-  if (!_acquisition_loop->UnRegisterExecution(*this)) {
-    ROS_ERROR_NAMED(EXEC_TAG, "Cannot detach from acquistion loop with %s",
-                    GetID().GetFullName());
-  }
+  std::lock_guard<std::mutex> guard(_newest_image_mutex);
+  _acquisition_loop->Detach(*this);
 
   // Stop thread
-  if (IsAlive()) {
-    if (!Terminate()) {
-      Kill();
-    }
+  if (thread_.joinable()) {
+    stop();
   } else {
-    ROS_WARN_NAMED(EXEC_TAG, "Thread is not alive");
+    ROS_WARN_NAMED(EXEC_TAG, "The excecution is not processing.");
   }
 
   _filterchain_to_process->CloseFilters();
@@ -152,25 +131,25 @@ vision_server::Execution::ERROR vision_server::Execution::StopExec() {
 
 //------------------------------------------------------------------------------
 //
-void vision_server::Execution::OnSubjectNotify(HTSubject *hook) {
-  CLMutex::Guard guard(_newest_image_mutex);
+void Execution::OnSubjectNotify(atlas::Subject<> &subject) ATLAS_NOEXCEPT {
+  std::lock_guard<std::mutex> guard(_newest_image_mutex);
   _acquisition_loop->GetImage(_newest_image);
   _new_image_ready = true;
 }
 
 //------------------------------------------------------------------------------
 //
-void vision_server::Execution::ThreadFunc() {
-  while (!ThreadMustExit()) {
+void Execution::run() {
+  while (!stop_) {
     // Prevent to process data twice for fast processing
     if (!_new_image_ready) {
-      CLTimer::Delay(10);
+      atlas::MilliTimer::sleep(10);
       continue;
     }
-    _newest_image_mutex.Take();
+    _newest_image_mutex.lock();
     _image_being_processed = _newest_image.clone();
     _new_image_ready = false;
-    _newest_image_mutex.Release();
+    _newest_image_mutex.unlock();
 
     std::string return_string;
 

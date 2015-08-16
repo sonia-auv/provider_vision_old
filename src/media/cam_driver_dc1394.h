@@ -59,7 +59,7 @@ class CAMDriverDC1394 : public CAMDriver {
 
   bool IsMyCamera(const std::string &nameMedia) override;
 
-  Media::Ptr GetActiveCamera(CameraID id) override;
+  std::shared_ptr<Media> GetActiveCamera(CameraID id) override;
 
   void SetFeature(FEATURE feat, CameraID id, float val) override;
 
@@ -69,7 +69,7 @@ class CAMDriverDC1394 : public CAMDriver {
    * HTThread override
    * Is traditionally use to call the watchdog.
    */
-  void ThreadFunc() override;
+  void run() override;
 
   bool WatchDogFunc() override;
 

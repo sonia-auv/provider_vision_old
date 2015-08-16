@@ -109,7 +109,6 @@ include_directories(
     ${vision_server_SRC_DIR}
     ${lib_atlas_INCLUDE_DIRS}
     ${lib_vision_INCLUDE_DIRS}
-    "/usr/local/include/vitals"
     ${catkin_INCLUDE_DIRS}
 )
 
@@ -123,7 +122,6 @@ add_executable( vision_server_node
 
 # Link all the used libraries to the previsouly created executable.
 target_link_libraries( vision_server_node
-    vitals
     dc1394
     ${catkin_LIBRARIES}
     ${lib_atlas_LIBRARIES}

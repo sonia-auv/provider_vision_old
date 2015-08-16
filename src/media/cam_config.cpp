@@ -72,7 +72,7 @@ CAMConfig::~CAMConfig() {}
 
 //------------------------------------------------------------------------------
 //
-const CLList<CameraConfig> CAMConfig::GetConfigList() { return _list; }
+const std::vector<CameraConfig> CAMConfig::GetConfigList() { return _list; }
 
 //------------------------------------------------------------------------------
 //

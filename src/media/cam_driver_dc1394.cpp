@@ -52,8 +52,7 @@ void CAMDriverDC1394::CloseDriver() {
 //
 bool CAMDriverDC1394::StartCamera(CameraID id) {
   dc1394camera_t *camera_dc1394 = dc1394_camera_new(_context, id.GetGUID());
-  CAMCameraDC1394::Ptr cam = new CAMCameraDC1394(camera_dc1394, id);
-  // cam.DynamicAssign(GetCameraFromID(id));
+  auto cam = std::make_shared<CAMCameraDC1394>(camera_dc1394, id);
 
   if (cam->Open()) {
     if (cam->Start()) {
@@ -73,10 +72,9 @@ bool CAMDriverDC1394::StartCamera(CameraID id) {
 //------------------------------------------------------------------------------
 //
 bool CAMDriverDC1394::StopCamera(CameraID id) {
-  CAMCameraDC1394::Ptr cam = nullptr;
-  cam.DynamicAssign(GetActiveCamera(id));
+  std::shared_ptr<CAMCameraDC1394> cam(dynamic_cast<CAMCameraDC1394 *>(GetActiveCamera(id).get()));
 
-  if (cam.IsNull()) {
+  if (cam.get() == nullptr) {
     ROS_ERROR_NAMED(DRIVER_TAG, "Could not find %s as active camera.",
                     id.GetFullName());
     return false;
@@ -123,33 +121,32 @@ bool CAMDriverDC1394::IsMyCamera(const std::string &nameMedia) {
 
 //------------------------------------------------------------------------------
 //
-void CAMDriverDC1394::ThreadFunc() {
-  while (!ThreadMustExit()) {
-    CLTimer::Delay(5000);
+void CAMDriverDC1394::run() {
+  while (!stop_) {
+    atlas::SecTimer ::sleep(5);
     if (!WatchDogFunc()) {
       ROS_FATAL_NAMED(DRIVER_TAG, "=====   Entering camera reset bus =====");
-      std::vector<CAMCameraDC1394::Ptr> cam_to_restart;
+      std::vector<std::shared_ptr<CAMCameraDC1394>> cam_to_restart;
       CameraID tempID;
 
       for (auto &elem : _live_camera_list) {
         tempID = elem->GetCameraID();
 
-        CAMCameraDC1394::Ptr cam = nullptr;
-        cam.DynamicAssign(elem);
+        std::shared_ptr<CAMCameraDC1394> cam(dynamic_cast<CAMCameraDC1394 *>(elem.get()));
         cam_to_restart.push_back(cam);
 
-        if (cam.IsNotNull()) {
+        if (cam.get() != nullptr) {
           cam->Stop();
           ROS_FATAL_NAMED(DRIVER_TAG, "Reseting bus on %s",
                           tempID.GetFullName());
           dc1394_reset_bus(cam->GetCameraPtr());
-          CLTimer::Delay(1000);
+          atlas::SecTimer ::sleep(1);
         } else {
           ROS_FATAL_NAMED(DRIVER_TAG, "Missed cast on %s",
                           tempID.GetFullName());
         }
       }
-      CLTimer::Delay(2000);
+      atlas::SecTimer ::sleep(2);
       ROS_INFO_NAMED(DRIVER_TAG, "Restarting the camera.");
       // Restarting the camera is done after everything, since resetting
       // the bus
@@ -158,7 +155,7 @@ void CAMDriverDC1394::ThreadFunc() {
       for (auto &elem : cam_to_restart) {
         elem->Start();
       }
-      CLTimer::Delay(2000);
+      atlas::SecTimer ::sleep(2);
     }
   }
 }
@@ -169,9 +166,8 @@ bool CAMDriverDC1394::WatchDogFunc() {
   bool fail = true;
   for (auto &elem : _live_camera_list) {
     CameraID tempID = elem->GetCameraID();
-    CAMCameraDC1394::Ptr cam = nullptr;
-    cam.DynamicAssign(elem);
-    if (cam.IsNotNull()) {
+    std::shared_ptr<CAMCameraDC1394> cam(dynamic_cast<CAMCameraDC1394 *>(elem.get()));
+    if (cam.get() != nullptr) {
       // If it has been 3 second no images have been produce
       if (cam->GetAcquistionTimerValue() > 3) {
         ROS_FATAL_NAMED(DRIVER_TAG, "Camera %s is not feeding!",
@@ -241,7 +237,7 @@ std::string CAMDriverDC1394::GetNameFromGUID(uint64_t guid) {
 
 //------------------------------------------------------------------------------
 //
-Media::Ptr CAMDriverDC1394::GetActiveCamera(CameraID id) {
+std::shared_ptr<Media> CAMDriverDC1394::GetActiveCamera(CameraID id) {
   auto iter = _live_camera_list.begin();
   auto end_iter = _live_camera_list.end();
 
@@ -256,10 +252,8 @@ Media::Ptr CAMDriverDC1394::GetActiveCamera(CameraID id) {
 //------------------------------------------------------------------------------
 //
 void CAMDriverDC1394::SetFeature(FEATURE feat, CameraID id, float val) {
-  CAMCameraDC1394::Ptr cam = nullptr;
-  cam.DynamicAssign(GetActiveCamera(id));
-
-  if (cam.IsNull()) {
+  std::shared_ptr<CAMCameraDC1394> cam(dynamic_cast<CAMCameraDC1394 *>(GetActiveCamera(id).get()));
+  if (cam.get() != nullptr) {
     ROS_ERROR_NAMED(DRIVER_TAG, "Camera is not active in the system.");
     return;
   }
@@ -271,9 +265,8 @@ void CAMDriverDC1394::SetFeature(FEATURE feat, CameraID id, float val) {
 //------------------------------------------------------------------------------
 //
 void CAMDriverDC1394::GetFeature(FEATURE feat, CameraID id, float &val) {
-  CAMCameraDC1394::Ptr cam = nullptr;
-  cam.DynamicAssign(GetActiveCamera(id));
-  if (cam.IsNull()) {
+  std::shared_ptr<CAMCameraDC1394> cam(dynamic_cast<CAMCameraDC1394 *>(GetActiveCamera(id).get()));
+  if (cam.get() != nullptr) {
     ROS_ERROR_NAMED(DRIVER_TAG, "Camera is not active in the system.");
     return;
   }

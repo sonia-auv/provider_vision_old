@@ -13,11 +13,10 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
-#include <HTSmartPtr.h>
-#include <HTObsBase.h>
-#include <HTThread.h>
-#include <CLMutex.h>
+#include <mutex>
 #include <lib_atlas/ros/image_publisher.h>
+#include <lib_atlas/pattern/runnable.h>
+#include <lib_atlas/pattern/observer.h>
 #include "media/media.h"
 #include "config.h"
 #include "server/filterchain.h"
@@ -32,15 +31,10 @@ namespace vision_server {
  * Execution class is responsible of taking the image from an acquisition loop,
  * broadcast it on topic and apply the given filterchain.
  */
-class Execution : public HTObsBase, public HTSmartObj, public HTThread {
+class Execution : public atlas::Runnable, public atlas::Observer<> {
  public:
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
-
-  /**
-   * Defining a type for ease of use
-   */
-  typedef HTSmartPtr<Execution> Ptr;
 
   /**
    * Error handling
@@ -58,8 +52,8 @@ class Execution : public HTObsBase, public HTSmartObj, public HTThread {
   /**
    * CTOR/DSTR
    */
-  Execution(atlas::NodeHandlePtr node_handle,
-            AcquisitionLoop::Ptr acquisition_loop, Filterchain *filterchain,
+  explicit Execution(atlas::NodeHandlePtr node_handle,
+            std::shared_ptr<AcquisitionLoop> acquisition_loop, Filterchain *filterchain,
             const std::string &execName);
 
   virtual ~Execution();
@@ -79,19 +73,19 @@ class Execution : public HTObsBase, public HTSmartObj, public HTThread {
    * HTObserver override
    * Catches the acquisitionLoop's notification that an image is ready.
    */
-  void OnSubjectNotify(HTSubject *hook) override;
+  auto OnSubjectNotify(atlas::Subject<> &subject) ATLAS_NOEXCEPT -> void override;
 
   /**
      * HTThread override
      * Run the filterchain when the new image is ready.
      * Is necessary to decouple the acqusition loop from the processing.
    */
-  void ThreadFunc() override;
+  void run() override;
 
   //==========================================================================
   // G E T T E R S   A N D   S E T T E R S
 
-  const AcquisitionLoop::Ptr GetAcquisitionLoop() const;
+  const std::shared_ptr<AcquisitionLoop> GetAcquisitionLoop() const;
 
   const Filterchain *getFilterChain() const;
 
@@ -132,15 +126,17 @@ class Execution : public HTObsBase, public HTSmartObj, public HTThread {
   /**
    * Execution core.
    */
-  AcquisitionLoop::Ptr _acquisition_loop;
+  std::shared_ptr<AcquisitionLoop> _acquisition_loop;
 
   Filterchain *_filterchain_to_process;
 
-  CLMutex _newest_image_mutex;
+  mutable std::mutex _newest_image_mutex;
+
   // Two image are needed since we don't want the mutex to block the process
   // on the image and we have to wait for it to be finish to release it so
   // the firenotification doesn't wait for a mutex.
   cv::Mat _newest_image, _image_being_processed;
+
   // Prevent to process data twice for fast processing
   bool _new_image_ready;
   /**
@@ -160,7 +156,7 @@ class Execution : public HTObsBase, public HTSmartObj, public HTThread {
 
 //------------------------------------------------------------------------------
 //
-inline const AcquisitionLoop::Ptr Execution::GetAcquisitionLoop() const {
+inline const std::shared_ptr<AcquisitionLoop> Execution::GetAcquisitionLoop() const {
   return _acquisition_loop;
 }
 

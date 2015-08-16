@@ -64,7 +64,7 @@ class CameraManager : public atlas::ServiceServerManager<CameraManager> {
    * acquisition loop or closing it, depending of the command.
    */
   void StreammingCmd(COMMAND cmd, const std::string &mediaName,
-                     AcquisitionLoop::Ptr &ptr);
+                     std::shared_ptr<AcquisitionLoop> &ptr);
 
   /**
    * ParametersCmd send  command of type feature to the media (shutter, white
@@ -95,7 +95,7 @@ class CameraManager : public atlas::ServiceServerManager<CameraManager> {
    * Simple for loop iteration which pokes each driver to know if they
    * possess the camera asked for.
    */
-  CAMDriver *GetDriverForCamera(const std::string &name);
+  std::shared_ptr<CAMDriver> GetDriverForCamera(const std::string &name);
 
   //==========================================================================
   // P R I V A T E   M E M B E R S
@@ -120,7 +120,7 @@ class CameraManager : public atlas::ServiceServerManager<CameraManager> {
   /**
    * List of the driers in the system
    */
-  std::vector<CAMDriver *> _drivers;
+  std::vector<std::shared_ptr<CAMDriver>> _drivers;
 };
 
 }  // namespace vision_server

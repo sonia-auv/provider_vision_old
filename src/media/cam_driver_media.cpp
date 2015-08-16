@@ -48,21 +48,13 @@ void CAMDriverMedia::CloseDriver() { _live_camera_list.clear(); }
 //
 bool CAMDriverMedia::StartCamera(CameraID id) {
   auto media = GetActiveCamera(id);
-  if (media.IsNull()) {
+  if (media.get() == nullptr) {
     std::string nameMedia = id.GetName();
     // le media n'existe pas, donc on le créé
     if (GetMediaType(nameMedia) == IMAGE) {
-      media = new MMImage(nameMedia);
-      if (media != nullptr) {
-        media->_id = CameraID(nameMedia, 0);
-        _live_camera_list.push_back(media);
-      }
+      media = std::make_shared<MMImage>(nameMedia);
     } else if (GetMediaType(nameMedia) == VIDEO) {
-      media = new MMVideo(nameMedia, true);
-      if (media != nullptr) {
-        media->_id = CameraID(nameMedia, 0);
-        _live_camera_list.push_back(media);
-      }
+      media = std::make_shared<MMVideo>(nameMedia, true);
     } else {
       ROS_ERROR_NAMED(DRIVER_TAG, "Media not instanciate and not started %s",
                       id.GetFullName());
@@ -78,7 +70,7 @@ bool CAMDriverMedia::StartCamera(CameraID id) {
 //
 bool CAMDriverMedia::StopCamera(CameraID id) {
   auto media = GetActiveCamera(id);
-  if (media.IsNotNull()) {
+  if (media.get() != nullptr) {
     if (!media->Stop()) {
       ROS_ERROR_NAMED(DRIVER_TAG, "Error closing %s", id.GetFullName());
       return false;
@@ -130,7 +122,7 @@ bool CAMDriverMedia::IsMyCamera(const std::string &nameMedia) {
 
 //------------------------------------------------------------------------------
 //
-Media::Ptr CAMDriverMedia::GetActiveCamera(CameraID id) {
+std::shared_ptr<Media> CAMDriverMedia::GetActiveCamera(CameraID id) {
   for (auto &camera : _live_camera_list) {
     if (camera->GetCameraID().GetName() == id.GetName()) {
       return camera;
@@ -163,7 +155,7 @@ void CAMDriverMedia::GetFeature(FEATURE feat, CameraID id, float &val) {
 
 //------------------------------------------------------------------------------
 //
-void CAMDriverMedia::ThreadFunc() {}
+void CAMDriverMedia::run() {}
 
 //------------------------------------------------------------------------------
 //

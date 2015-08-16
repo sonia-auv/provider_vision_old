@@ -13,15 +13,14 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
+#include <mutex>
 #include <string>
 #include <opencv2/opencv.hpp>
 #include <sensor_msgs/image_encodings.h>
 #include <dc1394/dc1394.h>
-#include <CLTimer.h>
-#include <HTSmartPtr.h>
+#include <lib_atlas/sys/timer.h>
 #include "utils/camera_id.h"
 #include "utils/yuv.h"
-
 #include "media/media.h"
 #include "media/cam_driver.h"
 #include "media/camera.h"
@@ -36,11 +35,6 @@ class CAMCameraDC1394 : public Camera {
   static const int DMA_BUFFER = 4;
 
   const std::string CAM_TAG;
-
-  //==========================================================================
-  // T Y P E D E F   A N D   E N U M
-
-  typedef HTSmartPtr<CAMCameraDC1394> Ptr;
 
   //==========================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
@@ -116,15 +110,15 @@ class CAMCameraDC1394 : public Camera {
 
   std::string _model;
 
-  CLMutex _cam_access;
+  mutable std::mutex _cam_access;
 
-  CLMutex _timer_acces;
+  mutable std::mutex _timer_acces;
 
   dc1394camera_t *_dc1394_camera;
 
   dc1394video_mode_t _video_mode;
 
-  CLTimer _acquisition_timer;
+  atlas::MilliTimer _acquisition_timer;
 
   // TODO:
   // Maybe not necessary? only performance issue.. Lot of access for
@@ -167,10 +161,10 @@ inline bool CAMCameraDC1394::HasArtificialFramerate() { return false; }
 //------------------------------------------------------------------------------
 //
 inline double CAMCameraDC1394::GetAcquistionTimerValue() {
-  auto timer = (long long){0};
-  _timer_acces.Take(3);
-  _acquisition_timer.ElapsedTime(timer);
-  _timer_acces.Release();
+  _timer_acces.lock();
+  _acquisition_timer.sleep(3);
+  auto timer = _acquisition_timer.time();
+  _timer_acces.unlock();
   return timer;
 };
 

@@ -16,7 +16,6 @@
   <build_depend>cv_bridge</build_depend>
   <build_depend>lib_vision</build_depend>
   <build_depend>lib_atlas</build_depend>
-  <build_depend>vitals</build_depend>
   <build_depend>libdc1394-22-dev</build_depend>
 
   <run_depend>roscpp</run_depend>
@@ -27,6 +26,5 @@
   <run_depend>cv_bridge</run_depend>
   <run_depend>lib_atlas</run_depend>
   <run_depend>lib_vision</run_depend>
-  <run_depend>vitals</run_depend>
   <run_depend>libdc1394-22-dev</run_depend>
 </package>

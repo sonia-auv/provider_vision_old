@@ -43,9 +43,6 @@ CameraManager::CameraManager(atlas::NodeHandlePtr node_handle)
 //
 CameraManager::~CameraManager() {
   Close();
-  for (auto &elem : _drivers) {
-    delete elem;
-  }
 }
 
 //==============================================================================
@@ -67,8 +64,8 @@ std::vector<CameraID> CameraManager::GetCameraList() {
 //------------------------------------------------------------------------------
 //
 void CameraManager::StreammingCmd(COMMAND cmd, const std::string &mediaName,
-                                  AcquisitionLoop::Ptr &ptr) {
-  CAMDriver *driver = GetDriverForCamera(mediaName);
+                                  std::shared_ptr<AcquisitionLoop> &ptr) {
+  std::shared_ptr<CAMDriver> driver = GetDriverForCamera(mediaName);
   // FEATURE* feat = static_cast<FEATURE*>(specific_to_cmd);
   // float* val = static_cast<float*>(specific_to_cmd2);
   if (driver == nullptr) {
@@ -79,9 +76,9 @@ void CameraManager::StreammingCmd(COMMAND cmd, const std::string &mediaName,
   switch (cmd) {
     case START:
       if (driver->StartCamera(camToStart)) {
-        Media::Ptr media_ptr = driver->GetActiveCamera(camToStart);
-        if (media_ptr.IsNotNull()) {
-          ptr = new AcquisitionLoop(media_ptr, 30);
+        std::shared_ptr<Media> media_ptr = driver->GetActiveCamera(camToStart);
+        if (media_ptr.get() != nullptr) {
+          ptr = std::make_shared<AcquisitionLoop>(media_ptr, 30);
           ptr->StartStreaming();
         } else {
           ptr = nullptr;
@@ -119,7 +116,7 @@ void CameraManager::StreammingCmd(COMMAND cmd, const std::string &mediaName,
 //
 void CameraManager::ParametersCmd(COMMAND cmd, const std::string &mediaName,
                                   FEATURE feat, float &val) {
-  CAMDriver *driver = GetDriverForCamera(mediaName);
+  std::shared_ptr<CAMDriver> driver = GetDriverForCamera(mediaName);
   // FEATURE* feat = static_cast<FEATURE*>(specific_to_cmd);
   // float* val = static_cast<float*>(specific_to_cmd2);
   if (driver == nullptr) {
@@ -146,12 +143,10 @@ void CameraManager::ParametersCmd(COMMAND cmd, const std::string &mediaName,
 bool CameraManager::Init() {
   // Each time you have a new driver (Gige, usb, etc.) add it to
   // the list here.
-  CAMDriverDC1394 *driver = new CAMDriverDC1394(_config);
-  _drivers.push_back(driver);
-  CAMDriverWebcam *driverWebcam = new CAMDriverWebcam(_config);
-  _drivers.push_back(driverWebcam);
-  CAMDriverMedia *driverMedia = new CAMDriverMedia(_config);
-  _drivers.push_back(driverMedia);
+  _drivers.push_back(std::make_shared<CAMDriverDC1394>(_config));
+  _drivers.push_back(std::make_shared<CAMDriverWebcam>(_config));
+  _drivers.push_back(std::make_shared<CAMDriverMedia>(_config));
+
   for (auto &elem : _drivers) {
     elem->InitDriver();
   }
@@ -170,7 +165,7 @@ bool CameraManager::Close() {
 
 //------------------------------------------------------------------------------
 //
-CAMDriver *CameraManager::GetDriverForCamera(const std::string &name) {
+std::shared_ptr<CAMDriver> CameraManager::GetDriverForCamera(const std::string &name) {
   for (auto &elem : _drivers) {
     if (elem->IsMyCamera(name)) {
       return elem;
@@ -210,7 +205,7 @@ bool CameraManager::CallbackGetCMD(
     vision_server_get_media_param::Request &rqst,
     vision_server_get_media_param::Response &rep) {
   rep.value = 0.0f;
-  CAMDriver *driver = GetDriverForCamera(rqst.media_name);
+  std::shared_ptr<CAMDriver> driver = GetDriverForCamera(rqst.media_name);
   if (driver == nullptr) {
     ROS_WARN_NAMED("[CAMERA_MANAGER]", "No driver for this media: %s",
                    rqst.media_name.c_str());
@@ -236,7 +231,7 @@ bool CameraManager::CallbackSetCMD(
     vision_server_set_media_param::Request &rqst,
     vision_server_set_media_param::Response &rep) {
   rep.success = rep.FAIL;
-  CAMDriver *driver = GetDriverForCamera(rqst.media_name);
+  std::shared_ptr<CAMDriver> driver = GetDriverForCamera(rqst.media_name);
   if (driver == nullptr) {
     ROS_WARN_NAMED("[CAMERA_MANAGER]", "No driver for this media: %s",
                    rqst.media_name.c_str());

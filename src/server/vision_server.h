@@ -13,6 +13,7 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
+#include <mutex>
 #include <lib_atlas/ros/service_server_manager.h>
 #include <vision_server/vision_server_execute_cmd.h>
 #include <vision_server/vision_server_get_information_list.h>
@@ -55,9 +56,9 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    * Return a pointer of acquisitionLoop or execution with that name if exist.
    * Can return nullptr
    */
-  const Execution::Ptr GetExecution(const std::string &execName);
+  const std::shared_ptr<Execution> GetExecution(const std::string &execName);
 
-  const AcquisitionLoop::Ptr GetAcquisitionLoop(const std::string &mediaName);
+  const std::shared_ptr<AcquisitionLoop> GetAcquisitionLoop(const std::string &mediaName);
 
   /**
    * Return true if another execution use the media
@@ -67,16 +68,16 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
   /**
    * Add/remove AcquisitionLoop from the list.
    */
-  void AddAcquisitionLoop(const AcquisitionLoop::Ptr &ptr);
+  void AddAcquisitionLoop(const std::shared_ptr<AcquisitionLoop> &ptr);
 
-  void RemoveAcquisitionLoop(const AcquisitionLoop::Ptr &ptr);
+  void RemoveAcquisitionLoop(const std::shared_ptr<AcquisitionLoop> &ptr);
 
   /**
    * Add/remove Execution from the list.
    */
-  void AddExecution(const Execution::Ptr &ptr);
+  void AddExecution(const std::shared_ptr<Execution> &ptr);
 
-  void RemoveExecution(const Execution::Ptr &ptr);
+  void RemoveExecution(const std::shared_ptr<Execution> &ptr);
 
  private:
   //==========================================================================
@@ -132,14 +133,14 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
   /**
    * Protect the access of the vectors
    */
-  CLMutex _list_access;
+  mutable std::mutex _list_access;
 
   /**
    * Remember what exist.
    */
-  std::vector<Execution::Ptr> executions;
+  std::vector<std::shared_ptr<Execution>> executions;
 
-  std::vector<AcquisitionLoop::Ptr> acquisition_loop;
+  std::vector<std::shared_ptr<AcquisitionLoop>> acquisition_loop;
 };
 
 //==============================================================================
@@ -147,16 +148,16 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
 
 //------------------------------------------------------------------------------
 //
-inline void VisionServer::AddAcquisitionLoop(const AcquisitionLoop::Ptr &ptr) {
-  CLMutex::Guard guard(_list_access);
+inline void VisionServer::AddAcquisitionLoop(const std::shared_ptr<AcquisitionLoop> &ptr) {
+  std::lock_guard<std::mutex> guard(_list_access);
   acquisition_loop.push_back(ptr);
 }
 
 //------------------------------------------------------------------------------
 //
 inline void VisionServer::RemoveAcquisitionLoop(
-    const AcquisitionLoop::Ptr &ptr) {
-  CLMutex::Guard guard(_list_access);
+    const std::shared_ptr<AcquisitionLoop> &ptr) {
+  std::lock_guard<std::mutex> guard(_list_access);
   auto acquisition = acquisition_loop.begin();
   auto vec_end = acquisition_loop.end();
   for (; acquisition != vec_end; ++acquisition) {
@@ -168,15 +169,15 @@ inline void VisionServer::RemoveAcquisitionLoop(
 
 //------------------------------------------------------------------------------
 //
-inline void VisionServer::AddExecution(const Execution::Ptr &ptr) {
-  CLMutex::Guard guard(_list_access);
+inline void VisionServer::AddExecution(const std::shared_ptr<Execution> &ptr) {
+  std::lock_guard<std::mutex> guard(_list_access);
   executions.push_back(ptr);
 }
 
 //------------------------------------------------------------------------------
 //
-inline void VisionServer::RemoveExecution(const Execution::Ptr &ptr) {
-  CLMutex::Guard guard(_list_access);
+inline void VisionServer::RemoveExecution(const std::shared_ptr<Execution> &ptr) {
+  std::lock_guard<std::mutex> guard(_list_access);
   auto execution = executions.begin();
   auto vec_end = executions.end();
   for (; execution != vec_end; ++execution) {

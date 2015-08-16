@@ -10,9 +10,8 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
-#include <CLTimer.h>
-#include <CLDate.h>
 #include <ros/ros.h>
+#include <lib_atlas/sys/timer.h>
 #include "server/acquisition_loop.h"
 #include <lib_atlas/sys/fsinfo.h>
 
@@ -23,7 +22,7 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-AcquisitionLoop::AcquisitionLoop(Media::Ptr cam, int artificialFrameRateMs)
+AcquisitionLoop::AcquisitionLoop(std::shared_ptr<Media> cam, int artificialFrameRateMs)
     : _media(cam),
       LOOP_TAG("[Acquisition Loop]"),
       _is_streaming(false),
@@ -33,9 +32,6 @@ AcquisitionLoop::AcquisitionLoop(Media::Ptr cam, int artificialFrameRateMs)
       _image(),
       video_writer_(),
       is_recording_(false) {
-  _image_access.Create();
-  list_access_.Create();
-
   if (_media->HasArtificialFramerate() && _artificialFrameRate != 0)
     _frameRateMiliSec = 1000 / _artificialFrameRate;
 }
@@ -43,13 +39,9 @@ AcquisitionLoop::AcquisitionLoop(Media::Ptr cam, int artificialFrameRateMs)
 //------------------------------------------------------------------------------
 //
 AcquisitionLoop::~AcquisitionLoop() {
-  if (_is_streaming) StopStreaming();
-  // Wait for the thread to stop
-  Synchronize(100);
-
-  _image_access.Destroy();
-  list_access_.Destroy();
-
+  if (_is_streaming) {
+    StopStreaming();
+  }
   ROS_INFO_NAMED(LOOP_TAG, "Destroying AcquisitionLoop");
 }
 
@@ -65,49 +57,34 @@ void AcquisitionLoop::SetFramerate(int framePerSecond) {
 //------------------------------------------------------------------------------
 //
 bool AcquisitionLoop::StartStreaming() {
-  bool retval = false;
-  // Send message on the line.
   ROS_INFO_NAMED(LOOP_TAG, "Starting streaming on camera %s",
                  _media->GetCameraID().GetName().c_str());
 
   // Start thread
-  CLMutex::Guard guard(_image_access);
-  if (Start()) {
+  std::lock_guard<std::mutex> guard(_image_access);
+  start();
+  if (thread_.joinable()) {
     _is_streaming = true;
-    retval = true;
+    return true;
   }
-  return retval;
+  return false;
 }
 
 //------------------------------------------------------------------------------
 //
 bool AcquisitionLoop::StopStreaming() {
-  bool retval = false;
   _is_streaming = false;
 
   // Send message on the line.
   ROS_INFO_NAMED(LOOP_TAG, "Stopping streaming on camera %s",
                  _media->GetCameraID().GetName().c_str());
-
-  //	// No need for mutex. In fact it might cause problem in case
-  //	// where we take the mutex, delete the thread, but the thread is waiting
-  //	// for the mutex, so after deleting thread and exiting, we still run the
-  // thread...
-  //	_logger->LogInfo(LOOP_TAG, "Taking mutex for stopping streaming");
-  //	CLMutex::Guard guard(_image_access);
-  //	_logger->LogInfo(LOOP_TAG, "Took mutex for stopping streaming");
-
   // Stop thread
-  if (IsAlive()) {
-    if (Terminate()) {
-      retval = true;
-    } else {
-      retval = Kill();
-    }
+  if (thread_.joinable()) {
+    stop();
+    return true;
   } else {
     ROS_WARN_NAMED(LOOP_TAG, "Thread is not alive");
   }
-  return retval;
 }
 
 //------------------------------------------------------------------------------
@@ -121,10 +98,8 @@ bool AcquisitionLoop::StartRecording(const std::string &filename) {
   std::string filepath = filename;
   // If no filename was provided, set the default filepath
   if (filepath.empty()) {
-    CLString dateString;
-    CLDate dateObj;
-    dateObj.GetDateAndTimeNoSpace(dateString);
-    filepath = atlas::kLogPath + std::string{dateString} + ".avi";
+    // TODO Thibaut Mattio: Save the video with the current timer.
+    filepath = atlas::kLogPath + "save_video" + ".avi";
     ROS_INFO_NAMED(LOOP_TAG, "Starting video on %s", filepath.c_str());
   }
 
@@ -155,7 +130,7 @@ bool AcquisitionLoop::StopRecording() {
 
 //------------------------------------------------------------------------------
 //
-void AcquisitionLoop::ThreadFunc() {
+void AcquisitionLoop::run() {
   bool acquival = false;
   bool must_set_record = false;
 
@@ -164,12 +139,12 @@ void AcquisitionLoop::ThreadFunc() {
     must_set_record = true;
   }
 
-  while (!ThreadMustExit()) {
+  while (!stop_) {
     //_logger->LogInfo(LOOP_TAG, "Taking mutex for publishing");
-    _image_access.Take();
+    _image_access.lock();
     //_logger->LogInfo(LOOP_TAG, "Took mutex for publishing");
     acquival = _media->NextImage(_image);
-    _image_access.Release();
+    _image_access.unlock();
     //_logger->LogInfo(LOOP_TAG, "Releasing mutex for publishing");
 
     if (!acquival) {
@@ -197,11 +172,11 @@ void AcquisitionLoop::ThreadFunc() {
       // Adding this here, because if the thread has been close,
       // but we have not pass through the while yet, we want to check that...
       if (IsStreaming()) {
-        InformExecution();
+        Notify();
       }
     }
 
-    CLTimer::Delay(_frameRateMiliSec);
+    atlas::MilliTimer::sleep(_frameRateMiliSec);
   }
 
   if (IsRecording()) {
@@ -215,7 +190,7 @@ bool AcquisitionLoop::GetImage(cv::Mat &image) {
   bool retval = false;
 
   //_logger->LogInfo(LOOP_TAG, "Taking mutex for getting image");
-  CLMutex::Guard guard(_image_access);
+  std::lock_guard<std::mutex> guard(_image_access);
   //_logger->LogInfo(LOOP_TAG, "Took mutex for getting image");
   if (_image.empty()) {
     image = cv::Mat::zeros(100, 100, CV_8UC3);

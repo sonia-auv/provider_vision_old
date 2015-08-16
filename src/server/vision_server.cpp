@@ -34,8 +34,6 @@ VisionServer::VisionServer(atlas::NodeHandlePtr node_handle)
   RegisterService<vision_server_get_information_list>(
       base_node_name + "vision_server_get_information_list",
       &VisionServer::CallbackInfoListCMD, *this);
-
-  _list_access.Create();
 };
 
 //------------------------------------------------------------------------------
@@ -44,7 +42,6 @@ VisionServer::~VisionServer() {
   ROS_INFO_NAMED("[VISION_SERVER]", "Closing vision server.");
   acquisition_loop.clear();
   executions.clear();
-  _list_access.Destroy();
 }
 
 //==============================================================================
@@ -52,8 +49,8 @@ VisionServer::~VisionServer() {
 
 //------------------------------------------------------------------------------
 //
-const Execution::Ptr VisionServer::GetExecution(const std::string &execName) {
-  CLMutex::Guard guard(_list_access);
+const std::shared_ptr<Execution> VisionServer::GetExecution(const std::string &execName) {
+  std::lock_guard<std::mutex> guard(_list_access);
   for (const auto &execution : executions) {
     if (execution->GetExecName().find(execName.c_str()) != std::string::npos) {
       return execution;
@@ -66,7 +63,7 @@ const Execution::Ptr VisionServer::GetExecution(const std::string &execName) {
 //------------------------------------------------------------------------------
 //
 const bool VisionServer::IsAnotherUserMedia(const std::string &mediaName) {
-  CLMutex::Guard guard(_list_access);
+  std::lock_guard<std::mutex> guard(_list_access);
   for (const auto &execution : executions) {
     if (execution->GetMediaName() == mediaName) {
       return true;
@@ -77,9 +74,9 @@ const bool VisionServer::IsAnotherUserMedia(const std::string &mediaName) {
 
 //------------------------------------------------------------------------------
 //
-const AcquisitionLoop::Ptr VisionServer::GetAcquisitionLoop(
+const std::shared_ptr<AcquisitionLoop> VisionServer::GetAcquisitionLoop(
     const std::string &mediaName) {
-  CLMutex::Guard guard(_list_access);
+  std::lock_guard<std::mutex> guard(_list_access);
   for (auto &acquisition : acquisition_loop) {
     if (acquisition->GetMediaID().GetName() == mediaName) {
       return acquisition;
@@ -99,43 +96,44 @@ bool VisionServer::CallbackExecutionCMD(
     for (auto &tmp : executions) {
       tmp->StopExec();
       // Security
-      CLTimer::Delay(20);
+      atlas::MilliTimer::sleep(20);
     }
     executions.clear();
     for (auto &tmp : acquisition_loop) {
       _camera_manager.StreammingCmd(vision_server::CameraManager::STOP,
                                     tmp->GetMediaID().GetName(), tmp);
       // Security
-      CLTimer::Delay(20);
+      atlas::MilliTimer::sleep(20);
     }
     acquisition_loop.clear();
   } else if (rqst.cmd == rqst.START) {
-    std::cout << std::endl << std::endl;
+    std::cout << std::endl
+              << std::endl;
     ROS_INFO_NAMED("[VISION_SERVER]",
                    "Stopping execution %s on %s with filterchain %s",
                    rqst.node_name.c_str(), rqst.media_name.c_str(),
                    rqst.filterchain_name.c_str());
 
-    Execution::Ptr exec = GetExecution(rqst.node_name);
-    if (exec.IsNotNull()) {
+    std::shared_ptr<Execution> exec = GetExecution(rqst.node_name);
+    if (exec.get() != nullptr) {
       ROS_WARN_NAMED("[VISION SERVER]",
                      " Execution of that name already exist");
       rep.response = exec->GetExecName();
     } else {
-      AcquisitionLoop::Ptr acquiPtr = GetAcquisitionLoop(rqst.media_name);
+      std::shared_ptr<AcquisitionLoop> acquiPtr = GetAcquisitionLoop(rqst.media_name);
       // Please change back to null string in production env
 
       // No acquisition loop running with this media.
       // Try to start one
-      if (acquiPtr.IsNull()) {
+      if (acquiPtr.get() == nullptr) {
         _camera_manager.StreammingCmd(CameraManager::START, rqst.media_name,
                                       acquiPtr);
         // Important to be here so we can push back ONLY if newly
         // started
-        if (acquiPtr.IsNotNull()) AddAcquisitionLoop(acquiPtr);
+        if (acquiPtr.get() != nullptr) AddAcquisitionLoop(acquiPtr);
       }
       // The media was found, and the streaming is on.
-      if (acquiPtr.IsNotNull()) {
+      if (acquiPtr.get() != nullptr) {
         // par défaut, ajouter le code pour prendre en compte la filter
         // chain
         // passée en paramètre
@@ -144,25 +142,23 @@ bool VisionServer::CallbackExecutionCMD(
             std::string(VISION_NODE_NAME) + rqst.node_name,
             rqst.filterchain_name);
 
-        exec =
-            new Execution(node_handle_, acquiPtr, filterchain, rqst.node_name);
-        if (exec.IsNotNull()) {
-          exec->StartExec();
-          AddExecution(exec);
-          rep.response = exec->GetExecName();
-        }
+        exec = std::make_shared<Execution>(node_handle_, acquiPtr, filterchain, rqst.node_name);
+        exec->StartExec();
+        AddExecution(exec);
+        rep.response = exec->GetExecName();
       }
     }
   } else if (rqst.cmd == rqst.STOP) {
-    std::cout << std::endl << std::endl;
+    std::cout << std::endl
+              << std::endl;
     ROS_INFO_NAMED("[VISION_SERVER]",
                    "Stopping execution %s on %s with filterchain %s",
                    rqst.node_name.c_str(), rqst.media_name.c_str(),
                    rqst.filterchain_name.c_str());
 
-    vision_server::Execution::Ptr exec = GetExecution(rqst.node_name);
+    std::shared_ptr<Execution> exec = GetExecution(rqst.node_name);
 
-    if (exec.IsNotNull()) {
+    if (exec.get() != nullptr) {
       // Stop Exec.
       exec->StopExec();
 
@@ -171,7 +167,7 @@ bool VisionServer::CallbackExecutionCMD(
 
       // Check if another user. If no, stop the acquisition loop.
       if (!IsAnotherUserMedia(exec->GetMediaName())) {
-        vision_server::AcquisitionLoop::Ptr aquiPtr =
+        std::shared_ptr<AcquisitionLoop> aquiPtr =
             GetAcquisitionLoop(exec->GetMediaName());
         _camera_manager.StreammingCmd(vision_server::CameraManager::STOP,
                                       exec->GetID().GetName(), aquiPtr);
@@ -220,7 +216,7 @@ bool vision_server::VisionServer::CallbackInfoListCMD(
 //------------------------------------------------------------------------------
 //
 std::string VisionServer::GetExecutionsList() {
-  CLMutex::Guard guard(_list_access);
+  std::lock_guard<std::mutex> guard(_list_access);
   auto execution_list_str = std::string{};
   for (const auto &execution : executions) {
     execution_list_str += execution->GetExecName() + ";";
@@ -232,7 +228,7 @@ std::string VisionServer::GetExecutionsList() {
 //------------------------------------------------------------------------------
 //
 std::string VisionServer::GetMediaList() {
-  CLMutex::Guard guard(_list_access);
+  std::lock_guard<std::mutex> guard(_list_access);
   auto camera_vec = _camera_manager.GetCameraList();
   auto camera_list_str = std::string{};
   for (const auto &camera : camera_vec) {

@@ -13,7 +13,6 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
-#include <HTSmartPtr.h>
 #include <opencv2/core/core.hpp>
 #include "utils/camera_id.h"
 #include "config.h"
@@ -27,18 +26,13 @@ namespace vision_server {
  * Base class for anything that can provide an image to the system
  * implement basic functionality that is called through the system.
  */
-class Media : public HTSmartObj {
+class Media {
  public:
   std::vector<std::string> commands;
 
   CameraID _id;
 
   STATUS _status;
-
-  //==========================================================================
-  // T Y P E D E F   A N D   E N U M
-
-  typedef HTSmartPtr<Media> Ptr;
 
   //==========================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R

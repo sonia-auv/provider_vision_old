@@ -34,7 +34,7 @@ CAMDriverWebcam::~CAMDriverWebcam() {}
 //------------------------------------------------------------------------------
 //
 void CAMDriverWebcam::InitDriver() {
-  _webcam = new CAMWebcam();
+  _webcam = std::make_shared<CAMWebcam>();
   _camera_list.push_back(CameraID("Webcam", 0000000000000000));
 }
 
@@ -83,7 +83,7 @@ bool CAMDriverWebcam::IsMyCamera(const std::string &nameMedia) {
 
 //------------------------------------------------------------------------------
 //
-Media::Ptr CAMDriverWebcam::GetActiveCamera(CameraID id) { return _webcam; }
+std::shared_ptr<Media> CAMDriverWebcam::GetActiveCamera(CameraID id) { return _webcam; }
 
 //------------------------------------------------------------------------------
 //
@@ -113,7 +113,7 @@ void CAMDriverWebcam::GetFeature(FEATURE feat, CameraID id, float &val) {
 
 //------------------------------------------------------------------------------
 //
-void CAMDriverWebcam::ThreadFunc() {}
+void CAMDriverWebcam::run() {}
 
 //------------------------------------------------------------------------------
 //

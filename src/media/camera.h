@@ -13,10 +13,7 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
-#include "HTThread.h"
-#include "CLMutex.h"
 #include "config.h"
-
 #include "media/cam_config.h"
 #include "media/media.h"
 

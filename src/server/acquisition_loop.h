@@ -13,12 +13,10 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
-#include <HTThread.h>
-#include <HTSmartPtr.h>
-#include <HTSubject.h>
-#include <CLMutex.h>
-
+#include <mutex>
 #include <opencv2/core/core.hpp>
+#include <lib_atlas/pattern/subject.h>
+#include <lib_atlas/pattern/runnable.h>
 #include "media/media.h"
 #include "utils/camera_id.h"
 
@@ -33,20 +31,12 @@ namespace vision_server {
  * The protected method are for the CameraManager, since they affect the media
  * or the drivers.
  */
-class AcquisitionLoop : public HTSubject, public HTSmartObj, private HTThread {
+class AcquisitionLoop : public atlas::Subject<>, public atlas::Runnable {
  public:
   //============================================================================
   // C O N S T A N T S   M E M B E R S
 
   const char *LOOP_TAG;
-
-  //==========================================================================
-  // T Y P E D E F   A N D   E N U M
-
-  /**
-   * Smart pointer to an a acquisition loop object
-   */
-  typedef HTSmartPtr<AcquisitionLoop> Ptr;
 
   //==========================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
@@ -55,7 +45,7 @@ class AcquisitionLoop : public HTSubject, public HTSmartObj, private HTThread {
    * Artificial frame rate simulate a frame rate for video and images.
    * It will run the loop at this speed.
    */
-  AcquisitionLoop(Media::Ptr cam, int artificialFrameRateMs = 30);
+  AcquisitionLoop(std::shared_ptr<Media> cam, int artificialFrameRateMs = 30);
 
   virtual ~AcquisitionLoop();
 
@@ -91,23 +81,9 @@ class AcquisitionLoop : public HTSubject, public HTSmartObj, private HTThread {
    */
   bool IsStreaming() const;
 
-  /**
-     * Add execution to the list
-     */
-  bool RegisterExecution(HTObsBase &exec);
-  /**
-     * Remove execution from the list
-     */
-  bool UnRegisterExecution(HTObsBase &exec);
-
  protected:
   //==========================================================================
   // P R O T E C T E D   M E T H O D S
-
-  /**
-     * Fire the notification
-     */
-  void InformExecution();
 
   /**
    * Those method can only be use by CameraManager, as it affect the Media
@@ -127,7 +103,7 @@ class AcquisitionLoop : public HTSubject, public HTSmartObj, private HTThread {
   /**
    * If the camera is a Real camera, we want to record a video feed for test
    * and debugging purpose.
-   * After having test if the camera is a real camera on the ThreadFunction,
+   * After having test if the camera is a real camera on the runtion,
    * the acquisition loop will start the record of the camera.
    * The recording will take end at the destruction of the acquisition loop or
    *at
@@ -159,7 +135,7 @@ class AcquisitionLoop : public HTSubject, public HTSmartObj, private HTThread {
    * Acquisition thread, from HTThread
    * main loop to call NextImage on the media.
    */
-  void ThreadFunc() override;
+  void run() override;
 
   //==========================================================================
   // P R I V A T E   M E M B E R S
@@ -170,14 +146,14 @@ class AcquisitionLoop : public HTSubject, public HTSmartObj, private HTThread {
   bool _is_streaming;
 
   /**
-   * Protection of concurrency access between getImage and ThreadFunc.
+   * Protection of concurrency access between getImage and run.
    */
-  CLMutex _image_access;
+  mutable std::mutex _image_access;
 
   /**
    * Active media of the loop
    */
-  Media::Ptr _media;
+  std::shared_ptr<Media> _media;
 
   /**
    * FrameRate members
@@ -208,7 +184,7 @@ class AcquisitionLoop : public HTSubject, public HTSmartObj, private HTThread {
    */
   bool is_recording_;
 
-  CLMutex list_access_;
+  mutable std::mutex list_access_;
 
   //==========================================================================
   // C L A S S   F R I E N D S H  I P
@@ -237,28 +213,6 @@ inline bool AcquisitionLoop::IsRecording() const {
 //------------------------------------------------------------------------------
 //
 inline bool AcquisitionLoop::IsStreaming() const { return _is_streaming; }
-
-//------------------------------------------------------------------------------
-//
-inline bool AcquisitionLoop::RegisterExecution(HTObsBase &exec) {
-  CLMutex::Guard g(list_access_);
-  return this->AttachObserver(exec);
-}
-
-//------------------------------------------------------------------------------
-//
-inline bool AcquisitionLoop::UnRegisterExecution(HTObsBase &exec) {
-  CLMutex::Guard g(list_access_);
-  this->DetachObserver(exec);
-  return true;
-}
-
-//------------------------------------------------------------------------------
-//
-inline void AcquisitionLoop::InformExecution() {
-  CLMutex::Guard g(list_access_);
-  FireNotifications();
-}
 
 }  // namespace vision_server
 

@@ -56,7 +56,7 @@ class CAMDriverWebcam : public CAMDriver {
 
   bool IsMyCamera(const std::string &nameMedia) override;
 
-  Media::Ptr GetActiveCamera(CameraID id) override;
+  std::shared_ptr<Media> GetActiveCamera(CameraID id) override;
 
   void SetFeature(FEATURE feat, CameraID id, float val) override;
 
@@ -66,7 +66,7 @@ class CAMDriverWebcam : public CAMDriver {
    * HTThread override
    * Is traditionally use to call the watchdog.
    */
-  void ThreadFunc() override;
+  void run() override;
 
   bool WatchDogFunc() override;
 
@@ -78,7 +78,8 @@ class CAMDriverWebcam : public CAMDriver {
 
   //==========================================================================
   // P R I V A T E   M E M B E R S
-  CAMWebcam *_webcam;
+
+  std::shared_ptr<CAMWebcam> _webcam;
 };
 
 }  // namespace vision_server

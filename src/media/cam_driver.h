@@ -13,10 +13,9 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
-#include <HTThread.h>
-#include <CLMutex.h>
+#include <mutex>
+#include <lib_atlas/pattern/runnable.h>
 #include "config.h"
-
 #include "media/cam_config.h"
 #include "media/media.h"
 
@@ -29,7 +28,7 @@ namespace vision_server {
  * Base class for any media driver. It also provide a Camera interface
  * which enhance Media class' basic method with camera handling method.
  */
-class CAMDriver : public HTThread {
+class CAMDriver : public atlas::Runnable {
  public:
   //==========================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
@@ -72,7 +71,7 @@ class CAMDriver : public HTThread {
    * \return The camera if it is open.
    *         WILL NOT OPEN IT IF NOT.
    */
-  virtual Media::Ptr GetActiveCamera(CameraID id) = 0;
+  virtual std::shared_ptr<Media> GetActiveCamera(CameraID id) = 0;
 
   virtual CameraID GetIDFromName(const std::string &name);
 
@@ -86,12 +85,6 @@ class CAMDriver : public HTThread {
    */
   virtual void PopulateCameraList() = 0;
 
-  /**
-   * HTThread override
-   * Is traditionally use to call the watchdog.
-   */
-  virtual void ThreadFunc() = 0;
-
   virtual bool WatchDogFunc() = 0;
 
   /**
@@ -102,7 +95,7 @@ class CAMDriver : public HTThread {
   /**
    * Safe multithreading access
    */
-  CLMutex _driver_access;
+  mutable std::mutex _driver_access;
 
   /**
    * Keeping track of medias.
@@ -114,7 +107,7 @@ class CAMDriver : public HTThread {
    * List of all camera ACTIVE in the system.
    * For camera, it is camera that are acquiring images.
    */
-  std::vector<Media::Ptr> _live_camera_list;
+  std::vector<std::shared_ptr<Media>> _live_camera_list;
 };
 
 //==============================================================================
