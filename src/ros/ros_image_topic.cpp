@@ -10,6 +10,7 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
+#include <assert.h>
 #include <cv_bridge/cv_bridge.h>
 #include "ros/ros_image_topic.h"
 
@@ -20,8 +21,10 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-ROSImageTopic::ROSImageTopic(ros::NodeHandle hdl, std::string topic_name)
-    : _img_transport(hdl), _topic_name(std::move(topic_name)), _valid(false) {}
+ROSImageTopic::ROSImageTopic(atlas::NodeHandlePtr node_handle, std::string topic_name)
+    : _img_transport(*node_handle), _topic_name(std::move(topic_name)), _valid(false) {
+  assert(node_handle.get() != nullptr);
+}
 
 //------------------------------------------------------------------------------
 //

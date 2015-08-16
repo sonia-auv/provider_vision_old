@@ -10,7 +10,9 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
+#include <assert.h>
 #include <cv_bridge/cv_bridge.h>
+#include <lib_atlas/typedef.h>
 #include "ros/ros_image_subscriber.h"
 
 namespace vision_server {
@@ -20,9 +22,10 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-ROSImageSubscriber::ROSImageSubscriber(ros::NodeHandle hdl,
+ROSImageSubscriber::ROSImageSubscriber(atlas::NodeHandlePtr node_handle,
                                        std::string topic_name)
-    : _img_transport(hdl), _topic_name(std::move(topic_name)) {
+    : _img_transport(*node_handle), _topic_name(std::move(topic_name)) {
+  assert(node_handle.get() != nullptr);
   _topic_access.Create();
   _subscriber = _img_transport.subscribe(
       _topic_name, 1, &ROSImageSubscriber::imageCallback, this);

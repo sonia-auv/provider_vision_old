@@ -18,6 +18,7 @@
 #include <ros/ros.h>
 #include <opencv2/opencv.hpp>
 #include <image_transport/image_transport.h>
+#include <lib_atlas/typedef.h>
 #include "config.h"
 
 namespace vision_server {
@@ -43,7 +44,7 @@ class ROSImageTopic : public HTSmartObj {
    * Needs an handle to create a topic and a topic_name so we
    * can identify it.
    */
-  ROSImageTopic(ros::NodeHandle hdl, std::string topic_name);
+  ROSImageTopic(atlas::NodeHandlePtr node_handle, std::string topic_name);
 
   virtual ~ROSImageTopic();
 

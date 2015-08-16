@@ -46,7 +46,7 @@ class ROSImageSubscriber : public image_transport::Subscriber,
   /**
    * Need the handle to subscribe and the topic to wich subscribe.
    */
-  ROSImageSubscriber(ros::NodeHandle hdl, std::string topic_name);
+  ROSImageSubscriber(atlas::NodeHandlePtr node_handle, std::string topic_name);
 
   virtual ~ROSImageSubscriber();
 

@@ -47,7 +47,7 @@ class CameraManager : public atlas::ServiceServerManager<CameraManager> {
   //==========================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
-  explicit CameraManager(const ros::NodeHandle &node_handle);
+  explicit CameraManager(atlas::NodeHandlePtr node_handle);
 
   virtual ~CameraManager();
 

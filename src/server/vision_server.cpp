@@ -10,6 +10,7 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
+#include <assert.h>
 #include "server/vision_server.h"
 
 namespace vision_server {
@@ -19,8 +20,9 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-VisionServer::VisionServer(const ros::NodeHandle &node_handle)
+VisionServer::VisionServer(atlas::NodeHandlePtr node_handle)
     : atlas::ServiceServerManager<VisionServer>(node_handle),
+      node_handle_(node_handle),
       _camera_manager(node_handle),
       _filterchain_manager(node_handle) {
   auto base_node_name = std::string{VISION_NODE_NAME};
@@ -143,7 +145,7 @@ bool VisionServer::CallbackExecutionCMD(
             std::string(VISION_NODE_NAME) + rqst.node_name,
             rqst.filterchain_name);
 
-        exec = new Execution(acquiPtr, filterchain, rqst.node_name);
+        exec = new Execution(node_handle_, acquiPtr, filterchain, rqst.node_name);
         if (exec.IsNotNull()) {
           exec->StartExec();
           AddExecution(exec);

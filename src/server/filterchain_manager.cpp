@@ -11,6 +11,7 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
+#include <assert.h>
 #include <dirent.h>
 #include <utils/pugixml.h>
 #include "server/filterchain_manager.h"
@@ -24,8 +25,10 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-FilterchainManager::FilterchainManager(const ros::NodeHandle &node_handle)
+FilterchainManager::FilterchainManager(atlas::NodeHandlePtr node_handle)
     : atlas::ServiceServerManager<FilterchainManager>(node_handle), FILTERCHAIN_MANAGER_TAG("FILTERCHAIN_MANAGER") {
+  assert(node_handle.get() != nullptr);
+
   std::cout << "Initialising FilterchainManager..." << std::endl;
   std::cout << "FilterchainList XML path : " << kConfigPath << std::endl;
 

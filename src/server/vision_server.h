@@ -44,7 +44,7 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
   //============================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
-  explicit VisionServer(const ros::NodeHandle &node_handle);
+  explicit VisionServer(atlas::NodeHandlePtr node_handle);
 
   ~VisionServer();
 
@@ -116,6 +116,14 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
 
   //==========================================================================
   // P R I V A T E   M E M B E R S
+
+  /**
+   * We must keep a reference to the initial node_handle for creating the
+   * different topics and services outside the contructor.
+   * This is mainly for performance purpose as we could also recreate a
+   * ros::NodeHandle on the different instance of the objects.
+   */
+  atlas::NodeHandlePtr node_handle_;
 
   CameraManager _camera_manager;
 

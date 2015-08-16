@@ -50,7 +50,7 @@ class FilterchainManager : public atlas::ServiceServerManager<FilterchainManager
   //==========================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
-  explicit FilterchainManager(const ros::NodeHandle &node_handle);
+  explicit FilterchainManager(atlas::NodeHandlePtr node_handle);
 
   ~FilterchainManager();
 
@@ -413,10 +413,6 @@ class FilterchainManager : public atlas::ServiceServerManager<FilterchainManager
    * List of current instances of filterchains
    */
   std::vector<Filterchain *> _runningFilterchains;
-
-  /**
-   * ROS logger
-   */
 };
 
 //==============================================================================

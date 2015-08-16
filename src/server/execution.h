@@ -20,7 +20,6 @@
 #include "media/media.h"
 #include "config.h"
 
-#include "ros/ros_result_topic.h"
 #include "ros/ros_image_topic.h"
 #include "server/filterchain.h"
 #include "server/acquisition_loop.h"
@@ -60,7 +59,7 @@ class Execution : public HTObsBase, public HTSmartObj, public HTThread {
   /**
    * CTOR/DSTR
    */
-  Execution(AcquisitionLoop::Ptr acquisition_loop, Filterchain *filterchain,
+  Execution(atlas::NodeHandlePtr node_handle, AcquisitionLoop::Ptr acquisition_loop, Filterchain *filterchain,
             const std::string &execName);
 
   virtual ~Execution();
@@ -108,7 +107,17 @@ class Execution : public HTObsBase, public HTSmartObj, public HTThread {
 
   ROSImageTopic::Ptr _image_topic;
 
-  ROSResultTopic *_result_topic;
+  /**
+   * This publisher will send the result of the image processing of the
+   * filterchain onto the ROS pipeline. It will contain informations about
+   * a potentially found object.
+   * This is a simple string separated by comma in this way:
+   * obstacle_name:x,y,width,height,specific_message;
+   * This could also return several objects this way:
+   * obstacle_name:x,y,width,height,specific_message;
+   * x2,y2,width2,height2,specific_message2;
+   */
+  ros::Publisher result_publisher_;
 
   /**
    * Execution core.

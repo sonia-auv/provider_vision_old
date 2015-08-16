@@ -10,6 +10,7 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
+#include <assert.h>
 #include "server/camera_manager.h"
 #include <lib_atlas/config.h>
 
@@ -20,10 +21,11 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-CameraManager::CameraManager(const ros::NodeHandle &node_handle)
+CameraManager::CameraManager(atlas::NodeHandlePtr node_handle)
     : atlas::ServiceServerManager<CameraManager>(node_handle),
       _config( atlas::kWorkspaceRoot +
               std::string("/src/vision_server/config/")) {
+  assert(node_handle.get() != nullptr);
   auto base_node_name = std::string{VISION_NODE_NAME};
 
   RegisterService<vision_server_get_media_param>(

@@ -10,7 +10,10 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
+#include <assert.h>
+#include <std_msgs/String.h>
 #include <CLTimer.h>
+#include <lib_atlas/typedef.h>
 #include "server/execution.h"
 
 namespace vision_server {
@@ -25,20 +28,21 @@ static const char *EXEC_TAG = "[EXECUTION]";
 
 //------------------------------------------------------------------------------
 //
-vision_server::Execution::Execution(
+vision_server::Execution::Execution(atlas::NodeHandlePtr node_handle,
     vision_server::AcquisitionLoop::Ptr acquisition_loop,
     Filterchain *filterchain, const std::string &execName)
     : _acquisition_loop(acquisition_loop),
       _filterchain_to_process(filterchain),
       _state(CLOSE),
       _image_topic(nullptr),
-      _result_topic(nullptr),
+      result_publisher_(),
       _exec_name(VISION_NODE_NAME + execName),
       TRY_CLOSE(3),
       _new_image_ready(false) {
-  ros::NodeHandle hdl;
-  _image_topic = new ROSImageTopic(hdl, _exec_name + "_image");
-  _result_topic = new ROSResultTopic(_exec_name + "_result", hdl);
+  assert(node_handle.get() != nullptr);
+
+  _image_topic = new ROSImageTopic(node_handle, _exec_name + "_image");
+  result_publisher_ = node_handle->advertise<std_msgs::String>(_exec_name + "_result", 50);
 
   _newest_image_mutex.Create();
 
@@ -195,7 +199,9 @@ void vision_server::Execution::ThreadFunc() {
         _image_topic->PublishImage(_image_being_processed);
       }
       if (return_string != "") {
-        _result_topic->PublishResultString(return_string);
+        std_msgs::String msg;
+        msg.data = return_string.c_str();
+        result_publisher_.publish(msg);
       }
     }
   }

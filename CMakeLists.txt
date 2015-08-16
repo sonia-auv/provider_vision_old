@@ -53,7 +53,6 @@ add_message_files(
     DIRECTORY msg
     FILES
     image_feed.msg
-    filterchain_return_message.msg
 )
 
 add_service_files(

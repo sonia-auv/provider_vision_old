@@ -30,10 +30,10 @@ int main(int argc, char **argv) {
   RunUnitTestIfNeeded(argc, argv);
 
   ros::init(argc, argv, "vision_server");
-  ros::NodeHandle nhl;
+  atlas::NodeHandlePtr node_handle = std::make_shared<ros::NodeHandle>();
   ros::Rate loop_rate(15);
 
-  vision_server::VisionServer vision_server{nhl};
+  vision_server::VisionServer vision_server{node_handle};
 
   while (ros::ok()) {
     ros::spinOnce();
