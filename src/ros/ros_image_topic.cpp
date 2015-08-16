@@ -21,8 +21,11 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-ROSImageTopic::ROSImageTopic(atlas::NodeHandlePtr node_handle, std::string topic_name)
-    : _img_transport(*node_handle), _topic_name(std::move(topic_name)), _valid(false) {
+ROSImageTopic::ROSImageTopic(atlas::NodeHandlePtr node_handle,
+                             std::string topic_name)
+    : _img_transport(*node_handle),
+      _topic_name(std::move(topic_name)),
+      _valid(false) {
   assert(node_handle.get() != nullptr);
 }
 

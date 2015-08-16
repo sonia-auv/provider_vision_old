@@ -23,7 +23,7 @@ namespace vision_server {
 //
 CameraManager::CameraManager(atlas::NodeHandlePtr node_handle)
     : atlas::ServiceServerManager<CameraManager>(node_handle),
-      _config( atlas::kWorkspaceRoot +
+      _config(atlas::kWorkspaceRoot +
               std::string("/src/vision_server/config/")) {
   assert(node_handle.get() != nullptr);
   auto base_node_name = std::string{VISION_NODE_NAME};

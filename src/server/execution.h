@@ -59,7 +59,8 @@ class Execution : public HTObsBase, public HTSmartObj, public HTThread {
   /**
    * CTOR/DSTR
    */
-  Execution(atlas::NodeHandlePtr node_handle, AcquisitionLoop::Ptr acquisition_loop, Filterchain *filterchain,
+  Execution(atlas::NodeHandlePtr node_handle,
+            AcquisitionLoop::Ptr acquisition_loop, Filterchain *filterchain,
             const std::string &execName);
 
   virtual ~Execution();

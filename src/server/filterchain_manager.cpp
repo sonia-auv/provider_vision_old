@@ -18,15 +18,14 @@
 
 namespace vision_server {
 
-
-
 //==============================================================================
 // C O N S T R U C T O R / D E S T R U C T O R   S E C T I O N
 
 //------------------------------------------------------------------------------
 //
 FilterchainManager::FilterchainManager(atlas::NodeHandlePtr node_handle)
-    : atlas::ServiceServerManager<FilterchainManager>(node_handle), FILTERCHAIN_MANAGER_TAG("FILTERCHAIN_MANAGER") {
+    : atlas::ServiceServerManager<FilterchainManager>(node_handle),
+      FILTERCHAIN_MANAGER_TAG("FILTERCHAIN_MANAGER") {
   assert(node_handle.get() != nullptr);
 
   std::cout << "Initialising FilterchainManager..." << std::endl;

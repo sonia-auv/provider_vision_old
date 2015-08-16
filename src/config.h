@@ -38,11 +38,10 @@ enum FEATURE {
 
 enum STATUS { OPEN, CLOSE, STREAMING, ERROR };
 
-const auto kProjectPath = atlas::kWorkspaceRoot +
-    std::string{"/src/provider_vision/"};
+const auto kProjectPath =
+    atlas::kWorkspaceRoot + std::string{"/src/provider_vision/"};
 
-const auto kConfigPath = kProjectPath +
-    std::string{"/config/"};
+const auto kConfigPath = kProjectPath + std::string{"/config/"};
 
 const auto kFilterchainExt = ".fc";
 

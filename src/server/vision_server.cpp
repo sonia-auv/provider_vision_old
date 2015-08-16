@@ -110,8 +110,7 @@ bool VisionServer::CallbackExecutionCMD(
     }
     acquisition_loop.clear();
   } else if (rqst.cmd == rqst.START) {
-    std::cout << std::endl
-              << std::endl;
+    std::cout << std::endl << std::endl;
     ROS_INFO_NAMED("[VISION_SERVER]",
                    "Stopping execution %s on %s with filterchain %s",
                    rqst.node_name.c_str(), rqst.media_name.c_str(),
@@ -145,7 +144,8 @@ bool VisionServer::CallbackExecutionCMD(
             std::string(VISION_NODE_NAME) + rqst.node_name,
             rqst.filterchain_name);
 
-        exec = new Execution(node_handle_, acquiPtr, filterchain, rqst.node_name);
+        exec =
+            new Execution(node_handle_, acquiPtr, filterchain, rqst.node_name);
         if (exec.IsNotNull()) {
           exec->StartExec();
           AddExecution(exec);
@@ -154,8 +154,7 @@ bool VisionServer::CallbackExecutionCMD(
       }
     }
   } else if (rqst.cmd == rqst.STOP) {
-    std::cout << std::endl
-              << std::endl;
+    std::cout << std::endl << std::endl;
     ROS_INFO_NAMED("[VISION_SERVER]",
                    "Stopping execution %s on %s with filterchain %s",
                    rqst.node_name.c_str(), rqst.media_name.c_str(),

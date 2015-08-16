@@ -183,7 +183,7 @@ void AcquisitionLoop::ThreadFunc() {
       // to know the size of the video feed they (are going to) send.
       // But for testing purpose we won't do such a modification.
       if (must_set_record) {
-        //StartRecording();
+        // StartRecording();
         must_set_record = false;
       }
 

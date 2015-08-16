@@ -45,7 +45,8 @@ namespace vision_server {
  * to each Filterchain in addition to being charged of opening and closing them.
  * Also offers ROS services to allow filterchain managing.
  */
-class FilterchainManager : public atlas::ServiceServerManager<FilterchainManager> {
+class FilterchainManager
+    : public atlas::ServiceServerManager<FilterchainManager> {
  public:
   //==========================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R

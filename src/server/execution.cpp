@@ -28,7 +28,8 @@ static const char *EXEC_TAG = "[EXECUTION]";
 
 //------------------------------------------------------------------------------
 //
-vision_server::Execution::Execution(atlas::NodeHandlePtr node_handle,
+vision_server::Execution::Execution(
+    atlas::NodeHandlePtr node_handle,
     vision_server::AcquisitionLoop::Ptr acquisition_loop,
     Filterchain *filterchain, const std::string &execName)
     : _acquisition_loop(acquisition_loop),
@@ -42,7 +43,8 @@ vision_server::Execution::Execution(atlas::NodeHandlePtr node_handle,
   assert(node_handle.get() != nullptr);
 
   _image_topic = new ROSImageTopic(node_handle, _exec_name + "_image");
-  result_publisher_ = node_handle->advertise<std_msgs::String>(_exec_name + "_result", 50);
+  result_publisher_ =
+      node_handle->advertise<std_msgs::String>(_exec_name + "_result", 50);
 
   _newest_image_mutex.Create();
 
