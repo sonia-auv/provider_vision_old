@@ -56,9 +56,9 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    * Return a pointer of acquisitionLoop or execution with that name if exist.
    * Can return nullptr
    */
-  const std::shared_ptr<Execution> GetExecution(const std::string &execName);
+  std::shared_ptr<Execution> GetExecution(const std::string &execName);
 
-  const std::shared_ptr<AcquisitionLoop> GetAcquisitionLoop(const std::string &mediaName);
+  std::shared_ptr<AcquisitionLoop> GetAcquisitionLoop(const std::string &mediaName);
 
   /**
    * Return true if another execution use the media
@@ -68,16 +68,16 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
   /**
    * Add/remove AcquisitionLoop from the list.
    */
-  void AddAcquisitionLoop(const std::shared_ptr<AcquisitionLoop> &ptr);
+  void AddAcquisitionLoop(std::shared_ptr<AcquisitionLoop> ptr);
 
-  void RemoveAcquisitionLoop(const std::shared_ptr<AcquisitionLoop> &ptr);
+  void RemoveAcquisitionLoop(std::shared_ptr<AcquisitionLoop> ptr);
 
   /**
    * Add/remove Execution from the list.
    */
-  void AddExecution(const std::shared_ptr<Execution> &ptr);
+  void AddExecution(std::shared_ptr<Execution> ptr);
 
-  void RemoveExecution(const std::shared_ptr<Execution> &ptr);
+  void RemoveExecution(std::shared_ptr<Execution> ptr);
 
  private:
   //==========================================================================
@@ -138,9 +138,9 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
   /**
    * Remember what exist.
    */
-  std::vector<std::shared_ptr<Execution>> executions;
+  std::vector<std::shared_ptr<Execution>> executions_;
 
-  std::vector<std::shared_ptr<AcquisitionLoop>> acquisition_loop;
+  std::vector<std::shared_ptr<AcquisitionLoop>> acquisition_loop_;
 };
 
 //==============================================================================
@@ -148,41 +148,41 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
 
 //------------------------------------------------------------------------------
 //
-inline void VisionServer::AddAcquisitionLoop(const std::shared_ptr<AcquisitionLoop> &ptr) {
+inline void VisionServer::AddAcquisitionLoop(std::shared_ptr<AcquisitionLoop> ptr) {
   std::lock_guard<std::mutex> guard(_list_access);
-  acquisition_loop.push_back(ptr);
+  acquisition_loop_.push_back(ptr);
 }
 
 //------------------------------------------------------------------------------
 //
 inline void VisionServer::RemoveAcquisitionLoop(
-    const std::shared_ptr<AcquisitionLoop> &ptr) {
+    std::shared_ptr<AcquisitionLoop> ptr) {
   std::lock_guard<std::mutex> guard(_list_access);
-  auto acquisition = acquisition_loop.begin();
-  auto vec_end = acquisition_loop.end();
+  auto acquisition = acquisition_loop_.begin();
+  auto vec_end = acquisition_loop_.end();
   for (; acquisition != vec_end; ++acquisition) {
     if (*acquisition == ptr) {
-      acquisition_loop.erase(acquisition);
+      acquisition_loop_.erase(acquisition);
     }
   }
 }
 
 //------------------------------------------------------------------------------
 //
-inline void VisionServer::AddExecution(const std::shared_ptr<Execution> &ptr) {
+inline void VisionServer::AddExecution(std::shared_ptr<Execution> ptr) {
   std::lock_guard<std::mutex> guard(_list_access);
-  executions.push_back(ptr);
+  executions_.push_back(ptr);
 }
 
 //------------------------------------------------------------------------------
 //
-inline void VisionServer::RemoveExecution(const std::shared_ptr<Execution> &ptr) {
+inline void VisionServer::RemoveExecution(std::shared_ptr<Execution> ptr) {
   std::lock_guard<std::mutex> guard(_list_access);
-  auto execution = executions.begin();
-  auto vec_end = executions.end();
+  auto execution = executions_.begin();
+  auto vec_end = executions_.end();
   for (; execution != vec_end; ++execution) {
     if (*execution == ptr) {
-      executions.erase(execution);
+      executions_.erase(execution);
     }
   }
 }

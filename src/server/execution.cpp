@@ -73,7 +73,7 @@ Execution::~Execution() {
 //
 Execution::ERROR Execution::StartExec() {
   ERROR status = ERROR::FAILURE_TO_START;
-  if (_acquisition_loop.get() != nullptr) {
+  if (_acquisition_loop.get() == nullptr) {
     ROS_ERROR_NAMED(EXEC_TAG, "Acquisition loop is null!");
     return status;
   }
