@@ -57,7 +57,6 @@ file( GLOB_RECURSE lib_vision_SRC_FILES "${lib_vision_SRC_DIR}/*.cpp" )
 
 # Include all the directories where source can be found.
 include_directories(
-    /usr/local/include/vitals
     ${lib_vision_SRC_DIR}
     ${catkin_INCLUDE_DIRS}
 )
