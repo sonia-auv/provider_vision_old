@@ -180,10 +180,6 @@ class AcquisitionLoop : public HTSubject, public HTSmartObj, private HTThread {
   Media::Ptr _media;
 
   /**
-   * Logger
-   */
-
-  /**
    * FrameRate members
    */
   int _artificialFrameRate;

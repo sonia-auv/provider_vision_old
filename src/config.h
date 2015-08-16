@@ -13,7 +13,6 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
-#include <vision_server/image_feed.h>
 #include <lib_atlas/config.h>
 
 #define VISION_NODE_NAME "/vision_server/"

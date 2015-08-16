@@ -49,12 +49,6 @@ find_package( DC1394 REQUIRED )
 #===============================================================================
 # G E N E R A T E   M E S S A G E S   &   S E R V I C E S
 
-add_message_files(
-    DIRECTORY msg
-    FILES
-    image_feed.msg
-)
-
 add_service_files(
     DIRECTORY srv
     FILES

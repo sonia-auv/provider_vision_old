@@ -119,7 +119,7 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
 
   /**
    * We must keep a reference to the initial node_handle for creating the
-   * different topics and services outside the contructor.
+   * different topics and services outside the constructor.
    * This is mainly for performance purpose as we could also recreate a
    * ros::NodeHandle on the different instance of the objects.
    */

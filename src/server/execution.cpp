@@ -35,14 +35,13 @@ vision_server::Execution::Execution(
     : _acquisition_loop(acquisition_loop),
       _filterchain_to_process(filterchain),
       _state(CLOSE),
-      _image_topic(nullptr),
+      image_publisher_(node_handle, VISION_NODE_NAME + execName + "_image"),
       result_publisher_(),
       _exec_name(VISION_NODE_NAME + execName),
       TRY_CLOSE(3),
       _new_image_ready(false) {
   assert(node_handle.get() != nullptr);
-
-  _image_topic = new ROSImageTopic(node_handle, _exec_name + "_image");
+  image_publisher_.start();
   result_publisher_ =
       node_handle->advertise<std_msgs::String>(_exec_name + "_result", 50);
 
@@ -50,9 +49,6 @@ vision_server::Execution::Execution(
 
   if (_acquisition_loop.IsNotNull())
     _camera_id = _acquisition_loop->GetMediaID();
-
-  // init filterchain
-  //_filterchain_to_process
 }
 
 //------------------------------------------------------------------------------
@@ -104,9 +100,6 @@ vision_server::Execution::ERROR vision_server::Execution::StartExec() {
     return status;
   }
 
-  // Create the topic on which we will put the image from the filter.
-  _image_topic->OpenTopic();
-
   // Attach to the acquisition loop to receive notification from a new image.
   _filterchain_to_process->InitFilters();
 
@@ -149,7 +142,7 @@ vision_server::Execution::ERROR vision_server::Execution::StopExec() {
                  _filterchain_to_process->GetName().c_str(),
                  GetID().GetFullName());
 
-  _image_topic->CloseTopic();
+  image_publisher_.stop();
 
   _state = CLOSE;
   status = ERROR::SUCCESS;
@@ -198,7 +191,7 @@ void vision_server::Execution::ThreadFunc() {
                        CV_GRAY2BGR);
         }
 
-        _image_topic->PublishImage(_image_being_processed);
+        image_publisher_.write(_image_being_processed);
       }
       if (return_string != "") {
         std_msgs::String msg;

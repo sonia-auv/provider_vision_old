@@ -17,10 +17,9 @@
 #include <HTObsBase.h>
 #include <HTThread.h>
 #include <CLMutex.h>
+#include <lib_atlas/ros/image_publisher.h>
 #include "media/media.h"
 #include "config.h"
-
-#include "ros/ros_image_topic.h"
 #include "server/filterchain.h"
 #include "server/acquisition_loop.h"
 
@@ -106,12 +105,22 @@ class Execution : public HTObsBase, public HTSmartObj, public HTThread {
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
-  ROSImageTopic::Ptr _image_topic;
+  /**
+   * The publisher we use to send the filtered images on the ROS pipeline.
+   *
+   * We don't use the image transport provided publisher because we
+   * extended the functionnalities of this one to be able to use the observer
+   * pattern on the pubisher. The publisher is an observer and can be
+   * attached to, for exemple, a subject that stream the content of a video
+   * file.
+   */
+  atlas::ImagePublisher image_publisher_;
 
   /**
    * This publisher will send the result of the image processing of the
    * filterchain onto the ROS pipeline. It will contain informations about
    * a potentially found object.
+   *
    * This is a simple string separated by comma in this way:
    * obstacle_name:x,y,width,height,specific_message;
    * This could also return several objects this way:
