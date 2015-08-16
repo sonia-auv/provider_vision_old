@@ -7,19 +7,8 @@
  * found in the LICENSE file.
  */
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
-#include <signal.h>
 #include <string>
-#include "ros/ros_manager.h"
 #include "server/vision_server.h"
-
-bool stopLoop = false;
-
-//------------------------------------------------------------------------------
-//
-void interupSignal(int dummy = 0) { stopLoop = true; }
 
 //------------------------------------------------------------------------------
 //
@@ -41,21 +30,15 @@ int main(int argc, char **argv) {
   RunUnitTestIfNeeded(argc, argv);
 
   ros::init(argc, argv, "vision_server");
+  ros::NodeHandle nhl;
+  ros::Rate loop_rate(15);
 
-  CLString dateString;
-  CLDate dateObj;
-  dateObj.GetDateAndTimeNoSpace(dateString);
-  vision_server::ROSManager ros_manager(argc, argv, dateString);
+  vision_server::VisionServer vision_server;
 
-  vision_server::VisionServer vs(ros_manager);
-
-  signal(SIGINT, interupSignal);
-
-  while (!stopLoop) {
+  while (ros::ok()) {
     ros::spinOnce();
-    CLTimer::Delay(15);
+    loop_rate.sleep();
   }
-  cv::waitKey(-1);
 
-  return 1;
+  return 0;
 }
