@@ -31,7 +31,7 @@ class Canny : public Filter {
         _l2_gradiant("l2_gradient", false, parameters_),
         _thresh_one("thres_one", 100, 0, 255, parameters_),
         _thresh_two("thres_two", 200, 0, 255, parameters_),
-        _aperture_size("Aperture_size", 3, 0, 20, parameters_){
+        _aperture_size("Aperture_size", 3, 0, 20, parameters_) {
     setName("Canny");
   }
 
@@ -45,7 +45,8 @@ class Canny : public Filter {
       if (image.channels() > 1) {
         cv::cvtColor(image, image, CV_BGR2GRAY);
       }
-      cv::Canny(image, image, _thresh_one(), _thresh_two(), _aperture_size()*2+1, _l2_gradiant());
+      cv::Canny(image, image, _thresh_one(), _thresh_two(),
+                _aperture_size() * 2 + 1, _l2_gradiant());
     }
   }
 

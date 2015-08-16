@@ -68,9 +68,9 @@ class TrackDetector : public Filter {
       for (int i = 0, size = contours.size(); i < size; i++) {
         contour_t hull;
         cv::convexHull(contours[i], hull, false);
-        ObjectFullData::Ptr object =
-            new ObjectFullData(originalImage, image, hull);
-        if (object.IsNull()) {
+        std::shared_ptr<ObjectFullData> object =
+            std::make_shared<ObjectFullData>(originalImage, image, hull);
+        if (object.get() == nullptr) {
           continue;
         }
         //
@@ -87,14 +87,14 @@ class TrackDetector : public Filter {
       }
 
       std::sort(objVec.begin(), objVec.end(),
-                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
+                [](std::shared_ptr<ObjectFullData> a,
+                   std::shared_ptr<ObjectFullData> b)
                     -> bool { return a->GetArea() > b->GetArea(); });
 
       // Get all the square contours.
       contourList_t squareContour;
       for (auto innerContour : inner_most_contour) {
-        if( cv::contourArea(innerContour) < _min_area() )
-        {
+        if (cv::contourArea(innerContour) < _min_area()) {
           continue;
         }
 
@@ -108,7 +108,8 @@ class TrackDetector : public Filter {
       }
 
       // Votes for the contour with the most
-      std::vector<std::pair<ObjectFullData::Ptr, int> > contour_vote;
+      std::vector<std::pair<std::shared_ptr<ObjectFullData>, int> >
+          contour_vote;
       for (auto &square : squareContour) {
         for (auto &already_voted_for : contour_vote) {
           if (cv::pointPolygonTest(already_voted_for.first->GetContourCopy(),
@@ -123,8 +124,9 @@ class TrackDetector : public Filter {
           if (cv::pointPolygonTest(to_added_to_the_voted_pool->GetContourCopy(),
                                    cv::Point2f(square[0].x, square[0].y),
                                    false) > 0.0f) {
-            contour_vote.push_back(std::pair<ObjectFullData::Ptr, int>(
-                to_added_to_the_voted_pool, 1));
+            contour_vote.push_back(
+                std::pair<std::shared_ptr<ObjectFullData>, int>(
+                    to_added_to_the_voted_pool, 1));
             cv::polylines(_output_image,
                           to_added_to_the_voted_pool->GetContourCopy(), true,
                           CV_RGB(255, 0, 255), 3);
@@ -133,14 +135,14 @@ class TrackDetector : public Filter {
         }
       }
       std::sort(contour_vote.begin(), contour_vote.end(),
-                [](const std::pair<ObjectFullData::Ptr, int> &a,
-                   const std::pair<ObjectFullData::Ptr, int> &b)
+                [](const std::pair<std::shared_ptr<ObjectFullData>, int> &a,
+                   const std::pair<std::shared_ptr<ObjectFullData>, int> &b)
                     -> bool { return a.second > b.second; });
 
       // Since we search only one buoy, get the biggest from sort function
       if (contour_vote.size() > 0) {
         Target target;
-        ObjectFullData::Ptr object = contour_vote[0].first;
+        std::shared_ptr<ObjectFullData> object = contour_vote[0].first;
         cv::Point center = object->GetCenter();
         setCameraOffset(&center, image.rows, image.cols);
         target.setTarget(center.x, center.y, object->GetLength(),

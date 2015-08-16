@@ -12,8 +12,6 @@
 
 #include <lib_vision/algorithm/rot_rect.h>
 #include <lib_vision/algorithm/type_and_const.h>
-#include <CLMath.h>
-#include <HTSmartPtr.h>
 #include <assert.h>
 
 class ObjectBasicData {
@@ -110,24 +108,15 @@ class ObjectBasicData {
 
 //-----------------------------------------------------------------------------
 //
-inline void ObjectBasicData::IncrementVote()
-{
-  _vote_count++;
-}
+inline void ObjectBasicData::IncrementVote() { _vote_count++; }
 
 //-----------------------------------------------------------------------------
 //
-inline int ObjectBasicData::GetVoteCount()
-{
-  return _vote_count;
-}
+inline int ObjectBasicData::GetVoteCount() { return _vote_count; }
 
 //-----------------------------------------------------------------------------
 //
-inline void ObjectBasicData::ResetVote()
-{
-  _vote_count = 0;
-}
+inline void ObjectBasicData::ResetVote() { _vote_count = 0; }
 
 //-----------------------------------------------------------------------------
 //
@@ -163,7 +152,9 @@ inline float ObjectBasicData::GetRatio() {
 //-----------------------------------------------------------------------------
 //
 inline void ObjectBasicData::SetPlaneInRange(int &planeID) {
-  CLMath::Clamp(planeID, 0, NB_OF_PLANE - 1);
+  // Clamping the planeID in [0; NB_OF_PLANE - 1]
+  planeID =
+      planeID < 0 ? 0 : (planeID > NB_OF_PLANE - 1 ? NB_OF_PLANE - 1 : planeID);
 }
 
 //-----------------------------------------------------------------------------
@@ -208,15 +199,13 @@ inline const cv::Point2f &ObjectBasicData::GetCenter() {
 
 //-----------------------------------------------------------------------------
 //
-inline float ObjectBasicData::GetDistanceFromCenter()
-{
+inline float ObjectBasicData::GetDistanceFromCenter() {
   // Makes sure it is calculated
-  if( !_is_calculated_map[DISTANCE_FROM_CENTER])
-  {
+  if (!_is_calculated_map[DISTANCE_FROM_CENTER]) {
     cv::Point center = GetCenter();
-    float x_dist = abs( center.x - _original_image.cols/2);
-    float y_dist = abs( center.y - _original_image.rows/2);
-    _distance_from_center = x_dist *x_dist + y_dist+y_dist;
+    float x_dist = abs(center.x - _original_image.cols / 2);
+    float y_dist = abs(center.y - _original_image.rows / 2);
+    _distance_from_center = x_dist * x_dist + y_dist + y_dist;
     _is_calculated_map[DISTANCE_FROM_CENTER] = true;
   }
   return _distance_from_center;

@@ -92,7 +92,6 @@ class ConvexHull : public Filter {
       for (int i = 0; i < contours.size(); i++) {
         cv::drawContours(image, hull, i, cv::Scalar(255, 255, 255), CV_FILLED);
       }
-
     }
   }
 

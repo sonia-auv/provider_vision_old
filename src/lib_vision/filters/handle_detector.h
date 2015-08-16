@@ -79,9 +79,9 @@ class HandleDetector : public Filter {
       retrieveAllContours(image, contours);
       ObjectFullData::FullObjectPtrVec objVec;
       for (int i = 0, size = contours.size(); i < size; i++) {
-        ObjectFullData::Ptr object =
-            new ObjectFullData(originalImage, image, contours[i]);
-        if (object.IsNull()) {
+        std::shared_ptr<ObjectFullData> object =
+            std::make_shared<ObjectFullData>(originalImage, image, contours[i]);
+        if (object.get() == nullptr) {
           continue;
         }
         //
@@ -97,8 +97,8 @@ class HandleDetector : public Filter {
         //
         // RATIO
         //
-        if ( !_disable_ratio() &&
-            (fabs(object->GetRatio() - _targeted_ratio()) > fabs(_difference_from_target_ratio()))) {
+        if (!_disable_ratio() && (fabs(object->GetRatio() - _targeted_ratio()) >
+                                  fabs(_difference_from_target_ratio()))) {
           continue;
         }
         if (_debug_contour()) {
@@ -108,8 +108,9 @@ class HandleDetector : public Filter {
         //
         // ANGLE
         //
-        if ( !_disable_angle() &&
-            (fabs(object->GetRotatedRect().angle - _targeted_angle()) > fabs(_difference_from_target_angle()))) {
+        if (!_disable_angle() &&
+            (fabs(object->GetRotatedRect().angle - _targeted_angle()) >
+             fabs(_difference_from_target_angle()))) {
           continue;
         }
 
@@ -128,13 +129,14 @@ class HandleDetector : public Filter {
       }
 
       std::sort(objVec.begin(), objVec.end(),
-                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
+                [](std::shared_ptr<ObjectFullData> a,
+                   std::shared_ptr<ObjectFullData> b)
                     -> bool { return a->GetArea() > b->GetArea(); });
 
       // Since we search only one buoy, get the biggest from sort function
       if (objVec.size() > 0) {
         Target target;
-        ObjectFullData::Ptr object = objVec[0];
+        std::shared_ptr<ObjectFullData> object = objVec[0];
         cv::Point center = object->GetCenter();
         setCameraOffset(&center, image.rows, image.cols);
         target.setTarget(center.x, center.y, object->GetLength(),
@@ -158,7 +160,8 @@ class HandleDetector : public Filter {
  private:
   cv::Mat _output_image;
   // Params
-  BooleanParameter _enable, _debug_contour, _look_for_rectangle, _disable_ratio, _disable_angle;
+  BooleanParameter _enable, _debug_contour, _look_for_rectangle, _disable_ratio,
+      _disable_angle;
   StringParameter _id, _spec_1, _spec_2;
   DoubleParameter _min_area, _targeted_ratio, _difference_from_target_ratio,
       _targeted_angle, _difference_from_target_angle;

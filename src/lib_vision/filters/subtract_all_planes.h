@@ -14,7 +14,6 @@
 // I N C L U D E   F I L E S
 
 #include <lib_vision/filter.h>
-#include <CLMath.h>
 #include <lib_vision/algorithm/general_function.h>
 
 namespace vision_filter {
@@ -100,7 +99,8 @@ class SubtractAllPlanes : public Filter {
     cv::Mat one(_rows, _cols, CV_16SC1, cv::Scalar(1));
 
     // Thightly couple with parameter, but putting safety...
-    _channel_vec[CLMath::Clamp(choice, 0, 6)].copyTo(out);
+    int index = choice < 0 ? 0 : (choice > 6 ? 6 : choice);
+    _channel_vec[index].copyTo(out);
 
     if (inverse) {
       inverseImage(out, out);

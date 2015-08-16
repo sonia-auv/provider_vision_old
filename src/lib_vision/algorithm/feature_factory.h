@@ -40,25 +40,26 @@ class FeatureFactory {
 
   // feature funcitions
   // For the ranking, require to call ObjectRanking first
-  float AreaFeature(ObjectFullData::Ptr object);
+  float AreaFeature(std::shared_ptr<ObjectFullData> object);
 
-  float LengthFeature(ObjectFullData::Ptr object);
+  float LengthFeature(std::shared_ptr<ObjectFullData> object);
 
-  float RatioFeature(ObjectFullData::Ptr object);
+  float RatioFeature(std::shared_ptr<ObjectFullData> object);
 
-  float ConvexityFeature(ObjectFullData::Ptr object);
+  float ConvexityFeature(std::shared_ptr<ObjectFullData> object);
 
-  float PercentFilledFeature(ObjectFullData::Ptr object);
+  float PercentFilledFeature(std::shared_ptr<ObjectFullData> object);
 
-  float CircularityFeature(ObjectFullData::Ptr object);
+  float CircularityFeature(std::shared_ptr<ObjectFullData> object);
 
-  float PresenceConsistencyFeature(ObjectFullData::Ptr object);
+  float PresenceConsistencyFeature(std::shared_ptr<ObjectFullData> object);
 
-  float HueMeanFeature(ObjectFullData::Ptr object);
+  float HueMeanFeature(std::shared_ptr<ObjectFullData> object);
 
  private:
   // define the type "Pointer to method to calculate a feature"
-  typedef float (FeatureFactory::*FEATURE_CALCULATOR_PTR)(ObjectFullData::Ptr);
+  typedef float (FeatureFactory::*FEATURE_CALCULATOR_PTR)(
+      std::shared_ptr<ObjectFullData>);
 
   // the vector of function enables iterating through the function that needs
   // to be call in odrer to compute the good feature.
@@ -75,9 +76,10 @@ class FeatureFactory {
 //	INLINE
 //-----------------------------------------------------------------------------
 //
-inline float FeatureFactory::AreaFeature(ObjectFullData::Ptr object) {
+inline float FeatureFactory::AreaFeature(
+    std::shared_ptr<ObjectFullData> object) {
   float areaRank = 0.0f;
-  if (object.IsNotNull()) {
+  if (object.get() != nullptr) {
     areaRank = object->GetAreaRank();
   }
   return areaRank;
@@ -85,9 +87,10 @@ inline float FeatureFactory::AreaFeature(ObjectFullData::Ptr object) {
 
 //-----------------------------------------------------------------------------
 //
-inline float FeatureFactory::LengthFeature(ObjectFullData::Ptr object) {
+inline float FeatureFactory::LengthFeature(
+    std::shared_ptr<ObjectFullData> object) {
   float lengthRank = 0.0f;
-  if (object.IsNotNull()) {
+  if (object.get() != nullptr) {
     lengthRank = object->GetLengthRank();
   }
   return lengthRank;
@@ -95,9 +98,10 @@ inline float FeatureFactory::LengthFeature(ObjectFullData::Ptr object) {
 
 //-----------------------------------------------------------------------------
 //
-inline float FeatureFactory::RatioFeature(ObjectFullData::Ptr object) {
+inline float FeatureFactory::RatioFeature(
+    std::shared_ptr<ObjectFullData> object) {
   float ratio = 0.0f;
-  if (object.IsNotNull()) {
+  if (object.get() != nullptr) {
     ratio = object->GetRatio();
   }
   return ratio;
@@ -105,9 +109,10 @@ inline float FeatureFactory::RatioFeature(ObjectFullData::Ptr object) {
 
 //-----------------------------------------------------------------------------
 //
-inline float FeatureFactory::ConvexityFeature(ObjectFullData::Ptr object) {
+inline float FeatureFactory::ConvexityFeature(
+    std::shared_ptr<ObjectFullData> object) {
   float convexity = 0.0f;
-  if (object.IsNotNull()) {
+  if (object.get() != nullptr) {
     // safety, should not happen
     float convexHull = object->GetConvexHullArea();
     if (convexHull > 0)
@@ -118,9 +123,10 @@ inline float FeatureFactory::ConvexityFeature(ObjectFullData::Ptr object) {
 
 //-----------------------------------------------------------------------------
 //
-inline float FeatureFactory::CircularityFeature(ObjectFullData::Ptr object) {
+inline float FeatureFactory::CircularityFeature(
+    std::shared_ptr<ObjectFullData> object) {
   float circularity = 0.0f;
-  if (object.IsNotNull()) {
+  if (object.get() != nullptr) {
     // Here we use pow on radius instead of sqrt on area because
     // pow is less hard computation
     float radiusCircum = pow(object->GetCircumference() / (2 * M_PI), 2);
@@ -136,9 +142,9 @@ inline float FeatureFactory::CircularityFeature(ObjectFullData::Ptr object) {
 //-----------------------------------------------------------------------------
 //
 inline float FeatureFactory::PresenceConsistencyFeature(
-    ObjectFullData::Ptr object) {
+    std::shared_ptr<ObjectFullData> object) {
   float consistency = 0.0f;
-  if (object.IsNotNull()) {
+  if (object.get() != nullptr) {
     ObjectFullData::FullObjectPtrVec vec =
         _frame_memory.GetPastObjectsViaCenter(object->GetCenter(),
                                               object->GetRatio());

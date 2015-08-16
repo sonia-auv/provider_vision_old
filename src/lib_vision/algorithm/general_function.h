@@ -77,8 +77,8 @@ float calculatePourcentFilled(const cv::Mat &image,
 cv::Scalar calculateMeans(contour_t contour, cv::Mat image, bool middle = true);
 
 bool IsRectangle(contour_t &contour, unsigned int degreeAccuracy = 5);
-bool IsSquare(std::vector<cv::Point> &approx, double min_area, double angle, double ratio_min,
-              double ratio_max);
+bool IsSquare(std::vector<cv::Point> &approx, double min_area, double angle,
+              double ratio_min, double ratio_max);
 
 inline bool SortVerticesLength(const std::pair<unsigned int, cv::Vec3f> &a,
                                const std::pair<unsigned int, cv::Vec3f> &b) {
@@ -111,7 +111,8 @@ cv::Point getEigenPos(std::vector<cv::Point> &pts);
 std::vector<double> getEigenValues(std::vector<cv::Point> &pts);
 std::vector<cv::Point2d> getEigenVectors(std::vector<cv::Point> &pts);
 double angleBetweenThreePoints(cv::Point pt1, cv::Point pt2, cv::Point pt0);
-void drawSquares( cv::Mat& image, const std::vector<std::vector<cv::Point> >& squares);
-bool compareYX(const cv::Point& p1, const cv::Point& p2);
+void drawSquares(cv::Mat &image,
+                 const std::vector<std::vector<cv::Point> > &squares);
+bool compareYX(const cv::Point &p1, const cv::Point &p2);
 
 #endif

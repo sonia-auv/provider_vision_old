@@ -78,6 +78,24 @@ set_target_properties( ${TARGET_NAME}
     LINKER_LANGUAGE CXX
 )
 
+#==========================================================================
+# C R E A T I N G   U N I T   T E S T S
+
+catkin_add_gtest( utest_object_ranking_data test/object_ranking_data_test.cc )
+catkin_add_gtest( utest_object_tracking_data test/object_tracking_data_test.cc )
+catkin_add_gtest( utest_object_ranker test/object_ranker_test.cc )
+catkin_add_gtest( utest_object_full_data test/object_full_data_test.cc )
+catkin_add_gtest( utest_object_frame_memory test/object_frame_memory_test.cc )
+catkin_add_gtest( utest_object_basic_data test/object_basic_data_test.cc )
+catkin_add_gtest( utest_major_edge_extractor test/major_edge_extractor_test.cc )
+catkin_add_gtest( utest_feature_vec test/feature_vec_test.cc )
+catkin_add_gtest( utest_ai_trainer test/ai_trainer_test.cc )
+catkin_add_gtest( utest_scharr test/scharr_test.cc )
+catkin_add_gtest( utest_feature_factory test/feature_factory_test.cc )
+
+#==========================================================================
+# I N S T A L L I N G   T A R G E T S
+
 install( TARGETS ${TARGET_NAME}
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}

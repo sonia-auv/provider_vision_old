@@ -31,8 +31,8 @@ class AdaptiveThreshold : public Filter {
         _method("Method", 0, 0, 1, parameters_, "0=Gaussian 1=Mean"),
         _threshold_type("Threshold_type", 0, 0, 1, parameters_,
                         "0=BIN, 1=BIN_INV"),
-        _block_size("Size", 1,1,40, parameters_),
-         _c_param("C_param", 0.0f, -255.0f, 255.0f, parameters_){
+        _block_size("Size", 1, 1, 40, parameters_),
+        _c_param("C_param", 0.0f, -255.0f, 255.0f, parameters_) {
     setName("AdaptiveThreshold");
   }
 
@@ -42,14 +42,15 @@ class AdaptiveThreshold : public Filter {
   // P U B L I C   M E T H O D S
 
   virtual void execute(cv::Mat &image) {
-    if ( _enable() ) {
-      if( image.channels() > 1)
-      {
+    if (_enable()) {
+      if (image.channels() > 1) {
         cv::cvtColor(image, image, CV_BGR2GRAY);
       }
-      int size = _block_size()*2+1;
-      int method = _method() == 0 ? cv::ADAPTIVE_THRESH_GAUSSIAN_C : cv::ADAPTIVE_THRESH_MEAN_C ;
-      int type = _threshold_type() == 0 ? cv::THRESH_BINARY : cv::THRESH_BINARY_INV;
+      int size = _block_size() * 2 + 1;
+      int method = _method() == 0 ? cv::ADAPTIVE_THRESH_GAUSSIAN_C
+                                  : cv::ADAPTIVE_THRESH_MEAN_C;
+      int type =
+          _threshold_type() == 0 ? cv::THRESH_BINARY : cv::THRESH_BINARY_INV;
       cv::adaptiveThreshold(image, image, 255, method, type, size, _c_param());
     }
   }

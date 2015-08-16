@@ -36,7 +36,8 @@ class DeloreanDetector : public Filter {
         _debug_contour("Debug_contour", false, parameters_),
         _min_area("Min_area", 200, 0, 10000, parameters_),
         _targeted_ratio_big("Ratio_target_big", 0.5f, 0.0f, 1.0f, parameters_),
-        _targeted_ratio_small("Ratio_target_small", 0.5f, 0.0f, 1.0f, parameters_),
+        _targeted_ratio_small("Ratio_target_small", 0.5f, 0.0f, 1.0f,
+                              parameters_),
         _difference_from_target_ratio("Diff_from_ratio_target", 0.10f, 0.0f,
                                       1.0f, parameters_),
         _output_train("Output_train", false, parameters_),
@@ -69,9 +70,9 @@ class DeloreanDetector : public Filter {
       ObjectFullData::FullObjectPtrVec objVec_big;
       ObjectFullData::FullObjectPtrVec objVec_small;
       for (size_t i = 0, size = contours.size(); i < size; i++) {
-        ObjectFullData::Ptr object =
-            new ObjectFullData(originalImage, image, contours[i]);
-        if (object.IsNull()) {
+        std::shared_ptr<ObjectFullData> object =
+            std::make_shared<ObjectFullData>(originalImage, image, contours[i]);
+        if (object.get() == nullptr) {
           continue;
         }
         //
@@ -81,39 +82,43 @@ class DeloreanDetector : public Filter {
           continue;
         }
         if (_debug_contour()) {
-          cv::drawContours(_output_image, contours, int(i), CV_RGB(255, 0, 0), 2);
+          cv::drawContours(_output_image, contours, int(i), CV_RGB(255, 0, 0),
+                           2);
         }
-
 
         //
         // RATIO
         //
-//        std::stringstream ss;
-//        ss << object->GetRatio();
-//        cv::putText(_output_image, ss.str(), object->GetCenter(),
-//                    cv::FONT_HERSHEY_SIMPLEX, 1 /*fontscale*/,
-//                    cv::Scalar(255, 0, 0), 3 /*thickness*/, 6 /*lineType*/,
-//                    false);
+        //        std::stringstream ss;
+        //        ss << object->GetRatio();
+        //        cv::putText(_output_image, ss.str(), object->GetCenter(),
+        //                    cv::FONT_HERSHEY_SIMPLEX, 1 /*fontscale*/,
+        //                    cv::Scalar(255, 0, 0), 3 /*thickness*/, 6
+        //                    /*lineType*/,
+        //                    false);
 
-        double ratio_difference_big = fabs(object->GetRatio() - _targeted_ratio_big());
-        double ratio_difference_small = fabs(object->GetRatio() - _targeted_ratio_small());
+        double ratio_difference_big =
+            fabs(object->GetRatio() - _targeted_ratio_big());
+        double ratio_difference_small =
+            fabs(object->GetRatio() - _targeted_ratio_small());
         //				std::cout << object->GetRatio() << " "
         //<<
         //_targeted_ratio() << " " << ratio << std::endl;
 
-        // Could change for check for wich is nearest the target ratio, i.e. is the ratio nearrer big object or
+        // Could change for check for wich is nearest the target ratio, i.e. is
+        // the ratio nearrer big object or
         // small object...
-        if (ratio_difference_big > _difference_from_target_ratio() && ratio_difference_small < _difference_from_target_ratio()) {
+        if (ratio_difference_big > _difference_from_target_ratio() &&
+            ratio_difference_small < _difference_from_target_ratio()) {
           objVec_small.push_back(object);
-        }
-        else if (ratio_difference_big < _difference_from_target_ratio() && ratio_difference_small > _difference_from_target_ratio()) {
+        } else if (ratio_difference_big < _difference_from_target_ratio() &&
+                   ratio_difference_small > _difference_from_target_ratio()) {
           objVec_big.push_back(object);
-        }
-        else if (ratio_difference_big < _difference_from_target_ratio() && ratio_difference_small < _difference_from_target_ratio()) {
+        } else if (ratio_difference_big < _difference_from_target_ratio() &&
+                   ratio_difference_small < _difference_from_target_ratio()) {
           objVec_big.push_back(object);
 
-        }
-        else {
+        } else {
           continue;
         }
         //				if( !IsRectangle( contours[i] ) )
@@ -121,41 +126,44 @@ class DeloreanDetector : public Filter {
         //					continue;
         //				}
         if (_debug_contour()) {
-          cv::drawContours(_output_image, contours, int(i), CV_RGB(0, 0, 255), 2);
+          cv::drawContours(_output_image, contours, int(i), CV_RGB(0, 0, 255),
+                           2);
         }
       }
 
       std::sort(objVec_big.begin(), objVec_big.end(),
-                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
+                [](std::shared_ptr<ObjectFullData> a,
+                   std::shared_ptr<ObjectFullData> b)
                     -> bool { return a->GetArea() > b->GetArea(); });
       std::sort(objVec_small.begin(), objVec_small.end(),
-                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
+                [](std::shared_ptr<ObjectFullData> a,
+                   std::shared_ptr<ObjectFullData> b)
                     -> bool { return a->GetArea() > b->GetArea(); });
 
       if (objVec_big.size() > 0) {
-
         Target target;
-        ObjectFullData::Ptr object_big = objVec_big[0];
+        std::shared_ptr<ObjectFullData> object_big = objVec_big[0];
         cv::Point center_big = object_big->GetCenter();
         double angle = 181;
         if (objVec_small.size() > 0) {
-          ObjectFullData::Ptr object_small = objVec_small[0];
+          std::shared_ptr<ObjectFullData> object_small = objVec_small[0];
           cv::Point center_small = object_small->GetCenter();
-          if( _debug_contour())
-          {
-            cv::circle(_output_image, center_small, 2,CV_RGB(255, 0, 255), 2);
+          if (_debug_contour()) {
+            cv::circle(_output_image, center_small, 2, CV_RGB(255, 0, 255), 2);
           }
-          angle = 360 * (atan2(center_big.y - center_big.y, center_big.x+5 - center_big.x) - atan2(center_small.y - center_big.y, center_small.x - center_big.x))/(2*3.1416);
-          }
+          angle = 360 * (atan2(center_big.y - center_big.y,
+                               center_big.x + 5 - center_big.x) -
+                         atan2(center_small.y - center_big.y,
+                               center_small.x - center_big.x)) /
+                  (2 * 3.1416);
+        }
         setCameraOffset(&center_big, image.rows, image.cols);
         target.setTarget(center_big.x, center_big.y, object_big->GetLength(),
                          object_big->GetLength(), float(angle));
         std::stringstream ss;
-        if( _output_train() )
-        {
+        if (_output_train()) {
           ss << "train:" << target.outputString();
-        }else
-        {
+        } else {
           ss << "delorean:" << target.outputString();
         }
         notify_str(ss.str().c_str());
@@ -175,7 +183,8 @@ class DeloreanDetector : public Filter {
   cv::Mat _output_image;
   // Params
   BooleanParameter _enable, _debug_contour, _output_train;
-  DoubleParameter _min_area, _targeted_ratio_big, _targeted_ratio_small, _difference_from_target_ratio;
+  DoubleParameter _min_area, _targeted_ratio_big, _targeted_ratio_small,
+      _difference_from_target_ratio;
   FeatureFactory _feat_factory;
 };
 

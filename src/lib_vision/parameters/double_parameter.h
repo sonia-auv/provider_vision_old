@@ -14,7 +14,6 @@
 // I N C L U D E   F I L E S
 
 #include <lib_vision/parameter.h>
-#include <CLMath.h>
 
 namespace vision_filter {
 
@@ -105,7 +104,8 @@ class DoubleParameter : public Parameter {
 
   template <class TYPE>
   inline void setValue(const TYPE _value) {
-    value = CLMath::Clamp(double(_value), min, max);
+    int x = static_cast<int>(_value);
+    value = x < min ? min : (x > max ? max : x);
   }
 
   // Get

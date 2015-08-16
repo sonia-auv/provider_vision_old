@@ -51,11 +51,8 @@ class ImageAccumulator : public Filter {
       // Is there any change in the type of images
       // we input to the accumulator?
       // If yes, reset it.
-      if (_last_type != image.type() ||
-          _last_method != _method() ||
-          _last_nb_image != _nb_image() ||
-          _last_size != image.size()) {
-
+      if (_last_type != image.type() || _last_method != _method() ||
+          _last_nb_image != _nb_image() || _last_size != image.size()) {
         _accumulator.ResetBuffer(_nb_image(), image.size(), image.type());
 
         _last_nb_image = _nb_image();

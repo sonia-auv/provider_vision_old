@@ -10,14 +10,13 @@
 #ifndef VISION_FILTER_FULL_OBJECT_DATA_H_
 #define VISION_FILTER_FULL_OBJECT_DATA_H_
 
+#include <vector>
+#include <memory>
+#include <opencv2/opencv.hpp>
 #include <lib_vision/algorithm/object_basic_data.h>
 #include <lib_vision/algorithm/object_tracking_data.h>
 #include <lib_vision/algorithm/object_ranking_data.h>
 #include <lib_vision/algorithm/feature_vec.h>
-
-#include <HTSmartObj.h>
-
-#include <opencv2/opencv.hpp>
 
 // Simple container class that is created with the contour.
 // It inherits from the different caracteristic of an object
@@ -31,11 +30,9 @@
 class ObjectFullData : public OBjectTrackingData,
                        public ObjectBasicData,
                        public ObjectRankingData,
-                       public FeatureVec,
-                       public HTSmartObj {
+                       public FeatureVec {
  public:
-  typedef HTSmartPtr<ObjectFullData> Ptr;
-  typedef std::vector<ObjectFullData::Ptr> FullObjectPtrVec;
+  typedef std::vector<std::shared_ptr<ObjectFullData>> FullObjectPtrVec;
 
   ObjectFullData(const cv::Mat &originalImage, const cv::Mat &binaryImage,
                  const contour_t &contour);

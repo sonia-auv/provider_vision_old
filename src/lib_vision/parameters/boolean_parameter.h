@@ -38,8 +38,8 @@ class BooleanParameter : public Parameter {
   // P U B L I C   M E T H O D S
 
   static inline bool FromStringToBool(const std::string val) {
-	  // Error in refactoring, now support both cases.
-	  if ( (val == "true") || (val == "1")) return true;
+    // Error in refactoring, now support both cases.
+    if ((val == "true") || (val == "1")) return true;
     return false;
   }
 

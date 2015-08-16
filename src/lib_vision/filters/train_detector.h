@@ -37,8 +37,8 @@ class TrainDetector : public Filter {
     //==========================================================================
     // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
-    explicit ObjectPair(ObjectFullData::Ptr object1,
-                        ObjectFullData::Ptr object2,
+    explicit ObjectPair(std::shared_ptr<ObjectFullData> object1,
+                        std::shared_ptr<ObjectFullData> object2,
                         FeatureFactory &featFactory)
         : _object1(object1), _object2(object2), _convexity_mean(0) {
       _convexity_mean = featFactory.ConvexityFeature(_object1);
@@ -52,7 +52,7 @@ class TrainDetector : public Filter {
       return a._convexity_mean > b._convexity_mean;
     }
 
-    ObjectFullData::Ptr _object1, _object2;
+    std::shared_ptr<ObjectFullData> _object1, _object2;
     float _convexity_mean;
   };
 
@@ -94,9 +94,9 @@ class TrainDetector : public Filter {
       retrieveAllContours(image, contours);
       ObjectFullData::FullObjectPtrVec objVec;
       for (int i = 0, size = contours.size(); i < size; i++) {
-        ObjectFullData::Ptr object =
-            new ObjectFullData(originalImage, image, contours[i]);
-        if (object.IsNull()) {
+        std::shared_ptr<ObjectFullData> object =
+            std::make_shared<ObjectFullData>(originalImage, image, contours[i]);
+        if (object.get() == nullptr) {
           continue;
         }
 
@@ -114,10 +114,10 @@ class TrainDetector : public Filter {
       std::vector<ObjectPair> pairs;
       // Iterate through object to find pair between objects
       for (int i = 0, size = objVec.size(); i < size; i++) {
-        ObjectFullData::Ptr currentObj = objVec[i];
-        if (currentObj.IsNull()) continue;
+        std::shared_ptr<ObjectFullData> currentObj = objVec[i];
+        if (currentObj.get() == nullptr) continue;
         for (int j = 0; j < size; j++) {
-          if (j == i || objVec[j].IsNull()) continue;
+          if (j == i || objVec[j].get() == nullptr) continue;
 
           // If they are near enough, add it to the pair.
           float distance = eucledianPointDistance(objVec[j]->GetCenter(),
@@ -142,8 +142,8 @@ class TrainDetector : public Filter {
         for (int i = 0, size = obj2.size(); i < size; i++) {
           obj1.push_back(obj2[i]);
         }
-        ObjectFullData::Ptr object =
-            new ObjectFullData(originalImage, image, obj1);
+        std::shared_ptr<ObjectFullData> object =
+            std::make_shared<ObjectFullData>(originalImage, image, obj1);
         cv::Point center = object->GetCenter();
         setCameraOffset(&center, image.rows, image.cols);
         target.setTarget(center.x, center.y, object->GetLength(),

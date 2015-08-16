@@ -34,12 +34,13 @@ void Target::setTarget(const Features &feat) {
 
 //==============================================================
 //
-void Target::setTarget(ObjectFullData::Ptr &obj) {
+void Target::setTarget(std::shared_ptr<ObjectFullData> obj) {
   _targetInited = true;
   RotRect rrect = obj->GetRotatedRect();
-  setCenter( rrect.center.x, rrect.center.y );
-  setCameraOffset(&_center, obj->GetImageSize().height, obj->GetImageSize().width);
-  setSize(rrect.size.height , rrect.size.width);
+  setCenter(rrect.center.x, rrect.center.y);
+  setCameraOffset(&_center, obj->GetImageSize().height,
+                  obj->GetImageSize().width);
+  setSize(rrect.size.height, rrect.size.width);
   setAngle(rrect.angle);
 }
 

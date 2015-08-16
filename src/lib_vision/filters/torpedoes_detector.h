@@ -50,7 +50,6 @@ class TorpedoesDetector : public Filter {
   //
   virtual void execute(cv::Mat &image) {
     if (_enable()) {
-
       if (_debug_contour()) {
         image.copyTo(_output_image);
         if (_output_image.channels() == 1) {
@@ -60,7 +59,7 @@ class TorpedoesDetector : public Filter {
       if (image.channels() != 1) cv::cvtColor(image, image, CV_BGR2GRAY);
 
       ObjectFullData::FullObjectPtrVec interior_squares;
-      ObjectFullData::Ptr panel;
+      std::shared_ptr<ObjectFullData> panel;
       std::vector<Target> target_vec;
       GetInnerSquare(image, interior_squares);
       GetBigSquare(image, panel, interior_squares);
@@ -77,12 +76,12 @@ class TorpedoesDetector : public Filter {
 
       // If we have the complete board, we use the board to set
       // the identity of the elements
-      if (panel.IsNotNull()) {
+      if (panel.get() != nullptr) {
         panel_center = panel->GetCenter();
 
         // Approach real near, only one square.
         if (nb_of_element == 1) {
-          ObjectFullData::Ptr obj = interior_squares[0];
+          std::shared_ptr<ObjectFullData> obj = interior_squares[0];
           Target current_square_target;
           current_square_target.setTarget(obj);
           current_square_target.setSpecField_1("a");
@@ -99,15 +98,11 @@ class TorpedoesDetector : public Filter {
           // Approach, select the smallest one.
         } else if (nb_of_element == 2) {
           // Get the smallest one.
-          ObjectFullData::Ptr small, big;
-          if( interior_squares[0]->GetArea() <
-              interior_squares[1]->GetArea() )
-          {
+          std::shared_ptr<ObjectFullData> small, big;
+          if (interior_squares[0]->GetArea() < interior_squares[1]->GetArea()) {
             small = interior_squares[0];
             big = interior_squares[1];
-          }
-          else
-          {
+          } else {
             small = interior_squares[1];
             big = interior_squares[0];
           }
@@ -136,7 +131,6 @@ class TorpedoesDetector : public Filter {
                         cv::FONT_HERSHEY_SIMPLEX, 1 /*fontscale*/,
                         cv::Scalar(255, 0, 0), 3 /*thickness*/, 6 /*lineType*/,
                         false);
-
           }
         } else {  // See everything, the world is beautiful
           for (auto &inner_square : interior_squares) {
@@ -157,11 +151,11 @@ class TorpedoesDetector : public Filter {
             // the < 1 comparaison is to check if we are looking at the bigger
             // or the smaller object right now. If so, set their values
             // if not check it is near wich one.
-            if ( area_dist_from_bigger < 1 ){
+            if (area_dist_from_bigger < 1) {
               current_square_target.setSpecField_2("big");
-            }else if( area_dist_from_smaller < 1 ){
+            } else if (area_dist_from_smaller < 1) {
               current_square_target.setSpecField_2("small");
-            }else if( area_dist_from_bigger < area_dist_from_smaller) {
+            } else if (area_dist_from_bigger < area_dist_from_smaller) {
               current_square_target.setSpecField_2("big");
             } else  // Small square
             {
@@ -176,7 +170,7 @@ class TorpedoesDetector : public Filter {
               // UP
               if (square_center.y < panel_center.y) {
                 current_square_target.setSpecField_1("d");
-              } // DOWN
+              }  // DOWN
               else {
                 current_square_target.setSpecField_1("c");
               }
@@ -189,7 +183,7 @@ class TorpedoesDetector : public Filter {
               // UP
               if (square_center.y < panel_center.y) {
                 current_square_target.setSpecField_1("b");
-              } // DOWN
+              }  // DOWN
               else {
                 current_square_target.setSpecField_1("a");
               }
@@ -247,13 +241,15 @@ class TorpedoesDetector : public Filter {
 
         if (IsSquare(approx, _min_area(), _angle(), _ratio_min(),
                      _ratio_max())) {
-          object_data.push_back(new ObjectFullData(original, in, approx));
+          object_data.push_back(
+              std::make_shared<ObjectFullData>(original, in, approx));
         }
       }
 
       std::sort(object_data.begin(), object_data.end(),
-                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
-                    ->bool { return a->GetArea() > b->GetArea(); });
+                [](std::shared_ptr<ObjectFullData> a,
+                   std::shared_ptr<ObjectFullData> b)
+                    -> bool { return a->GetArea() > b->GetArea(); });
       if (object_data.size() > 4) {
         object_data.erase(object_data.begin() + 4, object_data.end());
       }
@@ -270,26 +266,25 @@ class TorpedoesDetector : public Filter {
 
   //----------------------------------------------------------------------------
   //
-  void GetBigSquare(const cv::Mat &in, ObjectFullData::Ptr &big_square,
+  void GetBigSquare(const cv::Mat &in,
+                    std::shared_ptr<ObjectFullData> &big_square,
                     const ObjectFullData::FullObjectPtrVec &inside_squares) {
-
     contourList_t contours;
     retrieveOuterContours(in, contours);
 
-    std::vector<std::pair<ObjectFullData::Ptr, int> > contour_vote;
+    std::vector<std::pair<std::shared_ptr<ObjectFullData>, int> > contour_vote;
 
     cv::Mat original(global_params_.getOriginalImage());
     for (const auto &contour : contours) {
       // if(cv::contourArea(contour, false) > _min_area() )
-      contour_vote.push_back(std::pair<ObjectFullData::Ptr, int>(
-          new ObjectFullData(original, in, contour), 0));
+      contour_vote.push_back(std::pair<std::shared_ptr<ObjectFullData>, int>(
+          std::make_shared<ObjectFullData>(original, in, contour), 0));
     }
 
     // Votes for the contour with the most
     // for each contours found, count how many inner square there is inside.
     for (auto &outer_square : contour_vote) {
       for (auto inner_square : inside_squares) {
-
         if (cv::pointPolygonTest(outer_square.first->GetContourCopy(),
                                  inner_square->GetCenter(), false) > 0.0f) {
           outer_square.second += 1;
@@ -297,9 +292,9 @@ class TorpedoesDetector : public Filter {
       }
     }
     std::sort(contour_vote.begin(), contour_vote.end(),
-              [](const std::pair<ObjectFullData::Ptr, int> & a,
-                 const std::pair<ObjectFullData::Ptr, int> & b)
-                  ->bool { return a.second > b.second; });
+              [](const std::pair<std::shared_ptr<ObjectFullData>, int> &a,
+                 const std::pair<std::shared_ptr<ObjectFullData>, int> &b)
+                  -> bool { return a.second > b.second; });
     if (contour_vote.size() != 0) {
       big_square = contour_vote[0].first;
       if (_debug_contour()) {

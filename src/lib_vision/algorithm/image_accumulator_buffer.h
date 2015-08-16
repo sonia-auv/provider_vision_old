@@ -50,22 +50,21 @@ class ImageAccumulatorBuffer {
   int GetBufferLength();
 
   // Usefull for for loop iteration. ZERO BASED
-   // Return the index of the
-   // element at elementNumber from the most recent.
-   // if the newest is at idx 4 (on a array of size 5)
-   // elementNumber == 0 will return 4, and
-   // elementNumber == 1 will return 3, etc.
-   int GetIndexFromMostRecent(int elementNumber);
+  // Return the index of the
+  // element at elementNumber from the most recent.
+  // if the newest is at idx 4 (on a array of size 5)
+  // elementNumber == 0 will return 4, and
+  // elementNumber == 1 will return 3, etc.
+  int GetIndexFromMostRecent(int elementNumber);
 
-   // Return the index of the
-   // element at elementNumber from the oldest.
-   // if the oldest is at idx 4 (on a array of size 5)
-   // elementNumber == 0 will return 4, and
-   // elementNumber == 1 will return 0, etc.
-   int GetIndexFromOldest(int elementNumber);
+  // Return the index of the
+  // element at elementNumber from the oldest.
+  // if the oldest is at idx 4 (on a array of size 5)
+  // elementNumber == 0 will return 4, and
+  // elementNumber == 1 will return 0, etc.
+  int GetIndexFromOldest(int elementNumber);
 
-   void GetImage(unsigned int index, cv::Mat &image);
-
+  void GetImage(unsigned int index, cv::Mat &image);
 
  private:
   // Averaging methods
@@ -107,19 +106,13 @@ class ImageAccumulatorBuffer {
 
 //-----------------------------------------------------------------------------
 //
-inline int
-ImageAccumulatorBuffer::GetBufferLength()
-{
-  return _buffer_size;
-}
+inline int ImageAccumulatorBuffer::GetBufferLength() { return _buffer_size; }
 
 //-----------------------------------------------------------------------------
 //
-inline void
-ImageAccumulatorBuffer::GetImage(unsigned int index, cv::Mat &image)
-{
-  if( index < _buffer_size)
-    _image_vec[index].copyTo(image);
+inline void ImageAccumulatorBuffer::GetImage(unsigned int index,
+                                             cv::Mat &image) {
+  if (index < _buffer_size) _image_vec[index].copyTo(image);
 }
 
 //// Debug function to use with constant value image (i.e. al at 50)

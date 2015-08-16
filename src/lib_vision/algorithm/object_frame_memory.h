@@ -10,7 +10,6 @@
 #ifndef VISION_FILTER_OBJECT_FRAME_MEMORY_
 #define VISION_FILTER_OBJECT_FRAME_MEMORY_
 
-#include <CLCircularVector.h>
 #include <lib_vision/algorithm/object_full_data.h>
 #include <lib_vision/algorithm/general_function.h>
 #include <vector>
@@ -37,7 +36,7 @@ class ObjectFrameMemory {
       const cv::Point &center, const float objectRatio);
 
  private:
-  CLCircularVector<ObjectFullData::FullObjectPtrVec> _previous_frames;
+  std::vector<ObjectFullData::FullObjectPtrVec> _previous_frames;
   unsigned int _memory_size;
 };
 

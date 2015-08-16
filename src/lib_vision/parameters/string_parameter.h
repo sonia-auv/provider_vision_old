@@ -58,9 +58,7 @@ class StringParameter : public Parameter {
     return ss.str();
   }
 
-  virtual inline std::string GetStringValue() const override {
-    return value;
-  }
+  virtual inline std::string GetStringValue() const override { return value; }
 
  private:
   std::string value;

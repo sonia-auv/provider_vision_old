@@ -75,9 +75,9 @@ class ObjectFeatureCalculator : public Filter {
       retrieveAllContours(image, contours);
       ObjectFullData::FullObjectPtrVec objVec;
       for (int i = 0, size = contours.size(); i < size; i++) {
-        ObjectFullData::Ptr object =
-            new ObjectFullData(originalImage, image, contours[i]);
-        if (object.IsNull()) {
+        std::shared_ptr<ObjectFullData> object =
+            std::make_shared<ObjectFullData>(originalImage, image, contours[i]);
+        if (object.get() == nullptr) {
           continue;
         }
 
@@ -122,52 +122,59 @@ class ObjectFeatureCalculator : public Filter {
 
 #define VISION_FILTER_PI 3.14159265
 
-#include <TCTestHolder.h>
+//==============================================================================
+// U N I T   T E S T S
 
-TC_DEFINE_UNIT_TEST(ATAN_UT) {
-  cv::Mat in = cv::imread("/home/jeremie/Videos/AtanTest.png");
-  cv::Mat inGray;
-  cv::cvtColor(in, inGray, CV_BGR2GRAY);
-  contourList_t contours;
-      retrieveOuterContours(inGray, contours);
-  //	std::cout << "Testing angles" << std::endl;
-  //	for( int i = 0; i < 360; i++)
-  //	{
-  //		float y = tan(  i * PI / 180.0f );
-  //		cv::Mat A ( 1, 3, CV_32FC1, cv::Scalar::all(0));
-  //		cv::Mat B (1, 3, CV_32FC1, cv::Scalar::all(0));
-  //
-  //		float* ptrA = A.ptr<float>(0);
-  //		float* ptrB = B.ptr<float>(0);
-  //		ptrA[0] = 1, ptrA[1] = 0, ptrA[2] = 0;
-  //		ptrB[0] = 1, ptrB[1] = y, ptrB[2] = 0;
-  //		cv::Mat C = A.cross(B);
-  //		float* ptrC = C.ptr<float>(0);
-  //		float ninetyNorm = (norm(C))/(norm(A)*norm(B));
-  //		//std::cout << i <<" Norm: " << norm(C) << " Is not convex: " <<
-  // bool(ptrC[2] > 0) << " Square angle index: "<< ninetyNorm << std::endl;
-  //		std::cout << i <<"," << ninetyNorm << std::endl;
-  //
-  //	}
-  //	std::cout << "Ending Testing angles" << std::endl;
+// We need to use another unit test framework such as google test that
+// is being included in ROS framework.
+// Commenting this test in the mean time so we can remove vitals dependencies.
 
-  for (int i = 0; i < contours.size(); i++) {
-    cv::circle(in, contours[i][0], 3, CV_RGB(255, 0, 0));
-    cv::circle(in, contours[i][1], 3, CV_RGB(0, 255, 0));
-    contour_t contour = contours[i];
-    printf("New contour\n");
-
-    if (IsRectangle(contour)) {
-      std::cout << " IS A SQUARE!!! " << std::endl;
-      cv::drawContours(in, contours, i, CV_RGB(0, 255, 0));
-    }
-  }
-  cv::imshow("TIN", in);
-  cv::waitKey(-1);
-
-  return true;
-}
-TC_END_UNIT_TEST(ATAN_UT)
+//#include <TCTestHolder.h>
+//
+// TC_DEFINE_UNIT_TEST(ATAN_UT) {
+//  cv::Mat in = cv::imread("/home/jeremie/Videos/AtanTest.png");
+//  cv::Mat inGray;
+//  cv::cvtColor(in, inGray, CV_BGR2GRAY);
+//  contourList_t contours;
+//      retrieveOuterContours(inGray, contours);
+//  //	std::cout << "Testing angles" << std::endl;
+//  //	for( int i = 0; i < 360; i++)
+//  //	{
+//  //		float y = tan(  i * PI / 180.0f );
+//  //		cv::Mat A ( 1, 3, CV_32FC1, cv::Scalar::all(0));
+//  //		cv::Mat B (1, 3, CV_32FC1, cv::Scalar::all(0));
+//  //
+//  //		float* ptrA = A.ptr<float>(0);
+//  //		float* ptrB = B.ptr<float>(0);
+//  //		ptrA[0] = 1, ptrA[1] = 0, ptrA[2] = 0;
+//  //		ptrB[0] = 1, ptrB[1] = y, ptrB[2] = 0;
+//  //		cv::Mat C = A.cross(B);
+//  //		float* ptrC = C.ptr<float>(0);
+//  //		float ninetyNorm = (norm(C))/(norm(A)*norm(B));
+//  //		//std::cout << i <<" Norm: " << norm(C) << " Is not convex: " <<
+//  // bool(ptrC[2] > 0) << " Square angle index: "<< ninetyNorm << std::endl;
+//  //		std::cout << i <<"," << ninetyNorm << std::endl;
+//  //
+//  //	}
+//  //	std::cout << "Ending Testing angles" << std::endl;
+//
+//  for (int i = 0; i < contours.size(); i++) {
+//    cv::circle(in, contours[i][0], 3, CV_RGB(255, 0, 0));
+//    cv::circle(in, contours[i][1], 3, CV_RGB(0, 255, 0));
+//    contour_t contour = contours[i];
+//    printf("New contour\n");
+//
+//    if (IsRectangle(contour)) {
+//      std::cout << " IS A SQUARE!!! " << std::endl;
+//      cv::drawContours(in, contours, i, CV_RGB(0, 255, 0));
+//    }
+//  }
+//  cv::imshow("TIN", in);
+//  cv::waitKey(-1);
+//
+//  return true;
+//}
+// TC_END_UNIT_TEST(ATAN_UT)
 
 }  // namespace vision_filter
 

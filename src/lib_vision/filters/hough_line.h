@@ -28,11 +28,11 @@ class HoughLine : public Filter {
   explicit HoughLine(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
         _enable("Enable", false, parameters_),
-        _rho("Rho", 1.0f, 0.0f, 1000.0f,  parameters_),
-        _theta("Theta", 1.0f, 0.0f, 1000.0f,  parameters_),
-        _min_length("Min_length", 1, 0, 1000,  parameters_),
-        _max_gap("Max_gap", 1, 0, 1000,  parameters_),
-        _threshold("Threshold", 1, 0, 1000,  parameters_){
+        _rho("Rho", 1.0f, 0.0f, 1000.0f, parameters_),
+        _theta("Theta", 1.0f, 0.0f, 1000.0f, parameters_),
+        _min_length("Min_length", 1, 0, 1000, parameters_),
+        _max_gap("Max_gap", 1, 0, 1000, parameters_),
+        _threshold("Threshold", 1, 0, 1000, parameters_) {
     setName("HoughLine");
   }
 
@@ -49,16 +49,15 @@ class HoughLine : public Filter {
 
       std::vector<cv::Vec4i> lines;
       cv::HoughLinesP(image, lines, _rho(), _theta(), _threshold(),
-                      _min_length(), _max_gap() );
+                      _min_length(), _max_gap());
 
-       cv::Mat drawing_image(image.rows, image.cols, CV_8UC3, cv::Scalar::all(0));
-       for(const auto &line : lines)
-       {
-         cv::line( drawing_image, cv::Point(line[0], line[1]),
-               cv::Point(line[2], line[3]), cv::Scalar(255,255,255), 3);
-
-       }
-       cv::cvtColor(drawing_image, image, CV_BGR2GRAY);
+      cv::Mat drawing_image(image.rows, image.cols, CV_8UC3,
+                            cv::Scalar::all(0));
+      for (const auto &line : lines) {
+        cv::line(drawing_image, cv::Point(line[0], line[1]),
+                 cv::Point(line[2], line[3]), cv::Scalar(255, 255, 255), 3);
+      }
+      cv::cvtColor(drawing_image, image, CV_BGR2GRAY);
     }
   }
 

@@ -28,7 +28,7 @@ class Target {
 
   // WILL USE OFFSETED CENTER !!!
   void setTarget(const Features &feat);
-  void setTarget(ObjectFullData::Ptr &obj);
+  void setTarget(std::shared_ptr<ObjectFullData> obj);
 
   void setCenter(int x, int y);
 
@@ -110,7 +110,7 @@ inline void Target::setSpecFields(const std::string &field1,
 }
 
 inline cv::Point Target::getTarget() { return _center; }
-inline std::string Target::getSpecField_1(){return _specialField_1;};
-inline std::string Target::getSpecField_2(){return _specialField_2;};
+inline std::string Target::getSpecField_1() { return _specialField_1; };
+inline std::string Target::getSpecField_2() { return _specialField_2; };
 
 #endif

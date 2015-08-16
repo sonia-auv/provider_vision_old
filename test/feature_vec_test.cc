@@ -1,25 +1,17 @@
 /**
- * \file	feature_vec.cpp
- * \author  Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
- * \date	1/01/2014
- * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
+ * \file	feature_vec_test.cc
+ * \author	Thibaut Mattio <thibaut.mattio@gmail.com>
+ * \date	28/06/2015
+ * \copyright Copyright (c) 2015 Thibaut Mattio. All rights reserved.
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
 
+#include <gtest/gtest.h>
 #include <lib_vision/algorithm/feature_vec.h>
-
-//=============================================================================
-//=============================================================================
-//=============================================================================
-//=========================== UNIT TEST AREA ==================================
-//=============================================================================
-//=============================================================================
-//=============================================================================
-#include <TCUnitTest.h>
 #include <lib_vision/algorithm/object_full_data.h>
 
-TC_DEFINE_UNIT_TEST(FeatureVecUT) {
+TEST(FeatureVec, AllTest) {
   printf("Starting unit test on FeatureVec");
   contourList_t contours;
   cv::Mat binaryImage(1000, 1000, CV_8UC1, cv::Scalar::all(0));
@@ -53,17 +45,20 @@ TC_DEFINE_UNIT_TEST(FeatureVecUT) {
   cv::drawContours(originalImage, contours, -1, CV_RGB(255, 0, 255), -1);
   cv::cvtColor(originalImage, binaryImage, CV_BGR2GRAY);
 
-  std::vector<ObjectFullData::Ptr> objectVec;
-  objectVec.push_back(
-      new ObjectFullData(originalImage, binaryImage, contours[0]));
-  objectVec.push_back(
-      new ObjectFullData(originalImage, binaryImage, contours[1]));
-  objectVec.push_back(
-      new ObjectFullData(originalImage, binaryImage, contours[2]));
+  std::vector<std::shared_ptr<ObjectFullData>> objectVec;
+  objectVec.push_back(std::make_shared<ObjectFullData>(
+      originalImage, binaryImage, contours[0]));
+  objectVec.push_back(std::make_shared<ObjectFullData>(
+      originalImage, binaryImage, contours[1]));
+  objectVec.push_back(std::make_shared<ObjectFullData>(
+      originalImage, binaryImage, contours[2]));
 
   // NO further testing since everything is tested in the parent classes.
 
   printf("System all clear and good to go");
-  return true;
 }
-TC_END_UNIT_TEST(FeatureVecUT);
+
+int main(int argc, char **argv) {
+  testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
+}
