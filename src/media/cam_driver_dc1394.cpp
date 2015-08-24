@@ -122,7 +122,7 @@ bool CAMDriverDC1394::IsMyCamera(const std::string &nameMedia) {
 //------------------------------------------------------------------------------
 //
 void CAMDriverDC1394::run() {
-  while (!stop_) {
+  while (!must_stop()) {
     atlas::SecTimer ::sleep(5);
     if (!WatchDogFunc()) {
       ROS_FATAL_NAMED(DRIVER_TAG, "=====   Entering camera reset bus =====");

@@ -63,7 +63,7 @@ bool AcquisitionLoop::StartStreaming() {
   // Start thread
   std::lock_guard<std::mutex> guard(_image_access);
   start();
-  if (thread_.joinable()) {
+  if (running()) {
     _is_streaming = true;
     return true;
   }
@@ -79,7 +79,7 @@ bool AcquisitionLoop::StopStreaming() {
   ROS_INFO_NAMED(LOOP_TAG, "Stopping streaming on camera %s",
                  _media->GetCameraID().GetName().c_str());
   // Stop thread
-  if (thread_.joinable()) {
+  if (running()) {
     stop();
     return true;
   } else {
@@ -139,7 +139,7 @@ void AcquisitionLoop::run() {
     must_set_record = true;
   }
 
-  while (!stop_) {
+  while (!must_stop()) {
     //_logger->LogInfo(LOOP_TAG, "Taking mutex for publishing");
     _image_access.lock();
     //_logger->LogInfo(LOOP_TAG, "Took mutex for publishing");
@@ -162,7 +162,7 @@ void AcquisitionLoop::run() {
         must_set_record = false;
       }
 
-      if (IsRecording() && atlas::sys::percentage_used_physical_memory() < .8) {
+      if (IsRecording() && atlas::percentage_used_physical_memory() < .8) {
         //        cv::Mat image_with_correct_format;
         //        cv::cvtColor(_image, image_with_correct_format, CV_BGR2RGB);
         //        video_writer_.write(image_with_correct_format);

@@ -109,7 +109,7 @@ Execution::ERROR Execution::StopExec() {
   _acquisition_loop->Detach(*this);
 
   // Stop thread
-  if (thread_.joinable()) {
+  if (running()) {
     stop();
   } else {
     ROS_WARN_NAMED(EXEC_TAG, "The excecution is not processing.");
@@ -140,7 +140,7 @@ void Execution::OnSubjectNotify(atlas::Subject<> &subject) ATLAS_NOEXCEPT {
 //------------------------------------------------------------------------------
 //
 void Execution::run() {
-  while (!stop_) {
+  while (!must_stop()) {
     // Prevent to process data twice for fast processing
     if (!_new_image_ready) {
       atlas::MilliTimer::sleep(10);
