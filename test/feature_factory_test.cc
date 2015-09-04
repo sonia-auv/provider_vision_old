@@ -9,6 +9,7 @@
 
 #include <gtest/gtest.h>
 #include <lib_vision/algorithm/feature_factory.h>
+#include <stdlib.h>
 
 TEST(FeatureFactory, AllTest) {
   printf("Starting unit test on FeatureFactory\n");

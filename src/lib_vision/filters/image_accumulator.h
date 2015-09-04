@@ -15,7 +15,7 @@
 
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/image_accumulator_buffer.h>
-#include <lib_vision/algorithm/time.h>
+#include <lib_vision/algorithm/performance_evaluator.h>
 
 namespace vision_filter {
 

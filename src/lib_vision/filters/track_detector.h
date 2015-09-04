@@ -12,7 +12,8 @@
 
 //==============================================================================
 // I N C L U D E   F I L E S
-
+#include <vector>
+#include <memory>
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/features.h>
 #include <lib_vision/algorithm/general_function.h>

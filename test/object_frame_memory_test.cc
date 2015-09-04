@@ -63,7 +63,7 @@ TEST(AITrainer, AllTest) {
   frameMemory.AddFrameObjects(tmp);
   frameMemory.AddFrameObjects(tmp);
 
-  TC_COMMENT("Testing retrieval by center and ratio");
+  printf("Testing retrieval by center and ratio\n");
 
   /// Split the M shape to prevent retrieval of the object via center.
   // We create a frame where we should miss the M form.
@@ -74,7 +74,7 @@ TEST(AITrainer, AllTest) {
   cv::cvtColor(tmpOriginal, tmpBinary, CV_BGR2GRAY);
   contourList_t contoursTemp;
   retrieveAllContours(tmpBinary, contoursTemp);
-  TC_TEST_FAIL("Found four contours", contoursTemp.size() == 4);
+  ASSERT_TRUE(contoursTemp.size() == 4);
   // Push faulty object
   ObjectFullData::FullObjectPtrVec tmp2;
   for (int i = 0; i < contoursTemp.size(); i++) {

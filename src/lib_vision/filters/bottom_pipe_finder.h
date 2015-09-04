@@ -19,7 +19,7 @@
 #include <lib_vision/algorithm/target.h>
 #include <lib_vision/algorithm/object_full_data.h>
 #include <lib_vision/algorithm/feature_factory.h>
-#include <lib_vision/algorithm/time.h>
+#include <lib_vision/algorithm/performance_evaluator.h>
 
 namespace vision_filter {
 
@@ -33,19 +33,19 @@ class ObjectFinder : public Filter {
 
   explicit ObjectFinder(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, _param_vector),
-        _debug_contour("Debug_contour", false, _param_vector),
-        _look_for_rectangle("Look_for_Rectangle", false, _param_vector),
-        _id("ID", "buoy", _param_vector),
-        _spec_1("spec1", "red", _param_vector),
-        _spec_2("spec2", "blue", _param_vector),
-        _min_area("Min_area", 200, 0, 10000, _param_vector),
-        _targeted_ratio("Ratio_target", 0.5f, 0.0f, 1.0f, _param_vector),
+        _enable("Enable", false, parameters_),
+        _debug_contour("Debug_contour", false, parameters_),
+        _look_for_rectangle("Look_for_Rectangle", false, parameters_),
+        _id("ID", "buoy", parameters_),
+        _spec_1("spec1", "red", parameters_),
+        _spec_2("spec2", "blue", parameters_),
+        _min_area("Min_area", 200, 0, 10000, parameters_),
+        _targeted_ratio("Ratio_target", 0.5f, 0.0f, 1.0f, parameters_),
         _difference_from_target_ratio("Diff_from_ratio_target", 0.10f, 0.0f,
-                                      1.0f, _param_vector),
-        _targeted_angle("angle_target", 0.0f, 0.0f, 90.0f, _param_vector),
+                                      1.0f, parameters_),
+        _targeted_angle("angle_target", 0.0f, 0.0f, 90.0f, parameters_),
         _difference_from_target_angle("Diff_from_angle_target", 30.0f, 0.0f,
-                                      90.0f, _param_vector),
+                                      90.0f, parameters_),
         _feature_factory(5) {
     setName("ObjectFinder");
     _feature_factory.SetAllFeatureToCompute();
@@ -68,9 +68,9 @@ class ObjectFinder : public Filter {
       }
 
       if (image.channels() != 1) cv::cvtColor(image, image, CV_BGR2GRAY);
-      cv::Mat originalImage = _global_params.getOriginalImage();
+      cv::Mat originalImage = global_params_.getOriginalImage();
 
-      Time timer;
+      PerformanceEvaluator timer;
       timer.UpdateStartTime();
 
       contourList_t contours;
