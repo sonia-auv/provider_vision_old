@@ -27,13 +27,16 @@ set( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++1y -O3" )
 find_package( catkin REQUIRED COMPONENTS
     roscpp
     cv_bridge
+    lib_atlas
 )
 
 catkin_package(
     INCLUDE_DIRS src
     LIBRARIES sonia_vision
-    CATKIN_DEPENDS roscpp cv_bridge
+    CATKIN_DEPENDS roscpp cv_bridge lib_atlas
 )
+
+find_package( OpenCV REQUIRED)
 
 #===============================================================================
 # O T H E R   P A C K A G E S   D E P E N D E N C I E S
@@ -59,6 +62,7 @@ file( GLOB_RECURSE lib_vision_SRC_FILES "${lib_vision_SRC_DIR}/*.cpp" )
 include_directories(
     ${lib_vision_SRC_DIR}
     ${catkin_INCLUDE_DIRS}
+    ${lib_atlas_INCLUDE_DIRS}
 )
 
 #===============================================================================
@@ -66,31 +70,63 @@ include_directories(
 
 set( TARGET_NAME sonia_vision )
 
-add_library( ${TARGET_NAME} ${lib_vision_SRC_FILES} )
-target_link_libraries( ${TARGET_NAME}
-    ${catkin_LIBRARIES}
-    ${fann_LIBRARIES}
+SET( LIBS_TO_LINK
+  ${catkin_LIBRARIES}
+  ${fann_LIBRARIES}
+  ${lib_atlas_LIBRARIES}
+  ${OpenCV_LIBS}
 )
+
+add_library( ${TARGET_NAME} ${lib_vision_SRC_FILES} )
+target_link_libraries( ${TARGET_NAME} ${LIBS_TO_LINK})
 
 set_target_properties( ${TARGET_NAME}
     PROPERTIES
     LINKER_LANGUAGE CXX
 )
-
+SET( LIBS_TO_LINK ${LIBS_TO_LINK} ${TARGET_NAME})
 #==========================================================================
 # C R E A T I N G   U N I T   T E S T S
 
 catkin_add_gtest( utest_object_ranking_data test/object_ranking_data_test.cc )
+target_link_libraries( utest_object_ranking_data ${LIBS_TO_LINK})
+
 catkin_add_gtest( utest_object_tracking_data test/object_tracking_data_test.cc )
+target_link_libraries( utest_object_tracking_data  ${LIBS_TO_LINK})
+
 catkin_add_gtest( utest_object_ranker test/object_ranker_test.cc )
+target_link_libraries(  utest_object_ranker ${LIBS_TO_LINK})
+
 catkin_add_gtest( utest_object_full_data test/object_full_data_test.cc )
+target_link_libraries(  utest_object_full_data ${LIBS_TO_LINK})
+
 catkin_add_gtest( utest_object_frame_memory test/object_frame_memory_test.cc )
+target_link_libraries( utest_object_frame_memory ${LIBS_TO_LINK})
+
 catkin_add_gtest( utest_object_basic_data test/object_basic_data_test.cc )
+target_link_libraries(  utest_object_basic_data ${LIBS_TO_LINK})
+
 catkin_add_gtest( utest_major_edge_extractor test/major_edge_extractor_test.cc )
+target_link_libraries(  utest_major_edge_extractor ${LIBS_TO_LINK})
+
 catkin_add_gtest( utest_feature_vec test/feature_vec_test.cc )
+target_link_libraries( utest_feature_vec ${LIBS_TO_LINK})
+
 catkin_add_gtest( utest_ai_trainer test/ai_trainer_test.cc )
+target_link_libraries( utest_ai_trainer ${LIBS_TO_LINK})
+
 catkin_add_gtest( utest_scharr test/scharr_test.cc )
+target_link_libraries( utest_scharr ${LIBS_TO_LINK})
+
 catkin_add_gtest( utest_feature_factory test/feature_factory_test.cc )
+target_link_libraries( utest_feature_factory ${LIBS_TO_LINK})
+
+catkin_add_gtest( utest_performance_evaluator test/performace_evaluator_test.cc )
+target_link_libraries( utest_performance_evaluator ${LIBS_TO_LINK})
+
+catkin_add_gtest( utest_contour test/contour_test.cc )
+target_link_libraries( utest_contour ${LIBS_TO_LINK})
+
 
 #==========================================================================
 # I N S T A L L I N G   T A R G E T S
