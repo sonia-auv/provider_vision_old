@@ -17,9 +17,9 @@
 #include <dc1394/dc1394.h>
 
 #include "config.h"
-#include "media/media.h"
+#include "media/camera/base_media.h"
 #include "media/context/base_context.h"
-#include "media/dc1394_camera.h"
+#include "media/camera/dc1394_camera.h"
 
 namespace vision_server {
 

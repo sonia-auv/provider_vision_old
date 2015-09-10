@@ -14,9 +14,8 @@
 // I N C L U D E   F I L E S
 
 #include <opencv2/opencv.hpp>
-#include "media/media.h"
 #include "media/context/base_context.h"
-#include "media/webcam.h"
+#include "media/camera/webcam_camera.h"
 #include "config.h"
 
 namespace vision_server {
@@ -79,7 +78,7 @@ class WebcamContext: public BaseContext {
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
-  std::shared_ptr<CAMWebcam> _webcam;
+  std::shared_ptr<vision_server::CAMWebcam> _webcam;
 };
 
 }  // namespace vision_server

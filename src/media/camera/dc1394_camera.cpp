@@ -12,7 +12,7 @@
 
 #include <string>
 #include <ros/ros.h>
-#include "media/dc1394_camera.h"
+#include "media/camera/dc1394_camera.h"
 
 namespace vision_server {
 

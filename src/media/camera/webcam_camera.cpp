@@ -10,7 +10,7 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
-#include "media/webcam.h"
+#include "media/camera/webcam_camera.h"
 
 namespace vision_server {
 

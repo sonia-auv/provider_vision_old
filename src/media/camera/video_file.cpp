@@ -12,7 +12,7 @@
 
 #include <string>
 #include <vector>
-#include "media/video_file.h"
+#include "media/camera/video_file.h"
 
 namespace vision_server {
 

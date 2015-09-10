@@ -14,13 +14,10 @@
 // I N C L U D E   F I L E S
 
 #include <opencv2/opencv.hpp>
-#include "media/media.h"
+#include "media/camera/base_media.h"
 #include "media/context/base_context.h"
-#include "media/webcam.h"
 #include "config.h"
-
-#include "media/image_file.h"
-#include "media/video_file.h"
+#include "media/camera/video_file.h"
 
 namespace vision_server {
 

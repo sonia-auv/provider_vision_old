@@ -14,6 +14,7 @@
 #include <vector>
 #include <ros/ros.h>
 #include "media/context/video_file_context.h"
+#include "media/camera/image_file.h"
 
 namespace vision_server {
 

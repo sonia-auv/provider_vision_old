@@ -19,7 +19,7 @@
 #include <lib_atlas/pattern/observer.h>
 #include "config.h"
 #include "proc/filterchain.h"
-#include "media/media.h"
+#include "media/camera/base_media.h"
 #include "media/media_streamer.h"
 
 namespace vision_server {

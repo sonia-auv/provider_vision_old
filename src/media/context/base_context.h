@@ -17,7 +17,7 @@
 #include <lib_atlas/pattern/runnable.h>
 #include "config.h"
 #include "media/cam_config.h"
-#include "media/media.h"
+#include "media/camera/base_media.h"
 
 namespace vision_server {
 

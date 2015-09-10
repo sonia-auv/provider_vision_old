@@ -21,9 +21,9 @@
 #include <lib_atlas/sys/timer.h>
 #include "utils/camera_id.h"
 #include "utils/yuv.h"
-#include "media/media.h"
+#include "media/camera/base_media.h"
 #include "media/context/base_context.h"
-#include "media/camera.h"
+#include "media/camera/base_camera.h"
 
 namespace vision_server {
 

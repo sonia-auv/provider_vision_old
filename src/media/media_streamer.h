@@ -17,7 +17,7 @@
 #include <opencv2/core/core.hpp>
 #include <lib_atlas/pattern/subject.h>
 #include <lib_atlas/pattern/runnable.h>
-#include "media/media.h"
+#include "media/camera/base_media.h"
 #include "utils/camera_id.h"
 
 namespace vision_server {

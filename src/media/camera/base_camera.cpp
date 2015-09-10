@@ -10,7 +10,7 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
-#include "media/camera.h"
+#include "media/camera/base_camera.h"
 
 namespace vision_server {
 

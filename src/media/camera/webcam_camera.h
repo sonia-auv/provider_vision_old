@@ -15,9 +15,7 @@
 
 #include <opencv2/opencv.hpp>
 #include "config.h"
-#include "media/media.h"
-#include "media/context/base_context.h"
-#include "media/camera.h"
+#include "media/camera/base_camera.h"
 
 namespace vision_server {
 

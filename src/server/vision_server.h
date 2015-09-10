@@ -17,7 +17,7 @@
 #include <lib_atlas/ros/service_server_manager.h>
 #include <vision_server/vision_server_execute_cmd.h>
 #include <vision_server/vision_server_get_information_list.h>
-#include "media/media.h"
+#include "media/camera/base_media.h"
 #include "config.h"
 #include "server/media_manager.h"
 #include "server/filterchain_manager.h"
