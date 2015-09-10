@@ -14,14 +14,15 @@
 // I N C L U D E   F I L E S
 
 #include <lib_atlas/ros/service_server_manager.h>
+#include <media/context/file_context.h>
 #include <vision_server/vision_server_get_media_param.h>
 #include <vision_server/vision_server_set_media_param.h>
 #include "config.h"
 #include "media/context/base_context.h"
 #include "media/context/dc1394_context.h"
 #include "media/context/webcam_context.h"
+#include "media/context/file_context.h"
 #include "media/cam_config.h"
-#include "media/context/video_file_context.h"
 #include "media/media_streamer.h"
 
 namespace vision_server {

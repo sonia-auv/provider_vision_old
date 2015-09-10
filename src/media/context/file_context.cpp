@@ -10,10 +10,10 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
+#include <media/context/file_context.h>
 #include <string>
 #include <vector>
 #include <ros/ros.h>
-#include "media/context/video_file_context.h"
 #include "media/camera/image_file.h"
 
 namespace vision_server {
