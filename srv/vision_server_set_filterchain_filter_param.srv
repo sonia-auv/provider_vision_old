@@ -1,6 +1,6 @@
 # set the value of a parameter
 
-# Execution to get value from
+# DetectionTask to get value from
 string exec_name
 
 # Fitlerchain to get value from if no exec_name

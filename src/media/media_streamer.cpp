@@ -12,8 +12,8 @@
 
 #include <ros/ros.h>
 #include <lib_atlas/sys/timer.h>
-#include "server/acquisition_loop.h"
 #include <lib_atlas/sys/fsinfo.h>
+#include "media/media_streamer.h"
 
 namespace vision_server {
 
@@ -22,7 +22,7 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-AcquisitionLoop::AcquisitionLoop(std::shared_ptr<Media> cam, int artificialFrameRateMs)
+MediaStreamer::MediaStreamer(std::shared_ptr<Media> cam, int artificialFrameRateMs)
     : _media(cam),
       LOOP_TAG("[Acquisition Loop]"),
       _is_streaming(false),
@@ -38,11 +38,11 @@ AcquisitionLoop::AcquisitionLoop(std::shared_ptr<Media> cam, int artificialFrame
 
 //------------------------------------------------------------------------------
 //
-AcquisitionLoop::~AcquisitionLoop() {
+MediaStreamer::~MediaStreamer() {
   if (_is_streaming) {
     StopStreaming();
   }
-  ROS_INFO_NAMED(LOOP_TAG, "Destroying AcquisitionLoop");
+  ROS_INFO_NAMED(LOOP_TAG, "Destroying MediaStreamer");
 }
 
 //==============================================================================
@@ -50,13 +50,13 @@ AcquisitionLoop::~AcquisitionLoop() {
 
 //------------------------------------------------------------------------------
 //
-void AcquisitionLoop::SetFramerate(int framePerSecond) {
+void MediaStreamer::SetFramerate(int framePerSecond) {
   _frameRateMiliSec = 1000 / framePerSecond;
 }
 
 //------------------------------------------------------------------------------
 //
-bool AcquisitionLoop::StartStreaming() {
+bool MediaStreamer::StartStreaming() {
   ROS_INFO_NAMED(LOOP_TAG, "Starting streaming on camera %s",
                  _media->GetCameraID().GetName().c_str());
 
@@ -72,7 +72,7 @@ bool AcquisitionLoop::StartStreaming() {
 
 //------------------------------------------------------------------------------
 //
-bool AcquisitionLoop::StopStreaming() {
+bool MediaStreamer::StopStreaming() {
   _is_streaming = false;
 
   // Send message on the line.
@@ -89,7 +89,7 @@ bool AcquisitionLoop::StopStreaming() {
 
 //------------------------------------------------------------------------------
 //
-bool AcquisitionLoop::StartRecording(const std::string &filename) {
+bool MediaStreamer::StartRecording(const std::string &filename) {
   if (IsRecording()) {
     // ROS_INFO("[VISION_CLIENT] startVideoCapture not opened.");
     return false;
@@ -118,7 +118,7 @@ bool AcquisitionLoop::StartRecording(const std::string &filename) {
 
 //------------------------------------------------------------------------------
 //
-bool AcquisitionLoop::StopRecording() {
+bool MediaStreamer::StopRecording() {
   if (IsRecording()) {
     video_writer_.release();
     is_recording_ = false;
@@ -130,7 +130,7 @@ bool AcquisitionLoop::StopRecording() {
 
 //------------------------------------------------------------------------------
 //
-void AcquisitionLoop::run() {
+void MediaStreamer::run() {
   bool acquival = false;
   bool must_set_record = false;
 
@@ -186,7 +186,7 @@ void AcquisitionLoop::run() {
 
 //------------------------------------------------------------------------------
 //
-bool AcquisitionLoop::GetImage(cv::Mat &image) {
+bool MediaStreamer::GetImage(cv::Mat &image) {
   bool retval = false;
 
   //_logger->LogInfo(LOOP_TAG, "Taking mutex for getting image");
@@ -213,10 +213,10 @@ bool AcquisitionLoop::GetImage(cv::Mat &image) {
 
 //------------------------------------------------------------------------------
 //
-const CameraID AcquisitionLoop::GetMediaID() { return _media->GetCameraID(); }
+const CameraID MediaStreamer::GetMediaID() { return _media->GetCameraID(); }
 
 //------------------------------------------------------------------------------
 //
-const STATUS AcquisitionLoop::GetMediaStatus() { return _media->getStatus(); }
+const STATUS MediaStreamer::GetMediaStatus() { return _media->getStatus(); }
 
 }  // namespace vision_server

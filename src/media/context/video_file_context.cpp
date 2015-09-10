@@ -1,5 +1,5 @@
 /**
- * \file	CamDriverMedia.cpp
+ * \file	VideoFileContext.cpp
  * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
  * \date	10/03/2015
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 #include <ros/ros.h>
-#include "media/cam_driver_media.h"
+#include "media/context/video_file_context.h"
 
 namespace vision_server {
 
@@ -22,19 +22,19 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-CAMDriverMedia::CAMDriverMedia(const CAMConfig config)
-    : CAMDriver(config), DRIVER_TAG("[MEDIA Driver]") {}
+VideoFileContext::VideoFileContext(const CAMConfig config)
+    : BaseContext(config), DRIVER_TAG("[MEDIA Driver]") {}
 
 //------------------------------------------------------------------------------
 //
-CAMDriverMedia::~CAMDriverMedia() {}
+VideoFileContext::~VideoFileContext() {}
 
 //==============================================================================
 // M E T H O D   S E C T I O N
 
 //------------------------------------------------------------------------------
 //
-void CAMDriverMedia::InitDriver() {
+void VideoFileContext::InitDriver() {
   ROS_INFO_NAMED(DRIVER_TAG, "Initializing MEDIA driver");
   PopulateCameraList();
   // note : les médias sont instancés en cours d'exécution, pas à la création
@@ -42,19 +42,19 @@ void CAMDriverMedia::InitDriver() {
 
 //------------------------------------------------------------------------------
 //
-void CAMDriverMedia::CloseDriver() { _live_camera_list.clear(); }
+void VideoFileContext::CloseDriver() { _live_camera_list.clear(); }
 
 //------------------------------------------------------------------------------
 //
-bool CAMDriverMedia::StartCamera(CameraID id) {
+bool VideoFileContext::StartCamera(CameraID id) {
   auto media = GetActiveCamera(id);
   if (media.get() == nullptr) {
     std::string nameMedia = id.GetName();
     // le media n'existe pas, donc on le créé
     if (GetMediaType(nameMedia) == IMAGE) {
-      media = std::make_shared<MMImage>(nameMedia);
+      media = std::make_shared<ImageFile>(nameMedia);
     } else if (GetMediaType(nameMedia) == VIDEO) {
-      media = std::make_shared<MMVideo>(nameMedia, true);
+      media = std::make_shared<VideoFile>(nameMedia, true);
     } else {
       ROS_ERROR_NAMED(DRIVER_TAG, "Media not instanciate and not started %s",
                       id.GetFullName());
@@ -68,7 +68,7 @@ bool CAMDriverMedia::StartCamera(CameraID id) {
 
 //------------------------------------------------------------------------------
 //
-bool CAMDriverMedia::StopCamera(CameraID id) {
+bool VideoFileContext::StopCamera(CameraID id) {
   auto media = GetActiveCamera(id);
   if (media.get() != nullptr) {
     if (!media->Stop()) {
@@ -94,7 +94,7 @@ bool CAMDriverMedia::StopCamera(CameraID id) {
 
 //------------------------------------------------------------------------------
 //
-std::vector<CameraID> CAMDriverMedia::GetCameraList() {
+std::vector<CameraID> VideoFileContext::GetCameraList() {
   // feed la _camera_list (les données sont dans _live_camera_list)
   PopulateCameraList();
   return _camera_list;
@@ -102,7 +102,7 @@ std::vector<CameraID> CAMDriverMedia::GetCameraList() {
 
 //------------------------------------------------------------------------------
 //
-bool CAMDriverMedia::IsMyCamera(const std::string &nameMedia) {
+bool VideoFileContext::IsMyCamera(const std::string &nameMedia) {
   // cherche si la camera existe
   for (auto &camera : _live_camera_list) {
     if (camera->GetCameraID().GetName() == nameMedia) {
@@ -122,7 +122,7 @@ bool CAMDriverMedia::IsMyCamera(const std::string &nameMedia) {
 
 //------------------------------------------------------------------------------
 //
-std::shared_ptr<Media> CAMDriverMedia::GetActiveCamera(CameraID id) {
+std::shared_ptr<Media> VideoFileContext::GetActiveCamera(CameraID id) {
   for (auto &camera : _live_camera_list) {
     if (camera->GetCameraID().GetName() == id.GetName()) {
       return camera;
@@ -133,7 +133,7 @@ std::shared_ptr<Media> CAMDriverMedia::GetActiveCamera(CameraID id) {
 
 //------------------------------------------------------------------------------
 //
-void CAMDriverMedia::SetFeature(FEATURE feat, CameraID id, float val) {
+void VideoFileContext::SetFeature(FEATURE feat, CameraID id, float val) {
   // Should not be necessary, but in case the driver has been close, the list
   // is empty so...
   for (const auto &camera : _live_camera_list) {
@@ -144,7 +144,7 @@ void CAMDriverMedia::SetFeature(FEATURE feat, CameraID id, float val) {
 
 //------------------------------------------------------------------------------
 //
-void CAMDriverMedia::GetFeature(FEATURE feat, CameraID id, float &val) {
+void VideoFileContext::GetFeature(FEATURE feat, CameraID id, float &val) {
   // Should not be necessary, but in case the driver has been close, the list
   // is empty so...
   for (const auto &camera : _live_camera_list) {
@@ -155,15 +155,15 @@ void CAMDriverMedia::GetFeature(FEATURE feat, CameraID id, float &val) {
 
 //------------------------------------------------------------------------------
 //
-void CAMDriverMedia::run() {}
+void VideoFileContext::run() {}
 
 //------------------------------------------------------------------------------
 //
-bool CAMDriverMedia::WatchDogFunc() { return true; }
+bool VideoFileContext::WatchDogFunc() { return true; }
 
 //------------------------------------------------------------------------------
 //
-void CAMDriverMedia::PopulateCameraList() {
+void VideoFileContext::PopulateCameraList() {
   for (auto &camera : _live_camera_list) {
     _camera_list.push_back(camera->GetCameraID());
   }
@@ -171,7 +171,7 @@ void CAMDriverMedia::PopulateCameraList() {
 
 //------------------------------------------------------------------------------
 //
-CAMDriverMedia::MEDIA_TYPE CAMDriverMedia::GetMediaType(
+VideoFileContext::MEDIA_TYPE VideoFileContext::GetMediaType(
     const std::string &nameMedia) {
   // on commence par rechercher une image
   if (nameMedia.find(".jpg") != std::string::npos ||

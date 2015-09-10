@@ -19,9 +19,9 @@
 #include <vision_server/vision_server_get_information_list.h>
 #include "media/media.h"
 #include "config.h"
-#include "server/camera_manager.h"
+#include "server/media_manager.h"
 #include "server/filterchain_manager.h"
-#include "server/execution.h"
+#include "proc/detection_task.h"
 
 namespace vision_server {
 
@@ -31,7 +31,7 @@ namespace vision_server {
 /**
  * Vision server is the main class of the system
  * It's job is to assemble and connect the pieces to create execution
- * It is the owner of the active Execution and AcquisitionLoop
+ * It is the owner of the active DetectionTask and MediaStreamer
  * It does not hold the filterchains, as it is the responsability of the
  * filterchain manager.
  * It gets the filterchains from the filterchain manager.
@@ -56,9 +56,9 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    * Return a pointer of acquisitionLoop or execution with that name if exist.
    * Can return nullptr
    */
-  std::shared_ptr<Execution> GetExecution(const std::string &execName);
+  std::shared_ptr<DetectionTask> GetExecution(const std::string &execName);
 
-  std::shared_ptr<AcquisitionLoop> GetAcquisitionLoop(const std::string &mediaName);
+  std::shared_ptr<MediaStreamer> GetAcquisitionLoop(const std::string &mediaName);
 
   /**
    * Return true if another execution use the media
@@ -66,18 +66,18 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
   const bool IsAnotherUserMedia(const std::string &mediaName);
 
   /**
-   * Add/remove AcquisitionLoop from the list.
+   * Add/remove MediaStreamer from the list.
    */
-  void AddAcquisitionLoop(std::shared_ptr<AcquisitionLoop> ptr);
+  void AddAcquisitionLoop(std::shared_ptr<MediaStreamer> ptr);
 
-  void RemoveAcquisitionLoop(std::shared_ptr<AcquisitionLoop> ptr);
+  void RemoveAcquisitionLoop(std::shared_ptr<MediaStreamer> ptr);
 
   /**
-   * Add/remove Execution from the list.
+   * Add/remove DetectionTask from the list.
    */
-  void AddExecution(std::shared_ptr<Execution> ptr);
+  void AddExecution(std::shared_ptr<DetectionTask> ptr);
 
-  void RemoveExecution(std::shared_ptr<Execution> ptr);
+  void RemoveExecution(std::shared_ptr<DetectionTask> ptr);
 
  private:
   //==========================================================================
@@ -126,7 +126,7 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    */
   atlas::NodeHandlePtr node_handle_;
 
-  CameraManager _camera_manager;
+  MediaManager _camera_manager;
 
   FilterchainManager _filterchain_manager;
 
@@ -138,9 +138,9 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
   /**
    * Remember what exist.
    */
-  std::vector<std::shared_ptr<Execution>> executions_;
+  std::vector<std::shared_ptr<DetectionTask>> executions_;
 
-  std::vector<std::shared_ptr<AcquisitionLoop>> acquisition_loop_;
+  std::vector<std::shared_ptr<MediaStreamer>> acquisition_loop_;
 };
 
 //==============================================================================
@@ -148,7 +148,7 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
 
 //------------------------------------------------------------------------------
 //
-inline void VisionServer::AddAcquisitionLoop(std::shared_ptr<AcquisitionLoop> ptr) {
+inline void VisionServer::AddAcquisitionLoop(std::shared_ptr<MediaStreamer> ptr) {
   std::lock_guard<std::mutex> guard(_list_access);
   acquisition_loop_.push_back(ptr);
 }
@@ -156,7 +156,7 @@ inline void VisionServer::AddAcquisitionLoop(std::shared_ptr<AcquisitionLoop> pt
 //------------------------------------------------------------------------------
 //
 inline void VisionServer::RemoveAcquisitionLoop(
-    std::shared_ptr<AcquisitionLoop> ptr) {
+    std::shared_ptr<MediaStreamer> ptr) {
   std::lock_guard<std::mutex> guard(_list_access);
   auto acquisition = acquisition_loop_.begin();
   auto vec_end = acquisition_loop_.end();
@@ -169,14 +169,14 @@ inline void VisionServer::RemoveAcquisitionLoop(
 
 //------------------------------------------------------------------------------
 //
-inline void VisionServer::AddExecution(std::shared_ptr<Execution> ptr) {
+inline void VisionServer::AddExecution(std::shared_ptr<DetectionTask> ptr) {
   std::lock_guard<std::mutex> guard(_list_access);
   executions_.push_back(ptr);
 }
 
 //------------------------------------------------------------------------------
 //
-inline void VisionServer::RemoveExecution(std::shared_ptr<Execution> ptr) {
+inline void VisionServer::RemoveExecution(std::shared_ptr<DetectionTask> ptr) {
   std::lock_guard<std::mutex> guard(_list_access);
   auto execution = executions_.begin();
   auto vec_end = executions_.end();

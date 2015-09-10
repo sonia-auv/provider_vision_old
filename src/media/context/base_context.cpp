@@ -10,7 +10,7 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
-#include "media/cam_driver.h"
+#include "media/context/base_context.h"
 
 namespace vision_server {
 
@@ -19,11 +19,11 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-CAMDriver::CAMDriver(const CAMConfig config) : _config(config) {
+BaseContext::BaseContext(const CAMConfig config) : _config(config) {
 }
 
 //------------------------------------------------------------------------------
 //
-CAMDriver::~CAMDriver() {}
+BaseContext::~BaseContext() {}
 
 }  // namespace vision_server

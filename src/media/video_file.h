@@ -1,5 +1,5 @@
 /**
- * \file	CAMWebcam.h
+ * \file	VideoFile.h
  * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
  * \date	10/03/2015
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
@@ -7,17 +7,16 @@
  * found in the LICENSE file.
  */
 
-#ifndef VISION_SERVER_CAM_WEBCAM_H_
-#define VISION_SERVER_CAM_WEBCAM_H_
+#ifndef VISION_SERVER_MEDIA_VIDEO_H_
+#define VISION_SERVER_MEDIA_VIDEO_H_
 
 //==============================================================================
 // I N C L U D E   F I L E S
 
-#include <opencv2/opencv.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
 #include "config.h"
 #include "media/media.h"
-#include "media/cam_driver.h"
-#include "media/camera.h"
 
 namespace vision_server {
 
@@ -25,46 +24,51 @@ namespace vision_server {
 // C L A S S E S
 
 /**
- * CAMWebcam is the object for handling webcams.
- * For now it consider that the default camera is a webcam.
- * There is no other check than that. It is useful for debugging the server.
+ * Handles image from files (png, jpeg) and is use as a camera
+ * (same call for open, get image, close (start stop does nothing)
  */
-class CAMWebcam : public Camera, private cv::VideoCapture {
+class VideoFile: public Media, private cv::VideoCapture {
  public:
   //==========================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
-  CAMWebcam();
+  VideoFile(std::string path_to_file, bool looping = true);
 
-  CAMWebcam(int webcamIdx);
+  VideoFile();
 
-  virtual ~CAMWebcam();
+  virtual ~VideoFile();
 
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  /** Method override from Media */
+  void SetPathToVideo(std::string full_path);
+
+  void SetLooping(bool looping);
+
+  bool LoadVideo(std::string path_to_file);
+
+  // Media overload
+  std::vector<std::string> getCommands() const override;
+
   bool Start() override;
 
-  /** Method override from Media */
   bool Stop() override;
 
-  /** Method override from Media */
   bool NextImage(cv::Mat &image) override;
 
   bool IsRealCamera() const override;
 
-  /** Method override from Media */
-  bool Open() override;
+  std::string GetName() const;
 
-  /** Method override from Media */
-  bool Close() override;
+ private:
+  //==========================================================================
+  // P R I V A T E   M E M B E R S
 
-  /** Method override from Media */
-  bool SetFeature(FEATURE feat, float value) override;
+  cv::Mat _currentImage;
 
-  /** Method override from Media */
-  float GetFeature(FEATURE feat) override;
+  std::string _path;
+
+  bool _looping;
 };
 
 //==============================================================================
@@ -72,8 +76,8 @@ class CAMWebcam : public Camera, private cv::VideoCapture {
 
 //------------------------------------------------------------------------------
 //
-inline bool CAMWebcam::IsRealCamera() const { return true; }
+inline bool VideoFile::IsRealCamera() const { return false; }
 
 }  // namespace vision_server
 
-#endif  // VISION_SERVER_CAM_WEBCAM_H_
+#endif  // VISION_SERVER_MEDIA_VIDEO_H_

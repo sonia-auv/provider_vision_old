@@ -57,8 +57,8 @@ class VisionServerDescriptor(object):
 
         # Executions
         self._logger.info("Executions...")
-        self._executionsFake.append(self.Execution(name="AFakeExecution"))
-        self._executionsFake.append(self.Execution(name="AnotherFakeExecution"))
+        self._executionsFake.append(self.DetectionTask(name="AFakeExecution"))
+        self._executionsFake.append(self.DetectionTask(name="AnotherFakeExecution"))
         for i in range(len(self._executionsFake)):
             if i < len(self._mediasFake):
                 self._executionsFake[i]._media = self._mediasFake[i]
@@ -78,7 +78,7 @@ class VisionServerDescriptor(object):
     #
     # Inner descriptive classes
     #
-    class Execution(object):
+    class DetectionTask(object):
         def __init__(self, name):
             self._name = name
             self._media = None

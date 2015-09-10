@@ -22,7 +22,7 @@
 #include "utils/camera_id.h"
 #include "utils/yuv.h"
 #include "media/media.h"
-#include "media/cam_driver.h"
+#include "media/context/base_context.h"
 #include "media/camera.h"
 
 namespace vision_server {
@@ -30,7 +30,7 @@ namespace vision_server {
 //==============================================================================
 // C L A S S E S
 
-class CAMCameraDC1394 : public Camera {
+class DC1394Camera: public Camera {
  public:
   static const int DMA_BUFFER = 4;
 
@@ -39,9 +39,9 @@ class CAMCameraDC1394 : public Camera {
   //==========================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
-  CAMCameraDC1394(dc1394camera_t *camera, CameraID id);
+  DC1394Camera(dc1394camera_t *camera, CameraID id);
 
-  ~CAMCameraDC1394();
+  ~DC1394Camera();
 
   //==========================================================================
   // P U B L I C   M E T H O D S
@@ -136,31 +136,31 @@ class CAMCameraDC1394 : public Camera {
 
 //------------------------------------------------------------------------------
 //
-inline uint64_t CAMCameraDC1394::GetGUID() const { return _id.GetGUID(); }
+inline uint64_t DC1394Camera::GetGUID() const { return _id.GetGUID(); }
 
 //------------------------------------------------------------------------------
 //
-inline CameraID CAMCameraDC1394::GetCamID() const { return _id; }
+inline CameraID DC1394Camera::GetCamID() const { return _id; }
 
 //------------------------------------------------------------------------------
 //
-inline std::string CAMCameraDC1394::GetModel() const { return _model; }
+inline std::string DC1394Camera::GetModel() const { return _model; }
 
 //------------------------------------------------------------------------------
 //
-inline void CAMCameraDC1394::SetCamID(CameraID cam_id) { _id = cam_id; }
+inline void DC1394Camera::SetCamID(CameraID cam_id) { _id = cam_id; }
 
 //------------------------------------------------------------------------------
 //
-inline void CAMCameraDC1394::SetModel(std::string model) { _model = model; }
+inline void DC1394Camera::SetModel(std::string model) { _model = model; }
 
 //------------------------------------------------------------------------------
 //
-inline bool CAMCameraDC1394::HasArtificialFramerate() { return false; }
+inline bool DC1394Camera::HasArtificialFramerate() { return false; }
 
 //------------------------------------------------------------------------------
 //
-inline double CAMCameraDC1394::GetAcquistionTimerValue() {
+inline double DC1394Camera::GetAcquistionTimerValue() {
   _timer_acces.lock();
   _acquisition_timer.sleep(3);
   auto timer = _acquisition_timer.time();
@@ -170,13 +170,13 @@ inline double CAMCameraDC1394::GetAcquistionTimerValue() {
 
 //------------------------------------------------------------------------------
 //
-inline dc1394camera_t *CAMCameraDC1394::GetCameraPtr() {
+inline dc1394camera_t *DC1394Camera::GetCameraPtr() {
   return _dc1394_camera;
 }
 
 //------------------------------------------------------------------------------
 //
-inline void CAMCameraDC1394::UndistordImage(cv::Mat &in, cv::Mat &out) {
+inline void DC1394Camera::UndistordImage(cv::Mat &in, cv::Mat &out) {
   if (_undistortion_is_enable) {
     cv::undistort(in, out, _camera_matrix, _distortion_matrix);
   } else {
@@ -186,7 +186,7 @@ inline void CAMCameraDC1394::UndistordImage(cv::Mat &in, cv::Mat &out) {
 
 //------------------------------------------------------------------------------
 //
-inline bool CAMCameraDC1394::IsRealCamera() const { return true; }
+inline bool DC1394Camera::IsRealCamera() const { return true; }
 
 }  // namespace vision_server
 

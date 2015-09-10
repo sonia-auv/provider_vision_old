@@ -13,7 +13,7 @@
 #include <assert.h>
 #include <std_msgs/String.h>
 #include <lib_atlas/typedef.h>
-#include "server/execution.h"
+#include "proc/detection_task.h"
 
 namespace vision_server {
 
@@ -27,9 +27,9 @@ static const char *EXEC_TAG = "[EXECUTION]";
 
 //------------------------------------------------------------------------------
 //
-Execution::Execution(
+DetectionTask::DetectionTask(
     atlas::NodeHandlePtr node_handle,
-    std::shared_ptr<AcquisitionLoop> acquisition_loop,
+    std::shared_ptr<MediaStreamer> acquisition_loop,
     Filterchain *filterchain, const std::string &execName)
     : _acquisition_loop(acquisition_loop),
       _filterchain_to_process(filterchain),
@@ -50,7 +50,7 @@ Execution::Execution(
 
 //------------------------------------------------------------------------------
 //
-Execution::~Execution() {
+DetectionTask::~DetectionTask() {
   if (_state == RUNNING) StopExec();
   // No need to destroy _image_topic, it is a smart pointer
   ROS_INFO_NAMED(EXEC_TAG, "Destroying execution");
@@ -71,7 +71,7 @@ Execution::~Execution() {
 
 //------------------------------------------------------------------------------
 //
-Execution::ERROR Execution::StartExec() {
+DetectionTask::ERROR DetectionTask::StartExec() {
   ERROR status = ERROR::FAILURE_TO_START;
   if (_acquisition_loop.get() == nullptr) {
     ROS_ERROR_NAMED(EXEC_TAG, "Acquisition loop is null!");
@@ -102,7 +102,7 @@ Execution::ERROR Execution::StartExec() {
 
 //------------------------------------------------------------------------------
 //
-Execution::ERROR Execution::StopExec() {
+DetectionTask::ERROR DetectionTask::StopExec() {
   ERROR status = ERROR::FAILURE_TO_CLOSE;
 
   std::lock_guard<std::mutex> guard(_newest_image_mutex);
@@ -131,7 +131,7 @@ Execution::ERROR Execution::StopExec() {
 
 //------------------------------------------------------------------------------
 //
-void Execution::OnSubjectNotify(atlas::Subject<> &subject) ATLAS_NOEXCEPT {
+void DetectionTask::OnSubjectNotify(atlas::Subject<> &subject) ATLAS_NOEXCEPT {
   std::lock_guard<std::mutex> guard(_newest_image_mutex);
   _acquisition_loop->GetImage(_newest_image);
   _new_image_ready = true;
@@ -139,7 +139,7 @@ void Execution::OnSubjectNotify(atlas::Subject<> &subject) ATLAS_NOEXCEPT {
 
 //------------------------------------------------------------------------------
 //
-void Execution::run() {
+void DetectionTask::run() {
   while (!must_stop()) {
     // Prevent to process data twice for fast processing
     if (!_new_image_ready) {

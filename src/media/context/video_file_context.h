@@ -1,5 +1,5 @@
 /**
- * \file	CamDriverMedia.h
+ * \file	VideoFileContext.h
  * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
  * \date	10/03/2015
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
@@ -15,12 +15,12 @@
 
 #include <opencv2/opencv.hpp>
 #include "media/media.h"
-#include "media/cam_driver.h"
-#include "media/cam_webcam.h"
+#include "media/context/base_context.h"
+#include "media/webcam.h"
 #include "config.h"
 
-#include "media/media_image.h"
-#include "media/media_video.h"
+#include "media/image_file.h"
+#include "media/video_file.h"
 
 namespace vision_server {
 
@@ -39,7 +39,7 @@ namespace vision_server {
  * Therefore, calling GetCameraList() will return the list of videos from
  * _live_camera_list.
  */
-class CAMDriverMedia : public CAMDriver {
+class VideoFileContext: public BaseContext {
  public:
   const char *DRIVER_TAG;
 
@@ -51,9 +51,9 @@ class CAMDriverMedia : public CAMDriver {
   //==========================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
-  CAMDriverMedia(const CAMConfig config);
+  VideoFileContext(const CAMConfig config);
 
-  virtual ~CAMDriverMedia();
+  virtual ~VideoFileContext();
 
   //==========================================================================
   // P U B L I C   M E T H O D S
@@ -111,7 +111,7 @@ class CAMDriverMedia : public CAMDriver {
 
 //------------------------------------------------------------------------------
 //
-inline CameraID CAMDriverMedia::GetIDFromName(const std::string &name) {
+inline CameraID VideoFileContext::GetIDFromName(const std::string &name) {
   if (IsMyCamera(name)) {
     return CameraID(name, 0);
   }

@@ -12,7 +12,7 @@
 
 #include <string>
 #include <ros/ros.h>
-#include "media/cam_camera_dc1394.h"
+#include "media/dc1394_camera.h"
 
 namespace vision_server {
 
@@ -21,7 +21,7 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-CAMCameraDC1394::CAMCameraDC1394(dc1394camera_t *camera, CameraID id)
+DC1394Camera::DC1394Camera(dc1394camera_t *camera, CameraID id)
     : Camera(id),
       _dc1394_camera(camera),
       _is_transmitting(false),
@@ -36,7 +36,7 @@ CAMCameraDC1394::CAMCameraDC1394(dc1394camera_t *camera, CameraID id)
 
 //------------------------------------------------------------------------------
 //
-CAMCameraDC1394::~CAMCameraDC1394() {
+DC1394Camera::~DC1394Camera() {
   dc1394_camera_free(_dc1394_camera);
 }
 
@@ -45,7 +45,7 @@ CAMCameraDC1394::~CAMCameraDC1394() {
 
 //------------------------------------------------------------------------------
 //
-bool CAMCameraDC1394::Open() {
+bool DC1394Camera::Open() {
   dc1394error_t err;
   bool init_result = true;
 
@@ -79,7 +79,7 @@ bool CAMCameraDC1394::Open() {
 
 //------------------------------------------------------------------------------
 //
-bool CAMCameraDC1394::Close() {
+bool DC1394Camera::Close() {
   std::lock_guard<std::mutex> guard(_cam_access);
 
   bool close_result = true;
@@ -100,7 +100,7 @@ bool CAMCameraDC1394::Close() {
 
 //------------------------------------------------------------------------------
 //
-bool CAMCameraDC1394::Start() {
+bool DC1394Camera::Start() {
   _cam_access.lock();
   dc1394error_t error =
       dc1394_video_set_transmission(_dc1394_camera, DC1394_ON);
@@ -121,7 +121,7 @@ bool CAMCameraDC1394::Start() {
 
 //------------------------------------------------------------------------------
 //
-bool CAMCameraDC1394::Stop() {
+bool DC1394Camera::Stop() {
   std::lock_guard<std::mutex> guard(_cam_access);
 
   dc1394error_t error =
@@ -143,7 +143,7 @@ bool CAMCameraDC1394::Stop() {
 
 //------------------------------------------------------------------------------
 //
-bool CAMCameraDC1394::NextImage(cv::Mat &img) {
+bool DC1394Camera::NextImage(cv::Mat &img) {
   dc1394video_frame_t *frame = nullptr;
   dc1394error_t error;
 
@@ -208,7 +208,7 @@ bool CAMCameraDC1394::NextImage(cv::Mat &img) {
 
 //------------------------------------------------------------------------------
 //
-bool CAMCameraDC1394::SetFeature(FEATURE feat, float value) {
+bool DC1394Camera::SetFeature(FEATURE feat, float value) {
   std::lock_guard<std::mutex> guard(_cam_access);
   dc1394error_t error;
   uint32_t blue, red;
@@ -303,7 +303,7 @@ bool CAMCameraDC1394::SetFeature(FEATURE feat, float value) {
 
 //------------------------------------------------------------------------------
 //
-float CAMCameraDC1394::GetFeature(FEATURE feat) {
+float DC1394Camera::GetFeature(FEATURE feat) {
   std::lock_guard<std::mutex> guard(_cam_access);
   dc1394error_t error;
   uint32_t blue, red;
@@ -361,7 +361,7 @@ float CAMCameraDC1394::GetFeature(FEATURE feat) {
 
 //------------------------------------------------------------------------------
 //
-uint32_t CAMCameraDC1394::ConvertFramerate(float val) {
+uint32_t DC1394Camera::ConvertFramerate(float val) {
   uint32_t return_val = static_cast<uint32_t>(val);
   if (return_val == 15) {
     return_val = DC1394_FRAMERATE_15;
@@ -375,7 +375,7 @@ uint32_t CAMCameraDC1394::ConvertFramerate(float val) {
 
 //------------------------------------------------------------------------------
 //
-float CAMCameraDC1394::ConvertFramerate(uint32_t val) {
+float DC1394Camera::ConvertFramerate(uint32_t val) {
   float return_val = val;
   if (return_val == DC1394_FRAMERATE_15) {
     return_val = 15;
@@ -389,7 +389,7 @@ float CAMCameraDC1394::ConvertFramerate(uint32_t val) {
 
 //------------------------------------------------------------------------------
 //
-bool CAMCameraDC1394::SetFormat7() {
+bool DC1394Camera::SetFormat7() {
   bool init_result = false;
   if (_dc1394_camera == nullptr) return init_result;
 
@@ -454,7 +454,7 @@ bool CAMCameraDC1394::SetFormat7() {
 
 //------------------------------------------------------------------------------
 //
-bool CAMCameraDC1394::SetNormalFormat() {
+bool DC1394Camera::SetNormalFormat() {
   if (_dc1394_camera == nullptr) return false;
 
   dc1394error_t err;
@@ -493,7 +493,7 @@ bool CAMCameraDC1394::SetNormalFormat() {
 
 //------------------------------------------------------------------------------
 //
-bool CAMCameraDC1394::SetCameraParams() {
+bool DC1394Camera::SetCameraParams() {
   if (_dc1394_camera == nullptr) {
     ROS_ERROR_NAMED(CAM_TAG, "Camera is null when setting params");
     return false;

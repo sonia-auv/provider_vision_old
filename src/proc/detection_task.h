@@ -17,10 +17,10 @@
 #include <lib_atlas/ros/image_publisher.h>
 #include <lib_atlas/pattern/runnable.h>
 #include <lib_atlas/pattern/observer.h>
-#include "media/media.h"
 #include "config.h"
-#include "server/filterchain.h"
-#include "server/acquisition_loop.h"
+#include "proc/filterchain.h"
+#include "media/media.h"
+#include "media/media_streamer.h"
 
 namespace vision_server {
 
@@ -28,10 +28,10 @@ namespace vision_server {
 // C L A S S E S
 
 /**
- * Execution class is responsible of taking the image from an acquisition loop,
+ * DetectionTask class is responsible of taking the image from an acquisition loop,
  * broadcast it on topic and apply the given filterchain.
  */
-class Execution : public atlas::Runnable, public atlas::Observer<> {
+class DetectionTask: public atlas::Runnable, public atlas::Observer<> {
  public:
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
@@ -52,11 +52,11 @@ class Execution : public atlas::Runnable, public atlas::Observer<> {
   /**
    * CTOR/DSTR
    */
-  explicit Execution(atlas::NodeHandlePtr node_handle,
-            std::shared_ptr<AcquisitionLoop> acquisition_loop, Filterchain *filterchain,
+  explicit DetectionTask(atlas::NodeHandlePtr node_handle,
+            std::shared_ptr<MediaStreamer> acquisition_loop, Filterchain *filterchain,
             const std::string &execName);
 
-  virtual ~Execution();
+  virtual ~DetectionTask();
 
   //==========================================================================
   // P U B L I C   M E T H O D S
@@ -85,7 +85,7 @@ class Execution : public atlas::Runnable, public atlas::Observer<> {
   //==========================================================================
   // G E T T E R S   A N D   S E T T E R S
 
-  const std::shared_ptr<AcquisitionLoop> GetAcquisitionLoop() const;
+  const std::shared_ptr<MediaStreamer> GetAcquisitionLoop() const;
 
   const Filterchain *getFilterChain() const;
 
@@ -124,9 +124,9 @@ class Execution : public atlas::Runnable, public atlas::Observer<> {
   ros::Publisher result_publisher_;
 
   /**
-   * Execution core.
+   * DetectionTask core.
    */
-  std::shared_ptr<AcquisitionLoop> _acquisition_loop;
+  std::shared_ptr<MediaStreamer> _acquisition_loop;
 
   Filterchain *_filterchain_to_process;
 
@@ -140,7 +140,7 @@ class Execution : public atlas::Runnable, public atlas::Observer<> {
   // Prevent to process data twice for fast processing
   bool _new_image_ready;
   /**
-   * Execution's media
+   * DetectionTask's media
    */
   CameraID _camera_id;
 
@@ -156,27 +156,27 @@ class Execution : public atlas::Runnable, public atlas::Observer<> {
 
 //------------------------------------------------------------------------------
 //
-inline const std::shared_ptr<AcquisitionLoop> Execution::GetAcquisitionLoop() const {
+inline const std::shared_ptr<MediaStreamer> DetectionTask::GetAcquisitionLoop() const {
   return _acquisition_loop;
 }
 
 //------------------------------------------------------------------------------
 //
-inline const Filterchain *Execution::getFilterChain() const {
+inline const Filterchain *DetectionTask::getFilterChain() const {
   return _filterchain_to_process;
 }
 
 //------------------------------------------------------------------------------
 //
-inline const CameraID Execution::GetID() const { return _camera_id; }
+inline const CameraID DetectionTask::GetID() const { return _camera_id; }
 
 //------------------------------------------------------------------------------
 //
-inline const std::string Execution::GetExecName() const { return _exec_name; }
+inline const std::string DetectionTask::GetExecName() const { return _exec_name; }
 
 //------------------------------------------------------------------------------
 //
-inline const std::string Execution::GetMediaName() const {
+inline const std::string DetectionTask::GetMediaName() const {
   return _camera_id.GetName();
 }
 

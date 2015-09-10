@@ -32,7 +32,7 @@
 #include <vision_server/vision_server_set_filterchain_filter_observer.h>
 #include "config.h"
 #include "utils/camera_id.h"
-#include "server/filterchain.h"
+#include "proc/filterchain.h"
 
 namespace vision_server {
 

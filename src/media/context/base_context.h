@@ -28,7 +28,7 @@ namespace vision_server {
  * Base class for any media driver. It also provide a Camera interface
  * which enhance Media class' basic method with camera handling method.
  */
-class CAMDriver : public atlas::Runnable {
+class BaseContext: public atlas::Runnable {
  public:
   //==========================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
@@ -36,9 +36,9 @@ class CAMDriver : public atlas::Runnable {
   /**
    * CTR/DSTR
    */
-  CAMDriver(const CAMConfig config);
+  BaseContext(const CAMConfig config);
 
-  virtual ~CAMDriver();
+  virtual ~BaseContext();
 
   /**
    * Method to Init and close a driver contains step needed by driver to have
@@ -115,7 +115,7 @@ class CAMDriver : public atlas::Runnable {
 
 //------------------------------------------------------------------------------
 //
-inline CameraID CAMDriver::GetIDFromName(const std::string &name) {
+inline CameraID BaseContext::GetIDFromName(const std::string &name) {
   for (auto &elem : _camera_list) {
     if (elem.GetName() == name) {
       return elem;

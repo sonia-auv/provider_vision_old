@@ -1,5 +1,5 @@
 /**
- * \file	CAMDriverWebcam.cpp
+ * \file	WebcamContext.cpp
  * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
  * \date	10/03/2015
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
@@ -12,7 +12,7 @@
 
 #include <string>
 #include <vector>
-#include "media/cam_driver_webcam.h"
+#include "media/context/webcam_context.h"
 
 namespace vision_server {
 
@@ -21,26 +21,26 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-CAMDriverWebcam::CAMDriverWebcam(const CAMConfig config)
-    : CAMDriver(config), DRIVER_TAG("[DC1394 Driver]"), _webcam(nullptr) {}
+WebcamContext::WebcamContext(const CAMConfig config)
+    : BaseContext(config), DRIVER_TAG("[DC1394 Driver]"), _webcam(nullptr) {}
 
 //------------------------------------------------------------------------------
 //
-CAMDriverWebcam::~CAMDriverWebcam() {}
+WebcamContext::~WebcamContext() {}
 
 //==============================================================================
 // M E T H O D   S E C T I O N
 
 //------------------------------------------------------------------------------
 //
-void CAMDriverWebcam::InitDriver() {
+void WebcamContext::InitDriver() {
   _webcam = std::make_shared<CAMWebcam>();
   _camera_list.push_back(CameraID("Webcam", 0000000000000000));
 }
 
 //------------------------------------------------------------------------------
 //
-void CAMDriverWebcam::CloseDriver() {
+void WebcamContext::CloseDriver() {
   // delete _webcam;
   _webcam = nullptr;
   _camera_list.clear();
@@ -48,7 +48,7 @@ void CAMDriverWebcam::CloseDriver() {
 
 //------------------------------------------------------------------------------
 //
-bool CAMDriverWebcam::StartCamera(CameraID id) {
+bool WebcamContext::StartCamera(CameraID id) {
   if (_webcam != nullptr) {
     return _webcam->Start();
   }
@@ -57,7 +57,7 @@ bool CAMDriverWebcam::StartCamera(CameraID id) {
 
 //------------------------------------------------------------------------------
 //
-bool CAMDriverWebcam::StopCamera(CameraID id) {
+bool WebcamContext::StopCamera(CameraID id) {
   if (_webcam != nullptr) {
     return _webcam->Close();
   }
@@ -66,11 +66,11 @@ bool CAMDriverWebcam::StopCamera(CameraID id) {
 
 //------------------------------------------------------------------------------
 //
-std::vector<CameraID> CAMDriverWebcam::GetCameraList() { return _camera_list; }
+std::vector<CameraID> WebcamContext::GetCameraList() { return _camera_list; }
 
 //------------------------------------------------------------------------------
 //
-bool CAMDriverWebcam::IsMyCamera(const std::string &nameMedia) {
+bool WebcamContext::IsMyCamera(const std::string &nameMedia) {
   // Should not be necessary, but in case the driver has been close, the list
   // is empty so...
   for (const auto &camera : _camera_list) {
@@ -83,11 +83,11 @@ bool CAMDriverWebcam::IsMyCamera(const std::string &nameMedia) {
 
 //------------------------------------------------------------------------------
 //
-std::shared_ptr<Media> CAMDriverWebcam::GetActiveCamera(CameraID id) { return _webcam; }
+std::shared_ptr<Media> WebcamContext::GetActiveCamera(CameraID id) { return _webcam; }
 
 //------------------------------------------------------------------------------
 //
-void CAMDriverWebcam::SetFeature(FEATURE feat, CameraID id, float val) {
+void WebcamContext::SetFeature(FEATURE feat, CameraID id, float val) {
   // Should not be necessary, but in case the driver has been close, the list
   // is empty so...
   for (const auto &camera : _camera_list) {
@@ -100,7 +100,7 @@ void CAMDriverWebcam::SetFeature(FEATURE feat, CameraID id, float val) {
 
 //------------------------------------------------------------------------------
 //
-void CAMDriverWebcam::GetFeature(FEATURE feat, CameraID id, float &val) {
+void WebcamContext::GetFeature(FEATURE feat, CameraID id, float &val) {
   // Should not be necessary, but in case the driver has been close, the list
   // is empty so...
   for (const auto &camera : _camera_list) {
@@ -113,14 +113,14 @@ void CAMDriverWebcam::GetFeature(FEATURE feat, CameraID id, float &val) {
 
 //------------------------------------------------------------------------------
 //
-void CAMDriverWebcam::run() {}
+void WebcamContext::run() {}
 
 //------------------------------------------------------------------------------
 //
-bool CAMDriverWebcam::WatchDogFunc() { return true; }
+bool WebcamContext::WatchDogFunc() { return true; }
 
 //------------------------------------------------------------------------------
 //
-void CAMDriverWebcam::PopulateCameraList() {}
+void WebcamContext::PopulateCameraList() {}
 
 }  // namespace vision_server

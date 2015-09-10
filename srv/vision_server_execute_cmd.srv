@@ -1,4 +1,4 @@
-#Command to start/stop Execution
+#Command to start/stop DetectionTask
 
 uint8 START = 1
 uint8 STOP = 2

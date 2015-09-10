@@ -49,7 +49,7 @@ VisionServer::~VisionServer() {
 
 //------------------------------------------------------------------------------
 //
-std::shared_ptr<Execution> VisionServer::GetExecution(const std::string &execName) {
+std::shared_ptr<DetectionTask> VisionServer::GetExecution(const std::string &execName) {
   std::lock_guard<std::mutex> guard(_list_access);
   for (const auto &execution : executions_) {
     if (execution->GetExecName().find(execName.c_str()) != std::string::npos) {
@@ -74,7 +74,7 @@ const bool VisionServer::IsAnotherUserMedia(const std::string &mediaName) {
 
 //------------------------------------------------------------------------------
 //
-std::shared_ptr<AcquisitionLoop> VisionServer::GetAcquisitionLoop(
+std::shared_ptr<MediaStreamer> VisionServer::GetAcquisitionLoop(
     const std::string &mediaName) {
   std::lock_guard<std::mutex> guard(_list_access);
   for (auto &acquisition : acquisition_loop_) {
@@ -100,7 +100,7 @@ bool VisionServer::CallbackExecutionCMD(
     }
     executions_.clear();
     for (auto &tmp : acquisition_loop_) {
-      _camera_manager.StreammingCmd(vision_server::CameraManager::STOP,
+      _camera_manager.StreammingCmd(vision_server::MediaManager::STOP,
                                     tmp->GetMediaID().GetName(), tmp);
       // Security
       atlas::MilliTimer::sleep(20);
@@ -114,19 +114,19 @@ bool VisionServer::CallbackExecutionCMD(
                    rqst.node_name.c_str(), rqst.media_name.c_str(),
                    rqst.filterchain_name.c_str());
 
-    std::shared_ptr<Execution> exec = GetExecution(rqst.node_name);
+    std::shared_ptr<DetectionTask> exec = GetExecution(rqst.node_name);
     if (exec.get() != nullptr) {
       ROS_WARN_NAMED("[VISION SERVER]",
-                     " Execution of that name already exist");
+                     " DetectionTask of that name already exist");
       rep.response = exec->GetExecName();
     } else {
-      std::shared_ptr<AcquisitionLoop> acquiPtr = GetAcquisitionLoop(rqst.media_name);
+      std::shared_ptr<MediaStreamer> acquiPtr = GetAcquisitionLoop(rqst.media_name);
       // Please change back to null string in production env
 
       // No acquisition loop running with this media.
       // Try to start one
       if (acquiPtr.get() == nullptr) {
-        _camera_manager.StreammingCmd(CameraManager::START, rqst.media_name,
+        _camera_manager.StreammingCmd(MediaManager::START, rqst.media_name,
                                       acquiPtr);
         // Important to be here so we can push back ONLY if newly
         // started
@@ -144,7 +144,7 @@ bool VisionServer::CallbackExecutionCMD(
             std::string(VISION_NODE_NAME) + rqst.node_name,
             rqst.filterchain_name);
 
-        exec = std::make_shared<Execution>(node_handle_, acquiPtr, filterchain, rqst.node_name);
+        exec = std::make_shared<DetectionTask>(node_handle_, acquiPtr, filterchain, rqst.node_name);
         exec->StartExec();
         AddExecution(exec);
         rep.response = exec->GetExecName();
@@ -158,7 +158,7 @@ bool VisionServer::CallbackExecutionCMD(
                    rqst.node_name.c_str(), rqst.media_name.c_str(),
                    rqst.filterchain_name.c_str());
 
-    std::shared_ptr<Execution> exec = GetExecution(rqst.node_name);
+    std::shared_ptr<DetectionTask> exec = GetExecution(rqst.node_name);
 
     if (exec.get() != nullptr) {
       // Stop Exec.
@@ -169,9 +169,9 @@ bool VisionServer::CallbackExecutionCMD(
 
       // Check if another user. If no, stop the acquisition loop.
       if (!IsAnotherUserMedia(exec->GetMediaName())) {
-        std::shared_ptr<AcquisitionLoop> aquiPtr =
+        std::shared_ptr<MediaStreamer> aquiPtr =
             GetAcquisitionLoop(exec->GetMediaName());
-        _camera_manager.StreammingCmd(vision_server::CameraManager::STOP,
+        _camera_manager.StreammingCmd(vision_server::MediaManager::STOP,
                                       exec->GetID().GetName(), aquiPtr);
         RemoveAcquisitionLoop(aquiPtr);
       }

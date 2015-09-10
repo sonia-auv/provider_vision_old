@@ -1,5 +1,5 @@
 /**
- * \file	MMImage.cpp
+ * \file	ImageFile.cpp
  * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
  * \date	10/03/2015
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
@@ -12,7 +12,7 @@
 
 #include <string>
 #include <vector>
-#include "media/media_image.h"
+#include "media/image_file.h"
 
 namespace vision_server {
 
@@ -21,7 +21,7 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-MMImage::MMImage(std::string path_to_file)
+ImageFile::ImageFile(std::string path_to_file)
     : _path(path_to_file),
       // Two because...
       Media(CameraID(path_to_file, 1)) {
@@ -30,14 +30,14 @@ MMImage::MMImage(std::string path_to_file)
 
 //------------------------------------------------------------------------------
 //
-MMImage::MMImage() : _path(""), Media(CameraID("NO_PATH", 2)) {}
+ImageFile::ImageFile() : _path(""), Media(CameraID("NO_PATH", 2)) {}
 
 //==============================================================================
 // M E T H O D   S E C T I O N
 
 //------------------------------------------------------------------------------
 //
-bool MMImage::LoadImage(std::string path_to_file) {
+bool ImageFile::LoadImage(std::string path_to_file) {
   _image =
       cv::imread(path_to_file, CV_LOAD_IMAGE_ANYDEPTH | CV_LOAD_IMAGE_ANYCOLOR);
   if (_image.empty()) {
@@ -48,14 +48,14 @@ bool MMImage::LoadImage(std::string path_to_file) {
 
 //------------------------------------------------------------------------------
 //
-inline std::vector<std::string> MMImage::getCommands() const {
+inline std::vector<std::string> ImageFile::getCommands() const {
   // its an image, no command.
   return std::vector<std::string>();
 }
 
 //------------------------------------------------------------------------------
 //
-bool MMImage::Start() {
+bool ImageFile::Start() {
   // if the media is open, then the image is not empty.
   if (_image.empty()) {
     return _image.empty();
@@ -65,14 +65,14 @@ bool MMImage::Start() {
 
 //------------------------------------------------------------------------------
 //
-bool MMImage::Stop() {
+bool ImageFile::Stop() {
   // At destruction, will close the image... No method to close
   return true;
 }
 
 //------------------------------------------------------------------------------
 //
-bool MMImage::NextImage(cv::Mat &image) {
+bool ImageFile::NextImage(cv::Mat &image) {
   // Here, since cv::Mat are smart pointer, we can just
   // clone the image, and the "garbage collection"
   // will be handle later on in the program.
@@ -85,6 +85,6 @@ bool MMImage::NextImage(cv::Mat &image) {
 
 //------------------------------------------------------------------------------
 //
-std::string MMImage::GetName() const { return _path; }
+std::string ImageFile::GetName() const { return _path; }
 
 }  // namespace vision_server

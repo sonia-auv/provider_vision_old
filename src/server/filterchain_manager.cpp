@@ -250,7 +250,7 @@ bool FilterchainManager::CallbackGetFilterParam(
     return true;
   }
   ROS_INFO_NAMED(FILTERCHAIN_MANAGER_TAG,
-                 "Execution %s does not exist or does not use this "
+                 "DetectionTask %s does not exist or does not use this "
                  "filterchain: %s on get filter's param request.",
                  exec_name.c_str(), filterchain_name.c_str());
   return false;
@@ -271,7 +271,7 @@ bool FilterchainManager::CallbackGetFilterAllParam(
     return true;
   }
   ROS_INFO_NAMED(FILTERCHAIN_MANAGER_TAG,
-                 "Execution %s does not exist or does not use this "
+                 "DetectionTask %s does not exist or does not use this "
                  "filterchain: %s on get filter's param request.",
                  exec_name.c_str(), filterchain_name.c_str());
   return false;
@@ -293,7 +293,7 @@ bool FilterchainManager::CallbackSetFilterParam(
     return true;
   }
   ROS_INFO_NAMED(FILTERCHAIN_MANAGER_TAG,
-                 "Execution %s does not exist or does not use this "
+                 "DetectionTask %s does not exist or does not use this "
                  "filterchain: %s on get filter's param request.",
                  exec_name.c_str(), filterchain_name.c_str());
   return false;
@@ -314,11 +314,11 @@ bool FilterchainManager::CallbackGetFilter(
     return true;
   }
 
-  std::string log_txt = "Execution " + exec_name +
+  std::string log_txt = "DetectionTask " + exec_name +
                         " does not exist or does not use this filterchain: " +
                         filterchain_name + " on get filter's param request.";
   ROS_INFO_NAMED(FILTERCHAIN_MANAGER_TAG,
-                 "Execution %s does not exist or does not use this "
+                 "DetectionTask %s does not exist or does not use this "
                  "filterchain: %s on get filter's param request.",
                  exec_name.c_str(), filterchain_name.c_str());
   return false;
@@ -342,7 +342,7 @@ bool FilterchainManager::CallbackSetObserver(
 
   rep.result = rep.FAIL;
   ROS_INFO_NAMED(FILTERCHAIN_MANAGER_TAG,
-                 "Execution %s does not exist or does not use this "
+                 "DetectionTask %s does not exist or does not use this "
                  "filterchain: %s on get filters request",
                  rqst.execution.c_str(), rqst.filterchain.c_str());
   return false;
@@ -449,7 +449,7 @@ bool FilterchainManager::CallbackGetFcFromExec(
     return true;
   }
   ROS_INFO_NAMED(FILTERCHAIN_MANAGER_TAG,
-                 "Execution %s does not exist or does not use this filterchain "
+                 "DetectionTask %s does not exist or does not use this filterchain "
                  "on get filters request.",
                  exec_name.c_str());
   return false;

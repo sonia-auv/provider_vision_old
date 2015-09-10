@@ -11,7 +11,7 @@
 // I N C L U D E   F I L E S
 
 #include <utils/pugixml.h>
-#include "server/filterchain.h"
+#include "proc/filterchain.h"
 #include "config.h"
 #include <ros/ros.h>
 

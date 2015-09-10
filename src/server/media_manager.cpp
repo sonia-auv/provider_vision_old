@@ -11,8 +11,8 @@
 // I N C L U D E   F I L E S
 
 #include <assert.h>
-#include "server/camera_manager.h"
 #include <lib_atlas/config.h>
+#include "server/media_manager.h"
 
 namespace vision_server {
 
@@ -21,8 +21,8 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-CameraManager::CameraManager(atlas::NodeHandlePtr node_handle)
-    : atlas::ServiceServerManager<CameraManager>(node_handle),
+MediaManager::MediaManager(atlas::NodeHandlePtr node_handle)
+    : atlas::ServiceServerManager<MediaManager>(node_handle),
       _config(atlas::kWorkspaceRoot +
               std::string("/src/vision_server/config/")) {
   assert(node_handle.get() != nullptr);
@@ -30,18 +30,18 @@ CameraManager::CameraManager(atlas::NodeHandlePtr node_handle)
 
   RegisterService<vision_server_get_media_param>(
       base_node_name + "vision_server_get_media_param_list",
-      &CameraManager::CallbackGetCMD, *this);
+      &MediaManager::CallbackGetCMD, *this);
 
   RegisterService<vision_server_set_media_param>(
       base_node_name + "vision_server_set_media_param_list",
-      &CameraManager::CallbackSetCMD, *this);
+      &MediaManager::CallbackSetCMD, *this);
 
   Init();
 };
 
 //------------------------------------------------------------------------------
 //
-CameraManager::~CameraManager() {
+MediaManager::~MediaManager() {
   Close();
 }
 
@@ -50,7 +50,7 @@ CameraManager::~CameraManager() {
 
 //------------------------------------------------------------------------------
 //
-std::vector<CameraID> CameraManager::GetCameraList() {
+std::vector<CameraID> MediaManager::GetCameraList() {
   std::vector<CameraID> cameraList;
   for (auto &elem : _drivers) {
     std::vector<CameraID> driver_list = elem->GetCameraList();
@@ -63,9 +63,9 @@ std::vector<CameraID> CameraManager::GetCameraList() {
 
 //------------------------------------------------------------------------------
 //
-void CameraManager::StreammingCmd(COMMAND cmd, const std::string &mediaName,
-                                  std::shared_ptr<AcquisitionLoop> &ptr) {
-  std::shared_ptr<CAMDriver> driver = GetDriverForCamera(mediaName);
+void MediaManager::StreammingCmd(COMMAND cmd, const std::string &mediaName,
+                                  std::shared_ptr<MediaStreamer> &ptr) {
+  std::shared_ptr<BaseContext> driver = GetDriverForCamera(mediaName);
   // FEATURE* feat = static_cast<FEATURE*>(specific_to_cmd);
   // float* val = static_cast<float*>(specific_to_cmd2);
   if (driver == nullptr) {
@@ -78,7 +78,7 @@ void CameraManager::StreammingCmd(COMMAND cmd, const std::string &mediaName,
       if (driver->StartCamera(camToStart)) {
         std::shared_ptr<Media> media_ptr = driver->GetActiveCamera(camToStart);
         if (media_ptr.get() != nullptr) {
-          ptr = std::make_shared<AcquisitionLoop>(media_ptr, 30);
+          ptr = std::make_shared<MediaStreamer>(media_ptr, 30);
           ptr->StartStreaming();
         } else {
           ptr = nullptr;
@@ -88,13 +88,13 @@ void CameraManager::StreammingCmd(COMMAND cmd, const std::string &mediaName,
       } else {
         ptr = nullptr;
         ROS_INFO_NAMED("[CAM_MANAGER]",
-                       "AcquisitionLoop ptr is null! Can't start it!");
+                       "MediaStreamer ptr is null! Can't start it!");
       }
       break;
     case STOP:
       if (ptr == nullptr) {
         ROS_ERROR_NAMED("[CAM_MANAGER]",
-                        "AcquisitionLoop ptr is null! Can't stop it!");
+                        "MediaStreamer ptr is null! Can't stop it!");
         return;
       }
       if (!ptr->StopStreaming()) {
@@ -114,9 +114,9 @@ void CameraManager::StreammingCmd(COMMAND cmd, const std::string &mediaName,
 
 //=============================================================================
 //
-void CameraManager::ParametersCmd(COMMAND cmd, const std::string &mediaName,
+void MediaManager::ParametersCmd(COMMAND cmd, const std::string &mediaName,
                                   FEATURE feat, float &val) {
-  std::shared_ptr<CAMDriver> driver = GetDriverForCamera(mediaName);
+  std::shared_ptr<BaseContext> driver = GetDriverForCamera(mediaName);
   // FEATURE* feat = static_cast<FEATURE*>(specific_to_cmd);
   // float* val = static_cast<float*>(specific_to_cmd2);
   if (driver == nullptr) {
@@ -140,12 +140,12 @@ void CameraManager::ParametersCmd(COMMAND cmd, const std::string &mediaName,
 
 //------------------------------------------------------------------------------
 //
-bool CameraManager::Init() {
+bool MediaManager::Init() {
   // Each time you have a new driver (Gige, usb, etc.) add it to
   // the list here.
   _drivers.push_back(std::make_shared<CAMDriverDC1394>(_config));
-  _drivers.push_back(std::make_shared<CAMDriverWebcam>(_config));
-  _drivers.push_back(std::make_shared<CAMDriverMedia>(_config));
+  _drivers.push_back(std::make_shared<WebcamContext>(_config));
+  _drivers.push_back(std::make_shared<VideoFileContext>(_config));
 
   for (auto &elem : _drivers) {
     elem->InitDriver();
@@ -155,7 +155,7 @@ bool CameraManager::Init() {
 
 //------------------------------------------------------------------------------
 //
-bool CameraManager::Close() {
+bool MediaManager::Close() {
   // Close every devices here
   for (auto &elem : _drivers) {
     elem->CloseDriver();
@@ -165,7 +165,7 @@ bool CameraManager::Close() {
 
 //------------------------------------------------------------------------------
 //
-std::shared_ptr<CAMDriver> CameraManager::GetDriverForCamera(const std::string &name) {
+std::shared_ptr<BaseContext> MediaManager::GetDriverForCamera(const std::string &name) {
   for (auto &elem : _drivers) {
     if (elem->IsMyCamera(name)) {
       return elem;
@@ -179,7 +179,7 @@ std::shared_ptr<CAMDriver> CameraManager::GetDriverForCamera(const std::string &
 
 //------------------------------------------------------------------------------
 //
-FEATURE CameraManager::NameToEnum(const std::string &name) {
+FEATURE MediaManager::NameToEnum(const std::string &name) {
   FEATURE to_return = ERROR_FEATURE;
   if (name == "SHUTTER_AUTO") {
     to_return = SHUTTER_AUTO;
@@ -201,11 +201,11 @@ FEATURE CameraManager::NameToEnum(const std::string &name) {
 
 //------------------------------------------------------------------------------
 //
-bool CameraManager::CallbackGetCMD(
+bool MediaManager::CallbackGetCMD(
     vision_server_get_media_param::Request &rqst,
     vision_server_get_media_param::Response &rep) {
   rep.value = 0.0f;
-  std::shared_ptr<CAMDriver> driver = GetDriverForCamera(rqst.media_name);
+  std::shared_ptr<BaseContext> driver = GetDriverForCamera(rqst.media_name);
   if (driver == nullptr) {
     ROS_WARN_NAMED("[CAMERA_MANAGER]", "No driver for this media: %s",
                    rqst.media_name.c_str());
@@ -227,11 +227,11 @@ bool CameraManager::CallbackGetCMD(
 
 //------------------------------------------------------------------------------
 //
-bool CameraManager::CallbackSetCMD(
+bool MediaManager::CallbackSetCMD(
     vision_server_set_media_param::Request &rqst,
     vision_server_set_media_param::Response &rep) {
   rep.success = rep.FAIL;
-  std::shared_ptr<CAMDriver> driver = GetDriverForCamera(rqst.media_name);
+  std::shared_ptr<BaseContext> driver = GetDriverForCamera(rqst.media_name);
   if (driver == nullptr) {
     ROS_WARN_NAMED("[CAMERA_MANAGER]", "No driver for this media: %s",
                    rqst.media_name.c_str());

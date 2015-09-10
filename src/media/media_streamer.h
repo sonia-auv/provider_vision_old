@@ -28,10 +28,10 @@ namespace vision_server {
 /**
  * Class responsible of acquiring an image from a device, asynchronously from
  * the system. It is basically a thread running and getting images from a media.
- * The protected method are for the CameraManager, since they affect the media
+ * The protected method are for the MediaManager, since they affect the media
  * or the drivers.
  */
-class AcquisitionLoop : public atlas::Subject<>, public atlas::Runnable {
+class MediaStreamer: public atlas::Subject<>, public atlas::Runnable {
  public:
   //============================================================================
   // C O N S T A N T S   M E M B E R S
@@ -45,9 +45,9 @@ class AcquisitionLoop : public atlas::Subject<>, public atlas::Runnable {
    * Artificial frame rate simulate a frame rate for video and images.
    * It will run the loop at this speed.
    */
-  AcquisitionLoop(std::shared_ptr<Media> cam, int artificialFrameRateMs = 30);
+  MediaStreamer(std::shared_ptr<Media> cam, int artificialFrameRateMs = 30);
 
-  virtual ~AcquisitionLoop();
+  virtual ~MediaStreamer();
 
   //==========================================================================
   // P U B L I C   M E T H O D S
@@ -86,7 +86,7 @@ class AcquisitionLoop : public atlas::Subject<>, public atlas::Runnable {
   // P R O T E C T E D   M E T H O D S
 
   /**
-   * Those method can only be use by CameraManager, as it affect the Media
+   * Those method can only be use by MediaManager, as it affect the Media
    * and drivers also !
    * Set the framerate of the thread. Comes with the a change of framerate
    * for the media.
@@ -190,9 +190,9 @@ class AcquisitionLoop : public atlas::Subject<>, public atlas::Runnable {
   // C L A S S   F R I E N D S H  I P
 
   /**
-   * CameraManager needs more control over acquisition loop than normal users.
+   * MediaManager needs more control over acquisition loop than normal users.
    */
-  friend class CameraManager;
+  friend class MediaManager;
 };
 
 //==============================================================================
@@ -200,19 +200,19 @@ class AcquisitionLoop : public atlas::Subject<>, public atlas::Runnable {
 
 //------------------------------------------------------------------------------
 //
-inline const std::string AcquisitionLoop::GetMediaName() {
+inline const std::string MediaStreamer::GetMediaName() {
   return _media->GetCameraID().GetName();
 };
 
 //------------------------------------------------------------------------------
 //
-inline bool AcquisitionLoop::IsRecording() const {
+inline bool MediaStreamer::IsRecording() const {
   return is_recording_ && video_writer_.isOpened();
 }
 
 //------------------------------------------------------------------------------
 //
-inline bool AcquisitionLoop::IsStreaming() const { return _is_streaming; }
+inline bool MediaStreamer::IsStreaming() const { return _is_streaming; }
 
 }  // namespace vision_server
 

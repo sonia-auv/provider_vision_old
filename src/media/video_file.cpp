@@ -1,5 +1,5 @@
 /**
- * \file	MMVideo.cpp
+ * \file	VideoFile.cpp
  * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
  * \date	10/03/2015
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
@@ -12,7 +12,7 @@
 
 #include <string>
 #include <vector>
-#include "media/media_video.h"
+#include "media/video_file.h"
 
 namespace vision_server {
 
@@ -21,7 +21,7 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-MMVideo::MMVideo(std::string path_to_file, bool looping)
+VideoFile::VideoFile(std::string path_to_file, bool looping)
     : VideoCapture(path_to_file),
       // Two because...
       Media(CameraID(path_to_file, 2)),
@@ -33,7 +33,7 @@ MMVideo::MMVideo(std::string path_to_file, bool looping)
 
 //------------------------------------------------------------------------------
 //
-MMVideo::MMVideo()
+VideoFile::VideoFile()
     : _path(std::string("")),
       Media(CameraID("NO_PATH", 2)),
       _currentImage(),
@@ -41,7 +41,7 @@ MMVideo::MMVideo()
 
 //------------------------------------------------------------------------------
 //
-MMVideo::~MMVideo() {
+VideoFile::~VideoFile() {
   if (isOpened()) {
     release();
   }
@@ -52,28 +52,28 @@ MMVideo::~MMVideo() {
 
 //------------------------------------------------------------------------------
 //
-inline std::vector<std::string> MMVideo::getCommands() const {
+inline std::vector<std::string> VideoFile::getCommands() const {
   // Should implement play, pause, stop, forward, backward, etc.
   return std::vector<std::string>();
 }
 
 //------------------------------------------------------------------------------
 //
-void MMVideo::SetPathToVideo(std::string full_path) { _path = full_path; }
+void VideoFile::SetPathToVideo(std::string full_path) { _path = full_path; }
 
 //------------------------------------------------------------------------------
 //
-void MMVideo::SetLooping(bool looping) { _looping = looping; }
+void VideoFile::SetLooping(bool looping) { _looping = looping; }
 
 //------------------------------------------------------------------------------
 //
-bool MMVideo::LoadVideo(std::string path_to_file) {
+bool VideoFile::LoadVideo(std::string path_to_file) {
   return this->open(path_to_file);
 }
 
 //------------------------------------------------------------------------------
 //
-bool MMVideo::Start() {
+bool VideoFile::Start() {
   if (!isOpened()) {
     LoadVideo(_path);
   }
@@ -82,14 +82,14 @@ bool MMVideo::Start() {
 
 //------------------------------------------------------------------------------
 //
-bool MMVideo::Stop() {
+bool VideoFile::Stop() {
   if (isOpened()) release();
   return true;
 }
 
 //------------------------------------------------------------------------------
 //
-bool MMVideo::NextImage(cv::Mat &image) {
+bool VideoFile::NextImage(cv::Mat &image) {
   // Here, since cv::Mat are smart pointer, we can just
   // clone the image, and the "garbage collection"
   // will be handle later on in the program.
@@ -119,6 +119,6 @@ bool MMVideo::NextImage(cv::Mat &image) {
 
 //------------------------------------------------------------------------------
 //
-inline std::string MMVideo::GetName() const { return _path; }
+inline std::string VideoFile::GetName() const { return _path; }
 
 }  // namespace vision_server
