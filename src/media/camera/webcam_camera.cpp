@@ -19,12 +19,12 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-CAMWebcam::CAMWebcam() : cv::VideoCapture(0), Camera(CameraID("WebCam", 3)) {
+CAMWebcam::CAMWebcam()
+: cv::VideoCapture(0),
+  BaseCamera(CameraConfiguration("Webcam")) {
   if (isOpened()) {
-    _status = OPEN;
+    status_ = Status::OPEN;
   }
-  uint64_t guid = static_cast<uint64_t>(rand() % 100 + 1);
-  _id = CameraID("Webcam", guid);
 }
 
 //------------------------------------------------------------------------------
@@ -32,9 +32,9 @@ CAMWebcam::CAMWebcam() : cv::VideoCapture(0), Camera(CameraID("WebCam", 3)) {
 CAMWebcam::CAMWebcam(int webcamIdx)
     : cv::VideoCapture(webcamIdx),
       // three because...
-      Camera(CameraID("WebCam", 3)) {
+      BaseCamera(CameraConfiguration("Webcam")) {
   if (isOpened()) {
-    _status = OPEN;
+    status_ = Status::OPEN;
   }
 }
 
@@ -49,7 +49,7 @@ CAMWebcam::~CAMWebcam() {}
 //
 bool CAMWebcam::Start() {
   // Construction also start the camera for a videoCapture
-  if (isOpened()) _status = STREAMING;
+  if (isOpened()) status_ = Status::STREAMING;
   return isOpened();
 }
 
@@ -57,7 +57,7 @@ bool CAMWebcam::Start() {
 //
 bool CAMWebcam::Stop() {
   // Always stream when asking to capture only...
-  if (isOpened()) _status = OPEN;
+  if (isOpened()) status_ = Status::OPEN;
   return isOpened();
 }
 
@@ -88,19 +88,18 @@ bool CAMWebcam::Close() {
   if (isOpened()) {
     release();
   }
-
   return !isOpened();
 }
 
 //------------------------------------------------------------------------------
 //
-bool CAMWebcam::SetFeature(FEATURE feat, float value) { return true; }
+bool CAMWebcam::SetFeature(const Feature &feat, float value) { return true; }
 
 //------------------------------------------------------------------------------
 //
-float CAMWebcam::GetFeature(FEATURE feat) {
-  auto val = 0.f;
-  if (feat == FRAMERATE) {
+float CAMWebcam::GetFeature(const Feature &feat) {
+  float val = 0.f;
+  if (feat == Feature::FRAMERATE) {
     val = static_cast<float>(get(CV_CAP_PROP_FPS));
   }
 

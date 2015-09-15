@@ -28,7 +28,7 @@ namespace vision_server {
  * Handles image from files (png, jpeg) and is use s a camera
  * (same call for open, get image, close (start stop does nothing)
  */
-class ImageFile: public Media {
+class ImageFile: public BaseMedia {
  public:
   //==========================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
@@ -45,9 +45,6 @@ class ImageFile: public Media {
   bool LoadImage(std::string path_to_file);
 
   /** Method override from Media */
-  std::vector<std::string> getCommands() const override;
-
-  /** Method override from Media */
   bool Start() override;
 
   /** Method override from Media */
@@ -56,26 +53,17 @@ class ImageFile: public Media {
   /** Method override from Media */
   bool NextImage(cv::Mat &image) override;
 
-  bool IsRealCamera() const override;
-
-  /** Method override from Media */
-  std::string GetName() const;
-
  private:
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
-  cv::Mat _image;
+  cv::Mat image_;
 
-  std::string _path;
+  std::string path_;
 };
 
 //==============================================================================
 // I N L I N E   F U N C T I O N S   D E F I N I T I O N S
-
-//------------------------------------------------------------------------------
-//
-inline bool ImageFile::IsRealCamera() const { return false; }
 
 }  // namespace vision_server
 

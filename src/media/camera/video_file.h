@@ -27,12 +27,12 @@ namespace vision_server {
  * Handles image from files (png, jpeg) and is use as a camera
  * (same call for open, get image, close (start stop does nothing)
  */
-class VideoFile: public Media, private cv::VideoCapture {
+class VideoFile: public BaseMedia, private cv::VideoCapture {
  public:
   //==========================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
-  VideoFile(std::string path_to_file, bool looping = true);
+  VideoFile(const std::string &path_to_file, bool looping = true);
 
   VideoFile();
 
@@ -41,43 +41,29 @@ class VideoFile: public Media, private cv::VideoCapture {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  void SetPathToVideo(std::string full_path);
+  void SetPathToVideo(const std::string &full_path);
 
   void SetLooping(bool looping);
 
-  bool LoadVideo(std::string path_to_file);
+  bool LoadVideo(const std::string &path_to_file);
 
-  // Media overload
-  std::vector<std::string> getCommands() const override;
-
+  // BaseMedia override
   bool Start() override;
 
   bool Stop() override;
 
   bool NextImage(cv::Mat &image) override;
 
-  bool IsRealCamera() const override;
-
-  std::string GetName() const;
-
  private:
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
-  cv::Mat _currentImage;
+  cv::Mat current_image_;
 
-  std::string _path;
+  std::string path_;
 
-  bool _looping;
+  bool looping_;
 };
-
-//==============================================================================
-// I N L I N E   F U N C T I O N S   D E F I N I T I O N S
-
-//------------------------------------------------------------------------------
-//
-inline bool VideoFile::IsRealCamera() const { return false; }
-
 }  // namespace vision_server
 
 #endif  // VISION_SERVER_MEDIA_VIDEO_H_

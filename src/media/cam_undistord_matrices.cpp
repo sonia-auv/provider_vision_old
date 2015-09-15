@@ -10,7 +10,7 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
-#include "media/cam_config.h"
+#include <media/configuration_handler.h>
 #include "media/cam_undistord_matrices.h"
 
 namespace vision_server {
@@ -20,7 +20,7 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-CameraUndistordMatrices::CameraUndistordMatrices() : _matrices_founded(false) {}
+CameraUndistordMatrices::CameraUndistordMatrices() : matrices_founded_(false) {}
 
 //------------------------------------------------------------------------------
 //
@@ -28,29 +28,27 @@ CameraUndistordMatrices::~CameraUndistordMatrices() {}
 
 //==============================================================================
 // M E T H O D   S E C T I O N
-
 //------------------------------------------------------------------------------
 //
-void CameraUndistordMatrices::InitMatrices(const std::string fullPath) {
-  _matrices_founded = false;
+void CameraUndistordMatrices::InitMatrices(const std::string &fullPath) {
+  matrices_founded_ = false;
   if (fullPath.empty()) return;
 
   cv::FileStorage fs(fullPath, cv::FileStorage::READ);
 
   if (fs.isOpened()) {
-    fs["Camera_Matrix"] >> _camera_matrix;
-    fs["Distortion_Coefficients"] >> _distortion_matrix;
+    fs["Camera_Matrix"] >> camera_matrix_;
+    fs["Distortion_Coefficients"] >> distortion_matrix_;
 
     // Loading the matrices has initialized them. We know ( since it
     // is like this) that those matrices have those dimension. If they
     // are not right, then we did not successfully loaded them and we
     // should not use them.
-    if (_camera_matrix.rows == 3 && _camera_matrix.cols == 3 &&
-        _distortion_matrix.rows == 5 && _distortion_matrix.cols == 1) {
-      _matrices_founded = true;
-      _xml_file_path = fullPath;
+    if (camera_matrix_.rows == 3 && camera_matrix_.cols == 3 &&
+        distortion_matrix_.rows == 5 && distortion_matrix_.cols == 1) {
+      matrices_founded_ = true;
+      xml_file_path_ = fullPath;
     }
   }
 }
-
 }  // namespace vision_server

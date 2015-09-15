@@ -18,7 +18,6 @@
 #include <lib_atlas/pattern/subject.h>
 #include <lib_atlas/pattern/runnable.h>
 #include "media/camera/base_media.h"
-#include "utils/camera_id.h"
 
 namespace vision_server {
 
@@ -36,7 +35,7 @@ class MediaStreamer: public atlas::Subject<>, public atlas::Runnable {
   //============================================================================
   // C O N S T A N T S   M E M B E R S
 
-  const char *LOOP_TAG;
+  const std::string LOOP_TAG;
 
   //==========================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
@@ -45,7 +44,7 @@ class MediaStreamer: public atlas::Subject<>, public atlas::Runnable {
    * Artificial frame rate simulate a frame rate for video and images.
    * It will run the loop at this speed.
    */
-  MediaStreamer(std::shared_ptr<Media> cam, int artificialFrameRateMs = 30);
+  MediaStreamer(std::shared_ptr<BaseMedia> cam, int artificialFrameRateMs = 30);
 
   virtual ~MediaStreamer();
 
@@ -55,17 +54,17 @@ class MediaStreamer: public atlas::Subject<>, public atlas::Runnable {
   /**
    * Get the most recent image.
    */
-  bool GetImage(cv::Mat &image);
+  bool GetImage(cv::Mat &image) const;
 
   /**
    * Get the media CameraID on which we take the images.
    */
-  const CameraID GetMediaID();
+  uint64_t GetMediaGUID() const;
 
   /**
    * Return the acquisition loop status.
    */
-  const STATUS GetMediaStatus();
+  BaseMedia::Status GetMediaStatus() const;
 
   /**
    * Return either if the acquisition loop is recording the video or not.
@@ -125,7 +124,7 @@ class MediaStreamer: public atlas::Subject<>, public atlas::Runnable {
    * Returns the media name... to be deleted since we have the GetMediaID()
    * method.
    */
-  const std::string GetMediaName();
+  const std::string &GetMediaName() const;
 
  private:
   //==========================================================================
@@ -143,29 +142,29 @@ class MediaStreamer: public atlas::Subject<>, public atlas::Runnable {
   /**
    * Flag to know if the loop is streaming.
    */
-  bool _is_streaming;
+  bool is_streaming_;
 
   /**
    * Protection of concurrency access between getImage and run.
    */
-  mutable std::mutex _image_access;
+  mutable std::mutex image_access_;
 
   /**
    * Active media of the loop
    */
-  std::shared_ptr<Media> _media;
+  std::shared_ptr<BaseMedia> media_;
 
   /**
    * FrameRate members
    */
-  int _artificialFrameRate;
+  int artificial_framerate_;
 
-  int _frameRateMiliSec;
+  int framerate_mili_sec_;
 
   /**
    * Most updated image.
    */
-  cv::Mat _image;
+  cv::Mat image_;
 
   /**
    * This is the actuall VideoWriter that allows us to record the video
@@ -200,8 +199,8 @@ class MediaStreamer: public atlas::Subject<>, public atlas::Runnable {
 
 //------------------------------------------------------------------------------
 //
-inline const std::string MediaStreamer::GetMediaName() {
-  return _media->GetCameraID().GetName();
+inline const std::string &MediaStreamer::GetMediaName() const {
+  return media_->GetName();
 };
 
 //------------------------------------------------------------------------------
@@ -212,7 +211,7 @@ inline bool MediaStreamer::IsRecording() const {
 
 //------------------------------------------------------------------------------
 //
-inline bool MediaStreamer::IsStreaming() const { return _is_streaming; }
+inline bool MediaStreamer::IsStreaming() const { return is_streaming_; }
 
 }  // namespace vision_server
 

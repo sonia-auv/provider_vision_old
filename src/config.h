@@ -19,23 +19,6 @@
 
 namespace vision_server {
 
-/**
- * When calling with node, so string, please use
- * the enum name, ex. "FRAMERATE" for FEATURE::FRAMERATE
- */
-enum FEATURE {
-  ERROR_FEATURE,
-  SHUTTER_AUTO,
-  SHUTTER,
-  GAIN_AUTO,
-  GAIN,
-  WHITE_BALANCE_AUTO,
-  WHITE_BALANCE_RED,
-  WHITE_BALANCE_BLUE,
-  FRAMERATE
-};
-
-enum STATUS { OPEN, CLOSE, STREAMING, ERROR };
 
 const auto kProjectPath =
     atlas::kWorkspaceRoot + std::string{"/src/provider_vision/"};

@@ -19,10 +19,15 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-Camera::Camera(CameraID id) : Media(id) {}
+BaseCamera::BaseCamera(const CameraConfiguration &configuration)
+: BaseMedia(configuration)
+{
+  undistord_matrix_.InitMatrices(config_.GetUndistortionMatricePath());
+}
 
 //------------------------------------------------------------------------------
 //
-Camera::~Camera() {}
+BaseCamera::~BaseCamera() {}
 
 }  // namespace vision_server
+

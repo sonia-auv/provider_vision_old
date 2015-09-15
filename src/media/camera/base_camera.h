@@ -14,7 +14,6 @@
 // I N C L U D E   F I L E S
 
 #include "config.h"
-#include "media/cam_config.h"
 #include "media/camera/base_media.h"
 
 namespace vision_server {
@@ -27,13 +26,31 @@ namespace vision_server {
  * Media class.
  * This enables feature and open/close stuff.
  */
-class Camera : public Media {
+class BaseCamera : public BaseMedia {
  public:
+
+  /**
+   * When calling with node, so string, please use
+   * the enum name, ex. "FRAMERATE" for FEATURE::FRAMERATE
+   */
+  enum class Feature {
+    ERROR_FEATURE,
+    SHUTTER_AUTO,
+    SHUTTER,
+    GAIN_AUTO,
+    GAIN,
+    WHITE_BALANCE_AUTO,
+    WHITE_BALANCE_RED,
+    WHITE_BALANCE_BLUE,
+    FRAMERATE
+  };
+
+
   //==========================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
-  Camera(CameraID id);
+  BaseCamera (const CameraConfiguration &configuration);
 
-  virtual ~Camera();
+  virtual ~BaseCamera ();
 
   //==========================================================================
   // P U B L I C   M E T H O D S
@@ -48,11 +65,18 @@ class Camera : public Media {
 
   virtual bool Close() = 0;
 
-  virtual bool SetFeature(FEATURE feat, float value) = 0;
+  virtual bool SetFeature(const Feature &feat, float value) = 0;
 
-  virtual float GetFeature(FEATURE feat) = 0;
+  virtual float GetFeature(const Feature &feat) const = 0;
 
-  bool HasArtificialFramerate() override;
+  uint64_t GetGUID() const;
+
+  bool HasArtificialFramerate() const override;
+
+private:
+
+  CameraUndistordMatrices undistord_matrix_;
+
 };
 
 //==============================================================================
@@ -60,8 +84,11 @@ class Camera : public Media {
 
 //------------------------------------------------------------------------------
 //
-inline bool Camera::HasArtificialFramerate() { return false; }
+inline bool BaseCamera::HasArtificialFramerate() const { return false; }
 
+//------------------------------------------------------------------------------
+//
+uint64_t BaseCamera::GetGUID() const { return config_.GetGUID(); };
 }  // namespace vision_server
 
 #endif  // VISION_SERVER_CAMERA_H_

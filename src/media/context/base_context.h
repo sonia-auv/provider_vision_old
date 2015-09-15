@@ -15,9 +15,10 @@
 
 #include <mutex>
 #include <lib_atlas/pattern/runnable.h>
+#include <media/configuration_handler.h>
 #include "config.h"
-#include "media/cam_config.h"
 #include "media/camera/base_media.h"
+#include "media/camera/base_camera.h"
 
 namespace vision_server {
 
@@ -36,7 +37,7 @@ class BaseContext: public atlas::Runnable {
   /**
    * CTR/DSTR
    */
-  BaseContext(const CAMConfig config);
+  BaseContext();
 
   virtual ~BaseContext();
 
@@ -51,16 +52,18 @@ class BaseContext: public atlas::Runnable {
   /**
    * Method to handle cameras
    */
-  virtual bool StartCamera(CameraID id) = 0;
+  virtual bool StartCamera(const std::string &name) = 0;
 
-  virtual bool StopCamera(CameraID id) = 0;
+  virtual bool StopCamera(const std::string &name) = 0;
 
   /**
    * Feature setting/getting handler
    */
-  virtual void SetFeature(FEATURE feat, CameraID id, float val) = 0;
+  virtual void SetFeature(BaseCamera::Feature feat, const std::string &name,
+                          float val) = 0;
 
-  virtual void GetFeature(FEATURE feat, CameraID id, float &val) = 0;
+  virtual void GetFeature(BaseCamera::Feature feat, const std::string &name,
+                          float &val) = 0;
 
   /**
    * Method to get all listed (connected) camera of the system
@@ -71,7 +74,7 @@ class BaseContext: public atlas::Runnable {
    * \return The camera if it is open.
    *         WILL NOT OPEN IT IF NOT.
    */
-  virtual std::shared_ptr<Media> GetActiveCamera(CameraID id) = 0;
+  virtual std::shared_ptr<BaseMedia> GetActiveCamera(CameraID id) = 0;
 
   virtual CameraID GetIDFromName(const std::string &name);
 
@@ -107,7 +110,7 @@ class BaseContext: public atlas::Runnable {
    * List of all camera ACTIVE in the system.
    * For camera, it is camera that are acquiring images.
    */
-  std::vector<std::shared_ptr<Media>> _live_camera_list;
+  std::vector<std::shared_ptr<BaseMedia>> _active_camera_list;
 };
 
 //==============================================================================

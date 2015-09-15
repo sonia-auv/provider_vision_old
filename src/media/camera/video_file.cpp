@@ -21,23 +21,23 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-VideoFile::VideoFile(std::string path_to_file, bool looping)
+VideoFile::VideoFile(const std::string &path_to_file, bool looping)
     : VideoCapture(path_to_file),
-      // Two because...
-      Media(CameraID(path_to_file, 2)),
-      _path(path_to_file),
-      _currentImage(),
-      _looping(looping) {
-  LoadVideo(_path);
+      BaseMedia(CameraConfiguration(path_to_file)),
+      path_(path_to_file),
+      current_image_(),
+      looping_(looping)
+{
+  LoadVideo(path_);
 }
 
 //------------------------------------------------------------------------------
 //
 VideoFile::VideoFile()
-    : _path(std::string("")),
-      Media(CameraID("NO_PATH", 2)),
-      _currentImage(),
-      _looping(true) {}
+    : path_(std::string("")),
+      BaseMedia(CameraConfiguration("NO_PATH")),
+      current_image_(),
+      looping_(true) {}
 
 //------------------------------------------------------------------------------
 //
@@ -49,25 +49,17 @@ VideoFile::~VideoFile() {
 
 //==============================================================================
 // M E T H O D   S E C T I O N
+//------------------------------------------------------------------------------
+//
+void VideoFile::SetPathToVideo(const std::string &full_path) { path_ = full_path; }
 
 //------------------------------------------------------------------------------
 //
-inline std::vector<std::string> VideoFile::getCommands() const {
-  // Should implement play, pause, stop, forward, backward, etc.
-  return std::vector<std::string>();
-}
+void VideoFile::SetLooping(bool looping) { looping_ = looping; }
 
 //------------------------------------------------------------------------------
 //
-void VideoFile::SetPathToVideo(std::string full_path) { _path = full_path; }
-
-//------------------------------------------------------------------------------
-//
-void VideoFile::SetLooping(bool looping) { _looping = looping; }
-
-//------------------------------------------------------------------------------
-//
-bool VideoFile::LoadVideo(std::string path_to_file) {
+bool VideoFile::LoadVideo(const std::string &path_to_file) {
   return this->open(path_to_file);
 }
 
@@ -96,14 +88,14 @@ bool VideoFile::NextImage(cv::Mat &image) {
   bool video_status = false;
   if (isOpened()) {
     // Clear the previous image.
-    _currentImage = cv::Mat();
+    current_image_ = cv::Mat();
 
-    this->operator>>(_currentImage);
-    if (!_currentImage.empty()) {
+    this->operator>>(current_image_);
+    if (!current_image_.empty()) {
       // Next image has loaded
-      image = _currentImage;
+      image = current_image_;
       video_status = true;
-    } else if (_looping) {
+    } else if (looping_) {
       // end of sequence, going back to first frame.
       // Delay will happen, but it's part of the lib...
       set(CV_CAP_PROP_POS_AVI_RATIO, 0);
@@ -116,9 +108,4 @@ bool VideoFile::NextImage(cv::Mat &image) {
 
   return video_status;
 }
-
-//------------------------------------------------------------------------------
-//
-inline std::string VideoFile::GetName() const { return _path; }
-
 }  // namespace vision_server

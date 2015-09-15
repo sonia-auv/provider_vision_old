@@ -22,11 +22,10 @@ namespace vision_server {
 //------------------------------------------------------------------------------
 //
 MediaManager::MediaManager(atlas::NodeHandlePtr node_handle)
-    : atlas::ServiceServerManager<MediaManager>(node_handle),
-      _config(atlas::kWorkspaceRoot +
-              std::string("/src/vision_server/config/")) {
+    : atlas::ServiceServerManager<MediaManager>(node_handle)
+      {
   assert(node_handle.get() != nullptr);
-  auto base_node_name = std::string{VISION_NODE_NAME};
+  std::string base_node_name(VISION_NODE_NAME);
 
   RegisterService<vision_server_get_media_param>(
       base_node_name + "vision_server_get_media_param_list",
@@ -36,13 +35,13 @@ MediaManager::MediaManager(atlas::NodeHandlePtr node_handle)
       base_node_name + "vision_server_set_media_param_list",
       &MediaManager::CallbackSetCMD, *this);
 
-  Init();
+  InitializeContext();
 };
 
 //------------------------------------------------------------------------------
 //
 MediaManager::~MediaManager() {
-  Close();
+  CloseContext();
 }
 
 //==============================================================================
@@ -52,8 +51,8 @@ MediaManager::~MediaManager() {
 //
 std::vector<CameraID> MediaManager::GetCameraList() {
   std::vector<CameraID> cameraList;
-  for (auto &elem : _drivers) {
-    std::vector<CameraID> driver_list = elem->GetCameraList();
+  for (auto &elem : context_) {
+    std::vector<uint64_t> driver_list = elem->GetCameraList();
     for (auto &driver_list_j : driver_list) {
       cameraList.push_back(driver_list_j);
     }
@@ -140,14 +139,14 @@ void MediaManager::ParametersCmd(COMMAND cmd, const std::string &mediaName,
 
 //------------------------------------------------------------------------------
 //
-bool MediaManager::Init() {
+bool MediaManager::InitializeContext() {
   // Each time you have a new driver (Gige, usb, etc.) add it to
   // the list here.
-  _drivers.push_back(std::make_shared<CAMDriverDC1394>(_config));
-  _drivers.push_back(std::make_shared<WebcamContext>(_config));
-  _drivers.push_back(std::make_shared<VideoFileContext>(_config));
+  context_.push_back(std::make_shared<CAMDriverDC1394>());
+  context_.push_back(std::make_shared<WebcamContext>());
+  context_.push_back(std::make_shared<VideoFileContext>());
 
-  for (auto &elem : _drivers) {
+  for (auto &elem : context_) {
     elem->InitDriver();
   }
   return false;
@@ -155,9 +154,9 @@ bool MediaManager::Init() {
 
 //------------------------------------------------------------------------------
 //
-bool MediaManager::Close() {
+bool MediaManager::CloseContext() {
   // Close every devices here
-  for (auto &elem : _drivers) {
+  for (auto &elem : context_) {
     elem->CloseDriver();
   }
   return false;
@@ -166,7 +165,7 @@ bool MediaManager::Close() {
 //------------------------------------------------------------------------------
 //
 std::shared_ptr<BaseContext> MediaManager::GetDriverForCamera(const std::string &name) {
-  for (auto &elem : _drivers) {
+  for (auto &elem : context_) {
     if (elem->IsMyCamera(name)) {
       return elem;
     }

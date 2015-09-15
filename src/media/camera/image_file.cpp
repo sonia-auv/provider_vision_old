@@ -22,15 +22,16 @@ namespace vision_server {
 //------------------------------------------------------------------------------
 //
 ImageFile::ImageFile(std::string path_to_file)
-    : _path(path_to_file),
-      // Two because...
-      Media(CameraID(path_to_file, 1)) {
-  LoadImage(_path);
+    : path_(path_to_file),
+      BaseMedia(CameraConfiguration(path_to_file)) {
+  LoadImage(path_);
 }
 
 //------------------------------------------------------------------------------
 //
-ImageFile::ImageFile() : _path(""), Media(CameraID("NO_PATH", 2)) {}
+ImageFile::ImageFile()
+: path_(""),
+  BaseMedia(CameraConfiguration("NO_PATH")) {}
 
 //==============================================================================
 // M E T H O D   S E C T I O N
@@ -38,9 +39,9 @@ ImageFile::ImageFile() : _path(""), Media(CameraID("NO_PATH", 2)) {}
 //------------------------------------------------------------------------------
 //
 bool ImageFile::LoadImage(std::string path_to_file) {
-  _image =
+  image_ =
       cv::imread(path_to_file, CV_LOAD_IMAGE_ANYDEPTH | CV_LOAD_IMAGE_ANYCOLOR);
-  if (_image.empty()) {
+  if (image_.empty()) {
     return false;
   }
   return true;
@@ -48,17 +49,10 @@ bool ImageFile::LoadImage(std::string path_to_file) {
 
 //------------------------------------------------------------------------------
 //
-inline std::vector<std::string> ImageFile::getCommands() const {
-  // its an image, no command.
-  return std::vector<std::string>();
-}
-
-//------------------------------------------------------------------------------
-//
 bool ImageFile::Start() {
   // if the media is open, then the image is not empty.
-  if (_image.empty()) {
-    return _image.empty();
+  if (image_.empty()) {
+    return image_.empty();
   }
   return true;
 }
@@ -76,15 +70,10 @@ bool ImageFile::NextImage(cv::Mat &image) {
   // Here, since cv::Mat are smart pointer, we can just
   // clone the image, and the "garbage collection"
   // will be handle later on in the program.
-  if (!_image.empty()) {
-    image = _image.clone();
+  if (!image_.empty()) {
+    image = image_.clone();
     return true;
   }
   return false;
 }
-
-//------------------------------------------------------------------------------
-//
-std::string ImageFile::GetName() const { return _path; }
-
 }  // namespace vision_server

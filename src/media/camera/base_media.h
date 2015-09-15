@@ -7,14 +7,14 @@
  * found in the LICENSE file.
  */
 
-#ifndef VISION_SERVER_MEDIA_H_
-#define VISION_SERVER_MEDIA_H_
+#ifndef VISION_SERVER_BaseMedia_H_
+#define VISION_SERVER_BaseMedia_H_
 
 //==============================================================================
 // I N C L U D E   F I L E S
 
 #include <opencv2/core/core.hpp>
-#include "utils/camera_id.h"
+#include <media/camera_configuration.h>
 #include "config.h"
 
 namespace vision_server {
@@ -26,20 +26,19 @@ namespace vision_server {
  * Base class for anything that can provide an image to the system
  * implement basic functionality that is called through the system.
  */
-class Media {
+class BaseMedia {
  public:
-  std::vector<std::string> commands;
 
-  CameraID _id;
+  enum class Status { OPEN, CLOSE, STREAMING, ERROR };
 
-  STATUS _status;
 
   //==========================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
-  Media(CameraID id) : _id(id), _status(CLOSE){};
+  BaseMedia(const CameraConfiguration &config)
+  : config_(config), status_(Status::CLOSE){};
 
-  virtual ~Media(){};
+  virtual ~BaseMedia(){};
 
   //==========================================================================
   // P U B L I C   M E T H O D S
@@ -57,40 +56,41 @@ class Media {
   /**
    * Gives the most recent image
    */
-  virtual bool NextImage(cv::Mat &image) = 0;
+  virtual bool NextImage(const cv::Mat &image) = 0;
 
   /**
    * Return either if the camera is a real camera or not.
    * It will return false if, for exemple, the camera is a video or a Webcam.
    * Reimplement this method in your subclass and return the appropriate boolean
    *
-   * \return True if the camera is a real camera.
-   */
-  virtual bool IsRealCamera() const = 0;
-
+   *
   //==========================================================================
   // G E T T E R S   A N D   S E T T E R S
 
   /**
-   * Returns the current camera status
+   * Returns the current camera Status
    */
-  virtual STATUS getStatus() const;
-
-  /**
-   * Return the list of command available for this media
-   */
-  virtual std::vector<std::string> getCommands() const;
+  virtual Status GetStatus() const;
 
   /**
    * Makes return true if it does not have a proper framerate
    * i.e. Images and video;
    */
-  virtual bool HasArtificialFramerate();
+  virtual bool HasArtificialFramerate() const;
 
   /**
-   * Return the CameraID, the general identifier for a media in the system.
+   * Return the CameraID, the general identifier for a BaseMedia in the system.
    */
-  virtual const CameraID GetCameraID();
+  virtual const CameraConfiguration &GetCameraConfiguration() const;
+
+  std::string GetName() const;
+
+private:
+
+  CameraConfiguration config_;
+
+  Status status_;
+
 };
 
 //==============================================================================
@@ -98,20 +98,21 @@ class Media {
 
 //------------------------------------------------------------------------------
 //
-inline STATUS Media::getStatus() const { return _status; };
+inline BaseMedia::Status BaseMedia::GetStatus() const { return status_; };
 
 //------------------------------------------------------------------------------
 //
-inline std::vector<std::string> Media::getCommands() const { return commands; }
+inline bool BaseMedia::HasArtificialFramerate() const { return true; }
 
 //------------------------------------------------------------------------------
 //
-inline bool Media::HasArtificialFramerate() { return true; }
+inline const
+CameraConfiguration &BaseMedia::GetCameraConfiguration() const { return config_; }
 
 //------------------------------------------------------------------------------
 //
-inline const CameraID Media::GetCameraID() { return _id; }
+inline std::string BaseMedia::GetName() const { return config_.GetName(); }
 
 }  // namespace vision_server
 
-#endif  // VISION_SERVER_MEDIA_H_
+#endif  // VISION_SERVER_BaseMedia_H_

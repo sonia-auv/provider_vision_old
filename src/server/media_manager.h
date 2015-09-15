@@ -14,15 +14,16 @@
 // I N C L U D E   F I L E S
 
 #include <lib_atlas/ros/service_server_manager.h>
+#include <media/configuration_handler.h>
 #include <media/context/file_context.h>
 #include <vision_server/vision_server_get_media_param.h>
 #include <vision_server/vision_server_set_media_param.h>
 #include "config.h"
+#include "media/configuration_handler.h"
 #include "media/context/base_context.h"
 #include "media/context/dc1394_context.h"
 #include "media/context/webcam_context.h"
 #include "media/context/file_context.h"
-#include "media/cam_config.h"
 #include "media/media_streamer.h"
 
 namespace vision_server {
@@ -43,7 +44,7 @@ class MediaManager: public atlas::ServiceServerManager<MediaManager> {
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
 
-  enum COMMAND { START, STOP, SET_FEATURE, GET_FEATURE };
+  enum class Command { START, STOP, SET_FEATURE, GET_FEATURE };
 
   //==========================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
@@ -58,27 +59,27 @@ class MediaManager: public atlas::ServiceServerManager<MediaManager> {
   /**
    * Accumulate all the drivers' camear CameraID in a list.
    */
-  std::vector<CameraID> GetCameraList();
+  std::vector<std::string> GetCameraList() const;
 
   /**
-   * Streaming command is realated to start/stop a media, and returing active
+   * Streaming command is related to start/stop a media, and returning active
    * acquisition loop or closing it, depending of the command.
    */
-  void StreammingCmd(COMMAND cmd, const std::string &mediaName,
+  void StreammingCmd(Command cmd, const std::string &mediaName,
                      std::shared_ptr<MediaStreamer> &ptr);
 
   /**
    * ParametersCmd send  command of type feature to the media (shutter, white
    * balance...).
    */
-  void ParametersCmd(COMMAND cmd, const std::string &mediaName, FEATURE feat,
-                     float &val);
+  void ParametersCmd(Command cmd, const std::string &mediaName,
+                     BaseCamera::Feature feat, float &val);
 
   /**
    * Change a String representing a parameter of FEATURE to the appropriate
    * enum, so it can be use in the system.
    */
-  FEATURE NameToEnum(const std::string &name);
+  BaseCamera::Feature NameToEnum(const std::string &name) const;
 
  private:
   //==========================================================================
@@ -88,9 +89,9 @@ class MediaManager: public atlas::ServiceServerManager<MediaManager> {
    * Calls the Init and Close method of each drivers in the list.
    * creation/destruction.
    */
-  bool Init();
+  bool InitializeContext();
 
-  bool Close();
+  bool CloseContext();
 
   /**
    * Simple for loop iteration which pokes each driver to know if they
@@ -116,12 +117,13 @@ class MediaManager: public atlas::ServiceServerManager<MediaManager> {
   /**
    * Config object. To register/read cameras config.
    */
-  CAMConfig _config;
 
   /**
    * List of the driers in the system
    */
-  std::vector<std::shared_ptr<BaseContext>> _drivers;
+  std::vector<std::shared_ptr<BaseContext>> context_;
+
+  std::map<std::string, CameraConfiguration> _camera_configuration_map;
 };
 
 }  // namespace vision_server

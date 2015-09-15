@@ -30,7 +30,7 @@ namespace vision_server {
 //==============================================================================
 // C L A S S E S
 
-class DC1394Camera: public Camera {
+class DC1394Camera: public BaseCamera {
  public:
   static const int DMA_BUFFER = 4;
 
@@ -39,14 +39,14 @@ class DC1394Camera: public Camera {
   //==========================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
-  DC1394Camera(dc1394camera_t *camera, CameraID id);
+  DC1394Camera(dc1394camera_t *camera, const CameraConfiguration &config);
 
   ~DC1394Camera();
 
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  // MediaCAM override
+  // BaseCamera override
   bool Open() override;
 
   bool Close() override;
@@ -57,11 +57,9 @@ class DC1394Camera: public Camera {
 
   bool NextImage(cv::Mat &img) override;
 
-  bool IsRealCamera() const override;
+  bool SetFeature(const Feature &feat, float value) override;
 
-  bool SetFeature(FEATURE feat, float value) override;
-
-  float GetFeature(FEATURE feat) override;
+  float GetFeature(const Feature &feat) const override;
 
   // Sets to different streaming format.
   bool SetFormat7();
@@ -73,22 +71,12 @@ class DC1394Camera: public Camera {
   //==========================================================================
   // G E T T E R S   A N D   S E T T E R S
 
-  virtual uint64_t GetGUID() const;
-
-  CameraID GetCamID() const;
-
   std::string GetModel() const;
 
-  void SetCamID(CameraID cam_id);
-
-  void SetModel(std::string model);
-
-  bool HasArtificialFramerate() override;
-
-  double GetAcquistionTimerValue();
+  double GetAcquistionTimerValue() const;
 
   // SHOULD BE USE ONLY BY DRIVER WITH CAUTION
-  dc1394camera_t *GetCameraPtr();
+  dc1394camera_t *GetCameraPtr()const ;
 
  private:
   //==========================================================================
@@ -100,35 +88,18 @@ class DC1394Camera: public Camera {
   // enum to float
   float ConvertFramerate(uint32_t val);
 
-  // Corrects the fisheye effect.
-  void UndistordImage(cv::Mat &in, cv::Mat &out);
-
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
-  bool _is_transmitting;
+  mutable std::mutex cam_access_;
 
-  std::string _model;
+  mutable std::mutex timer_access_;
 
-  mutable std::mutex _cam_access;
+  dc1394camera_t *dc1394_camera_;
 
-  mutable std::mutex _timer_acces;
+  dc1394video_mode_t video_mode_;
 
-  dc1394camera_t *_dc1394_camera;
-
-  dc1394video_mode_t _video_mode;
-
-  atlas::MilliTimer _acquisition_timer;
-
-  // TODO:
-  // Maybe not necessary? only performance issue.. Lot of access for
-  // getting the matrices of CameraUndistordMatrices, so copy the values here
-  // at construction to prevent all those access all the time...
-  cv::Mat _camera_matrix;
-
-  cv::Mat _distortion_matrix;
-
-  bool _undistortion_is_enable;
+  atlas::MilliTimer acquisition_timer_;
 };
 
 //==============================================================================
@@ -136,57 +107,31 @@ class DC1394Camera: public Camera {
 
 //------------------------------------------------------------------------------
 //
-inline uint64_t DC1394Camera::GetGUID() const { return _id.GetGUID(); }
+inline std::string
+DC1394Camera::GetModel() const
+{
+
+  if( dc1394_camera_ != nullptr)
+  {
+    throw std::runtime_error("Null camera pointer");
+  }
+  return dc1394_camera_->model;
+}
 
 //------------------------------------------------------------------------------
 //
-inline CameraID DC1394Camera::GetCamID() const { return _id; }
-
-//------------------------------------------------------------------------------
-//
-inline std::string DC1394Camera::GetModel() const { return _model; }
-
-//------------------------------------------------------------------------------
-//
-inline void DC1394Camera::SetCamID(CameraID cam_id) { _id = cam_id; }
-
-//------------------------------------------------------------------------------
-//
-inline void DC1394Camera::SetModel(std::string model) { _model = model; }
-
-//------------------------------------------------------------------------------
-//
-inline bool DC1394Camera::HasArtificialFramerate() { return false; }
-
-//------------------------------------------------------------------------------
-//
-inline double DC1394Camera::GetAcquistionTimerValue() {
-  _timer_acces.lock();
-  _acquisition_timer.sleep(3);
-  auto timer = _acquisition_timer.time();
-  _timer_acces.unlock();
+inline double DC1394Camera::GetAcquistionTimerValue() const {
+  timer_access_.lock();
+  double timer = acquisition_timer_.time();
+  timer_access_.unlock();
   return timer;
 };
 
 //------------------------------------------------------------------------------
 //
-inline dc1394camera_t *DC1394Camera::GetCameraPtr() {
-  return _dc1394_camera;
+inline dc1394camera_t *DC1394Camera::GetCameraPtr() const {
+  return dc1394_camera_;
 }
-
-//------------------------------------------------------------------------------
-//
-inline void DC1394Camera::UndistordImage(cv::Mat &in, cv::Mat &out) {
-  if (_undistortion_is_enable) {
-    cv::undistort(in, out, _camera_matrix, _distortion_matrix);
-  } else {
-    in.copyTo(out);
-  }
-}
-
-//------------------------------------------------------------------------------
-//
-inline bool DC1394Camera::IsRealCamera() const { return true; }
 
 }  // namespace vision_server
 

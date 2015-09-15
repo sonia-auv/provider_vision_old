@@ -22,24 +22,24 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-MediaStreamer::MediaStreamer(std::shared_ptr<Media> cam, int artificialFrameRateMs)
-    : _media(cam),
+MediaStreamer::MediaStreamer(std::shared_ptr<BaseMedia> cam, int artificialFrameRateMs)
+    : media_(cam),
       LOOP_TAG("[Acquisition Loop]"),
-      _is_streaming(false),
-      _artificialFrameRate(artificialFrameRateMs),
+      is_streaming_(false),
+      artificial_framerate_(artificialFrameRateMs),
       // here 30 in case we forget to set it, so the cpu doesn't blow off.
-      _frameRateMiliSec(1000 / 30),
-      _image(),
+      framerate_mili_sec_(1000 / 30),
+      image_(),
       video_writer_(),
       is_recording_(false) {
-  if (_media->HasArtificialFramerate() && _artificialFrameRate != 0)
-    _frameRateMiliSec = 1000 / _artificialFrameRate;
+  if ( media_->HasArtificialFramerate() && artificial_framerate_ != 0)
+    framerate_mili_sec_ = 1000 / artificial_framerate_;
 }
 
 //------------------------------------------------------------------------------
 //
 MediaStreamer::~MediaStreamer() {
-  if (_is_streaming) {
+  if (is_streaming_) {
     StopStreaming();
   }
   ROS_INFO_NAMED(LOOP_TAG, "Destroying MediaStreamer");
@@ -51,20 +51,20 @@ MediaStreamer::~MediaStreamer() {
 //------------------------------------------------------------------------------
 //
 void MediaStreamer::SetFramerate(int framePerSecond) {
-  _frameRateMiliSec = 1000 / framePerSecond;
+  framerate_mili_sec_ = 1000 / framePerSecond;
 }
 
 //------------------------------------------------------------------------------
 //
 bool MediaStreamer::StartStreaming() {
   ROS_INFO_NAMED(LOOP_TAG, "Starting streaming on camera %s",
-                 _media->GetCameraID().GetName().c_str());
+                 media_->GetName() );
 
   // Start thread
-  std::lock_guard<std::mutex> guard(_image_access);
+  std::lock_guard<std::mutex> guard(image_access_);
   start();
   if (running()) {
-    _is_streaming = true;
+    is_streaming_ = true;
     return true;
   }
   return false;
@@ -73,11 +73,11 @@ bool MediaStreamer::StartStreaming() {
 //------------------------------------------------------------------------------
 //
 bool MediaStreamer::StopStreaming() {
-  _is_streaming = false;
+  is_streaming_ = false;
 
   // Send message on the line.
   ROS_INFO_NAMED(LOOP_TAG, "Stopping streaming on camera %s",
-                 _media->GetCameraID().GetName().c_str());
+                 media_->GetName() );
   // Stop thread
   if (running()) {
     stop();
@@ -106,7 +106,7 @@ bool MediaStreamer::StartRecording(const std::string &filename) {
   // mjpg et divx fonctionnels aussi, HFYU est en lossless
   video_writer_ =
       cv::VideoWriter(filepath, CV_FOURCC('D', 'I', 'V', 'X'), 15.0,
-                      cv::Size(_image.size().width, _image.size().height));
+                      cv::Size(image_.size().width, image_.size().height));
 
   if (!video_writer_.isOpened()) {
     ROS_ERROR_NAMED(LOOP_TAG, "Video writer was not opened!");
@@ -135,22 +135,22 @@ void MediaStreamer::run() {
   bool must_set_record = false;
 
   // If the media is a real camera, start recording the feed.
-  if (_media->IsRealCamera()) {
+  if ( !media_->HasArtificialFramerate() ) {
     must_set_record = true;
   }
 
   while (!must_stop()) {
     //_logger->LogInfo(LOOP_TAG, "Taking mutex for publishing");
-    _image_access.lock();
+    image_access_.lock();
     //_logger->LogInfo(LOOP_TAG, "Took mutex for publishing");
-    acquival = _media->NextImage(_image);
-    _image_access.unlock();
+    acquival = media_->NextImage(image_);
+    image_access_.unlock();
     //_logger->LogInfo(LOOP_TAG, "Releasing mutex for publishing");
 
     if (!acquival) {
-      _image = cv::Mat::zeros(100, 100, CV_8UC3);
+      image_ = cv::Mat::zeros(100, 100, CV_8UC3);
       ROS_ERROR_NAMED(LOOP_TAG, "Error on NextImage. Providing empty image %s",
-                      _media->GetCameraID().GetName().c_str());
+                      media_->GetName());
     } else {
       // This should not be the proper way to do this.
       // Actually the media, or even better the camera driver sould provide a
@@ -166,7 +166,7 @@ void MediaStreamer::run() {
         //        cv::Mat image_with_correct_format;
         //        cv::cvtColor(_image, image_with_correct_format, CV_BGR2RGB);
         //        video_writer_.write(image_with_correct_format);
-        video_writer_.write(_image);
+        video_writer_.write(image_);
       }
 
       // Adding this here, because if the thread has been close,
@@ -186,13 +186,13 @@ void MediaStreamer::run() {
 
 //------------------------------------------------------------------------------
 //
-bool MediaStreamer::GetImage(cv::Mat &image) {
+bool MediaStreamer::GetImage(cv::Mat &image) const {
   bool retval = false;
 
   //_logger->LogInfo(LOOP_TAG, "Taking mutex for getting image");
-  std::lock_guard<std::mutex> guard(_image_access);
+  std::lock_guard<std::mutex> guard(image_access_);
   //_logger->LogInfo(LOOP_TAG, "Took mutex for getting image");
-  if (_image.empty()) {
+  if (image_.empty()) {
     image = cv::Mat::zeros(100, 100, CV_8UC3);
     ROS_ERROR_NAMED(LOOP_TAG, "Image is empty");
     return retval;
@@ -201,7 +201,7 @@ bool MediaStreamer::GetImage(cv::Mat &image) {
   // Here we clone, since we want the acquisition loop to be the only
   // owner of the image. A copy would also give the memory address.
   try {
-    image = _image.clone();
+    image = image_.clone();
     retval = true;
   } catch (cv::Exception &e) {
     ROS_ERROR_NAMED(LOOP_TAG, "Exception in cloning (%s)", e.what());
@@ -213,10 +213,7 @@ bool MediaStreamer::GetImage(cv::Mat &image) {
 
 //------------------------------------------------------------------------------
 //
-const CameraID MediaStreamer::GetMediaID() { return _media->GetCameraID(); }
-
-//------------------------------------------------------------------------------
-//
-const STATUS MediaStreamer::GetMediaStatus() { return _media->getStatus(); }
+BaseMedia::Status
+MediaStreamer::GetMediaStatus() const { return media_->GetStatus(); }
 
 }  // namespace vision_server

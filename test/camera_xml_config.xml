@@ -1,0 +1,12 @@
+<CameraList>
+  <Camera name="Front" guid="0123456789">
+    <Shutter value="1"/>
+    <Gain value="1"/>
+    <UndistortionMatrice value="/test/for/path/lol"/>
+  </Camera>
+  <Camera name="Bottom" guid="9876543210">
+    <Shutter value="2"/>
+    <Gain value="3"/>
+  </Camera>
+</CameraList>
+

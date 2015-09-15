@@ -27,7 +27,7 @@ namespace vision_server {
  * For now it consider that the default camera is a webcam.
  * There is no other check than that. It is useful for debugging the server.
  */
-class CAMWebcam : public Camera, private cv::VideoCapture {
+class CAMWebcam : public BaseCamera, private cv::VideoCapture {
  public:
   //==========================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
@@ -50,8 +50,6 @@ class CAMWebcam : public Camera, private cv::VideoCapture {
   /** Method override from Media */
   bool NextImage(cv::Mat &image) override;
 
-  bool IsRealCamera() const override;
-
   /** Method override from Media */
   bool Open() override;
 
@@ -59,18 +57,14 @@ class CAMWebcam : public Camera, private cv::VideoCapture {
   bool Close() override;
 
   /** Method override from Media */
-  bool SetFeature(FEATURE feat, float value) override;
+  bool SetFeature(const Feature &feat, float value) override;
 
   /** Method override from Media */
-  float GetFeature(FEATURE feat) override;
+  float GetFeature(const Feature &feat) const override;
 };
 
 //==============================================================================
 // I N L I N E   F U N C T I O N S   D E F I N I T I O N S
-
-//------------------------------------------------------------------------------
-//
-inline bool CAMWebcam::IsRealCamera() const { return true; }
 
 }  // namespace vision_server
 

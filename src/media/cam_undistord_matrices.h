@@ -37,21 +37,23 @@ class CameraUndistordMatrices {
 
   //==========================================================================
   // P U B L I C   M E T H O D S
-  void InitMatrices(const std::string fullPath);
+  void InitMatrices(const std::string &fullPath);
 
   void GetMatrices(cv::Mat &cameraMatrix, cv::Mat &distortionMatrix);
 
-  inline bool IsCorrectionEnable() { return _matrices_founded; };
+  bool IsCorrectionEnable();
+
+  void CorrectInmage(const cv::Mat &in, cv::Mat &out) const;
 
  private:
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
-  cv::Mat _camera_matrix, _distortion_matrix;
+  cv::Mat camera_matrix_, distortion_matrix_;
 
-  std::string _xml_file_path;
+  std::string xml_file_path_;
 
-  bool _matrices_founded;
+  bool matrices_founded_;
 };
 
 //==============================================================================
@@ -61,8 +63,24 @@ class CameraUndistordMatrices {
 //
 inline void CameraUndistordMatrices::GetMatrices(cv::Mat &cameraMatrix,
                                                  cv::Mat &distortionMatrix) {
-  _camera_matrix.copyTo(cameraMatrix);
-  _distortion_matrix.copyTo(distortionMatrix);
+  camera_matrix_.copyTo(cameraMatrix);
+  distortion_matrix_.copyTo(distortionMatrix);
+}
+
+//------------------------------------------------------------------------------
+//
+inline bool
+CameraUndistordMatrices::IsCorrectionEnable() { return matrices_founded_; };
+
+//------------------------------------------------------------------------------
+//
+inline void
+CameraUndistordMatrices::CorrectInmage(const cv::Mat &in, cv::Mat &out) const {
+  if (matrices_founded_) {
+    cv::undistort(in, out, camera_matrix_, distortion_matrix_);
+  } else {
+    in.copyTo(out);
+  }
 }
 
 }  // namespace vision_server
