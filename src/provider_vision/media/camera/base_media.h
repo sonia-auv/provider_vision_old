@@ -14,7 +14,7 @@
 // I N C L U D E   F I L E S
 
 #include <opencv2/core/core.hpp>
-#include <media/camera_configuration.h>
+#include <provider_vision/media/camera_configuration.h>
 #include "provider_vision/config.h"
 
 namespace vision_server {
@@ -54,7 +54,7 @@ class BaseMedia {
   /**
    * Gives the most recent image
    */
-  virtual bool NextImage(const cv::Mat &image) = 0;
+  virtual bool NextImage(cv::Mat &image) = 0;
 
   /**
    * Return either if the camera is a real camera or not.
@@ -83,7 +83,11 @@ class BaseMedia {
 
   std::string GetName() const;
 
- private:
+  bool IsStreaming() const;
+  bool IsClosed() const;
+  bool IsOpened() const;
+
+ protected:
   CameraConfiguration config_;
 
   Status status_;
@@ -109,6 +113,20 @@ inline const CameraConfiguration &BaseMedia::GetCameraConfiguration() const {
 //------------------------------------------------------------------------------
 //
 inline std::string BaseMedia::GetName() const { return config_.GetName(); }
+
+//------------------------------------------------------------------------------
+//
+inline bool BaseMedia::IsStreaming() const { return status_ == Status::STREAMING; }
+
+//------------------------------------------------------------------------------
+//
+inline bool BaseMedia::IsClosed() const { return status_ == Status::CLOSE; }
+
+//------------------------------------------------------------------------------
+//
+inline bool BaseMedia::IsOpened() const { return status_ == Status::OPEN; }
+
+
 
 }  // namespace vision_server
 

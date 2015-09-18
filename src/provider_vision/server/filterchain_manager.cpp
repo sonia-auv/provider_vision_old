@@ -13,7 +13,7 @@
 
 #include <assert.h>
 #include <dirent.h>
-#include <utils/pugixml.h>
+#include <provider_vision/utils/pugixml.h>
 #include "provider_vision/server/filterchain_manager.h"
 
 namespace vision_server {
@@ -23,7 +23,7 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-FilterchainManager::FilterchainManager()
+FilterchainManager::FilterchainManager(atlas::NodeHandlePtr node_handle)
     : atlas::ServiceServerManager<FilterchainManager>(node_handle),
       FILTERCHAIN_MANAGER_TAG("FILTERCHAIN_MANAGER") {
   assert(node_handle.get() != nullptr);

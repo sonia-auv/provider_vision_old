@@ -8,14 +8,15 @@
  * found in the LICENSE file.
  */
 
+#include "provider_vision/server/detection_task_manager.h"
 namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-std::shared_ptr<DetectionTask> VisionServer::GetExecution(
+std::shared_ptr<DetectionTask> DetectionTaskManager::GetDetectionTask(
     const std::string &execName) {
   std::lock_guard<std::mutex> guard(_list_access);
-  for (const auto &execution : executions_) {
+  for (const auto &execution : detection_tasks_) {
     if (execution->GetExecName().find(execName.c_str()) != std::string::npos) {
       return execution;
     }
@@ -26,9 +27,9 @@ std::shared_ptr<DetectionTask> VisionServer::GetExecution(
 
 //------------------------------------------------------------------------------
 //
-const bool VisionServer::IsAnotherUserMedia(const std::string &mediaName) {
+const bool DetectionTaskManager::IsAnotherUserMedia(const std::string &mediaName) {
   std::lock_guard<std::mutex> guard(_list_access);
-  for (const auto &execution : executions_) {
+  for (const auto &execution : detection_tasks_) {
     if (execution->GetMediaName() == mediaName) {
       return true;
     }
@@ -38,11 +39,11 @@ const bool VisionServer::IsAnotherUserMedia(const std::string &mediaName) {
 
 //------------------------------------------------------------------------------
 //
-std::shared_ptr<MediaStreamer> VisionServer::GetAcquisitionLoop(
+std::shared_ptr<MediaStreamer> DetectionTaskManager::GetMediaStreamer(
     const std::string &mediaName) {
   std::lock_guard<std::mutex> guard(_list_access);
-  for (auto &acquisition : acquisition_loop_) {
-    if (acquisition->GetMediaID().GetName() == mediaName) {
+  for (auto &acquisition : media_streamers_) {
+    if (acquisition->GetMediaName() == mediaName) {
       return acquisition;
     }
   }

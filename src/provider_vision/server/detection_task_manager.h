@@ -12,6 +12,12 @@
 #ifndef VISION_SERVER_DETECTION_TASK_MANAGER_H_
 #define VISION_SERVER_DETECTION_TASK_MANAGER_H_
 
+#include <string>
+#include <memory>
+#include <mutex>
+
+#include "provider_vision/proc/detection_task.h"
+
 namespace vision_server {
 
 class DetectionTaskManager {
@@ -27,32 +33,33 @@ class DetectionTaskManager {
   // P U B L I C   M E T H O D S
 
   /**
-   * Return a pointer of acquisitionLoop or execution with that name if exist.
+   * Return a pointer of MediaStreamer or execution with that name if exist.
    * Can return nullptr
    */
-  std::shared_ptr<DetectionTask> GetExecution(const std::string &execName);
+  std::shared_ptr<DetectionTask> GetDetectionTask(const std::string &execName);
 
-  std::shared_ptr<MediaStreamer> GetAcquisitionLoop(
+
+  std::shared_ptr<MediaStreamer> GetMediaStreamer(
       const std::string &mediaName);
 
   /**
-   * Return true if another execution use the media
+   * Return true if another DetectionTask use the media
    */
   const bool IsAnotherUserMedia(const std::string &mediaName);
 
   /**
    * Add/remove MediaStreamer from the list.
    */
-  void AddAcquisitionLoop(std::shared_ptr<MediaStreamer> ptr);
+  void AddMediaStreamer(std::shared_ptr<MediaStreamer> ptr);
 
-  void RemoveAcquisitionLoop(std::shared_ptr<MediaStreamer> ptr);
+  void RemoveMediaStreamer(std::shared_ptr<MediaStreamer> ptr);
 
   /**
    * Add/remove DetectionTask from the list.
    */
-  void AddExecution(std::shared_ptr<DetectionTask> ptr);
+  void AddDetectionTask(std::shared_ptr<DetectionTask> ptr);
 
-  void RemoveExecution(std::shared_ptr<DetectionTask> ptr);
+  void RemoveDetectionTask(std::shared_ptr<DetectionTask> ptr);
 
  private:
   //==========================================================================
@@ -66,9 +73,9 @@ class DetectionTaskManager {
   /**
    * Remember what exist.
    */
-  std::vector<std::shared_ptr<DetectionTask>> executions_;
+  std::vector<std::shared_ptr<DetectionTask>> detection_tasks_;
 
-  std::vector<std::shared_ptr<MediaStreamer>> acquisition_loop_;
+  std::vector<std::shared_ptr<MediaStreamer>> media_streamers_;
 };
 
 //==============================================================================
@@ -76,42 +83,42 @@ class DetectionTaskManager {
 
 //------------------------------------------------------------------------------
 //
-inline void VisionServer::AddAcquisitionLoop(
+inline void DetectionTaskManager::AddMediaStreamer(
     std::shared_ptr<MediaStreamer> ptr) {
   std::lock_guard<std::mutex> guard(_list_access);
-  acquisition_loop_.push_back(ptr);
+  media_streamers_.push_back(ptr);
 }
 
 //------------------------------------------------------------------------------
 //
-inline void VisionServer::RemoveAcquisitionLoop(
+inline void DetectionTaskManager::RemoveMediaStreamer(
     std::shared_ptr<MediaStreamer> ptr) {
   std::lock_guard<std::mutex> guard(_list_access);
-  auto acquisition = acquisition_loop_.begin();
-  auto vec_end = acquisition_loop_.end();
+  auto acquisition = media_streamers_.begin();
+  auto vec_end = media_streamers_.end();
   for (; acquisition != vec_end; ++acquisition) {
     if (*acquisition == ptr) {
-      acquisition_loop_.erase(acquisition);
+      media_streamers_.erase(acquisition);
     }
   }
 }
 
 //------------------------------------------------------------------------------
 //
-inline void VisionServer::AddExecution(std::shared_ptr<DetectionTask> ptr) {
+inline void DetectionTaskManager::AddDetectionTask(std::shared_ptr<DetectionTask> ptr) {
   std::lock_guard<std::mutex> guard(_list_access);
-  executions_.push_back(ptr);
+  detection_tasks_.push_back(ptr);
 }
 
 //------------------------------------------------------------------------------
 //
-inline void VisionServer::RemoveExecution(std::shared_ptr<DetectionTask> ptr) {
+inline void DetectionTaskManager::RemoveDetectionTask(std::shared_ptr<DetectionTask> ptr) {
   std::lock_guard<std::mutex> guard(_list_access);
-  auto execution = executions_.begin();
-  auto vec_end = executions_.end();
+  auto execution = detection_tasks_.begin();
+  auto vec_end = detection_tasks_.end();
   for (; execution != vec_end; ++execution) {
     if (*execution == ptr) {
-      executions_.erase(execution);
+      detection_tasks_.erase(execution);
     }
   }
 }

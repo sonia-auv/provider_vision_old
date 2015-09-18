@@ -10,11 +10,8 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
-#include <media/configuration_handler.h>
-#include <string>
-#include <iostream>
-#include "lib_atlas/sys/fsinfo.h"
-#include "utils/pugixml.h"
+#include <provider_vision/media/configuration_handler.h>
+
 
 namespace vision_server {
 
@@ -48,7 +45,7 @@ ConfigurationHandler::~ConfigurationHandler() {}
 // M E T H O D   S E C T I O N
 //------------------------------------------------------------------------------
 //
-std::map<std::string, CameraConfiguration>
+std::vector<CameraConfiguration>
 ConfigurationHandler::ParseConfiguration() {
   // If the file has been change since constructor
   if (!atlas::is_file_exist(file_)) {
@@ -56,7 +53,7 @@ ConfigurationHandler::ParseConfiguration() {
   }
 
   pugi::xml_document doc;
-  std::map<std::string, CameraConfiguration> configuration_list;
+  std::vector<CameraConfiguration> configuration_list;
 
   if (!doc.load_file(file_.c_str(), pugi::parse_default)) {
     throw std::ios_base::failure("File not found or inaccessible");
@@ -67,7 +64,7 @@ ConfigurationHandler::ParseConfiguration() {
 
   for (; camera; camera = camera.next_sibling()) {
     std::string name;
-    CameraConfiguration camera_config;
+    CameraConfiguration camera_config(name);
 
     // ATTRIBUTES
     // Parse the attribute for the name and the GUID
@@ -102,8 +99,7 @@ ConfigurationHandler::ParseConfiguration() {
       }
     }
 
-    configuration_list.insert(
-        std::pair<std::string, CameraConfiguration>(name, camera_config));
+    configuration_list.push_back(camera_config);
   }
 
   return configuration_list;
@@ -112,7 +108,7 @@ ConfigurationHandler::ParseConfiguration() {
 //------------------------------------------------------------------------------
 //
 void ConfigurationHandler::SaveConfiguration(
-    const std::map<std::string, CameraConfiguration> &system_config) const {
+    const std::map<std::string, CameraConfiguration> &system_config) {
   std::string orignal_file = file_;
   // If the file has been change since constructor
   size_t pos = file_.find_last_of(".");

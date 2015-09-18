@@ -32,55 +32,47 @@ namespace vision_server {
 class WebcamContext : public BaseContext {
  public:
   const std::string DRIVER_TAG;
-
+  const std::string WEBCAM_NAME;
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  WebcamContext(const CAMConfig config);
+  WebcamContext();
 
   virtual ~WebcamContext();
 
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  void InitDriver() override;
+  void InitContext(const std::vector<CameraConfiguration> &cam_configuration_lists) override;
 
-  void CloseDriver() override;
+  void CloseContext() override;
 
-  bool StartCamera(CameraID id) override;
+  bool StartCamera(const std::string &name) override;
 
-  bool StopCamera(CameraID id) override;
+  bool StopCamera(const std::string &name) override;
 
-  std::vector<CameraID> GetCameraList() override;
+  void SetFeature(BaseCamera::Feature feat, const std::string &name,
+                           float val) override;
 
-  bool IsMyCamera(const std::string &nameMedia) override;
+  void GetFeature(BaseCamera::Feature feat, const std::string &name,
+                           float &val) const override;
 
-  std::shared_ptr<Media> GetActiveCamera(CameraID id) override;
+  bool IsMyCamera(std::string &nameMedia) const;
 
-  void SetFeature(FEATURE feat, CameraID id, float val) override;
-
-  void GetFeature(FEATURE feat, CameraID id, float &val) override;
-
-  /**
-   * HTThread override
-   * Is traditionally use to call the watchdog.
-   */
   void run() override;
 
   bool WatchDogFunc() override;
+private:
 
- private:
-  //==========================================================================
-  // P R I V A T E   M E T H O D S
+  WebcamCamera webcam_;
 
-  void PopulateCameraList() override;
-
-  //==========================================================================
-  // P R I V A T E   M E M B E R S
-
-  std::shared_ptr<vision_server::CAMWebcam> _webcam;
 };
 
+inline bool
+WebcamContext::IsMyCamera(std::string &nameMedia) const
+{
+  return WEBCAM_NAME.compare(nameMedia) == 0;
+}
 }  // namespace vision_server
 
 #endif  // VISION_SERVER_CAM_DRIVER_WEBCAM_H_

@@ -14,8 +14,8 @@
 // I N C L U D E   F I L E S
 
 #include <lib_atlas/ros/service_server_manager.h>
-#include <media/configuration_handler.h>
-#include <media/context/file_context.h>
+#include <provider_vision/media/configuration_handler.h>
+#include "provider_vision/media/context/file_context.h"
 #include <vision_server/vision_server_get_media_param.h>
 #include <vision_server/vision_server_set_media_param.h>
 #include "provider_vision/config.h"
@@ -39,7 +39,7 @@ namespace vision_server {
  * It is also the provider of acquisition loop ptr.
  * It has the responsibility of creating/destructing them.
  */
-class MediaManager : public atlas::ServiceServerManager<MediaManager> {
+class MediaManager: public atlas::ServiceServerManager<MediaManager> {
  public:
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
@@ -47,11 +47,11 @@ class MediaManager : public atlas::ServiceServerManager<MediaManager> {
   enum class Command { START, STOP, SET_FEATURE, GET_FEATURE };
 
   //==========================================================================
-  // P U B L I C   C / D T O R S
+  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
-  explicit MediaManager();
+  explicit MediaManager(atlas::NodeHandlePtr node_handle);
 
-  ~MediaManager();
+  virtual ~MediaManager();
 
   //==========================================================================
   // P U B L I C   M E T H O D S
@@ -89,9 +89,9 @@ class MediaManager : public atlas::ServiceServerManager<MediaManager> {
    * Calls the Init and Close method of each drivers in the list.
    * creation/destruction.
    */
-  bool InitializeContext();
+  void InitializeContext();
 
-  bool CloseContext();
+  void CloseContext();
 
   /**
    * Simple for loop iteration which pokes each driver to know if they
@@ -103,6 +103,18 @@ class MediaManager : public atlas::ServiceServerManager<MediaManager> {
   // P R I V A T E   M E M B E R S
 
   /**
+   * Answer to the service get media params
+   */
+  bool CallbackGetCMD(vision_server_get_media_param::Request &rqst,
+                      vision_server_get_media_param::Response &rep);
+
+  /**
+   * Answer to the service asking to set a parameter of a media.
+   */
+  bool CallbackSetCMD(vision_server_set_media_param::Request &rqst,
+                      vision_server_set_media_param::Response &rep);
+
+  /**
    * Config object. To register/read cameras config.
    */
 
@@ -110,8 +122,6 @@ class MediaManager : public atlas::ServiceServerManager<MediaManager> {
    * List of the driers in the system
    */
   std::vector<std::shared_ptr<BaseContext>> context_;
-
-  std::map<std::string, CameraConfiguration> _camera_configuration_map;
 };
 
 }  // namespace vision_server

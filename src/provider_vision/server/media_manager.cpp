@@ -21,7 +21,7 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-MediaManager::MediaManager()
+MediaManager::MediaManager(atlas::NodeHandlePtr node_handle)
     : atlas::ServiceServerManager<MediaManager>(node_handle) {
   assert(node_handle.get() != nullptr);
   std::string base_node_name(kRosNodeName);
@@ -38,12 +38,13 @@ MediaManager::~MediaManager() { CloseContext(); }
 
 //------------------------------------------------------------------------------
 //
-std::vector<CameraID> MediaManager::GetCameraList() {
-  std::vector<CameraID> cameraList;
+std::vector<std::string> MediaManager::GetCameraList() const {
+  std::vector<std::string> cameraList;
+
   for (auto &elem : context_) {
-    std::vector<uint64_t> driver_list = elem->GetCameraList();
-    for (auto &driver_list_j : driver_list) {
-      cameraList.push_back(driver_list_j);
+    std::vector<std::string> context_camera_list = elem->GetCameraList();
+    for (auto &context_camera : context_camera_list) {
+      cameraList.push_back(context_camera);
     }
   }
   return cameraList;
@@ -51,7 +52,7 @@ std::vector<CameraID> MediaManager::GetCameraList() {
 
 //------------------------------------------------------------------------------
 //
-void MediaManager::StreammingCmd(COMMAND cmd, const std::string &mediaName,
+void MediaManager::StreammingCmd(Command cmd, const std::string &mediaName,
                                  std::shared_ptr<MediaStreamer> &ptr) {
   std::shared_ptr<BaseContext> driver = GetDriverForCamera(mediaName);
   // FEATURE* feat = static_cast<FEATURE*>(specific_to_cmd);
@@ -60,13 +61,14 @@ void MediaManager::StreammingCmd(COMMAND cmd, const std::string &mediaName,
     ROS_ERROR_NAMED("[CAM_MANAGER]", "No driver found for this driver");
     return;
   }
-  CameraID camToStart = driver->GetIDFromName(mediaName);
+
   switch (cmd) {
-    case START:
-      if (driver->StartCamera(camToStart)) {
-        std::shared_ptr<Media> media_ptr = driver->GetActiveCamera(camToStart);
-        if (media_ptr.get() != nullptr) {
-          ptr = std::make_shared<MediaStreamer>(media_ptr, 30);
+    case Command::START:
+      if (driver->StartCamera(mediaName)) {
+        std::shared_ptr<BaseMedia> media = driver->GetMedia(mediaName);
+
+        if (media.get() != nullptr) {
+          ptr = std::make_shared<MediaStreamer>(media, 30);
           ptr->StartStreaming();
         } else {
           ptr = nullptr;
@@ -79,7 +81,7 @@ void MediaManager::StreammingCmd(COMMAND cmd, const std::string &mediaName,
                        "MediaStreamer ptr is null! Can't start it!");
       }
       break;
-    case STOP:
+    case Command::STOP:
       if (ptr == nullptr) {
         ROS_ERROR_NAMED("[CAM_MANAGER]",
                         "MediaStreamer ptr is null! Can't stop it!");
@@ -91,7 +93,7 @@ void MediaManager::StreammingCmd(COMMAND cmd, const std::string &mediaName,
         return;
       }
 
-      driver->StopCamera(camToStart);
+      driver->StopCamera(mediaName);
 
       break;
     default:
@@ -102,8 +104,8 @@ void MediaManager::StreammingCmd(COMMAND cmd, const std::string &mediaName,
 
 //=============================================================================
 //
-void MediaManager::ParametersCmd(COMMAND cmd, const std::string &mediaName,
-                                 FEATURE feat, float &val) {
+void MediaManager::ParametersCmd(Command cmd, const std::string &mediaName,
+                                 BaseCamera::Feature feat, float &val) {
   std::shared_ptr<BaseContext> driver = GetDriverForCamera(mediaName);
   // FEATURE* feat = static_cast<FEATURE*>(specific_to_cmd);
   // float* val = static_cast<float*>(specific_to_cmd2);
@@ -111,14 +113,12 @@ void MediaManager::ParametersCmd(COMMAND cmd, const std::string &mediaName,
     ROS_ERROR_NAMED("[CAM_TAG]", "No driver found for this driver");
     return;
   }
-  CameraID cam = driver->GetIDFromName(mediaName);
-
   switch (cmd) {
-    case SET_FEATURE:
-      driver->SetFeature(feat, cam, val);
+    case Command::SET_FEATURE:
+      driver->SetFeature(feat, mediaName, val);
       break;
-    case GET_FEATURE:
-      driver->GetFeature(feat, cam, val);
+    case Command::GET_FEATURE:
+      driver->GetFeature(feat, mediaName, val);
       break;
     default:
       ROS_WARN_NAMED("[CAM_MANAGER]", "Unrecognize command");
@@ -129,26 +129,29 @@ void MediaManager::ParametersCmd(COMMAND cmd, const std::string &mediaName,
 //------------------------------------------------------------------------------
 //
 void MediaManager::InitializeContext() {
+  std::stringstream ss;
+  ss << kConfigPath << "/camera_config.xml";
+  ConfigurationHandler configHandler(ss.str());
+  std::vector<CameraConfiguration> list
+    = configHandler.ParseConfiguration();
   // Each time you have a new driver (Gige, usb, etc.) add it to
   // the list here.
-  context_.push_back(std::make_shared<CAMDriverDC1394>());
+  context_.push_back(std::make_shared<DC1394Context>());
   context_.push_back(std::make_shared<WebcamContext>());
   context_.push_back(std::make_shared<VideoFileContext>());
 
   for (auto &elem : context_) {
-    elem->InitDriver();
+    elem->InitContext(list);
   }
-  return false;
 }
 
 //------------------------------------------------------------------------------
 //
-bool MediaManager::CloseContext() {
+void MediaManager::CloseContext() {
   // Close every devices here
   for (auto &elem : context_) {
-    elem->CloseDriver();
+    elem->CloseContext();
   }
-  return false;
 }
 
 //------------------------------------------------------------------------------
@@ -168,20 +171,20 @@ std::shared_ptr<BaseContext> MediaManager::GetDriverForCamera(
 
 //------------------------------------------------------------------------------
 //
-FEATURE MediaManager::NameToEnum(const std::string &name) {
-  FEATURE to_return = ERROR_FEATURE;
+BaseCamera::Feature MediaManager::NameToEnum(const std::string &name) const {
+  BaseCamera::Feature to_return = BaseCamera::Feature::ERROR_FEATURE;
   if (name == "SHUTTER_AUTO") {
-    to_return = SHUTTER_AUTO;
+    to_return = BaseCamera::Feature::SHUTTER_AUTO;
   } else if (name == "SHUTTER") {
-    to_return = SHUTTER;
+    to_return = BaseCamera::Feature::SHUTTER;
   } else if (name == "WHITE_BALANCE_AUTO") {
-    to_return = WHITE_BALANCE_AUTO;
+    to_return = BaseCamera::Feature::WHITE_BALANCE_AUTO;
   } else if (name == "WHITE_BALANCE_RED") {
-    to_return = WHITE_BALANCE_RED;
+    to_return = BaseCamera::Feature::WHITE_BALANCE_RED;
   } else if (name == "WHITE_BALANCE_BLUE") {
-    to_return = WHITE_BALANCE_BLUE;
+    to_return = BaseCamera::Feature::WHITE_BALANCE_BLUE;
   } else if (name == "FRAMERATE") {
-    to_return = FRAMERATE;
+    to_return = BaseCamera::Feature::FRAMERATE;
   } else {
     ROS_WARN_NAMED("[CAMERA_MANAGER]", "No feature named: %s", name.c_str());
   }

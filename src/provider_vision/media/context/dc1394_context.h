@@ -1,5 +1,5 @@
 /**
- * \file	CamDriverDC1394.h
+ * \file	DC1394Context.h
  * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
  * \date	18/10/2014
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
@@ -27,59 +27,52 @@ namespace vision_server {
 // C L A S S E S
 
 /**
- * CamDriverDC1394 is a driver to access all cameras that can
+ * DC1394Context is a driver to access all cameras that can
  * be used by the library DC1394. It does firewire and some
  * USB camera (if follow IIDC 1.31)
  * It manage the bus, the active camera.
  * It is the one creating and destroying cameras.
  */
-class CAMDriverDC1394 : public BaseContext {
+class DC1394Context : public BaseContext {
  public:
   const std::string DRIVER_TAG;
+  const double TIME_FOR_BUS_ERROR = 3;
 
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  CAMDriverDC1394(const CAMConfig config);
+  DC1394Context();
 
-  virtual ~CAMDriverDC1394();
+  virtual ~DC1394Context();
 
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  void InitDriver() override;
+  void InitContext(const std::vector<CameraConfiguration> &cam_configuration_lists) override;
 
-  void CloseDriver() override;
+  void CloseContext() override;
 
-  bool StartCamera(CameraID id) override;
+  bool StartCamera(const std::string &name) override;
 
-  bool StopCamera(CameraID id) override;
+  bool StopCamera(const std::string &name) override;
 
-  std::vector<CameraID> GetCameraList() override;
+  void SetFeature(BaseCamera::Feature feat, const std::string &name,
+                  float val) override;
 
-  bool IsMyCamera(const std::string &nameMedia) override;
+  void GetFeature(BaseCamera::Feature feat, const std::string &name,
+                  float &val) const override;
 
-  std::shared_ptr<Media> GetActiveCamera(CameraID id) override;
+  bool IsMyCamera(const std::string &nameMedia) const override;
 
-  void SetFeature(FEATURE feat, CameraID id, float val) override;
-
-  void GetFeature(FEATURE feat, CameraID id, float &val) override;
-
-  /**
-   * HTThread override
-   * Is traditionally use to call the watchdog.
-   */
   void run() override;
 
   bool WatchDogFunc() override;
 
- private:
-  //==========================================================================
-  // P R I V A T E   M E T H O D S
+private:
 
-  void PopulateCameraList() override;
-
-  std::string GetNameFromGUID(uint64_t guid);
+  DC1394Camera &GetCameraFromMap(const std::string &name) const;
+  DC1394Camera &GetCameraFromPair
+    (const std::pair<std::string, std::shared_ptr<BaseMedia> > &pair) const;
 
   //==========================================================================
   // P R I V A T E   M E M B E R S
@@ -87,6 +80,25 @@ class CAMDriverDC1394 : public BaseContext {
   dc1394_t *_context;
 };
 
-}  // namespace vision_server
+//-----------------------------------------------------------------------------
+//
+DC1394Camera &DC1394Context::GetCameraFromMap(const std::string &name) const
+{
+  auto camera = camera_list_.find(name);
+  if(camera != camera_list_.end())
+  {
+    throw std::invalid_argument("Camera does not exist");
+  }
+  return GetCameraFromPair(*camera);
+}
 
+//-----------------------------------------------------------------------------
+//
+DC1394Camera &DC1394Context::GetCameraFromPair
+  (const std::pair<std::string, std::shared_ptr<BaseMedia> > &pair) const
+{
+  return dynamic_cast<DC1394Camera&>(*pair.second);
+}
+
+}  // namespace vision_server
 #endif  // VISION_SERVER_CAM_DRIVER_DC1394_H_

@@ -19,8 +19,6 @@
 #include <sensor_msgs/image_encodings.h>
 #include <dc1394/dc1394.h>
 #include <lib_atlas/sys/timer.h>
-#include "utils/camera_id.h"
-#include "utils/yuv.h"
 #include "provider_vision/media/camera/base_media.h"
 #include "provider_vision/media/context/base_context.h"
 #include "provider_vision/media/camera/base_camera.h"
@@ -83,10 +81,10 @@ class DC1394Camera : public BaseCamera {
   // P R I V A T E   M E T H O D S
 
   // float to enum
-  uint32_t ConvertFramerate(float val);
+  uint32_t ConvertFramerateToEnum(float val) const;
 
   // enum to float
-  float ConvertFramerate(uint32_t val);
+  float ConvertFramerateToFloat(uint32_t val) const ;
 
   //==========================================================================
   // P R I V A T E   M E M B E R S

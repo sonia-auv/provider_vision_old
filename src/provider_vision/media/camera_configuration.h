@@ -8,6 +8,10 @@
 #ifndef PROVIDER_VISION_SRC_MEDIA_CAMERA_CONFIGURATION_H_
 #define PROVIDER_VISION_SRC_MEDIA_CAMERA_CONFIGURATION_H_
 
+#include <map>
+#include "pugixml.hpp"
+namespace vision_server
+{
 class CameraConfiguration {
  public:
   CameraConfiguration(const std::string &name);
@@ -84,5 +88,5 @@ inline void CameraConfiguration::SetUndistortionMatricePath(
 inline std::string CameraConfiguration::GetUndistortionMatricePath() const {
   return undistortion_matrice_path_;
 }
-
+}
 #endif /* PROVIDER_VISION_SRC_MEDIA_CAMERA_CONFIGURATION_H_ */

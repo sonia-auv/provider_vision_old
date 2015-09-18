@@ -15,6 +15,7 @@
 
 #include "provider_vision/config.h"
 #include "provider_vision/media/camera/base_media.h"
+#include "provider_vision/media/cam_undistord_matrices.h"
 
 namespace vision_server {
 
@@ -71,7 +72,7 @@ class BaseCamera : public BaseMedia {
 
   bool HasArtificialFramerate() const override;
 
- private:
+ protected:
   CameraUndistordMatrices undistord_matrix_;
 };
 

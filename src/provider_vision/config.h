@@ -14,14 +14,14 @@
 
 namespace vision_server {
 
-constexpr std::string kRosNodeName = "/vision_server/";
+const std::string kRosNodeName = "/vision_server/";
 
-constexpr std::string kProjectPath =
+const std::string kProjectPath =
     atlas::kWorkspaceRoot + "/src/provider_vision/";
 
-constexpr std::string kConfigPath = kProjectPath + "/config/";
+const std::string kConfigPath = kProjectPath + "/config/";
 
-constexpr std::string kFilterchainExt = ".fc";
+const std::string kFilterchainExt = ".fc";
 
 };  // namespace vision_server
 

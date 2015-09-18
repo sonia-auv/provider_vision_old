@@ -58,8 +58,7 @@ void MediaStreamer::SetFramerate(int framePerSecond) {
 //------------------------------------------------------------------------------
 //
 bool MediaStreamer::StartStreaming() {
-  ROS_INFO_NAMED(LOOP_TAG, "Starting streaming on camera %s",
-                 media_->GetName());
+  ROS_INFO_NAMED(LOOP_TAG, "Starting streaming on camera");
 
   // Start thread
   std::lock_guard<std::mutex> guard(image_access_);
@@ -77,8 +76,7 @@ bool MediaStreamer::StopStreaming() {
   is_streaming_ = false;
 
   // Send message on the line.
-  ROS_INFO_NAMED(LOOP_TAG, "Stopping streaming on camera %s",
-                 media_->GetName());
+  ROS_INFO_NAMED(LOOP_TAG, "Stopping streaming on camera");
   // Stop thread
   if (running()) {
     stop();
@@ -125,7 +123,7 @@ bool MediaStreamer::StopRecording() {
     is_recording_ = false;
     return true;
   }
-  ROS_INFO("[VISION_CLIENT] stopVideoCapture video is not running.");
+  //ROS_INFO("[VISION_CLIENT]","StopVideoCapture video is not running.");
   return false;
 }
 
@@ -150,8 +148,7 @@ void MediaStreamer::run() {
 
     if (!acquival) {
       image_ = cv::Mat::zeros(100, 100, CV_8UC3);
-      ROS_ERROR_NAMED(LOOP_TAG, "Error on NextImage. Providing empty image %s",
-                      media_->GetName());
+      ROS_ERROR_NAMED(LOOP_TAG, "Error on NextImage. Providing empty image ");
     } else {
       // This should not be the proper way to do this.
       // Actually the media, or even better the camera driver sould provide a
@@ -177,7 +174,7 @@ void MediaStreamer::run() {
       }
     }
 
-    atlas::MilliTimer::sleep(_frameRateMiliSec);
+    atlas::MilliTimer::sleep(framerate_mili_sec_);
   }
 
   if (IsRecording()) {

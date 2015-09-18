@@ -40,15 +40,19 @@ DC1394Camera::~DC1394Camera() { dc1394_camera_free(dc1394_camera_); }
 //------------------------------------------------------------------------------
 //
 bool DC1394Camera::Open() {
+
+  if( IsOpened() )
+    return true;
+
   dc1394error_t err;
   bool init_result = true;
 
   std::lock_guard<std::mutex> guard(cam_access_);
 
   if (!SetFormat7()) {
-    ROS_ERROR_NAMED(CAM_TAG,
-                    "Error while setting the Format 7 %s with message: %s",
-                    config_.GetGUID(), dc1394_error_get_string(err));
+//    ROS_ERROR_NAMED(CAM_TAG,
+//                    "Error while setting the Format 7 %s with message: %s",
+//                    config_.GetGUID(), dc1394_error_get_string(err));
     init_result = false;
   }
 
@@ -74,6 +78,10 @@ bool DC1394Camera::Open() {
 //------------------------------------------------------------------------------
 //
 bool DC1394Camera::Close() {
+
+  if( IsClosed() )
+      return true;
+
   std::lock_guard<std::mutex> guard(cam_access_);
 
   bool close_result = true;
@@ -95,6 +103,10 @@ bool DC1394Camera::Close() {
 //------------------------------------------------------------------------------
 //
 bool DC1394Camera::Start() {
+
+  if( IsStreaming() )
+    return true;
+
   cam_access_.lock();
   dc1394error_t error =
       dc1394_video_set_transmission(dc1394_camera_, DC1394_ON);
@@ -115,6 +127,10 @@ bool DC1394Camera::Start() {
 //------------------------------------------------------------------------------
 //
 bool DC1394Camera::Stop() {
+  // If not running, do not stop
+  if( !IsStreaming() )
+    return true;
+
   std::lock_guard<std::mutex> guard(cam_access_);
 
   dc1394error_t error =
@@ -135,7 +151,8 @@ bool DC1394Camera::Stop() {
 
 //------------------------------------------------------------------------------
 //
-bool DC1394Camera::NextImage(cv::Mat &img) {
+bool
+DC1394Camera::NextImage(cv::Mat &img) {
   dc1394video_frame_t *frame = nullptr;
   dc1394error_t error;
 
@@ -165,7 +182,7 @@ bool DC1394Camera::NextImage(cv::Mat &img) {
     cv::Mat tmp =
         cv::Mat(frame->size[1], frame->size[0], CV_8UC2, frame->image);
     cv::cvtColor(tmp, tmp, CV_YUV2BGR_Y422);
-    undistord_matrix_.CorrectInmage(tmp, img));
+    undistord_matrix_.CorrectInmage(tmp, img);
 
   } catch (cv::Exception &e) {
     ROS_ERROR_NAMED(
@@ -239,11 +256,11 @@ bool DC1394Camera::SetFeature(const Feature &feat, float value) {
     case Feature::FRAMERATE:
       ROS_INFO_NAMED(ss.str(), "Setting framerate to %f", value);
       error = dc1394_feature_set_value(
-          dc1394_camera_, DC1394_FEATURE_FRAME_RATE, ConvertFramerate(value));
+          dc1394_camera_, DC1394_FEATURE_FRAME_RATE, ConvertFramerateToEnum(value));
       uint32_t test;
       error = dc1394_feature_get_value(dc1394_camera_,
                                        DC1394_FEATURE_FRAME_RATE, &test);
-      printf("settting to : %d got %d\n", ConvertFramerate(value), test);
+      printf("settting to : %d got %d\n", value, ConvertFramerateToEnum(test));
       break;
     case Feature::WHITE_BALANCE_AUTO:
       if (value > 0) {
@@ -290,12 +307,13 @@ bool DC1394Camera::SetFeature(const Feature &feat, float value) {
 
 //------------------------------------------------------------------------------
 //
-float DC1394Camera::GetFeature(const Feature &feat) {
+float DC1394Camera::GetFeature(const Feature &feat) const {
   std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
   uint32_t blue, red;
   dc1394feature_mode_t mode;
   uint32_t value;
+  float return_val;
 
   switch (feat) {
     case Feature::SHUTTER:
@@ -313,7 +331,8 @@ float DC1394Camera::GetFeature(const Feature &feat) {
     case Feature::FRAMERATE:
       error = dc1394_feature_get_value(dc1394_camera_,
                                        DC1394_FEATURE_FRAME_RATE, &value);
-      value = ConvertFramerate(value);
+      return_val = ConvertFramerateToFloat(static_cast<unsigned int>(value));
+      value = static_cast<uint32_t>(return_val);
       break;
     case Feature::WHITE_BALANCE_AUTO:
       error = dc1394_feature_get_mode(dc1394_camera_,
@@ -338,9 +357,9 @@ float DC1394Camera::GetFeature(const Feature &feat) {
   }
 
   if (error != DC1394_SUCCESS) {
-    ROS_ERROR_NAMED(CAM_TAG,
-                    "Error while setting parameter on %s with message: %s",
-                    config_.GetGUID(), dc1394_error_get_string(error));
+//    ROS_ERROR_NAMED(CAM_TAG,
+//                    "Error while setting parameter on %s with message: %s",
+//                    config_.GetGUID(), dc1394_error_get_string(error));
     return -1.0f;
   }
 
@@ -349,7 +368,7 @@ float DC1394Camera::GetFeature(const Feature &feat) {
 
 //------------------------------------------------------------------------------
 //
-uint32_t DC1394Camera::ConvertFramerate(float val) {
+uint32_t DC1394Camera::ConvertFramerateToEnum(float val) const {
   uint32_t return_val = static_cast<uint32_t>(val);
   if (return_val == 15) {
     return_val = DC1394_FRAMERATE_15;
@@ -363,7 +382,7 @@ uint32_t DC1394Camera::ConvertFramerate(float val) {
 
 //------------------------------------------------------------------------------
 //
-float DC1394Camera::ConvertFramerate(uint32_t val) {
+float DC1394Camera::ConvertFramerateToFloat(uint32_t val) const{
   float return_val = val;
   if (return_val == DC1394_FRAMERATE_15) {
     return_val = 15;
@@ -394,23 +413,23 @@ bool DC1394Camera::SetFormat7() {
   }
 
   if (err != DC1394_SUCCESS) {
-    ROS_ERROR_NAMED(
-        CAM_TAG,
-        " Could not set operating mode or ISO speed.on %s with message: %s",
-        config_.GetGUID(),
-
-        dc1394_error_get_string(err));
+//    ROS_ERROR_NAMED(
+//        CAM_TAG,
+//        " Could not set operating mode or ISO speed.on %s with message: %s",
+//        config_.GetGUID(),
+//
+//        dc1394_error_get_string(err));
     return init_result;
   }
 
   // Sets the mode to format 7
   err = dc1394_video_set_mode(dc1394_camera_, DC1394_VIDEO_MODE_FORMAT7_0);
   if (err != DC1394_SUCCESS) {
-    ROS_ERROR_NAMED(CAM_TAG,
-                    "Could not set video mode to format7on %s with message: %s",
-                    config_.GetGUID(),
-
-                    dc1394_error_get_string(err));
+//    ROS_ERROR_NAMED(CAM_TAG,
+//                    "Could not set video mode to format7on %s with message: %s",
+//                    config_.GetGUID(),
+//
+//                    dc1394_error_get_string(err));
     return init_result;
   }
 
@@ -429,11 +448,11 @@ bool DC1394Camera::SetFormat7() {
                                w, h);                 // width, height
 
   if (err != DC1394_SUCCESS) {
-    ROS_ERROR_NAMED(
-        CAM_TAG, "Could not set the video size properly on %s with message: %s",
-        config_.GetGUID(),
-
-        dc1394_error_get_string(err));
+//    ROS_ERROR_NAMED(
+//        CAM_TAG, "Could not set the video size properly on %s with message: %s",
+//        config_.GetGUID(),
+//
+//        dc1394_error_get_string(err));
     return init_result;
   }
   init_result = true;
@@ -449,31 +468,30 @@ bool DC1394Camera::SetNormalFormat() {
 
   err = dc1394_video_set_iso_speed(dc1394_camera_, DC1394_ISO_SPEED_400);
   if (err != DC1394_SUCCESS) {
-    ROS_ERROR_NAMED(CAM_TAG,
-                    "Could not set ISO speed to 400 on %s with message: %s",
-                    config_.GetGUID(),
-
-                    dc1394_error_get_string(err));
+//    ROS_ERROR_NAMED(CAM_TAG,
+//                    "Could not set ISO speed to 400 on %s with message: %s",
+//                    config_.GetGUID(),
+//
+//                    dc1394_error_get_string(err));
     return false;
   }
 
   err = dc1394_video_set_mode(dc1394_camera_, DC1394_VIDEO_MODE_800x600_YUV422);
   if (err != DC1394_SUCCESS) {
-    ROS_ERROR_NAMED(CAM_TAG,
-                    "Could not set the video mode on %s with message: %s",
-                    config_.GetGUID(),
-
-                    dc1394_error_get_string(err));
+//    ROS_ERROR_NAMED(CAM_TAG,
+//                    "Could not set the video mode on %s with message",
+//                    config_.GetGUID(),
+//                    dc1394_error_get_string(err));
     return false;
   }
 
   err = dc1394_video_set_framerate(dc1394_camera_, DC1394_FRAMERATE_15);
   if (err != DC1394_SUCCESS) {
-    ROS_ERROR_NAMED(CAM_TAG,
-                    "Could not set the framerate on %s with message: %s",
-                    config_.GetGUID(),
-
-                    dc1394_error_get_string(err));
+//    ROS_ERROR_NAMED(CAM_TAG,
+//                    "Could not set the framerate on %s with message: %s",
+//                    config_.GetGUID(),
+//
+//                    dc1394_error_get_string(err));
     return false;
   }
   return true;

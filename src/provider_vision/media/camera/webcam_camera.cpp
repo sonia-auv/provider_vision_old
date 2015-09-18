@@ -1,5 +1,5 @@
 /**
- * \file	CAMWebcam.cpp
+ * \file	WebcamCamera.cpp
  * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
  * \date	10/03/2015
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
@@ -19,7 +19,7 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-CAMWebcam::CAMWebcam()
+WebcamCamera::WebcamCamera()
     : cv::VideoCapture(0), BaseCamera(CameraConfiguration("Webcam")) {
   if (isOpened()) {
     status_ = Status::OPEN;
@@ -28,7 +28,7 @@ CAMWebcam::CAMWebcam()
 
 //------------------------------------------------------------------------------
 //
-CAMWebcam::CAMWebcam(int webcamIdx)
+WebcamCamera::WebcamCamera(int webcamIdx)
     : cv::VideoCapture(webcamIdx),
       // three because...
       BaseCamera(CameraConfiguration("Webcam")) {
@@ -39,14 +39,14 @@ CAMWebcam::CAMWebcam(int webcamIdx)
 
 //------------------------------------------------------------------------------
 //
-CAMWebcam::~CAMWebcam() {}
+WebcamCamera::~WebcamCamera() {}
 
 //==============================================================================
 // M E T H O D   S E C T I O N
 
 //------------------------------------------------------------------------------
 //
-bool CAMWebcam::Start() {
+bool WebcamCamera::Start() {
   // Construction also start the camera for a videoCapture
   if (isOpened()) status_ = Status::STREAMING;
   return isOpened();
@@ -54,7 +54,7 @@ bool CAMWebcam::Start() {
 
 //------------------------------------------------------------------------------
 //
-bool CAMWebcam::Stop() {
+bool WebcamCamera::Stop() {
   // Always stream when asking to capture only...
   if (isOpened()) status_ = Status::OPEN;
   return isOpened();
@@ -62,7 +62,7 @@ bool CAMWebcam::Stop() {
 
 //------------------------------------------------------------------------------
 //
-bool CAMWebcam::NextImage(cv::Mat &image) {
+bool WebcamCamera::NextImage(cv::Mat &image) {
   if (isOpened()) {
     this->operator>>(image);
     return true;
@@ -72,7 +72,7 @@ bool CAMWebcam::NextImage(cv::Mat &image) {
 
 //------------------------------------------------------------------------------
 //
-bool CAMWebcam::Open() {
+bool WebcamCamera::Open() {
   // Already been open at constructor.
   if (!isOpened()) {
     open(0);
@@ -83,7 +83,7 @@ bool CAMWebcam::Open() {
 
 //------------------------------------------------------------------------------
 //
-bool CAMWebcam::Close() {
+bool WebcamCamera::Close() {
   if (isOpened()) {
     release();
   }
@@ -92,17 +92,18 @@ bool CAMWebcam::Close() {
 
 //------------------------------------------------------------------------------
 //
-bool CAMWebcam::SetFeature(const Feature &feat, float value) { return true; }
+bool WebcamCamera::SetFeature(const Feature &feat, float value) { return true; }
 
 //------------------------------------------------------------------------------
 //
-float CAMWebcam::GetFeature(const Feature &feat) {
-  float val = 0.f;
-  if (feat == Feature::FRAMERATE) {
-    val = static_cast<float>(get(CV_CAP_PROP_FPS));
-  }
+float WebcamCamera::GetFeature(const Feature &feat) const{
+//  float val = 0.0f;
+//  if (feat == Feature::FRAMERATE)
+//  {
+//    val = static_cast<float>(this->get(CV_CAP_PROP_FPS));
+//  }
 
-  return val;
+  return 0.0f;
 }
 
 }  // namespace vision_server

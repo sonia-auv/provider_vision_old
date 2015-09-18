@@ -10,7 +10,7 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
-#include "utils/camera_id.h"
+#include "provider_vision/utils/camera_id.h"
 
 namespace vision_server {
 

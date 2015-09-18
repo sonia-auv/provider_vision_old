@@ -15,117 +15,126 @@
 
 #include <mutex>
 #include <lib_atlas/pattern/runnable.h>
-#include <media/configuration_handler.h>
-#include "provider_vision/config.h"
+#include <provider_vision/media/configuration_handler.h>
 #include "provider_vision/media/camera/base_media.h"
 #include "provider_vision/media/camera/base_camera.h"
 
 namespace vision_server {
 
-//==============================================================================
-// C L A S S E S
-
-/**
- * Base class for any media driver. It also provide a Camera interface
- * which enhance Media class' basic method with camera handling method.
- */
-class BaseContext : public atlas::Runnable {
- public:
-  //==========================================================================
-  // P U B L I C   C / D T O R S
+  //==============================================================================
+  // C L A S S E S
 
   /**
-   * CTR/DSTR
+   * Base class for any media driver. It also provide a Camera interface
+   * which enhance Media class' basic method with camera handling method.
    */
-  BaseContext();
+  class BaseContext: public atlas::Runnable {
+  public:
 
-  virtual ~BaseContext();
+    typedef std::map<std::string, std::shared_ptr<BaseMedia> > MediaMap;
 
-  /**
-   * Method to Init and close a driver contains step needed by driver to have
-   * a functioning environnement.
-   */
-  virtual void InitDriver() = 0;
+    //==========================================================================
+    // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
-  virtual void CloseDriver() = 0;
+    /**
+     * CTR/DSTR
+     */
+    BaseContext() = default;
+    virtual ~BaseContext(){};
 
-  /**
-   * Method to handle cameras
-   */
-  virtual bool StartCamera(const std::string &name) = 0;
+    /**
+     * Method to Init and close a driver contains step needed by driver to have
+     * a functioning environnement.
+     */
+    virtual void InitContext(const std::vector<CameraConfiguration> &cam_configuration_lists) = 0;
 
-  virtual bool StopCamera(const std::string &name) = 0;
+    virtual void CloseContext() = 0;
 
-  /**
-   * Feature setting/getting handler
-   */
-  virtual void SetFeature(BaseCamera::Feature feat, const std::string &name,
-                          float val) = 0;
+    /**
+     * Method to handle cameras
+     */
+    virtual bool StartCamera(const std::string &name) = 0;
 
-  virtual void GetFeature(BaseCamera::Feature feat, const std::string &name,
-                          float &val) = 0;
+    virtual bool StopCamera(const std::string &name) = 0;
 
-  /**
-   * Method to get all listed (connected) camera of the system
-   */
-  virtual std::vector<CameraID> GetCameraList() = 0;
+    /**
+     * Feature setting/getting handler
+     */
+    virtual void SetFeature(BaseCamera::Feature feat, const std::string &name,
+                            float val) = 0;
 
-  /**
-   * \return The camera if it is open.
-   *         WILL NOT OPEN IT IF NOT.
-   */
-  virtual std::shared_ptr<BaseMedia> GetActiveCamera(CameraID id) = 0;
+    virtual void GetFeature(BaseCamera::Feature feat, const std::string &name,
+                            float &val) const  = 0;
 
-  virtual CameraID GetIDFromName(const std::string &name);
+    /**
+     * Method to get all listed (connected) camera of the system
+     */
+    virtual std::vector<std::string> GetCameraList() const;
 
-  /**
-   * Utility to know if this ID is associated to the media.
-   */
-  virtual bool IsMyCamera(const std::string &nameMedia) = 0;
+    /**
+     * \return The camera if it is open.
+     *         WILL NOT OPEN IT IF NOT.
+     */
+    virtual std::shared_ptr<BaseMedia> GetMedia(const std::string &name) const;
 
-  /**
-   * Method to refresh the camera list.
-   */
-  virtual void PopulateCameraList() = 0;
+    /**
+     * Utility to know if this ID is associated to the media.
+     */
+    virtual bool IsMyCamera(const std::string &nameMedia) const;
 
-  virtual bool WatchDogFunc() = 0;
+    virtual bool WatchDogFunc() = 0;
 
-  /**
-   * Config to list the cameras' parameters
-   */
-  CAMConfig _config;
+  protected:
 
-  /**
-   * Safe multithreading access
-   */
-  mutable std::mutex _driver_access;
+    /**
+     * Safe multithreading access
+     */
+    mutable std::mutex _driver_access;
 
-  /**
-   * Keeping track of medias.
-   * List of all camera AVAILABLE in the system
-   */
-  std::vector<CameraID> _camera_list;
+    /**
+     * Keeping track of medias.
+     * List of all camera AVAILABLE in the system
+     */
+    MediaMap camera_list_;
+  };
 
-  /**
-   * List of all camera ACTIVE in the system.
-   * For camera, it is camera that are acquiring images.
-   */
-  std::vector<std::shared_ptr<BaseMedia>> _active_camera_list;
-};
+  //==============================================================================
+  // I N L I N E   F U N C T I O N S   D E F I N I T I O N S
 
-//==============================================================================
-// I N L I N E   F U N C T I O N S   D E F I N I T I O N S
-
-//------------------------------------------------------------------------------
-//
-inline CameraID BaseContext::GetIDFromName(const std::string &name) {
-  for (auto &elem : _camera_list) {
-    if (elem.GetName() == name) {
-      return elem;
-    }
+  //-----------------------------------------------------------------------------
+  //
+  inline bool
+  BaseContext::IsMyCamera(const std::string &nameMedia) const
+  {
+    return camera_list_.find(nameMedia) != camera_list_.end();
   }
-  return CameraID();
-}
+
+  //-----------------------------------------------------------------------------
+  //
+  inline std::vector<std::string>
+  BaseContext::GetCameraList() const
+  {
+    std::vector<std::string> list;
+    for(auto const &cam: camera_list_)
+    {
+      list.push_back(cam.first);
+    }
+    return list;
+  }
+
+  //-----------------------------------------------------------------------------
+  //
+  inline std::shared_ptr<BaseMedia>
+  BaseContext::GetMedia(const std::string &name) const
+  {
+    auto camera = camera_list_.find(name);
+    if( camera == camera_list_.end())
+    {
+      throw std::invalid_argument("Camera is not from this context.");
+    }
+
+    return (*camera).second;
+  }
 
 }  // namespace vision_server
 

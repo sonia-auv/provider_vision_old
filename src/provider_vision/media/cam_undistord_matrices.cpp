@@ -10,7 +10,7 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
-#include <media/configuration_handler.h>
+#include <provider_vision/media/configuration_handler.h>
 #include "provider_vision/media/cam_undistord_matrices.h"
 
 namespace vision_server {

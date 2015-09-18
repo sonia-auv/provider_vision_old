@@ -31,7 +31,7 @@
 #include <vision_server/vision_server_get_media_from_execution.h>
 #include <vision_server/vision_server_set_filterchain_filter_observer.h>
 #include "provider_vision/config.h"
-#include "utils/camera_id.h"
+#include "provider_vision/utils/camera_id.h"
 #include "provider_vision/proc/filterchain.h"
 
 namespace vision_server {
@@ -51,7 +51,7 @@ class FilterchainManager
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  explicit FilterchainManager();
+  explicit FilterchainManager(atlas::NodeHandlePtr node_handle);
 
   ~FilterchainManager();
 

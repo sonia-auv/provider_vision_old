@@ -14,7 +14,7 @@
 // I N C L U D E   F I L E S
 
 #include <mutex>
-#include <opencv2/core/core.hpp>
+#include <opencv2/opencv.hpp>
 #include <lib_atlas/pattern/subject.h>
 #include <lib_atlas/pattern/runnable.h>
 #include "provider_vision/media/camera/base_media.h"
@@ -60,6 +60,12 @@ class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
    * Get the media CameraID on which we take the images.
    */
   uint64_t GetMediaGUID() const;
+
+  /**
+   * Returns the media name... to be deleted since we have the GetMediaID()
+   * method.
+   */
+  std::string GetMediaName() const;
 
   /**
    * Return the acquisition loop status.
@@ -120,11 +126,6 @@ class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
    */
   bool StopRecording();
 
-  /**
-   * Returns the media name... to be deleted since we have the GetMediaID()
-   * method.
-   */
-  const std::string &GetMediaName() const;
 
  private:
   //==========================================================================
@@ -199,7 +200,7 @@ class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
 
 //------------------------------------------------------------------------------
 //
-inline const std::string &MediaStreamer::GetMediaName() const {
+inline std::string MediaStreamer::GetMediaName() const {
   return media_->GetName();
 };
 

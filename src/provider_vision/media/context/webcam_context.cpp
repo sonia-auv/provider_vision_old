@@ -16,113 +16,78 @@
 
 namespace vision_server {
 
-//==============================================================================
-// C O N S T R U C T O R / D E S T R U C T O R   S E C T I O N
+  //==============================================================================
+  // C O N S T R U C T O R / D E S T R U C T O R   S E C T I O N
 
-//------------------------------------------------------------------------------
-//
-WebcamContext::WebcamContext(const CAMConfig config)
-    : BaseContext(config), DRIVER_TAG("[DC1394 Driver]"), _webcam(nullptr) {}
+  //------------------------------------------------------------------------------
+  //
+  WebcamContext::WebcamContext()
+  : BaseContext(),
+    DRIVER_TAG("[Webcam Driver]"),
+    WEBCAM_NAME("Webcam"),
+    webcam_()
+  {}
 
-//------------------------------------------------------------------------------
-//
-WebcamContext::~WebcamContext() {}
+  //------------------------------------------------------------------------------
+  //
+  WebcamContext::~WebcamContext() {}
 
-//==============================================================================
-// M E T H O D   S E C T I O N
+  //==============================================================================
+  // M E T H O D   S E C T I O N
 
-//------------------------------------------------------------------------------
-//
-void WebcamContext::InitDriver() {
-  _webcam = std::make_shared<CAMWebcam>();
-  _camera_list.push_back(CameraID("Webcam", 0000000000000000));
-}
-
-//------------------------------------------------------------------------------
-//
-void WebcamContext::CloseDriver() {
-  // delete _webcam;
-  _webcam = nullptr;
-  _camera_list.clear();
-}
-
-//------------------------------------------------------------------------------
-//
-bool WebcamContext::StartCamera(CameraID id) {
-  if (_webcam != nullptr) {
-    return _webcam->Start();
+  //------------------------------------------------------------------------------
+  //
+  void
+  WebcamContext::InitContext(const std::vector<CameraConfiguration> &cam_configuration_lists)
+  {
   }
-  return false;
-}
 
-//------------------------------------------------------------------------------
-//
-bool WebcamContext::StopCamera(CameraID id) {
-  if (_webcam != nullptr) {
-    return _webcam->Close();
+  //------------------------------------------------------------------------------
+  //
+  void WebcamContext::CloseContext()
+  {}
+
+  //------------------------------------------------------------------------------
+  //
+  bool WebcamContext::StartCamera(const std::string &name) {
+    if ( WEBCAM_NAME.compare(name) == 0 ) {
+      return webcam_.Start();
+    }
+    return false;
   }
-  return false;
-}
 
-//------------------------------------------------------------------------------
-//
-std::vector<CameraID> WebcamContext::GetCameraList() { return _camera_list; }
+  //------------------------------------------------------------------------------
+  //
+  bool WebcamContext::StopCamera(const std::string &name) {
+    if ( WEBCAM_NAME.compare(name) == 0 ) {
+      return webcam_.Close();
+    }
+    return false;
+  }
 
-//------------------------------------------------------------------------------
-//
-bool WebcamContext::IsMyCamera(const std::string &nameMedia) {
-  // Should not be necessary, but in case the driver has been close, the list
-  // is empty so...
-  for (const auto &camera : _camera_list) {
-    if (camera.GetName() == nameMedia) {
-      return true;
+  //------------------------------------------------------------------------------
+  //
+  void WebcamContext::SetFeature(BaseCamera::Feature feat, const std::string &name,
+                                 float val) {
+    if ( WEBCAM_NAME.compare(name) == 0 ) {
+      webcam_.SetFeature(feat, val);
     }
   }
-  return false;
-}
 
-//------------------------------------------------------------------------------
-//
-std::shared_ptr<Media> WebcamContext::GetActiveCamera(CameraID id) {
-  return _webcam;
-}
-
-//------------------------------------------------------------------------------
-//
-void WebcamContext::SetFeature(FEATURE feat, CameraID id, float val) {
-  // Should not be necessary, but in case the driver has been close, the list
-  // is empty so...
-  for (const auto &camera : _camera_list) {
-    if (camera.GetGUID() == id.GetGUID() && _webcam != nullptr) {
-      _webcam->SetFeature(feat, val);
-      break;
+  //------------------------------------------------------------------------------
+  //
+  void WebcamContext::GetFeature(BaseCamera::Feature feat, const std::string &name,
+                                 float &val) const {
+    if ( WEBCAM_NAME.compare(name) == 0 ) {
+      val = webcam_.GetFeature(feat);
     }
   }
-}
 
-//------------------------------------------------------------------------------
-//
-void WebcamContext::GetFeature(FEATURE feat, CameraID id, float &val) {
-  // Should not be necessary, but in case the driver has been close, the list
-  // is empty so...
-  for (const auto &camera : _camera_list) {
-    if (camera.GetGUID() == id.GetGUID() && _webcam != nullptr) {
-      val = _webcam->GetFeature(feat);
-      break;
-    }
-  }
-}
+  //------------------------------------------------------------------------------
+  //
+  void WebcamContext::run() {}
 
-//------------------------------------------------------------------------------
-//
-void WebcamContext::run() {}
-
-//------------------------------------------------------------------------------
-//
-bool WebcamContext::WatchDogFunc() { return true; }
-
-//------------------------------------------------------------------------------
-//
-void WebcamContext::PopulateCameraList() {}
-
+  //------------------------------------------------------------------------------
+  //
+  bool WebcamContext::WatchDogFunc() { return true; }
 }  // namespace vision_server

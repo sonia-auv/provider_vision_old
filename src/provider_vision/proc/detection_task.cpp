@@ -31,7 +31,7 @@ DetectionTask::DetectionTask(atlas::NodeHandlePtr node_handle,
                              std::shared_ptr<MediaStreamer> acquisition_loop,
                              Filterchain *filterchain,
                              const std::string &execName)
-    : _acquisition_loop(acquisition_loop),
+    : media_streaming_(acquisition_loop),
       _filterchain_to_process(filterchain),
       _state(CLOSE),
       image_publisher_(node_handle, kRosNodeName + execName + "_image"),
@@ -44,8 +44,8 @@ DetectionTask::DetectionTask(atlas::NodeHandlePtr node_handle,
   result_publisher_ =
       node_handle->advertise<std_msgs::String>(_exec_name + "_result", 50);
 
-  if (_acquisition_loop.get() != nullptr)
-    _camera_id = _acquisition_loop->GetMediaID();
+  if (media_streaming_.get() == nullptr)
+    throw std::invalid_argument("media_streaming is null");
 }
 
 //------------------------------------------------------------------------------
@@ -73,7 +73,7 @@ DetectionTask::~DetectionTask() {
 //
 DetectionTask::ERROR DetectionTask::StartExec() {
   ERROR status = ERROR::FAILURE_TO_START;
-  if (_acquisition_loop.get() == nullptr) {
+  if (media_streaming_.get() == nullptr) {
     ROS_ERROR_NAMED(EXEC_TAG, "Acquisition loop is null!");
     return status;
   }
@@ -83,14 +83,12 @@ DetectionTask::ERROR DetectionTask::StartExec() {
     return status;
   }
 
-  _acquisition_loop->Attach(*this);
+  media_streaming_->Attach(*this);
 
   // Attach to the acquisition loop to receive notification from a new image.
   _filterchain_to_process->InitFilters();
 
-  ROS_INFO_NAMED(EXEC_TAG, "Starting execution on %s with %s",
-                 _filterchain_to_process->GetName().c_str(),
-                 _camera_id.GetName().c_str());
+  ROS_INFO_NAMED(EXEC_TAG, "Starting execution ");
   _state = RUNNING;
   status = ERROR::SUCCESS;
 
@@ -106,7 +104,7 @@ DetectionTask::ERROR DetectionTask::StopExec() {
   ERROR status = ERROR::FAILURE_TO_CLOSE;
 
   std::lock_guard<std::mutex> guard(_newest_image_mutex);
-  _acquisition_loop->Detach(*this);
+  media_streaming_->Detach(*this);
 
   // Stop thread
   if (running()) {
@@ -117,9 +115,7 @@ DetectionTask::ERROR DetectionTask::StopExec() {
 
   _filterchain_to_process->CloseFilters();
 
-  ROS_INFO_NAMED(EXEC_TAG, "Closing execution of %s with %s",
-                 _filterchain_to_process->GetName().c_str(),
-                 GetID().GetFullName());
+  ROS_INFO_NAMED(EXEC_TAG, "Closing execution ");
 
   image_publisher_.stop();
 
@@ -133,7 +129,7 @@ DetectionTask::ERROR DetectionTask::StopExec() {
 //
 void DetectionTask::OnSubjectNotify(atlas::Subject<> &subject) ATLAS_NOEXCEPT {
   std::lock_guard<std::mutex> guard(_newest_image_mutex);
-  _acquisition_loop->GetImage(_newest_image);
+  media_streaming_->GetImage(_newest_image);
   _new_image_ready = true;
 }
 

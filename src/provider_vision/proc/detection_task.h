@@ -91,8 +91,6 @@ class DetectionTask : public atlas::Runnable, public atlas::Observer<> {
 
   const Filterchain *getFilterChain() const;
 
-  const CameraID GetID() const;
-
   const std::string GetExecName() const;
 
   const std::string GetMediaName() const;
@@ -128,7 +126,7 @@ class DetectionTask : public atlas::Runnable, public atlas::Observer<> {
   /**
    * DetectionTask core.
    */
-  std::shared_ptr<MediaStreamer> _acquisition_loop;
+  std::shared_ptr<MediaStreamer> media_streaming_;
 
   Filterchain *_filterchain_to_process;
 
@@ -144,8 +142,6 @@ class DetectionTask : public atlas::Runnable, public atlas::Observer<> {
   /**
    * DetectionTask's media
    */
-  CameraID _camera_id;
-
   STATE _state;
 
   const int TRY_CLOSE;
@@ -160,7 +156,7 @@ class DetectionTask : public atlas::Runnable, public atlas::Observer<> {
 //
 inline const std::shared_ptr<MediaStreamer> DetectionTask::GetAcquisitionLoop()
     const {
-  return _acquisition_loop;
+  return media_streaming_;
 }
 
 //------------------------------------------------------------------------------
@@ -171,10 +167,6 @@ inline const Filterchain *DetectionTask::getFilterChain() const {
 
 //------------------------------------------------------------------------------
 //
-inline const CameraID DetectionTask::GetID() const { return _camera_id; }
-
-//------------------------------------------------------------------------------
-//
 inline const std::string DetectionTask::GetExecName() const {
   return _exec_name;
 }
@@ -182,7 +174,7 @@ inline const std::string DetectionTask::GetExecName() const {
 //------------------------------------------------------------------------------
 //
 inline const std::string DetectionTask::GetMediaName() const {
-  return _camera_id.GetName();
+    return media_streaming_.get()->GetMediaName();
 }
 
 }  // namespace vision_server

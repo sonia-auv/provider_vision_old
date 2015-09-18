@@ -10,7 +10,7 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
-#include <media/context/file_context.h>
+#include <provider_vision/media/context/file_context.h>
 #include <string>
 #include <vector>
 #include <ros/ros.h>
@@ -18,176 +18,138 @@
 
 namespace vision_server {
 
-//==============================================================================
-// C O N S T R U C T O R / D E S T R U C T O R   S E C T I O N
+  //==============================================================================
+  // C O N S T R U C T O R / D E S T R U C T O R   S E C T I O N
 
-//------------------------------------------------------------------------------
-//
-VideoFileContext::VideoFileContext(const CAMConfig config)
-    : BaseContext(config), DRIVER_TAG("[MEDIA Driver]") {}
+  //------------------------------------------------------------------------------
+  //
+  VideoFileContext::VideoFileContext()
+  : BaseContext(),
+    DRIVER_TAG("[MEDIA Driver]")
+  {}
 
-//------------------------------------------------------------------------------
-//
-VideoFileContext::~VideoFileContext() {}
+  //------------------------------------------------------------------------------
+  //
+  VideoFileContext::~VideoFileContext() {}
 
-//==============================================================================
-// M E T H O D   S E C T I O N
+  //==============================================================================
+  // M E T H O D   S E C T I O N
 
-//------------------------------------------------------------------------------
-//
-void VideoFileContext::InitDriver() {
-  ROS_INFO_NAMED(DRIVER_TAG, "Initializing MEDIA driver");
-  PopulateCameraList();
-  // note : les médias sont instancés en cours d'exécution, pas à la création
-}
-
-//------------------------------------------------------------------------------
-//
-void VideoFileContext::CloseDriver() { _live_camera_list.clear(); }
-
-//------------------------------------------------------------------------------
-//
-bool VideoFileContext::StartCamera(CameraID id) {
-  auto media = GetActiveCamera(id);
-  if (media.get() == nullptr) {
-    std::string nameMedia = id.GetName();
-    // le media n'existe pas, donc on le créé
-    if (GetMediaType(nameMedia) == IMAGE) {
-      media = std::make_shared<ImageFile>(nameMedia);
-    } else if (GetMediaType(nameMedia) == VIDEO) {
-      media = std::make_shared<VideoFile>(nameMedia, true);
-    } else {
-      ROS_ERROR_NAMED(DRIVER_TAG, "Media not instanciate and not started %s",
-                      id.GetFullName());
-    }
-    // on le start
-    ROS_INFO_NAMED(DRIVER_TAG, "Successfully started %s", id.GetFullName());
+  //------------------------------------------------------------------------------
+  //
+  void
+  VideoFileContext::InitContext(const std::vector<CameraConfiguration> &cam_configuration_lists)
+  {
   }
 
-  return media->Start();
-}
+  //------------------------------------------------------------------------------
+  //
+  void VideoFileContext::CloseContext() { camera_list_.clear(); }
 
-//------------------------------------------------------------------------------
-//
-bool VideoFileContext::StopCamera(CameraID id) {
-  auto media = GetActiveCamera(id);
-  if (media.get() != nullptr) {
-    if (!media->Stop()) {
-      ROS_ERROR_NAMED(DRIVER_TAG, "Error closing %s", id.GetFullName());
-      return false;
-    }
+  //------------------------------------------------------------------------------
+  //
+  bool VideoFileContext::StartCamera(const std::string &name) {
 
-    // Retreive the camera and delete it.
-    auto camera = _live_camera_list.begin();
-    const auto camera_last = _live_camera_list.end();
-    for (; camera != camera_last; ++camera) {
-      if ((*camera)->GetCameraID().GetName() ==
-          media->GetCameraID().GetName()) {
-        _live_camera_list.erase(camera);
-        return true;
-      }
-    }
-  }
-  ROS_ERROR_NAMED(DRIVER_TAG, "Could not find %s as active camera.",
-                  id.GetFullName());
-  return false;
-}
-
-//------------------------------------------------------------------------------
-//
-std::vector<CameraID> VideoFileContext::GetCameraList() {
-  // feed la _camera_list (les données sont dans _live_camera_list)
-  PopulateCameraList();
-  return _camera_list;
-}
-
-//------------------------------------------------------------------------------
-//
-bool VideoFileContext::IsMyCamera(const std::string &nameMedia) {
-  // cherche si la camera existe
-  for (auto &camera : _live_camera_list) {
-    if (camera->GetCameraID().GetName() == nameMedia) {
+    // in the videoFile context, camera in list are existing camera.
+    if(camera_list_.find(name) != camera_list_.end() )
+      //already existing
       return true;
-    }
-  }
 
-  // N'existe pas dans le systeme, est-ce qu'on peut la creer?
-  if (GetMediaType(nameMedia) != NONE) {
-    // C'est un video ou une image
+    MediaType type = GetMediaType(name);
+    if( type == MediaType::IMAGE )
+    {
+      std::shared_ptr<ImageFile> file (new ImageFile(name));
+      file->Start();
+      camera_list_.insert( std::make_pair( name , file ) );
+    }else if (type == MediaType::VIDEO )
+    {
+      std::shared_ptr<VideoFile> file (new VideoFile(name));
+      file->Start();
+      camera_list_.insert(std::make_pair(name, file));
+    }else
+    {
+      throw std::invalid_argument("Not my camera type");
+    }
+
     return true;
   }
 
-  // N'est pas un video ni une image ou un media existant pour ce driver.
-  return false;
-}
+  //------------------------------------------------------------------------------
+  //
+  bool VideoFileContext::StopCamera(const std::string &name) {
 
-//------------------------------------------------------------------------------
-//
-std::shared_ptr<Media> VideoFileContext::GetActiveCamera(CameraID id) {
-  for (auto &camera : _live_camera_list) {
-    if (camera->GetCameraID().GetName() == id.GetName()) {
-      return camera;
+    // in the videoFile context, camera in list are existing camera.
+    auto file = camera_list_.find(name);
+    if(file == camera_list_.end() )
+        //does not exist
+        return true;
+
+    bool result = (*file).second->Stop();
+    camera_list_.erase(file);
+
+    return result;
+  }
+
+  //------------------------------------------------------------------------------
+  //
+  bool VideoFileContext::IsMyCamera(const std::string &nameMedia) const {
+
+    bool result = false;
+    // cherche si la camera existe
+    if(camera_list_.find(nameMedia) != camera_list_.end() )
+    {
+      //already existing
+      result = true;
+    }// N'existe pas dans le systeme, est-ce qu'on peut la creer?
+    else if( GetMediaType(nameMedia) != MediaType::NONE)
+    {
+      // C'est un video ou une image
+      result = true;
     }
+
+    // N'est pas un video ni une image ou un media existant pour ce driver.
+    return result;
   }
-  return nullptr;
-}
-
-//------------------------------------------------------------------------------
-//
-void VideoFileContext::SetFeature(FEATURE feat, CameraID id, float val) {
-  // Should not be necessary, but in case the driver has been close, the list
-  // is empty so...
-  for (const auto &camera : _live_camera_list) {
-    // if(camera.GetGUID() == id.GetGUID() && _media != nullptr)
-    //     _media->SetFeature(feat, val);
-  }
-}
-
-//------------------------------------------------------------------------------
-//
-void VideoFileContext::GetFeature(FEATURE feat, CameraID id, float &val) {
-  // Should not be necessary, but in case the driver has been close, the list
-  // is empty so...
-  for (const auto &camera : _live_camera_list) {
-    // if (camera.GetGUID() == id.GetGUID() && _media != nullptr)
-    //     val = _media->GetFeature(feat);
-  }
-}
-
-//------------------------------------------------------------------------------
-//
-void VideoFileContext::run() {}
-
-//------------------------------------------------------------------------------
-//
-bool VideoFileContext::WatchDogFunc() { return true; }
-
-//------------------------------------------------------------------------------
-//
-void VideoFileContext::PopulateCameraList() {
-  for (auto &camera : _live_camera_list) {
-    _camera_list.push_back(camera->GetCameraID());
-  }
-}
-
-//------------------------------------------------------------------------------
-//
-VideoFileContext::MEDIA_TYPE VideoFileContext::GetMediaType(
-    const std::string &nameMedia) {
-  // on commence par rechercher une image
-  if (nameMedia.find(".jpg") != std::string::npos ||
-      nameMedia.find(".png") != std::string::npos ||
-      nameMedia.find(".bmp") != std::string::npos) {
-    return IMAGE;
+  //------------------------------------------------------------------------------
+  //
+  void VideoFileContext::SetFeature(BaseCamera::Feature feat, const std::string &name,
+                                    float val)
+  {
   }
 
-  // On n'a pas trouver d'image, on recherche une vidéo
-  if (nameMedia.find(".avi") != std::string::npos ||
-      nameMedia.find(".mp4") != std::string::npos) {
-    return VIDEO;
+  //------------------------------------------------------------------------------
+  //
+  void VideoFileContext::GetFeature(BaseCamera::Feature feat, const std::string &name,
+                                    float &val) const
+  {
   }
 
-  return NONE;
-}
+  //------------------------------------------------------------------------------
+  //
+  void VideoFileContext::run() {}
+
+  //------------------------------------------------------------------------------
+  //
+  bool VideoFileContext::WatchDogFunc() { return true; }
+
+  //------------------------------------------------------------------------------
+  //
+  VideoFileContext::MediaType VideoFileContext::GetMediaType(
+      const std::string &nameMedia) const {
+    // on commence par rechercher une image
+    if (nameMedia.find(".jpg") != std::string::npos ||
+        nameMedia.find(".png") != std::string::npos ||
+        nameMedia.find(".bmp") != std::string::npos) {
+      return MediaType::IMAGE;
+    }
+
+    // On n'a pas trouver d'image, on recherche une vidéo
+    if (nameMedia.find(".avi") != std::string::npos ||
+        nameMedia.find(".mp4") != std::string::npos) {
+      return MediaType::VIDEO;
+    }
+
+    return MediaType::NONE;
+  }
 
 }  // namespace vision_server

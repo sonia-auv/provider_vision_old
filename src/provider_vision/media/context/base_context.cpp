@@ -17,12 +17,5 @@ namespace vision_server {
 //==============================================================================
 // C O N S T R U C T O R / D E S T R U C T O R   S E C T I O N
 
-//------------------------------------------------------------------------------
-//
-BaseContext::BaseContext(const CAMConfig config) : _config(config) {}
-
-//------------------------------------------------------------------------------
-//
-BaseContext::~BaseContext() {}
 
 }  // namespace vision_server

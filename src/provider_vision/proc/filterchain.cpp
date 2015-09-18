@@ -10,7 +10,7 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
-#include <utils/pugixml.h>
+#include "provider_vision/utils/pugixml.h"
 #include "provider_vision/proc/filterchain.h"
 #include "provider_vision/config.h"
 #include <ros/ros.h>

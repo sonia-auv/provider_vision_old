@@ -1,5 +1,5 @@
 /**
- * \file	CAMWebcam.h
+ * \file	WebcamCamera.h
  * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
  * \date	10/03/2015
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
@@ -23,20 +23,20 @@ namespace vision_server {
 // C L A S S E S
 
 /**
- * CAMWebcam is the object for handling webcams.
+ * WebcamCamera is the object for handling webcams.
  * For now it consider that the default camera is a webcam.
  * There is no other check than that. It is useful for debugging the server.
  */
-class CAMWebcam : public BaseCamera, private cv::VideoCapture {
+class WebcamCamera : public BaseCamera, private cv::VideoCapture {
  public:
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  CAMWebcam();
+  WebcamCamera();
 
-  CAMWebcam(int webcamIdx);
+  WebcamCamera(int webcamIdx);
 
-  virtual ~CAMWebcam();
+  virtual ~WebcamCamera();
 
   //==========================================================================
   // P U B L I C   M E T H O D S

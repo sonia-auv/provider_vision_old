@@ -68,7 +68,7 @@ bool VideoFile::LoadVideo(const std::string &path_to_file) {
 //
 bool VideoFile::Start() {
   if (!isOpened()) {
-    LoadVideo(_path);
+    LoadVideo(path_);
   }
   return isOpened();
 }

@@ -17,7 +17,7 @@
 #include <lib_vision/filter_factory.h>
 #include <lib_vision/global_param_handler.h>
 #include <lib_vision/filter.h>
-#include "utils/serializable.h"
+#include "provider_vision/utils/serializable.h"
 
 namespace vision_server {
 

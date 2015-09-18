@@ -13,9 +13,12 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
+#include <string>
+#include <sstream>
 #include <iostream>
-
-#include "utils/camera_id.h"
+#include <vector>
+#include "lib_atlas/sys/fsinfo.h"
+#include "provider_vision/utils/pugixml.h"
 #include "provider_vision/media/camera_configuration.h"
 #include "provider_vision/config.h"
 
@@ -41,9 +44,9 @@ class ConfigurationHandler {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  std::map<std::string, CameraConfiguration> ParseConfiguration();
+  std::vector<CameraConfiguration> ParseConfiguration();
   void SaveConfiguration(
-      const std::map<std::string, CameraConfiguration> &system_config) const;
+      const std::map<std::string, CameraConfiguration> &system_config) ;
 
  private:
   std::string file_;
