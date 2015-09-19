@@ -41,14 +41,6 @@ find_package( OpenCV REQUIRED)
 #===============================================================================
 # O T H E R   P A C K A G E S   D E P E N D E N C I E S
 
-# Fann libraries is actually a set of other libs, list them here.
-set( fann_LIBRARIES
-    "fann"
-    "fixedfann"
-    "floatfann"
-    "doublefann"
-)
-
 #===============================================================================
 # I N C L U D E   F I L E S
 
@@ -72,7 +64,6 @@ set( TARGET_NAME sonia_vision )
 
 SET( LIBS_TO_LINK
   ${catkin_LIBRARIES}
-  ${fann_LIBRARIES}
   ${lib_atlas_LIBRARIES}
   ${OpenCV_LIBS}
 )
