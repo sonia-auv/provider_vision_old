@@ -7,11 +7,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef VISION_SERVER_BaseMedia_H_
-#define VISION_SERVER_BaseMedia_H_
-
-//==============================================================================
-// I N C L U D E   F I L E S
+#ifndef PROVIDER_VISION_BaseMedia_H_
+#define PROVIDER_VISION_BaseMedia_H_
 
 #include <opencv2/core/core.hpp>
 #include <provider_vision/media/camera_configuration.h>
@@ -19,22 +16,17 @@
 
 namespace vision_server {
 
-//==============================================================================
-// C L A S S E S
-
 /**
  * Base class for anything that can provide an image to the system
  * implement basic functionality that is called through the system.
  */
 class BaseMedia {
  public:
-  enum class Status { OPEN, CLOSE, STREAMING, ERROR };
-
   //==========================================================================
   // P U B L I C   C / D T O R S
 
   BaseMedia(const CameraConfiguration &config)
-      : config_(config), status_(Status::CLOSE){};
+      : config_(config), is_open_(false){};
 
   virtual ~BaseMedia(){};
 
@@ -56,12 +48,6 @@ class BaseMedia {
    */
   virtual bool NextImage(cv::Mat &image) = 0;
 
-  /**
-   * Return either if the camera is a real camera or not.
-   * It will return false if, for exemple, the camera is a video or a Webcam.
-   * Reimplement this method in your subclass and return the appropriate boolean
-   *
-   *
   //==========================================================================
   // G E T T E R S   A N D   S E T T E R S
 
@@ -83,14 +69,15 @@ class BaseMedia {
 
   std::string GetName() const;
 
-  bool IsStreaming() const;
-  bool IsClosed() const;
   bool IsOpened() const;
 
  protected:
+  //==========================================================================
+  // P R O T E C T E D   M E M B E R S
+
   CameraConfiguration config_;
 
-  Status status_;
+  bool is_open_;
 };
 
 //==============================================================================
@@ -98,7 +85,7 @@ class BaseMedia {
 
 //------------------------------------------------------------------------------
 //
-inline BaseMedia::Status BaseMedia::GetStatus() const { return status_; };
+inline BaseMedia::Status BaseMedia::GetStatus() const { return is_open_; };
 
 //------------------------------------------------------------------------------
 //
@@ -116,18 +103,8 @@ inline std::string BaseMedia::GetName() const { return config_.GetName(); }
 
 //------------------------------------------------------------------------------
 //
-inline bool BaseMedia::IsStreaming() const { return status_ == Status::STREAMING; }
-
-//------------------------------------------------------------------------------
-//
-inline bool BaseMedia::IsClosed() const { return status_ == Status::CLOSE; }
-
-//------------------------------------------------------------------------------
-//
-inline bool BaseMedia::IsOpened() const { return status_ == Status::OPEN; }
-
-
+inline bool BaseMedia::IsOpened() const { return is_open_; }
 
 }  // namespace vision_server
 
-#endif  // VISION_SERVER_BaseMedia_H_
+#endif  // PROVIDER_VISION_BaseMedia_H_

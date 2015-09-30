@@ -9,8 +9,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef VISION_SERVER_FILTERCHAIN_MANAGER_H_
-#define VISION_SERVER_FILTERCHAIN_MANAGER_H_
+#ifndef PROVIDER_VISION_FILTERCHAIN_MANAGER_H_
+#define PROVIDER_VISION_FILTERCHAIN_MANAGER_H_
 
 //==============================================================================
 // I N C L U D E   F I L E S
@@ -18,20 +18,7 @@
 #include <functional>
 #include <lib_atlas/ros/service_server_manager.h>
 #include <lib_vision/filter.h>
-#include <vision_server/vision_server_copy_filterchain.h>
-#include <vision_server/vision_server_manage_filterchain.h>
-#include <vision_server/vision_server_get_filterchain_filter_param.h>
-#include <vision_server/vision_server_set_filterchain_filter_param.h>
-#include <vision_server/vision_server_get_filterchain_filter_all_param.h>
-#include <vision_server/vision_server_get_filterchain_filter.h>
-#include <vision_server/vision_server_manage_filterchain_filter.h>
-#include <vision_server/vision_server_save_filterchain.h>
-#include <vision_server/vision_server_set_filterchain_filter_order.h>
-#include <vision_server/vision_server_get_filterchain_from_execution.h>
-#include <vision_server/vision_server_get_media_from_execution.h>
-#include <vision_server/vision_server_set_filterchain_filter_observer.h>
 #include "provider_vision/config.h"
-#include "provider_vision/utils/camera_id.h"
 #include "provider_vision/proc/filterchain.h"
 
 namespace vision_server {
@@ -45,13 +32,12 @@ namespace vision_server {
  * to each Filterchain in addition to being charged of opening and closing them.
  * Also offers ROS services to allow filterchain managing.
  */
-class FilterchainManager
-    : public atlas::ServiceServerManager<FilterchainManager> {
+class FilterchainManager {
  public:
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  explicit FilterchainManager(atlas::NodeHandlePtr node_handle);
+  explicit FilterchainManager();
 
   ~FilterchainManager();
 
@@ -61,7 +47,7 @@ class FilterchainManager
   /**
    * Get all available filterchains on the system.
    *
-   * \param exec_name : string
+   * \param execution_name : string
    * \param filterchain : string
    * \param filter : string
    * \return vector<std::string>
@@ -76,8 +62,8 @@ class FilterchainManager
    * \param filterchainName std::string
    * \return Filterchain*
    */
-  Filterchain *InstanciateFilterchain(std::string executionName,
-                                      std::string filterchainName);
+  std::shared_ptr<Filterchain> InstanciateFilterchain(
+      std::string executionName, std::string filterchainName);
 
   /**
    * Get all available filterchains on the system.
@@ -100,29 +86,30 @@ class FilterchainManager
   /**
    * Find an existing filterchain
    *
-   * \param exec_name string
+   * \param execution_name string
    * \param filterchainName string
    * \return filterchain Filterchain*
    */
-  Filterchain *GetRunningFilterchain(std::string executionName,
-                                     std::string filterchainName = "");
+  std::shared_ptr<Filterchain> GetRunningFilterchain(
+      const std::string &execution);
 
   /**
-   * \brief If the does not filterchain exists, create it.
+   * If the does not filterchain exists, create it.
    * \param filterchain The name of the filterchain to create.
    * \return Either if the filterchain was added or not.
    */
   bool CreateFilterchain(const std::string &filterchain);
 
   /**
-   * \brief If the filterchain exists, delete it.
+   * If the filterchain exists, delete it.
+   *
    * \param filterchain The name of the filterchain to delete.
    * \return Either if the filterchain was delete or not.
    */
   bool DeleteFilterchain(const std::string &filterchain);
 
   /**
-   * \brief Check if a filterchain exist or not.
+   * Check if a filterchain exist or not.
    *
    * This will check on the list of the available filterchain provided by
    * GetAvailableFilterchain if the file exists or not.
@@ -133,13 +120,13 @@ class FilterchainManager
   bool FilterchainExists(const std::string &filterchain);
 
   /**
-   * \brief With the constants defining the config directory path and the
+   * With the constants defining the config directory path and the
    * extension, return the true path of a filterchain.
    */
   std::string GetFilterchainPath(const std::string &filterchain) const;
 
   /**
-   * \brief Display all the available filterchains on the standard output.
+   * Display all the available filterchains on the standard output.
    */
   void ListAvailableFilterchains();
 
@@ -155,7 +142,7 @@ class FilterchainManager
   /**
    * List of current instances of filterchains
    */
-  std::vector<Filterchain *> _runningFilterchains;
+  std::vector<std::shared_ptr<Filterchain>> _runningFilterchains;
 };
 
 //==============================================================================
@@ -170,4 +157,4 @@ inline std::string FilterchainManager::GetFilterchainPath(
 
 }  // namespace vision_server
 
-#endif  // VISION_SERVER_FILTERCHAIN_MANAGER_H_
+#endif  // PROVIDER_VISION_FILTERCHAIN_MANAGER_H_

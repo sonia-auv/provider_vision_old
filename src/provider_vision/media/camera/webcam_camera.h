@@ -7,8 +7,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef VISION_SERVER_CAM_WEBCAM_H_
-#define VISION_SERVER_CAM_WEBCAM_H_
+#ifndef PROVIDER_VISION_CAM_WEBCAM_H_
+#define PROVIDER_VISION_CAM_WEBCAM_H_
 
 //==============================================================================
 // I N C L U D E   F I L E S
@@ -68,4 +68,4 @@ class WebcamCamera : public BaseCamera, private cv::VideoCapture {
 
 }  // namespace vision_server
 
-#endif  // VISION_SERVER_CAM_WEBCAM_H_
+#endif  // PROVIDER_VISION_CAM_WEBCAM_H_

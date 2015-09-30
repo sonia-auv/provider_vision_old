@@ -12,7 +12,6 @@
 
 #include <provider_vision/media/configuration_handler.h>
 
-
 namespace vision_server {
 
 //==============================================================================
@@ -26,7 +25,7 @@ static const std::string XML_CAMERA_UNDISTORTION_MATRICE_NODE =
     "UndistortionMatrice";
 
 //==============================================================================
-// C O N S T R U C T O R / D E S T R U C T O R   S E C T I O N
+// C / D T O R S   S E C T I O N
 
 //------------------------------------------------------------------------------
 //
@@ -45,8 +44,7 @@ ConfigurationHandler::~ConfigurationHandler() {}
 // M E T H O D   S E C T I O N
 //------------------------------------------------------------------------------
 //
-std::vector<CameraConfiguration>
-ConfigurationHandler::ParseConfiguration() {
+std::vector<CameraConfiguration> ConfigurationHandler::ParseConfiguration() {
   // If the file has been change since constructor
   if (!atlas::is_file_exist(file_)) {
     throw std::ios_base::failure("File not found or inaccessible");

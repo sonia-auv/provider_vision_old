@@ -7,54 +7,70 @@
  * found in the LICENSE file.
  */
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
-#include <assert.h>
 #include <lib_atlas/config.h>
 #include "provider_vision/server/media_manager.h"
 
 namespace vision_server {
 
 //==============================================================================
-// C O N S T R U C T O R / D E S T R U C T O R   S E C T I O N
+// C / D T O R S   S E C T I O N
 
 //------------------------------------------------------------------------------
 //
-MediaManager::MediaManager(atlas::NodeHandlePtr node_handle)
-    : atlas::ServiceServerManager<MediaManager>(node_handle) {
-  assert(node_handle.get() != nullptr);
-  std::string base_node_name(kRosNodeName);
-
-  InitializeContext();
-};
+MediaManager::MediaManager() noexcept : contexts_() { InitializeContext(); }
 
 //------------------------------------------------------------------------------
 //
-MediaManager::~MediaManager() { CloseContext(); }
+MediaManager::~MediaManager() noexcept { CloseContext(); }
 
 //==============================================================================
 // M E T H O D   S E C T I O N
 
 //------------------------------------------------------------------------------
 //
-std::vector<std::string> MediaManager::GetCameraList() const {
-  std::vector<std::string> cameraList;
+std::shared_ptr<MediaStreamer> StartCamera(
+    const std::string &media_name) noexcept {
 
-  for (auto &elem : context_) {
-    std::vector<std::string> context_camera_list = elem->GetCameraList();
-    for (auto &context_camera : context_camera_list) {
-      cameraList.push_back(context_camera);
-    }
-  }
-  return cameraList;
 }
 
 //------------------------------------------------------------------------------
 //
-void MediaManager::StreammingCmd(Command cmd, const std::string &mediaName,
+void StopCamera(const std::string &media) noexcept {
+
+}
+
+//------------------------------------------------------------------------------
+//
+void SetFeature(const std::string &media_name, BaseCamera::Feature feat,
+                float val) noexcept {
+
+}
+
+//------------------------------------------------------------------------------
+//
+float GetFeature(const std::string &media_name,
+                 BaseCamera::Feature feat) noexcept {
+
+}
+
+//------------------------------------------------------------------------------
+//
+std::vector<BaseMedia> MediaManager::GetMediaList() const {
+  std::vector<BaseMedia> medias;
+
+  for (auto &elem : contexts_) {
+    for (auto &context : contexts_) {
+      medias.push_back(context);
+    }
+  }
+  return medias;
+}
+
+//------------------------------------------------------------------------------
+//
+void MediaManager::StreammingCmd(Command cmd, const std::string &media_name,
                                  std::shared_ptr<MediaStreamer> &ptr) {
-  std::shared_ptr<BaseContext> driver = GetDriverForCamera(mediaName);
+  std::shared_ptr<BaseContext> driver = GetContextFromMedia(media_name);
   // FEATURE* feat = static_cast<FEATURE*>(specific_to_cmd);
   // float* val = static_cast<float*>(specific_to_cmd2);
   if (driver == nullptr) {
@@ -64,8 +80,8 @@ void MediaManager::StreammingCmd(Command cmd, const std::string &mediaName,
 
   switch (cmd) {
     case Command::START:
-      if (driver->StartCamera(mediaName)) {
-        std::shared_ptr<BaseMedia> media = driver->GetMedia(mediaName);
+      if (driver->StartCamera(media_name)) {
+        std::shared_ptr<BaseMedia> media = driver->GetMedia(media_name);
 
         if (media.get() != nullptr) {
           ptr = std::make_shared<MediaStreamer>(media, 30);
@@ -93,7 +109,7 @@ void MediaManager::StreammingCmd(Command cmd, const std::string &mediaName,
         return;
       }
 
-      driver->StopCamera(mediaName);
+      driver->StopCamera(media_name);
 
       break;
     default:
@@ -104,9 +120,9 @@ void MediaManager::StreammingCmd(Command cmd, const std::string &mediaName,
 
 //=============================================================================
 //
-void MediaManager::ParametersCmd(Command cmd, const std::string &mediaName,
+void MediaManager::ParametersCmd(Command cmd, const std::string &media_name,
                                  BaseCamera::Feature feat, float &val) {
-  std::shared_ptr<BaseContext> driver = GetDriverForCamera(mediaName);
+  std::shared_ptr<BaseContext> driver = GetContextFromMedia(media_name);
   // FEATURE* feat = static_cast<FEATURE*>(specific_to_cmd);
   // float* val = static_cast<float*>(specific_to_cmd2);
   if (driver == nullptr) {
@@ -115,10 +131,10 @@ void MediaManager::ParametersCmd(Command cmd, const std::string &mediaName,
   }
   switch (cmd) {
     case Command::SET_FEATURE:
-      driver->SetFeature(feat, mediaName, val);
+      driver->SetFeature(feat, media_name, val);
       break;
     case Command::GET_FEATURE:
-      driver->GetFeature(feat, mediaName, val);
+      driver->GetFeature(feat, media_name, val);
       break;
     default:
       ROS_WARN_NAMED("[CAM_MANAGER]", "Unrecognize command");
@@ -132,15 +148,14 @@ void MediaManager::InitializeContext() {
   std::stringstream ss;
   ss << kConfigPath << "/camera_config.xml";
   ConfigurationHandler configHandler(ss.str());
-  std::vector<CameraConfiguration> list
-    = configHandler.ParseConfiguration();
+  std::vector<CameraConfiguration> list = configHandler.ParseConfiguration();
   // Each time you have a new driver (Gige, usb, etc.) add it to
   // the list here.
-  context_.push_back(std::make_shared<DC1394Context>());
-  context_.push_back(std::make_shared<WebcamContext>());
-  context_.push_back(std::make_shared<VideoFileContext>());
+  contexts_.push_back(std::make_shared<DC1394Context>());
+  contexts_.push_back(std::make_shared<WebcamContext>());
+  contexts_.push_back(std::make_shared<VideoFileContext>());
 
-  for (auto &elem : context_) {
+  for (auto &elem : contexts_) {
     elem->InitContext(list);
   }
 }
@@ -149,46 +164,41 @@ void MediaManager::InitializeContext() {
 //
 void MediaManager::CloseContext() {
   // Close every devices here
-  for (auto &elem : context_) {
+  for (auto &elem : contexts_) {
     elem->CloseContext();
   }
 }
 
 //------------------------------------------------------------------------------
 //
-std::shared_ptr<BaseContext> MediaManager::GetDriverForCamera(
+std::shared_ptr<BaseContext> MediaManager::GetContextFromMedia(
     const std::string &name) {
-  for (auto &elem : context_) {
-    if (elem->IsMyCamera(name)) {
-      return elem;
+  for (auto &context : contexts_) {
+    if (context->ContainsMedia(name)) {
+      return context;
     }
   }
-  ROS_ERROR_NAMED("[CAMERA_MANAGER]",
-                  "This camera: %s is not part of any driver instantiated...",
-                  name.c_str());
-  return nullptr;
+  throw std::invalid_argument("No context contains this media");
 }
 
 //------------------------------------------------------------------------------
 //
-BaseCamera::Feature MediaManager::NameToEnum(const std::string &name) const {
-  BaseCamera::Feature to_return = BaseCamera::Feature::ERROR_FEATURE;
+BaseCamera::Feature MediaManager::GetFeatureFromName(
+    const std::string &name) const {
   if (name == "SHUTTER_AUTO") {
-    to_return = BaseCamera::Feature::SHUTTER_AUTO;
+    return BaseCamera::Feature::SHUTTER_AUTO;
   } else if (name == "SHUTTER") {
-    to_return = BaseCamera::Feature::SHUTTER;
+    return BaseCamera::Feature::SHUTTER;
   } else if (name == "WHITE_BALANCE_AUTO") {
-    to_return = BaseCamera::Feature::WHITE_BALANCE_AUTO;
+    return BaseCamera::Feature::WHITE_BALANCE_AUTO;
   } else if (name == "WHITE_BALANCE_RED") {
-    to_return = BaseCamera::Feature::WHITE_BALANCE_RED;
+    return BaseCamera::Feature::WHITE_BALANCE_RED;
   } else if (name == "WHITE_BALANCE_BLUE") {
-    to_return = BaseCamera::Feature::WHITE_BALANCE_BLUE;
+    return BaseCamera::Feature::WHITE_BALANCE_BLUE;
   } else if (name == "FRAMERATE") {
-    to_return = BaseCamera::Feature::FRAMERATE;
-  } else {
-    ROS_WARN_NAMED("[CAMERA_MANAGER]", "No feature named: %s", name.c_str());
+    return BaseCamera::Feature::FRAMERATE;
   }
-  return to_return;
+  throw std::invalid_argument("No feature with this name");
 }
 
 }  // namespace vision_server

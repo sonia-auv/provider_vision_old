@@ -7,8 +7,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef VISION_SERVER_MEDIA_IMAGE_H_
-#define VISION_SERVER_MEDIA_IMAGE_H_
+#ifndef PROVIDER_VISION_MEDIA_IMAGE_H_
+#define PROVIDER_VISION_MEDIA_IMAGE_H_
 
 //==============================================================================
 // I N C L U D E   F I L E S
@@ -67,4 +67,4 @@ class ImageFile : public BaseMedia {
 
 }  // namespace vision_server
 
-#endif  // VISION_SERVER_MEDIA_IMAGE_H_
+#endif  // PROVIDER_VISION_MEDIA_IMAGE_H_

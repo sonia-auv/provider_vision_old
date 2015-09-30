@@ -15,14 +15,14 @@
 namespace vision_server {
 
 //==============================================================================
-// C O N S T R U C T O R / D E S T R U C T O R   S E C T I O N
+// C / D T O R S   S E C T I O N
 
 //------------------------------------------------------------------------------
 //
 WebcamCamera::WebcamCamera()
     : cv::VideoCapture(0), BaseCamera(CameraConfiguration("Webcam")) {
   if (isOpened()) {
-    status_ = Status::OPEN;
+    is_open_ = Status::OPEN;
   }
 }
 
@@ -33,7 +33,7 @@ WebcamCamera::WebcamCamera(int webcamIdx)
       // three because...
       BaseCamera(CameraConfiguration("Webcam")) {
   if (isOpened()) {
-    status_ = Status::OPEN;
+    is_open_ = Status::OPEN;
   }
 }
 
@@ -48,7 +48,7 @@ WebcamCamera::~WebcamCamera() {}
 //
 bool WebcamCamera::Start() {
   // Construction also start the camera for a videoCapture
-  if (isOpened()) status_ = Status::STREAMING;
+  if (isOpened()) is_open_ = Status::STREAMING;
   return isOpened();
 }
 
@@ -56,7 +56,7 @@ bool WebcamCamera::Start() {
 //
 bool WebcamCamera::Stop() {
   // Always stream when asking to capture only...
-  if (isOpened()) status_ = Status::OPEN;
+  if (isOpened()) is_open_ = Status::OPEN;
   return isOpened();
 }
 
@@ -96,12 +96,12 @@ bool WebcamCamera::SetFeature(const Feature &feat, float value) { return true; }
 
 //------------------------------------------------------------------------------
 //
-float WebcamCamera::GetFeature(const Feature &feat) const{
-//  float val = 0.0f;
-//  if (feat == Feature::FRAMERATE)
-//  {
-//    val = static_cast<float>(this->get(CV_CAP_PROP_FPS));
-//  }
+float WebcamCamera::GetFeature(const Feature &feat) const {
+  //  float val = 0.0f;
+  //  if (feat == Feature::FRAMERATE)
+  //  {
+  //    val = static_cast<float>(this->get(CV_CAP_PROP_FPS));
+  //  }
 
   return 0.0f;
 }

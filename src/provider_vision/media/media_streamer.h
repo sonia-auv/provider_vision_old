@@ -7,11 +7,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef VISION_SERVER_ACQUISITION_LOOP_H_
-#define VISION_SERVER_ACQUISITION_LOOP_H_
-
-//==============================================================================
-// I N C L U D E   F I L E S
+#ifndef PROVIDER_VISION_ACQUISITION_LOOP_H_
+#define PROVIDER_VISION_ACQUISITION_LOOP_H_
 
 #include <mutex>
 #include <opencv2/opencv.hpp>
@@ -126,7 +123,6 @@ class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
    */
   bool StopRecording();
 
-
  private:
   //==========================================================================
   // P R I V A T E   M E T H O D S
@@ -216,4 +212,4 @@ inline bool MediaStreamer::IsStreaming() const { return is_streaming_; }
 
 }  // namespace vision_server
 
-#endif  // VISION_SERVER_ACQUISITION_LOOP_H_
+#endif  // PROVIDER_VISION_ACQUISITION_LOOP_H_

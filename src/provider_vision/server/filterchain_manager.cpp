@@ -19,11 +19,12 @@
 namespace vision_server {
 
 //==============================================================================
-// C O N S T R U C T O R / D E S T R U C T O R   S E C T I O N
+// C / D T O R S   S E C T I O N
 
 //------------------------------------------------------------------------------
 //
-FilterchainManager::FilterchainManager(atlas::NodeHandlePtr node_handle)
+FilterchainManager::FilterchainManager(
+    std::shared_ptr<ros::NodeHandle> node_handle)
     : atlas::ServiceServerManager<FilterchainManager>(node_handle),
       FILTERCHAIN_MANAGER_TAG("FILTERCHAIN_MANAGER") {
   assert(node_handle.get() != nullptr);
@@ -119,7 +120,7 @@ bool FilterchainManager::FilterchainExists(const std::string &filterchain) {
 
 //------------------------------------------------------------------------------
 //
-Filterchain *FilterchainManager::InstanciateFilterchain(
+std::shared_ptr<Filterchain> FilterchainManager::InstanciateFilterchain(
     std::string executionName, std::string filterchainName) {
   if (FilterchainExists(filterchainName)) {
     const auto filterchain = new Filterchain(filterchainName, executionName);
@@ -150,7 +151,7 @@ bool FilterchainManager::CloseFilterchain(std::string executionName,
 //
 bool FilterchainManager::SaveFilterchain(std::string executionName,
                                          std::string filterchainName) {
-  auto filterchain = GetRunningFilterchain(executionName, filterchainName);
+  auto filterchain = GetRunningFilterchain(executionName);
   if (filterchain) {
     filterchain->Serialize();
     return true;
@@ -160,10 +161,10 @@ bool FilterchainManager::SaveFilterchain(std::string executionName,
 
 //------------------------------------------------------------------------------
 //
-Filterchain *FilterchainManager::GetRunningFilterchain(
-    std::string executionName, std::string filterchainName) {
+std::shared_ptr<Filterchain> FilterchainManager::GetRunningFilterchain(
+    const std::string &execution) {
   for (const auto &filterchain : _runningFilterchains) {
-    if (filterchain->GetExecutionName() == executionName) {
+    if (filterchain->GetName() == execution) {
       return filterchain;
     }
   }

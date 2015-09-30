@@ -7,10 +7,6 @@
  * found in the LICENSE file.
  */
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
-#include <assert.h>
 #include <std_msgs/String.h>
 #include <lib_atlas/typedef.h>
 #include "provider_vision/proc/detection_task.h"
@@ -23,35 +19,35 @@ namespace vision_server {
 static const char *EXEC_TAG = "[EXECUTION]";
 
 //==============================================================================
-// C O N S T R U C T O R / D E S T R U C T O R   S E C T I O N
+// C / D T O R S   S E C T I O N
 
 //------------------------------------------------------------------------------
 //
-DetectionTask::DetectionTask(atlas::NodeHandlePtr node_handle,
+DetectionTask::DetectionTask(std::shared_ptr<ros::NodeHandle> node_handle,
                              std::shared_ptr<MediaStreamer> acquisition_loop,
-                             Filterchain *filterchain,
-                             const std::string &execName)
-    : media_streaming_(acquisition_loop),
-      _filterchain_to_process(filterchain),
-      _state(CLOSE),
-      image_publisher_(node_handle, kRosNodeName + execName + "_image"),
+                             std::shared_ptr<Filterchain> filterchain,
+                             const std::string &execution_name)
+    : media_streamer_(acquisition_loop),
+      filterchain_(filterchain),
+      running_(false),
+      image_publisher_(node_handle, kRosNodeName + execution_name + "_image"),
       result_publisher_(),
-      _exec_name(kRosNodeName + execName),
-      TRY_CLOSE(3),
+      name_(kRosNodeName + execution_name),
+      close_attemps_(3),
       _new_image_ready(false) {
   assert(node_handle.get() != nullptr);
   image_publisher_.start();
   result_publisher_ =
-      node_handle->advertise<std_msgs::String>(_exec_name + "_result", 50);
+      node_handle->advertise<std_msgs::String>(name_ + "_result", 50);
 
-  if (media_streaming_.get() == nullptr)
+  if (media_streamer_.get() == nullptr)
     throw std::invalid_argument("media_streaming is null");
 }
 
 //------------------------------------------------------------------------------
 //
 DetectionTask::~DetectionTask() {
-  if (_state == RUNNING) StopExec();
+  if (running_ == true) StopExec();
   // No need to destroy _image_topic, it is a smart pointer
   ROS_INFO_NAMED(EXEC_TAG, "Destroying execution");
   unsigned int tries = 0;
@@ -71,65 +67,49 @@ DetectionTask::~DetectionTask() {
 
 //------------------------------------------------------------------------------
 //
-DetectionTask::ERROR DetectionTask::StartExec() {
-  ERROR status = ERROR::FAILURE_TO_START;
-  if (media_streaming_.get() == nullptr) {
-    ROS_ERROR_NAMED(EXEC_TAG, "Acquisition loop is null!");
-    return status;
+void DetectionTask::start() {
+  if (media_streamer_.get() == nullptr) {
+    throw std::runtime_error("Cannot start task with null media streamer");
   }
 
-  if (this->_filterchain_to_process == nullptr) {
-    ROS_ERROR_NAMED(EXEC_TAG, "Filterchain is null!");
-    return status;
+  if (filterchain_ == nullptr) {
+    throw std::runtime_error("Cannot start task with null filterchain");
   }
 
-  media_streaming_->Attach(*this);
+  if(running()) {
+    throw std::logic_error("This excecution is already running.");
+  }
+
+  media_streamer_->Attach(*this);
 
   // Attach to the acquisition loop to receive notification from a new image.
-  _filterchain_to_process->InitFilters();
+  filterchain_->InitFilters();
 
   ROS_INFO_NAMED(EXEC_TAG, "Starting execution ");
-  _state = RUNNING;
-  status = ERROR::SUCCESS;
-
-  // Start thread!
-  start();
-
-  return status;
+  running_ = true;
+  Runnable::start();
 }
 
 //------------------------------------------------------------------------------
 //
-DetectionTask::ERROR DetectionTask::StopExec() {
-  ERROR status = ERROR::FAILURE_TO_CLOSE;
-
+void DetectionTask::stop() {
   std::lock_guard<std::mutex> guard(_newest_image_mutex);
-  media_streaming_->Detach(*this);
-
-  // Stop thread
-  if (running()) {
-    stop();
-  } else {
-    ROS_WARN_NAMED(EXEC_TAG, "The excecution is not processing.");
+  if (!running()) {
+    throw std::logic_error("This excecution is not running.");
   }
 
-  _filterchain_to_process->CloseFilters();
-
-  ROS_INFO_NAMED(EXEC_TAG, "Closing execution ");
-
+  Runnable::stop();
+  media_streamer_->Detach(*this);
+  filterchain_->CloseFilters();
   image_publisher_.stop();
-
-  _state = CLOSE;
-  status = ERROR::SUCCESS;
-
-  return status;
+  running_ = false;
 }
 
 //------------------------------------------------------------------------------
 //
-void DetectionTask::OnSubjectNotify(atlas::Subject<> &subject) ATLAS_NOEXCEPT {
+void DetectionTask::OnSubjectNotify(atlas::Subject<> &subject) noexcept {
   std::lock_guard<std::mutex> guard(_newest_image_mutex);
-  media_streaming_->GetImage(_newest_image);
+  media_streamer_->GetImage(_newest_image);
   _new_image_ready = true;
 }
 
@@ -149,10 +129,10 @@ void DetectionTask::run() {
 
     std::string return_string;
 
-    if (_state == RUNNING) {
-      if (_filterchain_to_process != nullptr) {
+    if (running_ == true) {
+      if (filterchain_ != nullptr) {
         return_string =
-            _filterchain_to_process->ExecuteFilterChain(_image_being_processed);
+            filterchain_->ExecuteFilterChain(_image_being_processed);
       }
 
       // We don't want to send stuff for nothing.

@@ -16,78 +16,74 @@
 
 namespace vision_server {
 
-  //==============================================================================
-  // C O N S T R U C T O R / D E S T R U C T O R   S E C T I O N
+//==============================================================================
+// C / D T O R S   S E C T I O N
 
-  //------------------------------------------------------------------------------
-  //
-  WebcamContext::WebcamContext()
-  : BaseContext(),
-    DRIVER_TAG("[Webcam Driver]"),
-    WEBCAM_NAME("Webcam"),
-    webcam_()
-  {}
+//------------------------------------------------------------------------------
+//
+WebcamContext::WebcamContext()
+    : BaseContext(),
+      DRIVER_TAG("[Webcam Driver]"),
+      WEBCAM_NAME("Webcam"),
+      webcam_() {}
 
-  //------------------------------------------------------------------------------
-  //
-  WebcamContext::~WebcamContext() {}
+//------------------------------------------------------------------------------
+//
+WebcamContext::~WebcamContext() {}
 
-  //==============================================================================
-  // M E T H O D   S E C T I O N
+//==============================================================================
+// M E T H O D   S E C T I O N
 
-  //------------------------------------------------------------------------------
-  //
-  void
-  WebcamContext::InitContext(const std::vector<CameraConfiguration> &cam_configuration_lists)
-  {
+//------------------------------------------------------------------------------
+//
+void WebcamContext::InitContext(
+    const std::vector<CameraConfiguration> &cam_configuration_lists) {}
+
+//------------------------------------------------------------------------------
+//
+void WebcamContext::CloseContext() {}
+
+//------------------------------------------------------------------------------
+//
+bool WebcamContext::StartCamera(const std::string &name) {
+  if (WEBCAM_NAME.compare(name) == 0) {
+    return webcam_.Start();
   }
+  return false;
+}
 
-  //------------------------------------------------------------------------------
-  //
-  void WebcamContext::CloseContext()
-  {}
-
-  //------------------------------------------------------------------------------
-  //
-  bool WebcamContext::StartCamera(const std::string &name) {
-    if ( WEBCAM_NAME.compare(name) == 0 ) {
-      return webcam_.Start();
-    }
-    return false;
+//------------------------------------------------------------------------------
+//
+bool WebcamContext::StopCamera(const std::string &name) {
+  if (WEBCAM_NAME.compare(name) == 0) {
+    return webcam_.Close();
   }
+  return false;
+}
 
-  //------------------------------------------------------------------------------
-  //
-  bool WebcamContext::StopCamera(const std::string &name) {
-    if ( WEBCAM_NAME.compare(name) == 0 ) {
-      return webcam_.Close();
-    }
-    return false;
+//------------------------------------------------------------------------------
+//
+void WebcamContext::SetFeature(BaseCamera::Feature feat,
+                               const std::string &name, float val) {
+  if (WEBCAM_NAME.compare(name) == 0) {
+    webcam_.SetFeature(feat, val);
   }
+}
 
-  //------------------------------------------------------------------------------
-  //
-  void WebcamContext::SetFeature(BaseCamera::Feature feat, const std::string &name,
-                                 float val) {
-    if ( WEBCAM_NAME.compare(name) == 0 ) {
-      webcam_.SetFeature(feat, val);
-    }
+//------------------------------------------------------------------------------
+//
+void WebcamContext::GetFeature(BaseCamera::Feature feat,
+                               const std::string &name, float &val) const {
+  if (WEBCAM_NAME.compare(name) == 0) {
+    val = webcam_.GetFeature(feat);
   }
+}
 
-  //------------------------------------------------------------------------------
-  //
-  void WebcamContext::GetFeature(BaseCamera::Feature feat, const std::string &name,
-                                 float &val) const {
-    if ( WEBCAM_NAME.compare(name) == 0 ) {
-      val = webcam_.GetFeature(feat);
-    }
-  }
+//------------------------------------------------------------------------------
+//
+void WebcamContext::run() {}
 
-  //------------------------------------------------------------------------------
-  //
-  void WebcamContext::run() {}
-
-  //------------------------------------------------------------------------------
-  //
-  bool WebcamContext::WatchDogFunc() { return true; }
+//------------------------------------------------------------------------------
+//
+bool WebcamContext::WatchDogFunc() { return true; }
 }  // namespace vision_server

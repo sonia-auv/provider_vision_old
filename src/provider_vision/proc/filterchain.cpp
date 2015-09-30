@@ -18,26 +18,26 @@
 namespace vision_server {
 
 //==============================================================================
-// C O N S T R U C T O R / D E S T R U C T O R   S E C T I O N
+// C / D T O R S   S E C T I O N
 
 //------------------------------------------------------------------------------
 //
 Filterchain::Filterchain(const std::string &name, const std::string &execution)
     : Serializable(kConfigPath + name + kFilterchainExt),
-      _name(name),
+      name_(name),
       _execution_name(execution),
       _global_params(),
       _observer_index(0),
       _default_cam("") {
   Deserialize();
-  _observer_index = static_cast<int>(_filter_list.size() - 1);
+  _observer_index = static_cast<int>(filters_.size() - 1);
 }
 
 //------------------------------------------------------------------------------
 //
 Filterchain::Filterchain(const Filterchain &filterchain)
-    : Serializable(kConfigPath + filterchain._name + "_copy" + kFilterchainExt),
-      _name(filterchain._name + "_copy"),
+    : Serializable(kConfigPath + filterchain.name_ + "_copy" + kFilterchainExt),
+      name_(filterchain.name_ + "_copy"),
       _execution_name(filterchain._execution_name),
       _global_params(filterchain._global_params),
       _observer_index(filterchain._observer_index),
@@ -52,7 +52,7 @@ bool Filterchain::Serialize() {
   pugi::xml_document doc;
   auto node = doc.append_child("Filterchain");
   auto i = 0;
-  for (const auto filter : _filter_list) {
+  for (const auto filter : filters_) {
     auto node_name = std::string{"Filter"} + "_" + std::to_string(i);
     auto filter_node = node.append_child(node_name.c_str());
     auto filter_attr = filter_node.append_attribute("value");
@@ -65,7 +65,7 @@ bool Filterchain::Serialize() {
     }
     ++i;
   }
-  auto save_path = kConfigPath + _name + kFilterchainExt;
+  auto save_path = kConfigPath + name_ + kFilterchainExt;
   doc.save_file(save_path.c_str());
   return true;
 }
@@ -110,10 +110,10 @@ std::string Filterchain::ExecuteFilterChain(cv::Mat &image) {
   if (!imageToProcess.empty()) {
     _global_params.setOriginalImage(imageToProcess);
 
-    auto it = _filter_list.begin();
+    auto it = filters_.begin();
     try {
       int filterIndex = 0;
-      for (; it != _filter_list.end(); ++it) {
+      for (; it != filters_.end(); ++it) {
         if (!imageToProcess.empty()) {
           (*it)->execute(imageToProcess);
         }
@@ -125,7 +125,7 @@ std::string Filterchain::ExecuteFilterChain(cv::Mat &image) {
         filterIndex++;
       }
     } catch (cv::Exception &e) {
-      auto filterchainID = std::string{"[FILTERCHAIN " + _name + "]"};
+      auto filterchainID = std::string{"[FILTERCHAIN " + name_ + "]"};
       ROS_ERROR_NAMED(filterchainID.c_str(), "Error in image processing: %s",
                       e.what());
     };
@@ -138,25 +138,25 @@ std::string Filterchain::ExecuteFilterChain(cv::Mat &image) {
 //------------------------------------------------------------------------------
 //
 void Filterchain::RemoveFilter(const int index) {
-  if (index <= _filter_list.size() && index >= 0) {
-    auto it = _filter_list.begin() + index;
-    _filter_list.erase(it);
+  if (index <= filters_.size() && index >= 0) {
+    auto it = filters_.begin() + index;
+    filters_.erase(it);
   }
 }
 
 //------------------------------------------------------------------------------
 //
 void Filterchain::MoveFilterDown(const int filterIndex) {
-  if ((filterIndex < (_filter_list.size() - 1)) && (filterIndex >= 0)) {
-    auto itFilter = _filter_list.begin();
+  if ((filterIndex < (filters_.size() - 1)) && (filterIndex >= 0)) {
+    auto itFilter = filters_.begin();
     std::advance(itFilter, filterIndex);
 
-    auto itFilterBellow = _filter_list.begin();
+    auto itFilterBellow = filters_.begin();
     std::advance(itFilterBellow, filterIndex + 1);
 
     std::swap(*itFilter, *itFilterBellow);
   } else {
-    std::string filterchainID = {"[FILTERCHAIN " + _name + "]"};
+    std::string filterchainID = {"[FILTERCHAIN " + name_ + "]"};
     ROS_WARN_NAMED(filterchainID.c_str(), "Can't move this filter down");
   }
 }
@@ -164,16 +164,16 @@ void Filterchain::MoveFilterDown(const int filterIndex) {
 //------------------------------------------------------------------------------
 //
 void Filterchain::MoveFilterUp(const int filterIndex) {
-  if ((filterIndex > 0) && (filterIndex <= (_filter_list.size() - 1))) {
-    auto itFilter = _filter_list.begin();
+  if ((filterIndex > 0) && (filterIndex <= (filters_.size() - 1))) {
+    auto itFilter = filters_.begin();
     std::advance(itFilter, filterIndex);
 
-    auto itFilterAbove = _filter_list.begin();
+    auto itFilterAbove = filters_.begin();
     std::advance(itFilterAbove, filterIndex - 1);
 
     std::swap(*itFilter, *itFilterAbove);
   } else {
-    std::string filterchainID = {"[FILTERCHAIN " + _name + "]"};
+    std::string filterchainID = {"[FILTERCHAIN " + name_ + "]"};
     ROS_WARN_NAMED(filterchainID.c_str(), "Can't move this filter down");
   }
 }
@@ -183,7 +183,7 @@ void Filterchain::MoveFilterUp(const int filterIndex) {
 std::string Filterchain::GetFilterList() {
   std::stringstream ss;
   int filter_count = 0;
-  for (auto &elem : _filter_list) {
+  for (auto &elem : filters_) {
     // should never happen...
     if ((elem) == nullptr) {
       continue;
@@ -204,9 +204,9 @@ std::string Filterchain::GetFilterParam(const std::string &filter_name,
                                         const std::string &param_name) {
   int filter_index = GetFilterIndexFromUIName(filter_name);
   // Bad index...
-  if (filter_index >= _filter_list.size() || filter_index == -1) return "";
+  if (filter_index >= filters_.size() || filter_index == -1) return "";
 
-  auto iter = _filter_list.begin();
+  auto iter = filters_.begin();
   std::advance(iter, filter_index);
   std::string toReturn("");
   if (*iter != nullptr) {
@@ -222,8 +222,8 @@ void Filterchain::SetFilterParam(const std::string &filter_name,
                                  const std::string &param_value) {
   int filter_index = GetFilterIndexFromUIName(filter_name);
   // Bad index...
-  if (filter_index >= _filter_list.size() || filter_index == -1) return;
-  auto iter = _filter_list.begin();
+  if (filter_index >= filters_.size() || filter_index == -1) return;
+  auto iter = filters_.begin();
   std::advance(iter, filter_index);
   // Should never happen...
   if ((*iter) != nullptr) {
@@ -236,11 +236,11 @@ void Filterchain::SetFilterParam(const std::string &filter_name,
 std::string Filterchain::GetFilterAllParam(const std::string &filter_name) {
   int filter_index = GetFilterIndexFromUIName(filter_name);
   // Bad index...
-  if (filter_index >= _filter_list.size() || filter_index == -1) {
+  if (filter_index >= filters_.size() || filter_index == -1) {
     return "";
   }
 
-  auto iter = _filter_list.begin();
+  auto iter = filters_.begin();
   std::advance(iter, filter_index);
   std::string toReturn("");
   if (*iter != nullptr) {
@@ -254,7 +254,7 @@ std::string Filterchain::GetFilterAllParam(const std::string &filter_name) {
 void Filterchain::AddFilter(const std::string &filter_name) {
   auto filter =
       vision_filter::FilterFactory::createInstance(filter_name, _global_params);
-  _filter_list.push_back(filter);
+  filters_.push_back(filter);
 }
 
 }  // namespace vision_server

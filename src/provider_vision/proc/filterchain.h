@@ -7,8 +7,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef VISION_SERVER_FILTERCHAIN_H_
-#define VISION_SERVER_FILTERCHAIN_H_
+#ifndef PROVIDER_VISION_FILTERCHAIN_H_
+#define PROVIDER_VISION_FILTERCHAIN_H_
 
 //==============================================================================
 // I N C L U D E   F I L E S
@@ -110,8 +110,6 @@ class Filterchain : public Serializable {
 
   void SetExecutionName(const std::string &executionName);
 
-  std::string GetExecutionName() const;
-
   // Communication from the UI goes on the form
   int GetFilterIndexFromUIName(const std::string &name) const;
 
@@ -128,15 +126,11 @@ class Filterchain : public Serializable {
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
+  std::string name_;
+
   vision_filter::GlobalParamHandler _global_params;
 
-  std::vector<vision_filter::Filter *> _filter_list;
-
-  std::string _name;
-
-  std::string _execution_name;
-
-  std::string _default_cam;
+  std::vector<vision_filter::Filter *> filters_;
 
   int _observer_index;
 };
@@ -147,7 +141,7 @@ class Filterchain : public Serializable {
 //------------------------------------------------------------------------------
 //
 inline void Filterchain::InitFilters() {
-  for (auto &filter : _filter_list) {
+  for (auto &filter : filters_) {
     if (filter != nullptr) {
       filter->init();
     }
@@ -157,7 +151,7 @@ inline void Filterchain::InitFilters() {
 //------------------------------------------------------------------------------
 //
 inline void Filterchain::CloseFilters() {
-  for (auto &filter : _filter_list) {
+  for (auto &filter : filters_) {
     if (filter != nullptr) {
       filter->destroy();
     }
@@ -168,7 +162,7 @@ inline void Filterchain::CloseFilters() {
 //
 inline vision_filter::Filter *const Filterchain::GetFilter(
     const std::string &filter_name) const {
-  for (const auto &filter : _filter_list) {
+  for (const auto &filter : filters_) {
     if (filter->getName() == filter_name) {
       return filter;
     }
@@ -179,7 +173,7 @@ inline vision_filter::Filter *const Filterchain::GetFilter(
 //------------------------------------------------------------------------------
 //
 inline bool Filterchain::HasFilter(const std::string &filter_name) const {
-  for (const auto &filter : _filter_list) {
+  for (const auto &filter : filters_) {
     if (filter->getName() == filter_name) {
       return true;
     }
@@ -201,23 +195,11 @@ inline vision_filter::GlobalParamHandler *Filterchain::getParamHandler() {
 
 //------------------------------------------------------------------------------
 //
-inline std::string Filterchain::GetName() const { return _name; }
+inline std::string Filterchain::GetName() const { return name_; }
 
 //------------------------------------------------------------------------------
 //
-inline std::string Filterchain::GetExecutionName() const {
-  return _execution_name;
-}
-
-//------------------------------------------------------------------------------
-//
-inline void Filterchain::SetName(const std::string &name) { _name = name; }
-
-//------------------------------------------------------------------------------
-//
-inline void Filterchain::SetExecutionName(const std::string &executionName) {
-  _execution_name = executionName;
-}
+inline void Filterchain::SetName(const std::string &name) { name_ = name; }
 
 //------------------------------------------------------------------------------
 //
@@ -237,4 +219,4 @@ inline int Filterchain::GetFilterIndexFromUIName(
 
 }  // namespace vision_server
 
-#endif  // VISION_SERVER_FILTERCHAIN_H_
+#endif  // PROVIDER_VISION_FILTERCHAIN_H_

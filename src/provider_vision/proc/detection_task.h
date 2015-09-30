@@ -1,5 +1,5 @@
 /**
- * \file	Execution.h
+ * \file	detection_task.h
  * \author	Karl Ritchie <ritchie.karl@gmail.com>
  * \date	28/12/2014
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
@@ -7,11 +7,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef VISION_SERVER_EXECUTION_H_
-#define VISION_SERVER_EXECUTION_H_
-
-//==============================================================================
-// I N C L U D E   F I L E S
+#ifndef PROVIDER_VISION_PROC_DETECTION_TASK_H_
+#define PROVIDER_VISION_PROC_DETECTION_TASK_H_
 
 #include <mutex>
 #include <lib_atlas/ros/image_publisher.h>
@@ -24,9 +21,6 @@
 
 namespace vision_server {
 
-//==============================================================================
-// C L A S S E S
-
 /**
  * DetectionTask class is responsible of taking the image from an acquisition
  * loop,
@@ -35,69 +29,52 @@ namespace vision_server {
 class DetectionTask : public atlas::Runnable, public atlas::Observer<> {
  public:
   //==========================================================================
-  // T Y P E D E F   A N D   E N U M
-
-  /**
-   * Error handling
-   */
-  enum ERROR { SUCCESS = 0, FAILURE_TO_START, FAILURE_TO_CLOSE };
-
-  /**
-   * Internal state machine
-   */
-  enum STATE { RUNNING, CLOSE };
-
-  //==========================================================================
   // P U B L I C   C / D T O R S
 
-  /**
-   * CTOR/DSTR
-   */
-  explicit DetectionTask(atlas::NodeHandlePtr node_handle,
+  explicit DetectionTask(std::shared_ptr<ros::NodeHandle> node_handle,
                          std::shared_ptr<MediaStreamer> acquisition_loop,
-                         Filterchain *filterchain, const std::string &execName);
+                         std::shared_ptr<Filterchain> filterchain,
+                         const std::string &execution_name);
 
   virtual ~DetectionTask();
 
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  /**
-   * Exectution command
-   * Only start/stop the thread of image processing, not the acquisition loop.
-   */
-  ERROR StartExec();
+  void start() override;
 
-  ERROR StopExec();
+  void stop() override;
+
+  std::shared_ptr<MediaStreamer> GetMediaStreamer() const noexcept;
+
+  std::shared_ptr<Filterchain> GetFilterchain() const noexcept;
+
+  const std::string &GetName() const noexcept;
+
+  const std::string &GetMediaName() const noexcept;
+
+ protected:
+  //==========================================================================
+  // P R O T E C T E D   M E T H O D S
 
   /**
    * HTObserver override
    * Catches the acquisitionLoop's notification that an image is ready.
    */
-  auto OnSubjectNotify(atlas::Subject<> &subject) ATLAS_NOEXCEPT
-      -> void override;
+  void OnSubjectNotify(atlas::Subject<> &subject) noexcept override;
 
   /**
-     * HTThread override
-     * Run the filterchain when the new image is ready.
-     * Is necessary to decouple the acqusition loop from the processing.
+   * HTThread override
+   * Run the filterchain when the new image is ready.
+   * Is necessary to decouple the acqusition loop from the processing.
    */
   void run() override;
-
-  //==========================================================================
-  // G E T T E R S   A N D   S E T T E R S
-
-  const std::shared_ptr<MediaStreamer> GetAcquisitionLoop() const;
-
-  const Filterchain *getFilterChain() const;
-
-  const std::string GetExecName() const;
-
-  const std::string GetMediaName() const;
 
  private:
   //==========================================================================
   // P R I V A T E   M E M B E R S
+
+  std::string name_;
 
   /**
    * The publisher we use to send the filtered images on the ROS pipeline.
@@ -126,9 +103,9 @@ class DetectionTask : public atlas::Runnable, public atlas::Observer<> {
   /**
    * DetectionTask core.
    */
-  std::shared_ptr<MediaStreamer> media_streaming_;
+  std::shared_ptr<MediaStreamer> media_streamer_;
 
-  Filterchain *_filterchain_to_process;
+  std::shared_ptr<Filterchain> filterchain_;
 
   mutable std::mutex _newest_image_mutex;
 
@@ -142,11 +119,9 @@ class DetectionTask : public atlas::Runnable, public atlas::Observer<> {
   /**
    * DetectionTask's media
    */
-  STATE _state;
+  bool running_;
 
-  const int TRY_CLOSE;
-
-  std::string _exec_name;
+  static int close_attemps_;
 };
 
 //==============================================================================
@@ -154,29 +129,30 @@ class DetectionTask : public atlas::Runnable, public atlas::Observer<> {
 
 //------------------------------------------------------------------------------
 //
-inline const std::shared_ptr<MediaStreamer> DetectionTask::GetAcquisitionLoop()
-    const {
-  return media_streaming_;
+inline std::shared_ptr<MediaStreamer> DetectionTask::GetMediaStreamer()
+    const noexcept {
+  return media_streamer_;
 }
 
 //------------------------------------------------------------------------------
 //
-inline const Filterchain *DetectionTask::getFilterChain() const {
-  return _filterchain_to_process;
+inline std::shared_ptr<Filterchain> DetectionTask::GetFilterchain()
+    const noexcept {
+  return filterchain_;
 }
 
 //------------------------------------------------------------------------------
 //
-inline const std::string DetectionTask::GetExecName() const {
-  return _exec_name;
+inline const std::string &DetectionTask::GetName() const noexcept {
+  return name_;
 }
 
 //------------------------------------------------------------------------------
 //
-inline const std::string DetectionTask::GetMediaName() const {
-    return media_streaming_.get()->GetMediaName();
+inline const std::string &DetectionTask::GetMediaName() const noexcept {
+  return media_streamer_.get()->GetMediaName();
 }
 
 }  // namespace vision_server
 
-#endif  // VISION_SERVER_EXECUTION_H_
+#endif  // PROVIDER_VISION_PROC_DETECTION_TASK_H_

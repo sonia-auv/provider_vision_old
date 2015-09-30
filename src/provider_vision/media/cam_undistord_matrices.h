@@ -7,8 +7,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef VISION_SERVER_CAM_UNDISTORD_MATRICES_H_
-#define VISION_SERVER_CAM_UNDISTORD_MATRICES_H_
+#ifndef PROVIDER_VISION_CAM_UNDISTORD_MATRICES_H_
+#define PROVIDER_VISION_CAM_UNDISTORD_MATRICES_H_
 
 #include <stdint.h>
 #include <string>
@@ -56,22 +56,22 @@ class CameraUndistordMatrices {
 
 //------------------------------------------------------------------------------
 //
-inline void CameraUndistordMatrices::GetMatrices(cv::Mat &cameraMatrix,
-                                                 cv::Mat &distortionMatrix) {
+ATLAS_INLINE void CameraUndistordMatrices::GetMatrices(
+    cv::Mat &cameraMatrix, cv::Mat &distortionMatrix) {
   camera_matrix_.copyTo(cameraMatrix);
   distortion_matrix_.copyTo(distortionMatrix);
 }
 
 //------------------------------------------------------------------------------
 //
-inline bool CameraUndistordMatrices::IsCorrectionEnable() {
+ATLAS_INLINE bool CameraUndistordMatrices::IsCorrectionEnable() {
   return matrices_founded_;
 };
 
 //------------------------------------------------------------------------------
 //
-inline void CameraUndistordMatrices::CorrectInmage(const cv::Mat &in,
-                                                   cv::Mat &out) const {
+ATLAS_INLINE void CameraUndistordMatrices::CorrectInmage(const cv::Mat &in,
+                                                         cv::Mat &out) const {
   if (matrices_founded_) {
     cv::undistort(in, out, camera_matrix_, distortion_matrix_);
   } else {
@@ -81,4 +81,4 @@ inline void CameraUndistordMatrices::CorrectInmage(const cv::Mat &in,
 
 }  // namespace vision_server
 
-#endif  // VISION_SERVER_CAM_UNDISTORD_MATRICES_H_
+#endif  // PROVIDER_VISION_CAM_UNDISTORD_MATRICES_H_

@@ -7,8 +7,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef VISION_SERVER_MEDIA_VIDEO_H_
-#define VISION_SERVER_MEDIA_VIDEO_H_
+#ifndef PROVIDER_VISION_MEDIA_VIDEO_H_
+#define PROVIDER_VISION_MEDIA_VIDEO_H_
 
 //==============================================================================
 // I N C L U D E   F I L E S
@@ -66,4 +66,4 @@ class VideoFile : public BaseMedia, private cv::VideoCapture {
 };
 }  // namespace vision_server
 
-#endif  // VISION_SERVER_MEDIA_VIDEO_H_
+#endif  // PROVIDER_VISION_MEDIA_VIDEO_H_

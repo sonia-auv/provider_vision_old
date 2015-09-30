@@ -7,17 +7,12 @@
  * found in the LICENSE file.
  */
 
-#ifndef VISION_SERVER_CAMERA_MANAGER_H_
-#define VISION_SERVER_CAMERA_MANAGER_H_
-
-//==============================================================================
-// I N C L U D E   F I L E S
+#ifndef PROVIDER_VISION_CAMERA_MANAGER_H_
+#define PROVIDER_VISION_CAMERA_MANAGER_H_
 
 #include <lib_atlas/ros/service_server_manager.h>
 #include <provider_vision/media/configuration_handler.h>
 #include "provider_vision/media/context/file_context.h"
-#include <vision_server/vision_server_get_media_param.h>
-#include <vision_server/vision_server_set_media_param.h>
 #include "provider_vision/config.h"
 #include "provider_vision/media/configuration_handler.h"
 #include "provider_vision/media/context/base_context.h"
@@ -28,9 +23,6 @@
 
 namespace vision_server {
 
-//==============================================================================
-// C L A S S E S
-
 /**
  * MediaManager is the main manager for EVERY media.
  * It is responsible to know wich camera is in the system
@@ -39,47 +31,39 @@ namespace vision_server {
  * It is also the provider of acquisition loop ptr.
  * It has the responsibility of creating/destructing them.
  */
-class MediaManager: public atlas::ServiceServerManager<MediaManager> {
+class MediaManager {
  public:
   //==========================================================================
-  // T Y P E D E F   A N D   E N U M
+  // P U B L I C   C / D T O R S
 
-  enum class Command { START, STOP, SET_FEATURE, GET_FEATURE };
+  MediaManager() noexcept;
 
-  //==========================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
-
-  explicit MediaManager(atlas::NodeHandlePtr node_handle);
-
-  virtual ~MediaManager();
+  virtual ~MediaManager() noexcept;
 
   //==========================================================================
   // P U B L I C   M E T H O D S
 
+  std::shared_ptr<MediaStreamer> StartCamera(
+      const std::string &media_name) noexcept;
+
+  void StopCamera(const std::string &media) noexcept;
+
+  void SetFeature(const std::string &media_name, BaseCamera::Feature feat,
+                  float val) noexcept;
+
+  float GetFeature(const std::string &media_name,
+                   BaseCamera::Feature feat) noexcept;
+
   /**
    * Accumulate all the drivers' camear CameraID in a list.
    */
-  std::vector<std::string> GetCameraList() const;
-
-  /**
-   * Streaming command is related to start/stop a media, and returning active
-   * acquisition loop or closing it, depending of the command.
-   */
-  void StreammingCmd(Command cmd, const std::string &mediaName,
-                     std::shared_ptr<MediaStreamer> &ptr);
-
-  /**
-   * ParametersCmd send  command of type feature to the media (shutter, white
-   * balance...).
-   */
-  void ParametersCmd(Command cmd, const std::string &mediaName,
-                     BaseCamera::Feature feat, float &val);
+  std::vector<BaseMedia> GetMediaList() const;
 
   /**
    * Change a String representing a parameter of FEATURE to the appropriate
    * enum, so it can be use in the system.
    */
-  BaseCamera::Feature NameToEnum(const std::string &name) const;
+  BaseCamera::Feature GetFeatureFromName(const std::string &name) const;
 
  private:
   //==========================================================================
@@ -97,33 +81,17 @@ class MediaManager: public atlas::ServiceServerManager<MediaManager> {
    * Simple for loop iteration which pokes each driver to know if they
    * possess the camera asked for.
    */
-  std::shared_ptr<BaseContext> GetDriverForCamera(const std::string &name);
+  std::shared_ptr<BaseContext> GetContextFromMedia(const std::string &name);
 
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
   /**
-   * Answer to the service get media params
-   */
-  bool CallbackGetCMD(vision_server_get_media_param::Request &rqst,
-                      vision_server_get_media_param::Response &rep);
-
-  /**
-   * Answer to the service asking to set a parameter of a media.
-   */
-  bool CallbackSetCMD(vision_server_set_media_param::Request &rqst,
-                      vision_server_set_media_param::Response &rep);
-
-  /**
-   * Config object. To register/read cameras config.
-   */
-
-  /**
    * List of the driers in the system
    */
-  std::vector<std::shared_ptr<BaseContext>> context_;
+  std::vector<std::shared_ptr<BaseContext>> contexts_;
 };
 
 }  // namespace vision_server
 
-#endif  // VISION_SERVER_CAMERA_MANAGER_H_
+#endif  // PROVIDER_VISION_CAMERA_MANAGER_H_

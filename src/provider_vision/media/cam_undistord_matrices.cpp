@@ -7,16 +7,13 @@
  * found in the LICENSE file.
  */
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
 #include <provider_vision/media/configuration_handler.h>
 #include "provider_vision/media/cam_undistord_matrices.h"
 
 namespace vision_server {
 
 //==============================================================================
-// C O N S T R U C T O R / D E S T R U C T O R   S E C T I O N
+// C / D T O R S   S E C T I O N
 
 //------------------------------------------------------------------------------
 //
@@ -28,6 +25,7 @@ CameraUndistordMatrices::~CameraUndistordMatrices() {}
 
 //==============================================================================
 // M E T H O D   S E C T I O N
+
 //------------------------------------------------------------------------------
 //
 void CameraUndistordMatrices::InitMatrices(const std::string &fullPath) {
@@ -51,4 +49,5 @@ void CameraUndistordMatrices::InitMatrices(const std::string &fullPath) {
     }
   }
 }
+
 }  // namespace vision_server

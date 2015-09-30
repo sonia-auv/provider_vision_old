@@ -10,8 +10,7 @@
 
 #include <map>
 #include "pugixml.hpp"
-namespace vision_server
-{
+namespace vision_server {
 class CameraConfiguration {
  public:
   CameraConfiguration(const std::string &name);

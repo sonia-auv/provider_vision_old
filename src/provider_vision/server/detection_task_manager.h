@@ -9,8 +9,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef VISION_SERVER_DETECTION_TASK_MANAGER_H_
-#define VISION_SERVER_DETECTION_TASK_MANAGER_H_
+#ifndef PROVIDER_VISION_DETECTION_TASK_MANAGER_H_
+#define PROVIDER_VISION_DETECTION_TASK_MANAGER_H_
 
 #include <string>
 #include <memory>
@@ -32,97 +32,43 @@ class DetectionTaskManager {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  /**
-   * Return a pointer of MediaStreamer or execution with that name if exist.
-   * Can return nullptr
-   */
-  std::shared_ptr<DetectionTask> GetDetectionTask(const std::string &execName);
+  std::vector<std::shared_ptr<DetectionTask>> GetAllDetectionTasks() const
+      noexcept;
 
+  std::shared_ptr<DetectionTask> GetDetectionTask(
+      const std::string &execution_name) const;
+
+  std::shared_ptr<DetectionTask> CreateDetectionTask(
+      std::shared_ptr<ros::NodeHandle> node_handle,
+      std::shared_ptr<MediaStreamer> acquisition_loop,
+      std::shared_ptr<Filterchain> filterchain,
+      const std::string &execution_name) noexcept;
+
+  void StopDetectionTask(const std::string &execution_name) noexcept;
+
+  void StopDetectionTask(std::shared_ptr<DetectionTask>) noexcept;
+
+  std::vector<std::shared_ptr<MediaStreamer>> GetAllMediaStreamers() const
+      noexcept;
 
   std::shared_ptr<MediaStreamer> GetMediaStreamer(
-      const std::string &mediaName);
+      const std::string &execution_name, const std::string &media_name) const
+      noexcept;
 
-  /**
-   * Return true if another DetectionTask use the media
-   */
-  const bool IsAnotherUserMedia(const std::string &mediaName);
+  std::shared_ptr<Filterchain> GetRunningFilterchains(
+      const std::string &execution_name) const noexcept;
 
-  /**
-   * Add/remove MediaStreamer from the list.
-   */
-  void AddMediaStreamer(std::shared_ptr<MediaStreamer> ptr);
+  std::vector<std::shared_ptr<Filterchain>> GetAllRunningFilterchains() const noexcept;
 
-  void RemoveMediaStreamer(std::shared_ptr<MediaStreamer> ptr);
-
-  /**
-   * Add/remove DetectionTask from the list.
-   */
-  void AddDetectionTask(std::shared_ptr<DetectionTask> ptr);
-
-  void RemoveDetectionTask(std::shared_ptr<DetectionTask> ptr);
+  bool IsMediaUsed(const std::string &media_name);
 
  private:
   //==========================================================================
-  // P R I V A T E   M E T H O D S
+  // P R I V A T E   M E M B E R S
 
-  /**
-  * Protect the access of the vectors
-  */
-  mutable std::mutex _list_access;
-
-  /**
-   * Remember what exist.
-   */
   std::vector<std::shared_ptr<DetectionTask>> detection_tasks_;
-
-  std::vector<std::shared_ptr<MediaStreamer>> media_streamers_;
 };
-
-//==============================================================================
-// I N L I N E   F U N C T I O N S   D E F I N I T I O N S
-
-//------------------------------------------------------------------------------
-//
-inline void DetectionTaskManager::AddMediaStreamer(
-    std::shared_ptr<MediaStreamer> ptr) {
-  std::lock_guard<std::mutex> guard(_list_access);
-  media_streamers_.push_back(ptr);
-}
-
-//------------------------------------------------------------------------------
-//
-inline void DetectionTaskManager::RemoveMediaStreamer(
-    std::shared_ptr<MediaStreamer> ptr) {
-  std::lock_guard<std::mutex> guard(_list_access);
-  auto acquisition = media_streamers_.begin();
-  auto vec_end = media_streamers_.end();
-  for (; acquisition != vec_end; ++acquisition) {
-    if (*acquisition == ptr) {
-      media_streamers_.erase(acquisition);
-    }
-  }
-}
-
-//------------------------------------------------------------------------------
-//
-inline void DetectionTaskManager::AddDetectionTask(std::shared_ptr<DetectionTask> ptr) {
-  std::lock_guard<std::mutex> guard(_list_access);
-  detection_tasks_.push_back(ptr);
-}
-
-//------------------------------------------------------------------------------
-//
-inline void DetectionTaskManager::RemoveDetectionTask(std::shared_ptr<DetectionTask> ptr) {
-  std::lock_guard<std::mutex> guard(_list_access);
-  auto execution = detection_tasks_.begin();
-  auto vec_end = detection_tasks_.end();
-  for (; execution != vec_end; ++execution) {
-    if (*execution == ptr) {
-      detection_tasks_.erase(execution);
-    }
-  }
-}
 
 }  // namespace vision_server
 
-#endif  // VISION_SERVER_DETECTION_TASK_MANAGER_H_
+#endif  // PROVIDER_VISION_DETECTION_TASK_MANAGER_H_

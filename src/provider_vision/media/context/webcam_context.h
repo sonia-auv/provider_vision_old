@@ -7,8 +7,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef VISION_SERVER_CAM_DRIVER_WEBCAM_H_
-#define VISION_SERVER_CAM_DRIVER_WEBCAM_H_
+#ifndef PROVIDER_VISION_CAM_DRIVER_WEBCAM_H_
+#define PROVIDER_VISION_CAM_DRIVER_WEBCAM_H_
 
 //==============================================================================
 // I N C L U D E   F I L E S
@@ -43,7 +43,8 @@ class WebcamContext : public BaseContext {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  void InitContext(const std::vector<CameraConfiguration> &cam_configuration_lists) override;
+  void InitContext(
+      const std::vector<CameraConfiguration> &cam_configuration_lists) override;
 
   void CloseContext() override;
 
@@ -52,27 +53,24 @@ class WebcamContext : public BaseContext {
   bool StopCamera(const std::string &name) override;
 
   void SetFeature(BaseCamera::Feature feat, const std::string &name,
-                           float val) override;
+                  float val) override;
 
   void GetFeature(BaseCamera::Feature feat, const std::string &name,
-                           float &val) const override;
+                  float &val) const override;
 
   bool IsMyCamera(std::string &nameMedia) const;
 
   void run() override;
 
   bool WatchDogFunc() override;
-private:
 
+ private:
   WebcamCamera webcam_;
-
 };
 
-inline bool
-WebcamContext::IsMyCamera(std::string &nameMedia) const
-{
+inline bool WebcamContext::IsMyCamera(std::string &nameMedia) const {
   return WEBCAM_NAME.compare(nameMedia) == 0;
 }
 }  // namespace vision_server
 
-#endif  // VISION_SERVER_CAM_DRIVER_WEBCAM_H_
+#endif  // PROVIDER_VISION_CAM_DRIVER_WEBCAM_H_

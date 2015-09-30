@@ -7,12 +7,26 @@
  * found in the LICENSE file.
  */
 
-#ifndef VISION_SERVER_VISION_SERVER_H_
-#define VISION_SERVER_VISION_SERVER_H_
+#ifndef PROVIDER_VISION_PROVIDER_VISION_H_
+#define PROVIDER_VISION_PROVIDER_VISION_H_
 
 #include <lib_atlas/ros/service_server_manager.h>
 #include <vision_server/vision_server_execute_cmd.h>
 #include <vision_server/vision_server_get_information_list.h>
+#include <vision_server/vision_server_get_media_param.h>
+#include <vision_server/vision_server_set_media_param.h>
+#include <vision_server/vision_server_copy_filterchain.h>
+#include <vision_server/vision_server_manage_filterchain.h>
+#include <vision_server/vision_server_get_filterchain_filter_param.h>
+#include <vision_server/vision_server_set_filterchain_filter_param.h>
+#include <vision_server/vision_server_get_filterchain_filter_all_param.h>
+#include <vision_server/vision_server_get_filterchain_filter.h>
+#include <vision_server/vision_server_manage_filterchain_filter.h>
+#include <vision_server/vision_server_save_filterchain.h>
+#include <vision_server/vision_server_set_filterchain_filter_order.h>
+#include <vision_server/vision_server_get_filterchain_from_execution.h>
+#include <vision_server/vision_server_get_media_from_execution.h>
+#include <vision_server/vision_server_set_filterchain_filter_observer.h>
 #include "provider_vision/config.h"
 #include "provider_vision/media/camera/base_media.h"
 #include "provider_vision/proc/detection_task.h"
@@ -39,7 +53,7 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
   //============================================================================
   // P U B L I C   C / D T O R S
 
-  explicit VisionServer(atlas::NodeHandlePtr node_handle);
+  explicit VisionServer(std::shared_ptr<ros::NodeHandle> node_handle);
 
   ~VisionServer();
 
@@ -172,7 +186,7 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    *  * filter_chain_name	Name of the filterchain.
    *  * commande The commande to proccess. 1 for ADD, 2 for DELETE.
    *  * filter_name Name of the filter.
-   *  * execName Name of the execution.
+   *  * execution_name Name of the execution.
    *
    * \param	rqst The ROS object containing the Request of the service.
    *             It contains all the parameters sent to the callback
@@ -344,13 +358,13 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    * This is mainly for performance purpose as we could also recreate a
    * ros::NodeHandle on the different instance of the objects.
    */
-  atlas::NodeHandlePtr node_handle_;
+  std::shared_ptr<ros::NodeHandle> node_handle_;
 
-  MediaManager media_manager_;
+  MediaManager media_mgr_;
 
-  FilterchainManager filterchain_manager_;
+  FilterchainManager filterchain_mgr_;
 
-  DetectionTaskManager detection_task_manager_;
+  DetectionTaskManager detection_task_mgr_;
 };
 
 //==============================================================================
@@ -362,7 +376,7 @@ inline std::string VisionServer::BuildRosMessage(
     const std::vector<DetectionTask> &detection_tasks) const noexcept {
   std::string msg = {""};
   for (const auto &detection_task : detection_tasks) {
-    msg += detection_task.GetExecName() + ";";
+    msg += detection_task.GetName() + ";";
   }
   return msg;
 }
@@ -391,4 +405,4 @@ inline std::string VisionServer::BuildRosMessage(
 
 }  // namespace vision_server
 
-#endif  // VISION_SERVER_VISION_SERVER_H_
+#endif  // PROVIDER_VISION_PROVIDER_VISION_H_

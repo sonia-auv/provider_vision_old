@@ -18,7 +18,7 @@
 namespace vision_server {
 
 //==============================================================================
-// C O N S T R U C T O R / D E S T R U C T O R   S E C T I O N
+// C / D T O R S   S E C T I O N
 
 //------------------------------------------------------------------------------
 //
@@ -123,7 +123,7 @@ bool MediaStreamer::StopRecording() {
     is_recording_ = false;
     return true;
   }
-  //ROS_INFO("[VISION_CLIENT]","StopVideoCapture video is not running.");
+  // ROS_INFO("[VISION_CLIENT]","StopVideoCapture video is not running.");
   return false;
 }
 

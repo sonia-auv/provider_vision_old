@@ -28,7 +28,8 @@ int main(int argc, char **argv) {
   // RunUnitTestIfNeeded(argc, argv);
 
   ros::init(argc, argv, "vision_server");
-  atlas::NodeHandlePtr node_handle = std::make_shared<ros::NodeHandle>();
+  std::shared_ptr<ros::NodeHandle> node_handle =
+      std::make_shared<ros::NodeHandle>();
   ros::Rate loop_rate(15);
 
   vision_server::VisionServer vision_server{node_handle};

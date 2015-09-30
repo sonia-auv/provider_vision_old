@@ -7,8 +7,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef VISION_SERVER_CONFIG_H_
-#define VISION_SERVER_CONFIG_H_
+#ifndef PROVIDER_VISION_CONFIG_H_
+#define PROVIDER_VISION_CONFIG_H_
 
 #include <lib_atlas/config.h>
 
@@ -25,4 +25,4 @@ const std::string kFilterchainExt = ".fc";
 
 };  // namespace vision_server
 
-#endif  // VISION_SERVER_CONFIG_H_
+#endif  // PROVIDER_VISION_CONFIG_H_

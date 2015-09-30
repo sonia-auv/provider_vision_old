@@ -7,8 +7,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef VISION_SERVER_CAMERA_H_
-#define VISION_SERVER_CAMERA_H_
+#ifndef PROVIDER_VISION_CAMERA_H_
+#define PROVIDER_VISION_CAMERA_H_
 
 //==============================================================================
 // I N C L U D E   F I L E S
@@ -47,7 +47,8 @@ class BaseCamera : public BaseMedia {
 
   //==========================================================================
   // P U B L I C   C / D T O R S
-  BaseCamera(const CameraConfiguration &configuration);
+
+  explicit BaseCamera(const CameraConfiguration &configuration);
 
   virtual ~BaseCamera();
 
@@ -73,6 +74,9 @@ class BaseCamera : public BaseMedia {
   bool HasArtificialFramerate() const override;
 
  protected:
+  //==========================================================================
+  // P R O T E C T E D   M E M B E R S
+
   CameraUndistordMatrices undistord_matrix_;
 };
 
@@ -85,7 +89,7 @@ inline bool BaseCamera::HasArtificialFramerate() const { return false; }
 
 //------------------------------------------------------------------------------
 //
-uint64_t BaseCamera::GetGUID() const { return config_.GetGUID(); };
+inline uint64_t BaseCamera::GetGUID() const { return config_.GetGUID(); }
 }  // namespace vision_server
 
-#endif  // VISION_SERVER_CAMERA_H_
+#endif  // PROVIDER_VISION_CAMERA_H_

@@ -7,8 +7,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef VISION_SERVER_CAM_CAMERA_DC1394_H_
-#define VISION_SERVER_CAM_CAMERA_DC1394_H_
+#ifndef PROVIDER_VISION_CAM_CAMERA_DC1394_H_
+#define PROVIDER_VISION_CAM_CAMERA_DC1394_H_
 
 //==============================================================================
 // I N C L U D E   F I L E S
@@ -84,7 +84,7 @@ class DC1394Camera : public BaseCamera {
   uint32_t ConvertFramerateToEnum(float val) const;
 
   // enum to float
-  float ConvertFramerateToFloat(uint32_t val) const ;
+  float ConvertFramerateToFloat(uint32_t val) const;
 
   //==========================================================================
   // P R I V A T E   M E M B E R S
@@ -129,4 +129,4 @@ inline dc1394camera_t *DC1394Camera::GetCameraPtr() const {
 
 }  // namespace vision_server
 
-#endif  // VISION_SERVER_CAM_CAMERA_DC1394_H_
+#endif  // PROVIDER_VISION_CAM_CAMERA_DC1394_H_

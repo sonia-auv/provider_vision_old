@@ -7,8 +7,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef VISION_SERVER_CAM_DRIVER_DC1394_H_
-#define VISION_SERVER_CAM_DRIVER_DC1394_H_
+#ifndef PROVIDER_VISION_CAM_DRIVER_DC1394_H_
+#define PROVIDER_VISION_CAM_DRIVER_DC1394_H_
 
 //==============================================================================
 // I N C L U D E   F I L E S
@@ -48,7 +48,8 @@ class DC1394Context : public BaseContext {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  void InitContext(const std::vector<CameraConfiguration> &cam_configuration_lists) override;
+  void InitContext(
+      const std::vector<CameraConfiguration> &cam_configuration_lists) override;
 
   void CloseContext() override;
 
@@ -62,17 +63,16 @@ class DC1394Context : public BaseContext {
   void GetFeature(BaseCamera::Feature feat, const std::string &name,
                   float &val) const override;
 
-  bool IsMyCamera(const std::string &nameMedia) const override;
+  bool ContainsMedia(const std::string &nameMedia) const override;
 
   void run() override;
 
   bool WatchDogFunc() override;
 
-private:
-
+ private:
   DC1394Camera &GetCameraFromMap(const std::string &name) const;
-  DC1394Camera &GetCameraFromPair
-    (const std::pair<std::string, std::shared_ptr<BaseMedia> > &pair) const;
+  DC1394Camera &GetCameraFromPair(
+      const std::pair<std::string, std::shared_ptr<BaseMedia> > &pair) const;
 
   //==========================================================================
   // P R I V A T E   M E M B E R S
@@ -82,11 +82,9 @@ private:
 
 //-----------------------------------------------------------------------------
 //
-DC1394Camera &DC1394Context::GetCameraFromMap(const std::string &name) const
-{
-  auto camera = camera_list_.find(name);
-  if(camera != camera_list_.end())
-  {
+DC1394Camera &DC1394Context::GetCameraFromMap(const std::string &name) const {
+  auto camera = GetMedia(name);
+  if (camera != media_list_.end()) {
     throw std::invalid_argument("Camera does not exist");
   }
   return GetCameraFromPair(*camera);
@@ -94,11 +92,10 @@ DC1394Camera &DC1394Context::GetCameraFromMap(const std::string &name) const
 
 //-----------------------------------------------------------------------------
 //
-DC1394Camera &DC1394Context::GetCameraFromPair
-  (const std::pair<std::string, std::shared_ptr<BaseMedia> > &pair) const
-{
-  return dynamic_cast<DC1394Camera&>(*pair.second);
+DC1394Camera &DC1394Context::GetCameraFromPair(
+    const std::pair<std::string, std::shared_ptr<BaseMedia> > &pair) const {
+  return dynamic_cast<DC1394Camera &>(*pair.second);
 }
 
 }  // namespace vision_server
-#endif  // VISION_SERVER_CAM_DRIVER_DC1394_H_
+#endif  // PROVIDER_VISION_CAM_DRIVER_DC1394_H_
