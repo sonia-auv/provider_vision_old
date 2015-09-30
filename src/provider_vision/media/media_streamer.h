@@ -18,9 +18,6 @@
 
 namespace vision_server {
 
-//==============================================================================
-// C L A S S E S
-
 /**
  * Class responsible of acquiring an image from a device, asynchronously from
  * the system. It is basically a thread running and getting images from a media.
@@ -29,6 +26,11 @@ namespace vision_server {
  */
 class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<MediaStreamer>;
+
   //============================================================================
   // C O N S T A N T S   M E M B E R S
 
@@ -41,7 +43,7 @@ class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
    * Artificial frame rate simulate a frame rate for video and images.
    * It will run the loop at this speed.
    */
-  MediaStreamer(std::shared_ptr<BaseMedia> cam, int artificialFrameRateMs = 30);
+  MediaStreamer(BaseMedia::Ptr cam, int artificialFrameRateMs = 30);
 
   virtual ~MediaStreamer();
 
@@ -149,7 +151,7 @@ class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
   /**
    * Active media of the loop
    */
-  std::shared_ptr<BaseMedia> media_;
+  BaseMedia::Ptr media_;
 
   /**
    * FrameRate members

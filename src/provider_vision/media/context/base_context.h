@@ -67,13 +67,13 @@ class BaseContext : public atlas::Runnable {
   /**
    * Method to get all listed (connected) camera of the system
    */
-  virtual std::vector<std::shared_ptr<BaseMedia>> GetMediaList() const;
+  virtual std::vector<BaseMedia::Ptr> GetMediaList() const;
 
   /**
    * \return The camera if it is open.
    *         WILL NOT OPEN IT IF NOT.
    */
-  virtual std::shared_ptr<BaseMedia> GetMedia(const std::string &name) const;
+  virtual BaseMedia::Ptr GetMedia(const std::string &name) const;
 
   /**
    * Utility to know if this ID is associated to the media.
@@ -86,7 +86,7 @@ class BaseContext : public atlas::Runnable {
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
-  std::vector<std::shared_ptr<BaseMedia>> media_list_;
+  std::vector<BaseMedia::Ptr> media_list_;
 };
 
 //==============================================================================
@@ -100,14 +100,14 @@ inline bool BaseContext::ContainsMedia(const std::string &nameMedia) const {
 
 //-----------------------------------------------------------------------------
 //
-inline std::vector<std::shared_ptr<BaseMedia>> BaseContext::GetMediaList()
+inline std::vector<BaseMedia::Ptr> BaseContext::GetMediaList()
     const {
   return media_list_;
 }
 
 //-----------------------------------------------------------------------------
 //
-inline std::shared_ptr<BaseMedia> BaseContext::GetMedia(
+inline BaseMedia::Ptr BaseContext::GetMedia(
     const std::string &name) const {
   auto camera = GetMedia(name);
   if (camera == media_list_.end()) {

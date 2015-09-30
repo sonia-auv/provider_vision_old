@@ -28,14 +28,14 @@ DetectionTaskManager::~DetectionTaskManager() {}
 
 //------------------------------------------------------------------------------
 //
-std::vector<std::shared_ptr<DetectionTask>>
+std::vector<DetectionTask::Ptr>
 DetectionTaskManager::GetAllDetectionTasks() const noexcept {
   return detection_tasks_;
 }
 
 //------------------------------------------------------------------------------
 //
-std::shared_ptr<DetectionTask> DetectionTaskManager::GetDetectionTask(
+DetectionTask::Ptr DetectionTaskManager::GetDetectionTask(
     const std::string &execution_name) const {
   for (const auto &task : detection_tasks_) {
     if (task->GetName() == execution_name) {
@@ -47,10 +47,10 @@ std::shared_ptr<DetectionTask> DetectionTaskManager::GetDetectionTask(
 
 //------------------------------------------------------------------------------
 //
-std::shared_ptr<DetectionTask> DetectionTaskManager::CreateDetectionTask(
+DetectionTask::Ptr DetectionTaskManager::CreateDetectionTask(
     std::shared_ptr<ros::NodeHandle> node_handle,
-    std::shared_ptr<MediaStreamer> acquisition_loop,
-    std::shared_ptr<Filterchain> filterchain,
+    MediaStreamer::Ptr acquisition_loop,
+    Filterchain::Ptr filterchain,
     const std::string &execution_name) noexcept {
   auto task = std::make_shared<DetectionTask>(node_handle, acquisition_loop,
                                               filterchain, execution_name);
@@ -77,7 +77,7 @@ void DetectionTaskManager::StopDetectionTask(
 //------------------------------------------------------------------------------
 //
 void DetectionTaskManager::StopDetectionTask(
-    std::shared_ptr<DetectionTask> task) noexcept {
+    DetectionTask::Ptr task) noexcept {
   const auto &it = detection_tasks_.cbegin();
   for (; it != detection_tasks_.cend(); std::advance(it, 1)) {
     if ((*it).get() == task.get()) {
@@ -92,9 +92,9 @@ void DetectionTaskManager::StopDetectionTask(
 
 //------------------------------------------------------------------------------
 //
-std::vector<std::shared_ptr<MediaStreamer>>
+std::vector<MediaStreamer::Ptr>
 DetectionTaskManager::GetAllMediaStreamers() const noexcept {
-  std::vector<std::shared_ptr<MediaStreamer>> media_streamers = {};
+  std::vector<MediaStreamer::Ptr> media_streamers = {};
   for (const auto &task : detection_tasks_) {
     media_streamers.push_back(task->GetMediaStreamer());
   }
@@ -103,7 +103,7 @@ DetectionTaskManager::GetAllMediaStreamers() const noexcept {
 
 //------------------------------------------------------------------------------
 //
-std::shared_ptr<MediaStreamer> DetectionTaskManager::GetMediaStreamer(
+MediaStreamer::Ptr DetectionTaskManager::GetMediaStreamer(
     const std::string &execution_name, const std::string &media_name) const
     noexcept {
   return GetDetectionTask(execution_name)->GetMediaStreamer();
@@ -111,16 +111,16 @@ std::shared_ptr<MediaStreamer> DetectionTaskManager::GetMediaStreamer(
 
 //------------------------------------------------------------------------------
 //
-std::shared_ptr<Filterchain> DetectionTaskManager::GetRunningFilterchains(
+Filterchain::Ptr DetectionTaskManager::GetRunningFilterchains(
     const std::string &execution_name) const noexcept {
   return GetDetectionTask(execution_name)->GetFilterchain();
 }
 
 //------------------------------------------------------------------------------
 //
-std::vector<std::shared_ptr<Filterchain>>
+std::vector<Filterchain::Ptr>
 DetectionTaskManager::GetAllRunningFilterchains() const noexcept {
-  std::vector<std::shared_ptr<Filterchain>> v = {};
+  std::vector<Filterchain::Ptr> v = {};
   for(const auto &task : detection_tasks_) {
     v.push_back(task->GetFilterchain());
   }

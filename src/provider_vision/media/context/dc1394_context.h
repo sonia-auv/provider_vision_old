@@ -72,7 +72,7 @@ class DC1394Context : public BaseContext {
  private:
   DC1394Camera &GetCameraFromMap(const std::string &name) const;
   DC1394Camera &GetCameraFromPair(
-      const std::pair<std::string, std::shared_ptr<BaseMedia> > &pair) const;
+      const std::pair<std::string, BaseMedia::Ptr > &pair) const;
 
   //==========================================================================
   // P R I V A T E   M E M B E R S
@@ -93,7 +93,7 @@ DC1394Camera &DC1394Context::GetCameraFromMap(const std::string &name) const {
 //-----------------------------------------------------------------------------
 //
 DC1394Camera &DC1394Context::GetCameraFromPair(
-    const std::pair<std::string, std::shared_ptr<BaseMedia> > &pair) const {
+    const std::pair<std::string, BaseMedia::Ptr > &pair) const {
   return dynamic_cast<DC1394Camera &>(*pair.second);
 }
 

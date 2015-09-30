@@ -36,24 +36,23 @@ namespace vision_server {
  * Therefore, calling GetCameraList() will return the list of videos from
  * _live_camera_list.
  */
-class VideoFileContext : public BaseContext {
+class FileContext: public BaseContext {
  public:
   const char *DRIVER_TAG;
 
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
 
-  using Ptr = std::shared_ptr<VideoFileContext>;
-
+  using Ptr = std::shared_ptr<FileContext>;
 
   enum class MediaType { IMAGE, VIDEO, NONE };
 
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  VideoFileContext();
+  FileContext();
 
-  virtual ~VideoFileContext();
+  virtual ~FileContext();
 
   //==========================================================================
   // P U B L I C   M E T H O D S

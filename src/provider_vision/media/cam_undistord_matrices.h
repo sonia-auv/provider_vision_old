@@ -10,7 +10,7 @@
 #ifndef PROVIDER_VISION_CAM_UNDISTORD_MATRICES_H_
 #define PROVIDER_VISION_CAM_UNDISTORD_MATRICES_H_
 
-#include <stdint.h>
+#include <memory>
 #include <string>
 #include <opencv2/opencv.hpp>
 
@@ -22,6 +22,12 @@ namespace vision_server {
  */
 class CameraUndistordMatrices {
  public:
+
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<CameraUndistordMatrices>;
+
   //==========================================================================
   // P U B L I C   C / D T O R S
 

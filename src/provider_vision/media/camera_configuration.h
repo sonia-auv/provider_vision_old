@@ -9,10 +9,19 @@
 #define PROVIDER_VISION_SRC_MEDIA_CAMERA_CONFIGURATION_H_
 
 #include <map>
+#include <memory>
 #include "pugixml.hpp"
+
 namespace vision_server {
+
 class CameraConfiguration {
  public:
+
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<CameraConfiguration>;
+
   CameraConfiguration(const std::string &name);
   virtual ~CameraConfiguration();
 

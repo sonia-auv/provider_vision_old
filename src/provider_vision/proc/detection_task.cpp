@@ -24,8 +24,8 @@ static const char *EXEC_TAG = "[EXECUTION]";
 //------------------------------------------------------------------------------
 //
 DetectionTask::DetectionTask(std::shared_ptr<ros::NodeHandle> node_handle,
-                             std::shared_ptr<MediaStreamer> acquisition_loop,
-                             std::shared_ptr<Filterchain> filterchain,
+                             MediaStreamer::Ptr acquisition_loop,
+                             Filterchain::Ptr filterchain,
                              const std::string &execution_name)
     : media_streamer_(acquisition_loop),
       filterchain_(filterchain),

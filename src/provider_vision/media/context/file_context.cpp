@@ -23,28 +23,28 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-VideoFileContext::VideoFileContext()
+FileContext::FileContext()
     : BaseContext(), DRIVER_TAG("[MEDIA Driver]") {}
 
 //------------------------------------------------------------------------------
 //
-VideoFileContext::~VideoFileContext() {}
+FileContext::~FileContext() {}
 
 //==============================================================================
 // M E T H O D   S E C T I O N
 
 //------------------------------------------------------------------------------
 //
-void VideoFileContext::InitContext(
+void FileContext::InitContext(
     const std::vector<CameraConfiguration> &cam_configuration_lists) {}
 
 //------------------------------------------------------------------------------
 //
-void VideoFileContext::CloseContext() { media_list_.clear(); }
+void FileContext::CloseContext() { media_list_.clear(); }
 
 //------------------------------------------------------------------------------
 //
-bool VideoFileContext::StartCamera(const std::string &name) {
+bool FileContext::StartCamera(const std::string &name) {
   // in the videoFile context, camera in list are existing camera.
   if (GetMedia(name) != media_list_.end())
     // already existing
@@ -52,11 +52,11 @@ bool VideoFileContext::StartCamera(const std::string &name) {
 
   MediaType type = GetMediaType(name);
   if (type == MediaType::IMAGE) {
-    std::shared_ptr<ImageFile> file(new ImageFile(name));
+    ImageFile::Ptr file(new ImageFile(name));
     file->Start();
     media_list_.insert(std::make_pair(name, file));
   } else if (type == MediaType::VIDEO) {
-    std::shared_ptr<VideoFile> file(new VideoFile(name));
+    VideoFile::Ptr file(new VideoFile(name));
     file->Start();
     media_list_.insert(std::make_pair(name, file));
   } else {
@@ -68,7 +68,7 @@ bool VideoFileContext::StartCamera(const std::string &name) {
 
 //------------------------------------------------------------------------------
 //
-bool VideoFileContext::StopCamera(const std::string &name) {
+bool FileContext::StopCamera(const std::string &name) {
   // in the videoFile context, camera in list are existing camera.
   auto file = GetMedia(name);
   if (file == media_list_.end())
@@ -83,7 +83,7 @@ bool VideoFileContext::StopCamera(const std::string &name) {
 
 //------------------------------------------------------------------------------
 //
-bool VideoFileContext::ContainsMedia(const std::string &nameMedia) const {
+bool FileContext::ContainsMedia(const std::string &nameMedia) const {
   bool result = false;
   // cherche si la camera existe
   if (GetMedia(nameMedia) != media_list_.end()) {
@@ -100,25 +100,25 @@ bool VideoFileContext::ContainsMedia(const std::string &nameMedia) const {
 }
 //------------------------------------------------------------------------------
 //
-void VideoFileContext::SetFeature(BaseCamera::Feature feat,
-                                  const std::string &name, float val) {}
+void FileContext::SetFeature(BaseCamera::Feature feat,
+                             const std::string &name, float val) {}
 
 //------------------------------------------------------------------------------
 //
-void VideoFileContext::GetFeature(BaseCamera::Feature feat,
-                                  const std::string &name, float &val) const {}
+void FileContext::GetFeature(BaseCamera::Feature feat,
+                             const std::string &name, float &val) const {}
 
 //------------------------------------------------------------------------------
 //
-void VideoFileContext::run() {}
+void FileContext::run() {}
 
 //------------------------------------------------------------------------------
 //
-bool VideoFileContext::WatchDogFunc() { return true; }
+bool FileContext::WatchDogFunc() { return true; }
 
 //------------------------------------------------------------------------------
 //
-VideoFileContext::MediaType VideoFileContext::GetMediaType(
+FileContext::MediaType FileContext::GetMediaType(
     const std::string &nameMedia) const {
   // on commence par rechercher une image
   if (nameMedia.find(".jpg") != std::string::npos ||

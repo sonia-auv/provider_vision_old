@@ -33,7 +33,7 @@ class DC1394Camera : public BaseCamera {
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
 
-  using Ptr = std::shared_ptr<DC1394Camera>;
+  using Ptr = DC1394Camera::Ptr;
 
   //==========================================================================
   // P U B L I C   C / D T O R S

@@ -23,6 +23,11 @@ namespace vision_server {
 class DetectionTaskManager {
  public:
   //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<DetectionTaskManager>;
+
+  //==========================================================================
   // P U B L I C   C / D T O R S
 
   explicit DetectionTaskManager();
@@ -32,33 +37,33 @@ class DetectionTaskManager {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  std::vector<std::shared_ptr<DetectionTask>> GetAllDetectionTasks() const
+  std::vector<DetectionTask::Ptr> GetAllDetectionTasks() const
       noexcept;
 
-  std::shared_ptr<DetectionTask> GetDetectionTask(
+  DetectionTask::Ptr GetDetectionTask(
       const std::string &execution_name) const;
 
-  std::shared_ptr<DetectionTask> CreateDetectionTask(
+  DetectionTask::Ptr CreateDetectionTask(
       std::shared_ptr<ros::NodeHandle> node_handle,
-      std::shared_ptr<MediaStreamer> acquisition_loop,
-      std::shared_ptr<Filterchain> filterchain,
+      MediaStreamer::Ptr acquisition_loop,
+      Filterchain::Ptr filterchain,
       const std::string &execution_name) noexcept;
 
   void StopDetectionTask(const std::string &execution_name) noexcept;
 
-  void StopDetectionTask(std::shared_ptr<DetectionTask>) noexcept;
+  void StopDetectionTask(DetectionTask::Ptr) noexcept;
 
-  std::vector<std::shared_ptr<MediaStreamer>> GetAllMediaStreamers() const
+  std::vector<MediaStreamer::Ptr> GetAllMediaStreamers() const
       noexcept;
 
-  std::shared_ptr<MediaStreamer> GetMediaStreamer(
+  MediaStreamer::Ptr GetMediaStreamer(
       const std::string &execution_name, const std::string &media_name) const
       noexcept;
 
-  std::shared_ptr<Filterchain> GetRunningFilterchains(
+  Filterchain::Ptr GetRunningFilterchains(
       const std::string &execution_name) const noexcept;
 
-  std::vector<std::shared_ptr<Filterchain>> GetAllRunningFilterchains() const noexcept;
+  std::vector<Filterchain::Ptr> GetAllRunningFilterchains() const noexcept;
 
   bool IsMediaUsed(const std::string &media_name);
 
@@ -66,7 +71,7 @@ class DetectionTaskManager {
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
-  std::vector<std::shared_ptr<DetectionTask>> detection_tasks_;
+  std::vector<DetectionTask::Ptr> detection_tasks_;
 };
 
 }  // namespace vision_server

@@ -24,11 +24,10 @@ namespace vision_server {
  */
 class VideoFile : public BaseMedia, private cv::VideoCapture {
  public:
-
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
 
-  using Ptr = std::shared_ptr<VideoFile>;
+  using Ptr = VideoFile::Ptr;
 
   //==========================================================================
   // P U B L I C   C / D T O R S

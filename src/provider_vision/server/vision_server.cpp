@@ -127,13 +127,13 @@ bool VisionServer::CallbackExecutionCMD(
                    rqst.node_name.c_str(), rqst.media_name.c_str(),
                    rqst.filterchain_name.c_str());
 
-    std::shared_ptr<DetectionTask> exec = GetExecution(rqst.node_name);
+    DetectionTask::Ptr exec = GetExecution(rqst.node_name);
     if (exec.get() != nullptr) {
       ROS_WARN_NAMED("[VISION SERVER]",
                      " DetectionTask of that name already exist");
       rep.response = exec->GetName();
     } else {
-      std::shared_ptr<MediaStreamer> acquiPtr =
+      MediaStreamer::Ptr acquiPtr =
           GetAcquisitionLoop(rqst.media_name);
       // Please change back to null string in production env
 
@@ -153,7 +153,7 @@ bool VisionServer::CallbackExecutionCMD(
         // par défaut, ajouter le code pour prendre en compte la filter
         // chain
         // passée en paramètre
-        std::shared_ptr<Filterchain> filterchain = nullptr;
+        Filterchain::Ptr filterchain = nullptr;
         filterchain = filterchain_mgr_.InstanciateFilterchain(
             std::string(kRosNodeName) + rqst.node_name, rqst.filterchain_name);
 
@@ -172,7 +172,7 @@ bool VisionServer::CallbackExecutionCMD(
                    rqst.node_name.c_str(), rqst.media_name.c_str(),
                    rqst.filterchain_name.c_str());
 
-    std::shared_ptr<DetectionTask> exec = GetExecution(rqst.node_name);
+    DetectionTask::Ptr exec = GetExecution(rqst.node_name);
 
     if (exec.get() != nullptr) {
       // Stop Exec.
@@ -183,14 +183,14 @@ bool VisionServer::CallbackExecutionCMD(
 
       // Check if another user. If no, stop the acquisition loop.
       if (!IsAnotherUserMedia(exec->GetMediaName())) {
-        std::shared_ptr<MediaStreamer> aquiPtr =
+        MediaStreamer::Ptr aquiPtr =
             GetAcquisitionLoop(exec->GetMediaName());
         media_mgr_.StreammingCmd(vision_server::VisionServer::STOP,
                                  exec->GetID().GetName(), aquiPtr);
         RemoveAcquisitionLoop(aquiPtr);
       }
       // Should never happen... null filterchain...
-      const std::shared_ptr<Filterchain> fc = exec->GetFilterchain();
+      const Filterchain::Ptr fc = exec->GetFilterchain();
       if (fc != nullptr) {
         filterchain_mgr_.CloseFilterchain(exec->GetName(), fc->GetName());
       }
@@ -234,7 +234,7 @@ bool VisionServer::CallbackGetCMD(
     vision_server_get_media_param::Request &rqst,
     vision_server_get_media_param::Response &rep) {
   rep.value = 0.0f;
-  std::shared_ptr<BaseContext> driver =
+  BaseContext::Ptr driver =
       media_mgr_.GetContextFromMedia(rqst.media_name);
   if (driver == nullptr) {
     ROS_WARN_NAMED("[CAMERA_MANAGER]", "No driver for this media: %s",
@@ -259,7 +259,7 @@ bool VisionServer::CallbackSetCMD(
     vision_server_set_media_param::Request &rqst,
     vision_server_set_media_param::Response &rep) {
   rep.success = rep.FAIL;
-  std::shared_ptr<BaseContext> driver = GetDriverForCamera(rqst.media_name);
+  BaseContext::Ptr driver = GetDriverForCamera(rqst.media_name);
   if (driver == nullptr) {
     ROS_WARN_NAMED("[CAMERA_MANAGER]", "No driver for this media: %s",
                    rqst.media_name.c_str());
@@ -303,7 +303,7 @@ bool VisionServer::CallbackGetFilterParam(
 
   std::string execution_name(rqst.execution_name),
       filterchain_name(rqst.filterchain);
-  std::shared_ptr<Filterchain> filterchain =
+  Filterchain::Ptr filterchain =
       filterchain_mgr_.GetRunningFilterchain(execution_name);
 
   if (filterchain != nullptr) {
@@ -326,7 +326,7 @@ bool VisionServer::CallbackGetFilterAllParam(
 
   std::string execution_name(rqst.execution_name),
       filterchain_name(rqst.filterchain);
-  std::shared_ptr<Filterchain> filterchain =
+  Filterchain::Ptr filterchain =
       filterchain_mgr_.GetRunningFilterchain(execution_name);
 
   if (filterchain != nullptr) {
@@ -349,7 +349,7 @@ bool VisionServer::CallbackSetFilterParam(
 
   std::string execution_name(rqst.execution_name),
       filterchain_name(rqst.filterchain);
-  std::shared_ptr<Filterchain> filterchain =
+  Filterchain::Ptr filterchain =
       filterchain_mgr_.GetRunningFilterchain(execution_name);
 
   if (filterchain != nullptr) {
@@ -373,7 +373,7 @@ bool VisionServer::CallbackGetFilter(
 
   std::string execution_name(rqst.execution_name),
       filterchain_name(rqst.filterchain);
-  std::shared_ptr<Filterchain> filterchain =
+  Filterchain::Ptr filterchain =
       filterchain_mgr_.GetRunningFilterchain(execution_name);
 
   if (filterchain != nullptr) {
@@ -398,7 +398,7 @@ bool VisionServer::CallbackSetObserver(
     vision_server_set_filterchain_filter_observer::Response &rep) {
   // For now ignoring filterchain name, but when we will have multiple,
   // we will have to check the name and find the good filterchain
-  std::shared_ptr<Filterchain> filterchain =
+  Filterchain::Ptr filterchain =
       filterchain_mgr_.GetRunningFilterchain(rqst.execution);
 
   if (filterchain != nullptr) {
@@ -506,7 +506,7 @@ bool VisionServer::CallbackGetFcFromExec(
     vision_server_get_filterchain_from_execution::Response &rep) {
   ROS_INFO("Call to vision_server_get_filterchain_from_execution.");
   std::string execution_name(rqst.execution_name);
-  std::shared_ptr<Filterchain> filterchain =
+  Filterchain::Ptr filterchain =
       filterchain_mgr_.GetRunningFilterchain(execution_name);
 
   if (filterchain != nullptr) {

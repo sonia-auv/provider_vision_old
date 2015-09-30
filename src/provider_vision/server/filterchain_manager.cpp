@@ -120,7 +120,7 @@ bool FilterchainManager::FilterchainExists(const std::string &filterchain) {
 
 //------------------------------------------------------------------------------
 //
-std::shared_ptr<Filterchain> FilterchainManager::InstanciateFilterchain(
+Filterchain::Ptr FilterchainManager::InstanciateFilterchain(
     std::string executionName, std::string filterchainName) {
   if (FilterchainExists(filterchainName)) {
     const auto filterchain = new Filterchain(filterchainName, executionName);
@@ -161,7 +161,7 @@ bool FilterchainManager::SaveFilterchain(std::string executionName,
 
 //------------------------------------------------------------------------------
 //
-std::shared_ptr<Filterchain> FilterchainManager::GetRunningFilterchain(
+Filterchain::Ptr FilterchainManager::GetRunningFilterchain(
     const std::string &execution) {
   for (const auto &filterchain : _runningFilterchains) {
     if (filterchain->GetName() == execution) {

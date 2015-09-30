@@ -24,7 +24,6 @@ namespace vision_server {
  */
 class WebcamCamera : public BaseCamera, private cv::VideoCapture {
  public:
-
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
 

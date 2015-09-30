@@ -28,7 +28,7 @@ MediaManager::~MediaManager() noexcept { CloseContext(); }
 
 //------------------------------------------------------------------------------
 //
-std::shared_ptr<MediaStreamer> MediaManager::StartCamera(
+MediaStreamer::Ptr MediaManager::StartCamera(
     const std::string &media_name) noexcept {
   GetMedia()
 }
@@ -69,8 +69,8 @@ std::vector<BaseMedia> MediaManager::GetAllMedias() const {
 //------------------------------------------------------------------------------
 //
 void MediaManager::StreammingCmd(Command cmd, const std::string &media_name,
-                                 std::shared_ptr<MediaStreamer> &ptr) {
-  std::shared_ptr<BaseContext> driver = GetContextFromMedia(media_name);
+                                 MediaStreamer::Ptr &ptr) {
+  BaseContext::Ptr driver = GetContextFromMedia(media_name);
   // FEATURE* feat = static_cast<FEATURE*>(specific_to_cmd);
   // float* val = static_cast<float*>(specific_to_cmd2);
   if (driver == nullptr) {
@@ -81,7 +81,7 @@ void MediaManager::StreammingCmd(Command cmd, const std::string &media_name,
   switch (cmd) {
     case Command::START:
       if (driver->StartCamera(media_name)) {
-        std::shared_ptr<BaseMedia> media = driver->GetMedia(media_name);
+        BaseMedia::Ptr media = driver->GetMedia(media_name);
 
         if (media.get() != nullptr) {
           ptr = std::make_shared<MediaStreamer>(media, 30);
@@ -122,7 +122,7 @@ void MediaManager::StreammingCmd(Command cmd, const std::string &media_name,
 //
 void MediaManager::ParametersCmd(Command cmd, const std::string &media_name,
                                  BaseCamera::Feature feat, float &val) {
-  std::shared_ptr<BaseContext> driver = GetContextFromMedia(media_name);
+  BaseContext::Ptr driver = GetContextFromMedia(media_name);
   // FEATURE* feat = static_cast<FEATURE*>(specific_to_cmd);
   // float* val = static_cast<float*>(specific_to_cmd2);
   if (driver == nullptr) {
@@ -153,7 +153,7 @@ void MediaManager::InitializeContext() {
   // the list here.
   contexts_.push_back(std::make_shared<DC1394Context>());
   contexts_.push_back(std::make_shared<WebcamContext>());
-  contexts_.push_back(std::make_shared<VideoFileContext>());
+  contexts_.push_back(std::make_shared<FileContext>());
 
   for (auto &elem : contexts_) {
     elem->InitContext(list);
@@ -171,7 +171,7 @@ void MediaManager::CloseContext() {
 
 //------------------------------------------------------------------------------
 //
-std::shared_ptr<BaseContext> MediaManager::GetContextFromMedia(
+BaseContext::Ptr MediaManager::GetContextFromMedia(
     const std::string &name) {
   for (auto &context : contexts_) {
     if (context->ContainsMedia(name)) {

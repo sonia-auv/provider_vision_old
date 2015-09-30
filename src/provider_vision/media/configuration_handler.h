@@ -10,9 +10,6 @@
 #ifndef PROVIDER_VISION_CAM_CONFIG_H_
 #define PROVIDER_VISION_CAM_CONFIG_H_
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -24,8 +21,6 @@
 
 namespace vision_server {
 
-//==============================================================================
-// C L A S S E S
 
 /**
  * Class to read and save ALL the cameras parameter of the system. It will
@@ -34,6 +29,12 @@ namespace vision_server {
  */
 class ConfigurationHandler {
  public:
+
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<ConfigurationHandler>;
+
   //==========================================================================
   // P U B L I C   C / D T O R S
 

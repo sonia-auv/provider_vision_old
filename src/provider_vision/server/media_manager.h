@@ -34,6 +34,11 @@ namespace vision_server {
 class MediaManager {
  public:
   //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<MediaManager>;
+
+  //==========================================================================
   // P U B L I C   C / D T O R S
 
   MediaManager() noexcept;
@@ -43,7 +48,7 @@ class MediaManager {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  std::shared_ptr<MediaStreamer> StartCamera(
+  MediaStreamer::Ptr StartCamera(
       const std::string &media_name) noexcept;
 
   void StopCamera(const std::string &media) noexcept;
@@ -54,12 +59,12 @@ class MediaManager {
   float GetFeature(const std::string &media_name,
                    BaseCamera::Feature feat) noexcept;
 
-  std::shared_ptr<BaseMedia> GetMedia(const std::string &name) const noexcept;
+  BaseMedia::Ptr GetMedia(const std::string &name) const noexcept;
 
   /**
    * Accumulate all the drivers' camear CameraID in a list.
    */
-  std::vector<std::shared_ptr<BaseMedia>> GetAllMedias() const noexcept;
+  std::vector<BaseMedia::Ptr> GetAllMedias() const noexcept;
 
   /**
    * Change a String representing a parameter of FEATURE to the appropriate
@@ -83,7 +88,7 @@ class MediaManager {
    * Simple for loop iteration which pokes each driver to know if they
    * possess the camera asked for.
    */
-  std::shared_ptr<BaseContext> GetContextFromMedia(const std::string &name);
+  BaseContext::Ptr GetContextFromMedia(const std::string &name);
 
   //==========================================================================
   // P R I V A T E   M E M B E R S
@@ -91,7 +96,7 @@ class MediaManager {
   /**
    * List of the driers in the system
    */
-  std::vector<std::shared_ptr<BaseContext>> contexts_;
+  std::vector<BaseContext::Ptr> contexts_;
 };
 
 }  // namespace vision_server

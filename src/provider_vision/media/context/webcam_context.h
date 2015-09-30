@@ -10,18 +10,12 @@
 #ifndef PROVIDER_VISION_CAM_DRIVER_WEBCAM_H_
 #define PROVIDER_VISION_CAM_DRIVER_WEBCAM_H_
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
 #include <opencv2/opencv.hpp>
 #include "provider_vision/media/context/base_context.h"
 #include "provider_vision/media/camera/webcam_camera.h"
 #include "provider_vision/config.h"
 
 namespace vision_server {
-
-//==============================================================================
-// C L A S S E S
 
 /**
  * CamDriverDC1394 is a driver to access all cameras that can be used by the
@@ -32,7 +26,14 @@ namespace vision_server {
 class WebcamContext : public BaseContext {
  public:
   const std::string DRIVER_TAG;
+
   const std::string WEBCAM_NAME;
+
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<WebcamContext>;
+
   //==========================================================================
   // P U B L I C   C / D T O R S
 

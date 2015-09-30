@@ -30,7 +30,7 @@ class BaseCamera : public BaseMedia {
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
 
-  using Ptr = std::shared_ptr<BaseMedia>;
+  using Ptr = std::shared_ptr<BaseCamera>;
 
   /**
    * When calling with node, so string, please use

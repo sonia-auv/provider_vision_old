@@ -12,9 +12,6 @@
 #ifndef PROVIDER_VISION_FILTERCHAIN_MANAGER_H_
 #define PROVIDER_VISION_FILTERCHAIN_MANAGER_H_
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
 #include <functional>
 #include <lib_atlas/ros/service_server_manager.h>
 #include <lib_vision/filter.h>
@@ -22,9 +19,6 @@
 #include "provider_vision/proc/filterchain.h"
 
 namespace vision_server {
-
-//==============================================================================
-// C L A S S E S
 
 /**
  * This class is the core module that stores and manages every FilterChains
@@ -34,6 +28,11 @@ namespace vision_server {
  */
 class FilterchainManager {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<FilterchainManager>;
+
   //==========================================================================
   // P U B L I C   C / D T O R S
 
@@ -62,7 +61,7 @@ class FilterchainManager {
    * \param filterchainName std::string
    * \return Filterchain*
    */
-  std::shared_ptr<Filterchain> InstanciateFilterchain(
+  Filterchain::Ptr InstanciateFilterchain(
       std::string executionName, std::string filterchainName);
 
   /**
@@ -90,7 +89,7 @@ class FilterchainManager {
    * \param filterchainName string
    * \return filterchain Filterchain*
    */
-  std::shared_ptr<Filterchain> GetRunningFilterchain(
+  Filterchain::Ptr GetRunningFilterchain(
       const std::string &execution);
 
   /**
@@ -142,7 +141,7 @@ class FilterchainManager {
   /**
    * List of current instances of filterchains
    */
-  std::vector<std::shared_ptr<Filterchain>> _runningFilterchains;
+  std::vector<Filterchain::Ptr> _runningFilterchains;
 };
 
 //==============================================================================

@@ -22,7 +22,7 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-MediaStreamer::MediaStreamer(std::shared_ptr<BaseMedia> cam,
+MediaStreamer::MediaStreamer(BaseMedia::Ptr cam,
                              int artificialFrameRateMs)
     : media_(cam),
       LOOP_TAG("[Acquisition Loop]"),

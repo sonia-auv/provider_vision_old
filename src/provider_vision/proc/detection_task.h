@@ -29,11 +29,16 @@ namespace vision_server {
 class DetectionTask : public atlas::Runnable, public atlas::Observer<> {
  public:
   //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<DetectionTask>;
+
+  //==========================================================================
   // P U B L I C   C / D T O R S
 
   explicit DetectionTask(std::shared_ptr<ros::NodeHandle> node_handle,
-                         std::shared_ptr<MediaStreamer> acquisition_loop,
-                         std::shared_ptr<Filterchain> filterchain,
+                         MediaStreamer::Ptr acquisition_loop,
+                         Filterchain::Ptr filterchain,
                          const std::string &execution_name);
 
   virtual ~DetectionTask();
@@ -45,9 +50,9 @@ class DetectionTask : public atlas::Runnable, public atlas::Observer<> {
 
   void stop() override;
 
-  std::shared_ptr<MediaStreamer> GetMediaStreamer() const noexcept;
+  MediaStreamer::Ptr GetMediaStreamer() const noexcept;
 
-  std::shared_ptr<Filterchain> GetFilterchain() const noexcept;
+  Filterchain::Ptr GetFilterchain() const noexcept;
 
   const std::string &GetName() const noexcept;
 
@@ -103,9 +108,9 @@ class DetectionTask : public atlas::Runnable, public atlas::Observer<> {
   /**
    * DetectionTask core.
    */
-  std::shared_ptr<MediaStreamer> media_streamer_;
+  MediaStreamer::Ptr media_streamer_;
 
-  std::shared_ptr<Filterchain> filterchain_;
+  Filterchain::Ptr filterchain_;
 
   mutable std::mutex _newest_image_mutex;
 
@@ -129,14 +134,14 @@ class DetectionTask : public atlas::Runnable, public atlas::Observer<> {
 
 //------------------------------------------------------------------------------
 //
-inline std::shared_ptr<MediaStreamer> DetectionTask::GetMediaStreamer()
+inline MediaStreamer::Ptr DetectionTask::GetMediaStreamer()
     const noexcept {
   return media_streamer_;
 }
 
 //------------------------------------------------------------------------------
 //
-inline std::shared_ptr<Filterchain> DetectionTask::GetFilterchain()
+inline Filterchain::Ptr DetectionTask::GetFilterchain()
     const noexcept {
   return filterchain_;
 }
