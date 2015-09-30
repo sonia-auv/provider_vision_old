@@ -54,10 +54,12 @@ class MediaManager {
   float GetFeature(const std::string &media_name,
                    BaseCamera::Feature feat) noexcept;
 
+  std::shared_ptr<BaseMedia> GetMedia(const std::string &name) const noexcept;
+
   /**
    * Accumulate all the drivers' camear CameraID in a list.
    */
-  std::vector<BaseMedia> GetMediaList() const;
+  std::vector<std::shared_ptr<BaseMedia>> GetAllMedias() const noexcept;
 
   /**
    * Change a String representing a parameter of FEATURE to the appropriate

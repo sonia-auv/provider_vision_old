@@ -10,21 +10,15 @@
 #ifndef PROVIDER_VISION_CAM_DRIVER_DC1394_H_
 #define PROVIDER_VISION_CAM_DRIVER_DC1394_H_
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
+#include <memory>
 #include <inttypes.h>
 #include <dc1394/dc1394.h>
-
 #include "provider_vision/config.h"
 #include "provider_vision/media/camera/base_media.h"
 #include "provider_vision/media/context/base_context.h"
 #include "provider_vision/media/camera/dc1394_camera.h"
 
 namespace vision_server {
-
-//==============================================================================
-// C L A S S E S
 
 /**
  * DC1394Context is a driver to access all cameras that can
@@ -36,7 +30,13 @@ namespace vision_server {
 class DC1394Context : public BaseContext {
  public:
   const std::string DRIVER_TAG;
+
   const double TIME_FOR_BUS_ERROR = 3;
+
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<DC1394Context>;
 
   //==========================================================================
   // P U B L I C   C / D T O R S

@@ -10,9 +10,7 @@
 #ifndef PROVIDER_VISION_MEDIA_IMAGE_H_
 #define PROVIDER_VISION_MEDIA_IMAGE_H_
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
+#include <memory>
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -21,15 +19,18 @@
 
 namespace vision_server {
 
-//==============================================================================
-// C L A S S E S
-
 /**
  * Handles image from files (png, jpeg) and is use s a camera
  * (same call for open, get image, close (start stop does nothing)
  */
 class ImageFile : public BaseMedia {
  public:
+
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<ImageFile>;
+
   //==========================================================================
   // P U B L I C   C / D T O R S
 

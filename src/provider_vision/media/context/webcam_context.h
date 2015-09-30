@@ -71,6 +71,7 @@ class WebcamContext : public BaseContext {
 inline bool WebcamContext::IsMyCamera(std::string &nameMedia) const {
   return WEBCAM_NAME.compare(nameMedia) == 0;
 }
+
 }  // namespace vision_server
 
 #endif  // PROVIDER_VISION_CAM_DRIVER_WEBCAM_H_

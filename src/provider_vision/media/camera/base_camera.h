@@ -10,9 +10,7 @@
 #ifndef PROVIDER_VISION_CAMERA_H_
 #define PROVIDER_VISION_CAMERA_H_
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
+#include <memory>
 #include "provider_vision/config.h"
 #include "provider_vision/media/camera/base_media.h"
 #include "provider_vision/media/cam_undistord_matrices.h"
@@ -29,6 +27,11 @@ namespace vision_server {
  */
 class BaseCamera : public BaseMedia {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<BaseMedia>;
+
   /**
    * When calling with node, so string, please use
    * the enum name, ex. "FRAMERATE" for FEATURE::FRAMERATE

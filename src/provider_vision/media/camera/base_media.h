@@ -10,6 +10,7 @@
 #ifndef PROVIDER_VISION_BaseMedia_H_
 #define PROVIDER_VISION_BaseMedia_H_
 
+#include <memory>
 #include <opencv2/core/core.hpp>
 #include <provider_vision/media/camera_configuration.h>
 #include "provider_vision/config.h"
@@ -22,6 +23,11 @@ namespace vision_server {
  */
 class BaseMedia {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<BaseMedia>;
+
   //==========================================================================
   // P U B L I C   C / D T O R S
 

@@ -28,34 +28,34 @@ MediaManager::~MediaManager() noexcept { CloseContext(); }
 
 //------------------------------------------------------------------------------
 //
-std::shared_ptr<MediaStreamer> StartCamera(
+std::shared_ptr<MediaStreamer> MediaManager::StartCamera(
     const std::string &media_name) noexcept {
+  GetMedia()
+}
+
+//------------------------------------------------------------------------------
+//
+void MediaManager::StopCamera(const std::string &media) noexcept {
 
 }
 
 //------------------------------------------------------------------------------
 //
-void StopCamera(const std::string &media) noexcept {
-
-}
-
-//------------------------------------------------------------------------------
-//
-void SetFeature(const std::string &media_name, BaseCamera::Feature feat,
+void MediaManager::SetFeature(const std::string &media_name, BaseCamera::Feature feat,
                 float val) noexcept {
 
 }
 
 //------------------------------------------------------------------------------
 //
-float GetFeature(const std::string &media_name,
+float MediaManager::GetFeature(const std::string &media_name,
                  BaseCamera::Feature feat) noexcept {
 
 }
 
 //------------------------------------------------------------------------------
 //
-std::vector<BaseMedia> MediaManager::GetMediaList() const {
+std::vector<BaseMedia> MediaManager::GetAllMedias() const {
   std::vector<BaseMedia> medias;
 
   for (auto &elem : contexts_) {

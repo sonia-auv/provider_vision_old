@@ -10,17 +10,12 @@
 #ifndef PROVIDER_VISION_CAM_WEBCAM_H_
 #define PROVIDER_VISION_CAM_WEBCAM_H_
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
+#include <memory>
 #include <opencv2/opencv.hpp>
 #include "provider_vision/config.h"
 #include "provider_vision/media/camera/base_camera.h"
 
 namespace vision_server {
-
-//==============================================================================
-// C L A S S E S
 
 /**
  * WebcamCamera is the object for handling webcams.
@@ -29,6 +24,12 @@ namespace vision_server {
  */
 class WebcamCamera : public BaseCamera, private cv::VideoCapture {
  public:
+
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<WebcamCamera>;
+
   //==========================================================================
   // P U B L I C   C / D T O R S
 

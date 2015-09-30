@@ -43,6 +43,9 @@ class VideoFileContext : public BaseContext {
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
 
+  using Ptr = std::shared_ptr<VideoFileContext>;
+
+
   enum class MediaType { IMAGE, VIDEO, NONE };
 
   //==========================================================================

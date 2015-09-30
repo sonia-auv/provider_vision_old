@@ -10,10 +10,8 @@
 #ifndef PROVIDER_VISION_CAM_CAMERA_DC1394_H_
 #define PROVIDER_VISION_CAM_CAMERA_DC1394_H_
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
 #include <mutex>
+#include <memory>
 #include <string>
 #include <opencv2/opencv.hpp>
 #include <sensor_msgs/image_encodings.h>
@@ -25,14 +23,17 @@
 
 namespace vision_server {
 
-//==============================================================================
-// C L A S S E S
-
 class DC1394Camera : public BaseCamera {
  public:
+
   static const int DMA_BUFFER = 4;
 
-  const std::string CAM_TAG;
+  static const std::string CAM_TAG;
+
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<DC1394Camera>;
 
   //==========================================================================
   // P U B L I C   C / D T O R S
