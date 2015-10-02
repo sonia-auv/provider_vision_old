@@ -120,8 +120,7 @@ bool VisionServer::CallbackExecutionCMD(
     }
     acquisition_loop_.clear();
   } else if (rqst.cmd == rqst.START) {
-    std::cout << std::endl
-              << std::endl;
+    std::cout << std::endl << std::endl;
     ROS_INFO_NAMED("[PROVIDER_VISION]",
                    "Stopping execution %s on %s with filterchain %s",
                    rqst.node_name.c_str(), rqst.media_name.c_str(),
@@ -133,8 +132,7 @@ bool VisionServer::CallbackExecutionCMD(
                      " DetectionTask of that name already exist");
       rep.response = exec->GetName();
     } else {
-      MediaStreamer::Ptr acquiPtr =
-          GetAcquisitionLoop(rqst.media_name);
+      MediaStreamer::Ptr acquiPtr = GetAcquisitionLoop(rqst.media_name);
       // Please change back to null string in production env
 
       // No acquisition loop running with this media.
@@ -165,8 +163,7 @@ bool VisionServer::CallbackExecutionCMD(
       }
     }
   } else if (rqst.cmd == rqst.STOP) {
-    std::cout << std::endl
-              << std::endl;
+    std::cout << std::endl << std::endl;
     ROS_INFO_NAMED("[PROVIDER_VISION]",
                    "Stopping execution %s on %s with filterchain %s",
                    rqst.node_name.c_str(), rqst.media_name.c_str(),
@@ -183,8 +180,7 @@ bool VisionServer::CallbackExecutionCMD(
 
       // Check if another user. If no, stop the acquisition loop.
       if (!IsAnotherUserMedia(exec->GetMediaName())) {
-        MediaStreamer::Ptr aquiPtr =
-            GetAcquisitionLoop(exec->GetMediaName());
+        MediaStreamer::Ptr aquiPtr = GetAcquisitionLoop(exec->GetMediaName());
         media_mgr_.StreammingCmd(vision_server::VisionServer::STOP,
                                  exec->GetID().GetName(), aquiPtr);
         RemoveAcquisitionLoop(aquiPtr);
@@ -233,24 +229,12 @@ bool vision_server::VisionServer::CallbackInfoListCMD(
 bool VisionServer::CallbackGetCMD(
     vision_server_get_media_param::Request &rqst,
     vision_server_get_media_param::Response &rep) {
-  rep.value = 0.0f;
-  BaseContext::Ptr driver =
-      media_mgr_.GetContextFromMedia(rqst.media_name);
-  if (driver == nullptr) {
-    ROS_WARN_NAMED("[CAMERA_MANAGER]", "No driver for this media: %s",
-                   rqst.media_name.c_str());
+  try {
+    rep.value = media_mgr_.GetCameraFeature(rqst.media_name, rqst.param_name);
+    return true;
+  } catch (std::invalid_argument) {
     return false;
   }
-
-  BaseCamera::Feature feat = media_mgr_.GetFeatureFromName(rqst.param_name);
-
-  if (feat == BaseCamera::Feature::ERROR_FEATURE) {
-    return false;
-  }
-
-  driver->GetFeature(feat, rqst.media_name, rep.value);
-
-  return true;
 }
 
 //------------------------------------------------------------------------------
@@ -258,23 +242,12 @@ bool VisionServer::CallbackGetCMD(
 bool VisionServer::CallbackSetCMD(
     vision_server_set_media_param::Request &rqst,
     vision_server_set_media_param::Response &rep) {
-  rep.success = rep.FAIL;
-  BaseContext::Ptr driver = GetDriverForCamera(rqst.media_name);
-  if (driver == nullptr) {
-    ROS_WARN_NAMED("[CAMERA_MANAGER]", "No driver for this media: %s",
-                   rqst.media_name.c_str());
+  try {
+    media_mgr_.SetCameraFeature(rqst.media_name, rqst.param_name, rqst.value);
+  } catch (std::invalid_argument) {
+    rep.success = rep.FAIL;
     return false;
   }
-
-  FEATURE feat = NameToEnum(rqst.param_name);
-
-  if (feat == ERROR_FEATURE) {
-    return false;
-  }
-
-  CameraID camID = driver->GetIDFromName(rqst.media_name);
-
-  driver->SetFeature(feat, camID, rqst.value);
 
   rep.success = rep.SUCCESS;
   return true;
@@ -285,10 +258,12 @@ bool VisionServer::CallbackSetCMD(
 bool VisionServer::CallbackCopyFc(
     vision_server_copy_filterchain::Request &rqst,
     vision_server_copy_filterchain::Response &rep) {
-  std::ifstream src(GetFilterchainPath(rqst.filterchain_to_copy),
-                    std::ios::binary);
-  std::ofstream dst(GetFilterchainPath(rqst.filterchain_new_name),
-                    std::ios::binary);
+  std::ifstream src(
+      filterchain_mgr_.GetFilterchainPath(rqst.filterchain_to_copy).c_str(),
+      std::ios::binary);
+  std::ofstream dst(
+      filterchain_mgr_.GetFilterchainPath(rqst.filterchain_new_name).c_str(),
+      std::ios::binary);
   dst << src.rdbuf();
   rep.success = true;
   return rep.success;
@@ -301,7 +276,7 @@ bool VisionServer::CallbackGetFilterParam(
     vision_server_get_filterchain_filter_param::Response &rep) {
   rep.list = "";
 
-  std::string execution_name(rqst.execution_name),
+  std::string execution_name(rqst.exec_name),
       filterchain_name(rqst.filterchain);
   Filterchain::Ptr filterchain =
       filterchain_mgr_.GetRunningFilterchain(execution_name);
@@ -324,7 +299,7 @@ bool VisionServer::CallbackGetFilterAllParam(
     vision_server_get_filterchain_filter_all_param::Response &rep) {
   rep.list = "";
 
-  std::string execution_name(rqst.execution_name),
+  std::string execution_name(rqst.exec_name),
       filterchain_name(rqst.filterchain);
   Filterchain::Ptr filterchain =
       filterchain_mgr_.GetRunningFilterchain(execution_name);
@@ -347,7 +322,7 @@ bool VisionServer::CallbackSetFilterParam(
     vision_server_set_filterchain_filter_param::Response &rep) {
   rep.success = rep.FAIL;
 
-  std::string execution_name(rqst.execution_name),
+  std::string execution_name(rqst.exec_name),
       filterchain_name(rqst.filterchain);
   Filterchain::Ptr filterchain =
       filterchain_mgr_.GetRunningFilterchain(execution_name);
@@ -371,7 +346,7 @@ bool VisionServer::CallbackGetFilter(
     vision_server_get_filterchain_filter::Response &rep) {
   rep.list = "";
 
-  std::string execution_name(rqst.execution_name),
+  std::string execution_name(rqst.exec_name),
       filterchain_name(rqst.filterchain);
   Filterchain::Ptr filterchain =
       filterchain_mgr_.GetRunningFilterchain(execution_name);
@@ -421,7 +396,7 @@ bool VisionServer::CallbackManageFilter(
     vision_server_manage_filterchain_filter::Request &rqst,
     vision_server_manage_filterchain_filter::Response &rep) {
   const auto &filterchain =
-      filterchain_mgr_.GetRunningFilterchain(rqst.execution_name);
+      filterchain_mgr_.GetRunningFilterchain(rqst.exec_name);
   rep.success = 1;
   if (filterchain != nullptr) {
     if (rqst.cmd == rqst.ADD) {
@@ -445,14 +420,14 @@ bool VisionServer::CallbackManageFc(
   std::string filterchain_name(rqst.filterchain);
   bool response = true;
   if (rqst.cmd == rqst.ADD) {
-    if (CreateFilterchain(filterchain_name)) {
+    if (filterchain_mgr_.CreateFilterchain(filterchain_name)) {
       rep.success = rep.SUCCESS;
 
     } else {
       rep.success = rep.FAIL;
     }
   } else if (rqst.cmd == rqst.DELETE) {
-    DeleteFilterchain(filterchain_name);
+    filterchain_mgr_.DeleteFilterchain(filterchain_name);
   }
   return response;
 }
@@ -462,10 +437,10 @@ bool VisionServer::CallbackManageFc(
 bool VisionServer::CallbackSaveFc(
     vision_server_save_filterchain::Request &rqst,
     vision_server_save_filterchain::Response &rep) {
-  std::string execution_name(rqst.execution_name);
+  std::string execution_name(rqst.exec_name);
   std::string filterchain_name(rqst.filterchain);
   if (rqst.cmd == rqst.SAVE) {
-    if (SaveFilterchain(execution_name, filterchain_name))
+    if (filterchain_mgr_.SaveFilterchain(execution_name, filterchain_name))
       rep.success = rep.SUCCESS;
     else
       rep.success = rep.FAIL;
@@ -481,18 +456,15 @@ bool VisionServer::CallbackSetFcOrder(
   ROS_INFO("Call to vision_server_set_filterchain_filter_order.");
 
   rep.success = rep.SUCCESS;
-
-  for (const auto &filterchain : _runningFilterchains) {
-    if (filterchain->GetExecutionName() == rqst.execution_name) {
-      if (rqst.cmd == rqst.UP) {
-        filterchain->MoveFilterUp(rqst.filter_index);
-      } else if (rqst.cmd == rqst.DOWN) {
-        filterchain->MoveFilterDown(rqst.filter_index);
-      } else {
-        ROS_INFO("Filter index provided was invalid");
-        rep.success = rep.FAIL;
-      }
-      break;
+  for (const auto &filterchain :
+       filterchain_mgr_.GetRunningFilterchain(rqst.exec_name)) {
+    if (rqst.cmd == rqst.UP) {
+      filterchain->MoveFilterUp(rqst.filter_index);
+    } else if (rqst.cmd == rqst.DOWN) {
+      filterchain->MoveFilterDown(rqst.filter_index);
+    } else {
+      ROS_INFO("Filter index provided was invalid");
+      rep.success = rep.FAIL;
     }
   }
 
@@ -505,7 +477,7 @@ bool VisionServer::CallbackGetFcFromExec(
     vision_server_get_filterchain_from_execution::Request &rqst,
     vision_server_get_filterchain_from_execution::Response &rep) {
   ROS_INFO("Call to vision_server_get_filterchain_from_execution.");
-  std::string execution_name(rqst.execution_name);
+  std::string execution_name(rqst.exec_name);
   Filterchain::Ptr filterchain =
       filterchain_mgr_.GetRunningFilterchain(execution_name);
 
@@ -526,7 +498,7 @@ bool VisionServer::CallbackGetMediaFromExec(
     vision_server_get_media_from_execution::Request &rqst,
     vision_server_get_media_from_execution::Response &rep) {
   ROS_INFO("Call to vision_server_get_media_from_execution.");
-  const auto response = "media_" + rqst.execution_name;
+  auto response = "media_" + rqst.exec_name;
   rep.list = response;
   return true;
 }

@@ -41,9 +41,9 @@ class DC1394Context : public BaseContext {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  DC1394Context();
+  DC1394Context() noexcept;
 
-  virtual ~DC1394Context();
+  virtual ~DC1394Context() noexcept;
 
   //==========================================================================
   // P U B L I C   M E T H O D S
@@ -72,7 +72,7 @@ class DC1394Context : public BaseContext {
  private:
   DC1394Camera &GetCameraFromMap(const std::string &name) const;
   DC1394Camera &GetCameraFromPair(
-      const std::pair<std::string, BaseMedia::Ptr > &pair) const;
+      const std::pair<std::string, BaseMedia::Ptr> &pair) const;
 
   //==========================================================================
   // P R I V A T E   M E M B E R S
@@ -93,7 +93,7 @@ DC1394Camera &DC1394Context::GetCameraFromMap(const std::string &name) const {
 //-----------------------------------------------------------------------------
 //
 DC1394Camera &DC1394Context::GetCameraFromPair(
-    const std::pair<std::string, BaseMedia::Ptr > &pair) const {
+    const std::pair<std::string, BaseMedia::Ptr> &pair) const {
   return dynamic_cast<DC1394Camera &>(*pair.second);
 }
 

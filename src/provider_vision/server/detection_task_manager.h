@@ -37,27 +37,23 @@ class DetectionTaskManager {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  std::vector<DetectionTask::Ptr> GetAllDetectionTasks() const
-      noexcept;
+  std::vector<DetectionTask::Ptr> GetAllDetectionTasks() const noexcept;
 
-  DetectionTask::Ptr GetDetectionTask(
-      const std::string &execution_name) const;
+  DetectionTask::Ptr GetDetectionTask(const std::string &execution_name) const;
 
   DetectionTask::Ptr CreateDetectionTask(
       std::shared_ptr<ros::NodeHandle> node_handle,
-      MediaStreamer::Ptr acquisition_loop,
-      Filterchain::Ptr filterchain,
+      MediaStreamer::Ptr acquisition_loop, Filterchain::Ptr filterchain,
       const std::string &execution_name) noexcept;
 
   void StopDetectionTask(const std::string &execution_name) noexcept;
 
   void StopDetectionTask(DetectionTask::Ptr) noexcept;
 
-  std::vector<MediaStreamer::Ptr> GetAllMediaStreamers() const
-      noexcept;
+  std::vector<MediaStreamer::Ptr> GetAllMediaStreamers() const noexcept;
 
-  MediaStreamer::Ptr GetMediaStreamer(
-      const std::string &execution_name, const std::string &media_name) const
+  MediaStreamer::Ptr GetMediaStreamer(const std::string &execution_name,
+                                      const std::string &media_name) const
       noexcept;
 
   Filterchain::Ptr GetRunningFilterchains(

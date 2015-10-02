@@ -7,8 +7,13 @@
  * found in the LICENSE file.
  */
 
-#include <lib_atlas/config.h>
+#include <stdexcept>
+#include <string>
+#include <vector>
 #include "provider_vision/server/media_manager.h"
+#include "provider_vision/media/context/dc1394_context.h"
+#include "provider_vision/media/context/webcam_context.h"
+#include "provider_vision/media/context/file_context.h"
 
 namespace vision_server {
 
@@ -28,34 +33,53 @@ MediaManager::~MediaManager() noexcept { CloseContext(); }
 
 //------------------------------------------------------------------------------
 //
-MediaStreamer::Ptr MediaManager::StartCamera(
-    const std::string &media_name) noexcept {
-  GetMedia()
+void MediaManager::StartMedia(const std::string &media_name) noexcept {
+  GetMedia(media_name)->Start();
 }
 
 //------------------------------------------------------------------------------
 //
-void MediaManager::StopCamera(const std::string &media) noexcept {
-
+void MediaManager::StopMedia(const std::string &media) noexcept {
+  GetMedia(media)->Stop();
 }
 
 //------------------------------------------------------------------------------
 //
-void MediaManager::SetFeature(const std::string &media_name, BaseCamera::Feature feat,
-                float val) noexcept {
+void MediaManager::SetCameraFeature(const std::string &media_name,
+                                    const std::string &feature,
+                                    float value) noexcept {
+  auto camera = dynamic_cast<BaseCamera *>(GetMedia(media_name).get());
 
+  if (camera != nullptr) {
+    camera->SetFeature(GetFeatureFromName(feature), value);
+  }
+  throw std::invalid_argument("The given media is not a camera.");
 }
 
 //------------------------------------------------------------------------------
 //
-float MediaManager::GetFeature(const std::string &media_name,
-                 BaseCamera::Feature feat) noexcept {
+float MediaManager::GetCameraFeature(const std::string &media_name,
+                                     const std::string &feature) noexcept {
+  auto camera = dynamic_cast<BaseCamera *>(GetMedia(media_name).get());
 
+  if (camera != nullptr) {
+    return camera->GetFeature(GetFeatureFromName(feature));
+  }
+  throw std::invalid_argument("The given media is not a camera.");
 }
 
 //------------------------------------------------------------------------------
 //
-std::vector<BaseMedia> MediaManager::GetAllMedias() const {
+BaseMedia::Ptr MediaManager::GetMedia(const std::string &name) const noexcept {
+  for (const auto &context : contexts_) {
+    if (context->GetMedia(name)->GetName() == name) {
+    }
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+std::vector<BaseMedia::Ptr> MediaManager::GetAllMedias() const {
   std::vector<BaseMedia> medias;
 
   for (auto &elem : contexts_) {
@@ -172,7 +196,7 @@ void MediaManager::CloseContext() {
 //------------------------------------------------------------------------------
 //
 BaseContext::Ptr MediaManager::GetContextFromMedia(
-    const std::string &name) {
+    const std::string &name) const {
   for (auto &context : contexts_) {
     if (context->ContainsMedia(name)) {
       return context;

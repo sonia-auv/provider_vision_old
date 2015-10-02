@@ -32,9 +32,9 @@ class WebcamCamera : public BaseCamera, private cv::VideoCapture {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  WebcamCamera();
+  WebcamCamera() noexcept;
 
-  WebcamCamera(int webcamIdx);
+  explicit WebcamCamera(int webcamIdx) noexcept;
 
   virtual ~WebcamCamera();
 

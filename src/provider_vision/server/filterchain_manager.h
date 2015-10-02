@@ -61,8 +61,8 @@ class FilterchainManager {
    * \param filterchainName std::string
    * \return Filterchain*
    */
-  Filterchain::Ptr InstanciateFilterchain(
-      std::string executionName, std::string filterchainName);
+  Filterchain::Ptr InstanciateFilterchain(std::string executionName,
+                                          std::string filterchainName);
 
   /**
    * Get all available filterchains on the system.
@@ -89,8 +89,7 @@ class FilterchainManager {
    * \param filterchainName string
    * \return filterchain Filterchain*
    */
-  Filterchain::Ptr GetRunningFilterchain(
-      const std::string &execution);
+  Filterchain::Ptr GetRunningFilterchain(const std::string &execution);
 
   /**
    * If the does not filterchain exists, create it.

@@ -1,5 +1,6 @@
 /**
- * \file	CameraManager.h
+ * \file	MediaManager.h
+ * \author  Thibaut Mattio <thibaut.mattio@gmail.com>
  * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
  * \date	12/10/2015
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
@@ -10,27 +11,15 @@
 #ifndef PROVIDER_VISION_CAMERA_MANAGER_H_
 #define PROVIDER_VISION_CAMERA_MANAGER_H_
 
-#include <lib_atlas/ros/service_server_manager.h>
-#include <provider_vision/media/configuration_handler.h>
-#include "provider_vision/media/context/file_context.h"
-#include "provider_vision/config.h"
-#include "provider_vision/media/configuration_handler.h"
+#include <memory>
+#include <vector>
+#include <bits/shared_ptr.h>
+#include "provider_vision/media/base_media.h"
+#include "provider_vision/media/camera/base_camera.h"
 #include "provider_vision/media/context/base_context.h"
-#include "provider_vision/media/context/dc1394_context.h"
-#include "provider_vision/media/context/webcam_context.h"
-#include "provider_vision/media/context/file_context.h"
-#include "provider_vision/media/media_streamer.h"
 
 namespace vision_server {
 
-/**
- * MediaManager is the main manager for EVERY media.
- * It is responsible to know wich camera is in the system
- * by asking its drivers. It is also responsible of calling
- * the good driver to start/stop/[set/get]features.
- * It is also the provider of acquisition loop ptr.
- * It has the responsibility of creating/destructing them.
- */
 class MediaManager {
  public:
   //==========================================================================
@@ -43,59 +32,60 @@ class MediaManager {
 
   MediaManager() noexcept;
 
-  virtual ~MediaManager() noexcept;
+  ~MediaManager() noexcept;
 
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  MediaStreamer::Ptr StartCamera(
-      const std::string &media_name) noexcept;
+  void StartMedia(const std::string &media_name) noexcept;
 
-  void StopCamera(const std::string &media) noexcept;
-
-  void SetFeature(const std::string &media_name, BaseCamera::Feature feat,
-                  float val) noexcept;
-
-  float GetFeature(const std::string &media_name,
-                   BaseCamera::Feature feat) noexcept;
+  void StopMedia(const std::string &media) noexcept;
 
   BaseMedia::Ptr GetMedia(const std::string &name) const noexcept;
 
-  /**
-   * Accumulate all the drivers' camear CameraID in a list.
-   */
   std::vector<BaseMedia::Ptr> GetAllMedias() const noexcept;
 
   /**
-   * Change a String representing a parameter of FEATURE to the appropriate
-   * enum, so it can be use in the system.
+   * If the media is a camera, set the feature to a specific value.
+   *
+   * This will try to convert the media to a camera. If this work, calls the
+   * method to set a feature on it. If it does not, this throws an exception.
+   *
+   * \param media_name The name of the media to set the feature to.
+   * \param feature The feature to change the value of.
+   * \param value The value to set on the given feature.
    */
-  BaseCamera::Feature GetFeatureFromName(const std::string &name) const;
+  void SetCameraFeature(const std::string &media_name,
+                        const std::string &feature, float value);
+
+  /**
+   * If the media is a camera, get the value of the given feature.
+   *
+   * This will try to convert the media to a camera. If this work, calls the
+   * method to ge the value of a feature on it. If it does not, this throws
+   * an exception.
+   *
+   * \param media_name The name of the media to set the feature to.
+   * \param feature The feature to change the value of.
+   */
+  float GetCameraFeature(const std::string &media_name,
+                         const std::string &feature);
 
  private:
   //==========================================================================
   // P R I V A T E   M E T H O D S
 
-  /**
-   * Calls the Init and Close method of each drivers in the list.
-   * creation/destruction.
-   */
   void InitializeContext();
 
   void CloseContext();
 
-  /**
-   * Simple for loop iteration which pokes each driver to know if they
-   * possess the camera asked for.
-   */
-  BaseContext::Ptr GetContextFromMedia(const std::string &name);
+  BaseContext::Ptr GetContextFromMedia(const std::string &name) const;
+
+  BaseCamera::Feature GetFeatureFromName(const std::string &name) const;
 
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
-  /**
-   * List of the driers in the system
-   */
   std::vector<BaseContext::Ptr> contexts_;
 };
 

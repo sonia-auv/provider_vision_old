@@ -8,10 +8,6 @@
  * found in the LICENSE file.
  */
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
-#include <assert.h>
 #include <dirent.h>
 #include <provider_vision/utils/pugixml.h>
 #include "provider_vision/server/filterchain_manager.h"
@@ -170,8 +166,5 @@ Filterchain::Ptr FilterchainManager::GetRunningFilterchain(
   }
   return nullptr;
 }
-
-//==============================================================================
-// C A L L B A C K   R O S   S E R V I C E   S E C T I O N
 
 }  // namespace vision_server

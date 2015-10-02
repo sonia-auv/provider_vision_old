@@ -31,10 +31,10 @@ class BaseMedia {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  BaseMedia(const CameraConfiguration &config)
-      : config_(config), is_open_(false){};
+  explicit BaseMedia(const CameraConfiguration &config)
+      : config_(config), is_open_(false) {}
 
-  virtual ~BaseMedia(){};
+  virtual ~BaseMedia() = default;
 
   //==========================================================================
   // P U B L I C   M E T H O D S

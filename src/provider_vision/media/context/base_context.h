@@ -32,9 +32,9 @@ class BaseContext : public atlas::Runnable {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  BaseContext() = default;
+  BaseContext() noexcept = default;
 
-  virtual ~BaseContext(){};
+  virtual ~BaseContext() noexcept = default;
 
   //==========================================================================
   // P U B L I C   M E T H O D S
@@ -100,15 +100,13 @@ inline bool BaseContext::ContainsMedia(const std::string &nameMedia) const {
 
 //-----------------------------------------------------------------------------
 //
-inline std::vector<BaseMedia::Ptr> BaseContext::GetMediaList()
-    const {
+inline std::vector<BaseMedia::Ptr> BaseContext::GetMediaList() const {
   return media_list_;
 }
 
 //-----------------------------------------------------------------------------
 //
-inline BaseMedia::Ptr BaseContext::GetMedia(
-    const std::string &name) const {
+inline BaseMedia::Ptr BaseContext::GetMedia(const std::string &name) const {
   auto camera = GetMedia(name);
   if (camera == media_list_.end()) {
     throw std::invalid_argument("Camera is not from this context.");

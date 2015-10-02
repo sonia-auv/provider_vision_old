@@ -25,7 +25,6 @@ namespace vision_server {
 
 class DC1394Camera : public BaseCamera {
  public:
-
   static const int DMA_BUFFER = 4;
 
   static const std::string CAM_TAG;
@@ -38,7 +37,8 @@ class DC1394Camera : public BaseCamera {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  DC1394Camera(dc1394camera_t *camera, const CameraConfiguration &config);
+  explicit DC1394Camera(dc1394camera_t *camera,
+                        const CameraConfiguration &config);
 
   ~DC1394Camera();
 

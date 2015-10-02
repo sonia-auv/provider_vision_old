@@ -134,15 +134,13 @@ class DetectionTask : public atlas::Runnable, public atlas::Observer<> {
 
 //------------------------------------------------------------------------------
 //
-inline MediaStreamer::Ptr DetectionTask::GetMediaStreamer()
-    const noexcept {
+inline MediaStreamer::Ptr DetectionTask::GetMediaStreamer() const noexcept {
   return media_streamer_;
 }
 
 //------------------------------------------------------------------------------
 //
-inline Filterchain::Ptr DetectionTask::GetFilterchain()
-    const noexcept {
+inline Filterchain::Ptr DetectionTask::GetFilterchain() const noexcept {
   return filterchain_;
 }
 

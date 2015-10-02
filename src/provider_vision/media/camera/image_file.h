@@ -25,7 +25,6 @@ namespace vision_server {
  */
 class ImageFile : public BaseMedia {
  public:
-
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
 
@@ -34,7 +33,7 @@ class ImageFile : public BaseMedia {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  ImageFile(std::string path_to_file);
+  explicit ImageFile(std::string path_to_file);
 
   ImageFile();
 

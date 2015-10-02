@@ -28,8 +28,8 @@ DetectionTaskManager::~DetectionTaskManager() {}
 
 //------------------------------------------------------------------------------
 //
-std::vector<DetectionTask::Ptr>
-DetectionTaskManager::GetAllDetectionTasks() const noexcept {
+std::vector<DetectionTask::Ptr> DetectionTaskManager::GetAllDetectionTasks()
+    const noexcept {
   return detection_tasks_;
 }
 
@@ -49,8 +49,7 @@ DetectionTask::Ptr DetectionTaskManager::GetDetectionTask(
 //
 DetectionTask::Ptr DetectionTaskManager::CreateDetectionTask(
     std::shared_ptr<ros::NodeHandle> node_handle,
-    MediaStreamer::Ptr acquisition_loop,
-    Filterchain::Ptr filterchain,
+    MediaStreamer::Ptr acquisition_loop, Filterchain::Ptr filterchain,
     const std::string &execution_name) noexcept {
   auto task = std::make_shared<DetectionTask>(node_handle, acquisition_loop,
                                               filterchain, execution_name);
@@ -76,8 +75,7 @@ void DetectionTaskManager::StopDetectionTask(
 
 //------------------------------------------------------------------------------
 //
-void DetectionTaskManager::StopDetectionTask(
-    DetectionTask::Ptr task) noexcept {
+void DetectionTaskManager::StopDetectionTask(DetectionTask::Ptr task) noexcept {
   const auto &it = detection_tasks_.cbegin();
   for (; it != detection_tasks_.cend(); std::advance(it, 1)) {
     if ((*it).get() == task.get()) {
@@ -92,8 +90,8 @@ void DetectionTaskManager::StopDetectionTask(
 
 //------------------------------------------------------------------------------
 //
-std::vector<MediaStreamer::Ptr>
-DetectionTaskManager::GetAllMediaStreamers() const noexcept {
+std::vector<MediaStreamer::Ptr> DetectionTaskManager::GetAllMediaStreamers()
+    const noexcept {
   std::vector<MediaStreamer::Ptr> media_streamers = {};
   for (const auto &task : detection_tasks_) {
     media_streamers.push_back(task->GetMediaStreamer());
@@ -118,10 +116,10 @@ Filterchain::Ptr DetectionTaskManager::GetRunningFilterchains(
 
 //------------------------------------------------------------------------------
 //
-std::vector<Filterchain::Ptr>
-DetectionTaskManager::GetAllRunningFilterchains() const noexcept {
+std::vector<Filterchain::Ptr> DetectionTaskManager::GetAllRunningFilterchains()
+    const noexcept {
   std::vector<Filterchain::Ptr> v = {};
-  for(const auto &task : detection_tasks_) {
+  for (const auto &task : detection_tasks_) {
     v.push_back(task->GetFilterchain());
   }
   return v;
@@ -129,8 +127,8 @@ DetectionTaskManager::GetAllRunningFilterchains() const noexcept {
 //------------------------------------------------------------------------------
 //
 bool DetectionTaskManager::IsMediaUsed(const std::string &media_name) {
-  for(const auto &task : detection_tasks_) {
-    if(task->GetMediaName() == media_name) {
+  for (const auto &task : detection_tasks_) {
+    if (task->GetMediaName() == media_name) {
       return true;
     }
   }

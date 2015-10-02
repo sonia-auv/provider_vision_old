@@ -16,7 +16,6 @@ namespace vision_server {
 
 class CameraConfiguration {
  public:
-
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
 
@@ -63,8 +62,8 @@ inline void CameraConfiguration::AddConfiguration(
 
 //-----------------------------------------------------------------------------
 //
-const std::map<std::string, std::string> &
-CameraConfiguration::GetConfigurations() const {
+const std::map<std::string, std::string>
+    &CameraConfiguration::GetConfigurations() const {
   return configuration_;
 }
 

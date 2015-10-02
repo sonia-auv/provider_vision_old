@@ -23,8 +23,7 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-FileContext::FileContext()
-    : BaseContext(), DRIVER_TAG("[MEDIA Driver]") {}
+FileContext::FileContext() : BaseContext(), DRIVER_TAG("[MEDIA Driver]") {}
 
 //------------------------------------------------------------------------------
 //
@@ -100,13 +99,13 @@ bool FileContext::ContainsMedia(const std::string &nameMedia) const {
 }
 //------------------------------------------------------------------------------
 //
-void FileContext::SetFeature(BaseCamera::Feature feat,
-                             const std::string &name, float val) {}
+void FileContext::SetFeature(BaseCamera::Feature feat, const std::string &name,
+                             float val) {}
 
 //------------------------------------------------------------------------------
 //
-void FileContext::GetFeature(BaseCamera::Feature feat,
-                             const std::string &name, float &val) const {}
+void FileContext::GetFeature(BaseCamera::Feature feat, const std::string &name,
+                             float &val) const {}
 
 //------------------------------------------------------------------------------
 //

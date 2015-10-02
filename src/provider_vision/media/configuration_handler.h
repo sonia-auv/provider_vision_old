@@ -21,7 +21,6 @@
 
 namespace vision_server {
 
-
 /**
  * Class to read and save ALL the cameras parameter of the system. It will
  * read/save it into xml format.
@@ -29,7 +28,6 @@ namespace vision_server {
  */
 class ConfigurationHandler {
  public:
-
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
 

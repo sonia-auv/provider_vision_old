@@ -76,7 +76,7 @@ void DetectionTask::start() {
     throw std::runtime_error("Cannot start task with null filterchain");
   }
 
-  if(running()) {
+  if (running()) {
     throw std::logic_error("This excecution is already running.");
   }
 

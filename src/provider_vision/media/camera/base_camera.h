@@ -93,6 +93,7 @@ inline bool BaseCamera::HasArtificialFramerate() const { return false; }
 //------------------------------------------------------------------------------
 //
 inline uint64_t BaseCamera::GetGUID() const { return config_.GetGUID(); }
+
 }  // namespace vision_server
 
 #endif  // PROVIDER_VISION_CAMERA_H_

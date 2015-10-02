@@ -32,7 +32,7 @@ class VideoFile : public BaseMedia, private cv::VideoCapture {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  VideoFile(const std::string &path_to_file, bool looping = true);
+  explicit VideoFile(const std::string &path_to_file, bool looping = true);
 
   VideoFile();
 

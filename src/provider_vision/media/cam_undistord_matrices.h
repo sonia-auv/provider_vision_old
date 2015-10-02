@@ -22,7 +22,6 @@ namespace vision_server {
  */
 class CameraUndistordMatrices {
  public:
-
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
 

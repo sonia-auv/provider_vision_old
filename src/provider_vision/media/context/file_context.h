@@ -29,14 +29,14 @@ namespace vision_server {
  *
  * Allow to load a video or a picture from a hard drive onto the vision server.
  * The creation of a static media is done during the execution in the method
- * StartCamera().
+ * StartMedia().
  * We Currently use _live_camera_list because the responsability of camera_list
  * is to list all the available camera. As they are videos, they are all and
  * always available.
  * Therefore, calling GetCameraList() will return the list of videos from
  * _live_camera_list.
  */
-class FileContext: public BaseContext {
+class FileContext : public BaseContext {
  public:
   const char *DRIVER_TAG;
 
@@ -50,7 +50,7 @@ class FileContext: public BaseContext {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  FileContext();
+  FileContext() noexcept;
 
   virtual ~FileContext();
 
