@@ -19,21 +19,23 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-WebcamCamera::WebcamCamera()
-    : cv::VideoCapture(0), BaseCamera(CameraConfiguration("Webcam")) {
+WebcamCamera::WebcamCamera() noexcept
+    : BaseCamera(CameraConfiguration("Webcam")),
+      cv::VideoCapture(0)
+    {
   if (isOpened()) {
-    is_open_ = Status::OPEN;
+    status_ = Status::OPEN;
   }
 }
 
 //------------------------------------------------------------------------------
 //
-WebcamCamera::WebcamCamera(int webcamIdx)
-    : cv::VideoCapture(webcamIdx),
-      // three because...
-      BaseCamera(CameraConfiguration("Webcam")) {
+WebcamCamera::WebcamCamera(int webcamIdx) noexcept
+    : BaseCamera(CameraConfiguration("Webcam")) ,
+      cv::VideoCapture(webcamIdx)
+      {
   if (isOpened()) {
-    is_open_ = Status::OPEN;
+    status_ = Status::OPEN;
   }
 }
 
@@ -48,16 +50,18 @@ WebcamCamera::~WebcamCamera() {}
 //
 bool WebcamCamera::Start() {
   // Construction also start the camera for a videoCapture
-  if (isOpened()) is_open_ = Status::STREAMING;
-  return isOpened();
+  if ( IsOpened())
+    status_ = Status::STREAMING;
+  return IsOpened();
 }
 
 //------------------------------------------------------------------------------
 //
 bool WebcamCamera::Stop() {
   // Always stream when asking to capture only...
-  if (isOpened()) is_open_ = Status::OPEN;
-  return isOpened();
+  if ( IsOpened())
+    status_ = Status::OPEN;
+  return IsOpened();
 }
 
 //------------------------------------------------------------------------------
@@ -74,20 +78,20 @@ bool WebcamCamera::NextImage(cv::Mat &image) {
 //
 bool WebcamCamera::Open() {
   // Already been open at constructor.
-  if (!isOpened()) {
+  if (!IsOpened()) {
     open(0);
   }
 
-  return isOpened();
+  return IsOpened();
 }
 
 //------------------------------------------------------------------------------
 //
 bool WebcamCamera::Close() {
-  if (isOpened()) {
+  if (IsOpened()) {
     release();
   }
-  return !isOpened();
+  return !IsOpened();
 }
 
 //------------------------------------------------------------------------------

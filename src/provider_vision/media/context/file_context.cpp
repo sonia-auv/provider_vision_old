@@ -11,10 +11,7 @@
 // I N C L U D E   F I L E S
 
 #include <provider_vision/media/context/file_context.h>
-#include <string>
-#include <vector>
-#include <ros/ros.h>
-#include "provider_vision/media/camera/image_file.h"
+
 
 namespace vision_server {
 
@@ -23,7 +20,7 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-FileContext::FileContext() : BaseContext(), DRIVER_TAG("[MEDIA Driver]") {}
+FileContext::FileContext() noexcept : BaseContext(), DRIVER_TAG("[MEDIA Driver]") {}
 
 //------------------------------------------------------------------------------
 //
@@ -45,37 +42,41 @@ void FileContext::CloseContext() { media_list_.clear(); }
 //
 bool FileContext::StartCamera(const std::string &name) {
   // in the videoFile context, camera in list are existing camera.
-  if (GetMedia(name) != media_list_.end())
-    // already existing
-    return true;
+  bool ret_val = false;
+  BaseMedia::Ptr media = GetMedia(name);
+  if( !media )
+  {
+    MediaType type = GetMediaType(name);
 
-  MediaType type = GetMediaType(name);
-  if (type == MediaType::IMAGE) {
-    ImageFile::Ptr file(new ImageFile(name));
-    file->Start();
-    media_list_.insert(std::make_pair(name, file));
-  } else if (type == MediaType::VIDEO) {
-    VideoFile::Ptr file(new VideoFile(name));
-    file->Start();
-    media_list_.insert(std::make_pair(name, file));
-  } else {
-    throw std::invalid_argument("Not my camera type");
+    if (type == MediaType::IMAGE)
+    {
+      ImageFile::Ptr file(std::make_shared<ImageFile>(name));
+      ret_val = file->Start();
+      media_list_.push_back(std::dynamic_pointer_cast<BaseMedia>(file));
+    }
+    else if (type == MediaType::VIDEO)
+    {
+      VideoFile::Ptr file(std::make_shared<VideoFile>(name));
+      ret_val = file->Start();
+      media_list_.push_back(std::dynamic_pointer_cast<BaseMedia>(file));
+    }
+    else
+    {
+      throw std::invalid_argument("Not my camera type");
+    }
   }
-
-  return true;
+  return ret_val;
 }
 
 //------------------------------------------------------------------------------
 //
 bool FileContext::StopCamera(const std::string &name) {
   // in the videoFile context, camera in list are existing camera.
-  auto file = GetMedia(name);
-  if (file == media_list_.end())
-    // does not exist
-    return true;
 
-  bool result = (*file).second->Stop();
-  media_list_.erase(file);
+
+  auto file = GetMedia(name);
+  bool result = file->Stop();
+  EraseMedia(name);
 
   return result;
 }
@@ -85,7 +86,7 @@ bool FileContext::StopCamera(const std::string &name) {
 bool FileContext::ContainsMedia(const std::string &nameMedia) const {
   bool result = false;
   // cherche si la camera existe
-  if (GetMedia(nameMedia) != media_list_.end()) {
+  if ( GetMedia(nameMedia) ) {
     // already existing
     result = true;
   }  // N'existe pas dans le systeme, est-ce qu'on peut la creer?
@@ -109,7 +110,7 @@ void FileContext::GetFeature(BaseCamera::Feature feat, const std::string &name,
 
 //------------------------------------------------------------------------------
 //
-void FileContext::run() {}
+void FileContext::Run() {}
 
 //------------------------------------------------------------------------------
 //

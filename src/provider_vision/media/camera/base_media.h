@@ -28,11 +28,13 @@ class BaseMedia {
 
   using Ptr = std::shared_ptr<BaseMedia>;
 
+  enum class Status {OPEN, STREAMING, CLOSE, ERROR};
+
   //==========================================================================
   // P U B L I C   C / D T O R S
 
   explicit BaseMedia(const CameraConfiguration &config)
-      : config_(config), is_open_(false) {}
+      : config_(config), status_(Status::CLOSE) {}
 
   virtual ~BaseMedia() = default;
 
@@ -73,17 +75,18 @@ class BaseMedia {
    */
   virtual const CameraConfiguration &GetCameraConfiguration() const;
 
-  std::string GetName() const;
+  const std::string &GetName() const;
 
   bool IsOpened() const;
+  bool IsClosed() const;
+  bool IsStreaming() const;
 
  protected:
   //==========================================================================
   // P R O T E C T E D   M E M B E R S
 
   CameraConfiguration config_;
-
-  bool is_open_;
+  Status status_;
 };
 
 //==============================================================================
@@ -91,7 +94,7 @@ class BaseMedia {
 
 //------------------------------------------------------------------------------
 //
-inline BaseMedia::Status BaseMedia::GetStatus() const { return is_open_; };
+inline BaseMedia::Status BaseMedia::GetStatus() const { return status_; };
 
 //------------------------------------------------------------------------------
 //
@@ -105,12 +108,20 @@ inline const CameraConfiguration &BaseMedia::GetCameraConfiguration() const {
 
 //------------------------------------------------------------------------------
 //
-inline std::string BaseMedia::GetName() const { return config_.GetName(); }
+inline const std::string &BaseMedia::GetName() const { return config_.GetName(); }
 
 //------------------------------------------------------------------------------
 //
-inline bool BaseMedia::IsOpened() const { return is_open_; }
+inline bool BaseMedia::IsOpened() const { return Status::OPEN == status_; }
+
+//------------------------------------------------------------------------------
+//
+inline bool
+BaseMedia::IsClosed() const { return Status::CLOSE == status_; }
+
+//------------------------------------------------------------------------------
+//
+inline bool BaseMedia::IsStreaming() const { return Status::STREAMING == status_; }
 
 }  // namespace vision_server
-
 #endif  // PROVIDER_VISION_BaseMedia_H_

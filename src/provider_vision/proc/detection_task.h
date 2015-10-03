@@ -32,6 +32,7 @@ class DetectionTask : public atlas::Runnable, public atlas::Observer<> {
   // T Y P E D E F   A N D   E N U M
 
   using Ptr = std::shared_ptr<DetectionTask>;
+  static const std::string EXEC_TAG;
 
   //==========================================================================
   // P U B L I C   C / D T O R S
@@ -46,9 +47,9 @@ class DetectionTask : public atlas::Runnable, public atlas::Observer<> {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  void start() override;
+  void Start();
 
-  void stop() override;
+  void Stop();
 
   MediaStreamer::Ptr GetMediaStreamer() const noexcept;
 
@@ -73,7 +74,7 @@ class DetectionTask : public atlas::Runnable, public atlas::Observer<> {
    * Run the filterchain when the new image is ready.
    * Is necessary to decouple the acqusition loop from the processing.
    */
-  void run() override;
+  void Run() override;
 
  private:
   //==========================================================================
@@ -126,7 +127,7 @@ class DetectionTask : public atlas::Runnable, public atlas::Observer<> {
    */
   bool running_;
 
-  static int close_attemps_;
+  int close_attemps_;
 };
 
 //==============================================================================

@@ -15,60 +15,47 @@
 #include <string>
 #include <memory>
 #include <mutex>
-
 #include "provider_vision/proc/detection_task.h"
+#include "provider_vision/proc/filterchain.h"
+
 
 namespace vision_server {
 
-class DetectionTaskManager {
- public:
-  //==========================================================================
-  // T Y P E D E F   A N D   E N U M
+    class DetectionTaskManager {
+    public:
+        //==========================================================================
+        // T Y P E D E F   A N D   E N U M
 
-  using Ptr = std::shared_ptr<DetectionTaskManager>;
+        using Ptr = std::shared_ptr<DetectionTaskManager>;
 
-  //==========================================================================
-  // P U B L I C   C / D T O R S
+        //==========================================================================
+        // P U B L I C   C / D T O R S
 
-  explicit DetectionTaskManager();
+        explicit DetectionTaskManager();
 
-  ~DetectionTaskManager();
+        ~DetectionTaskManager();
 
-  //==========================================================================
-  // P U B L I C   M E T H O D S
+        //==========================================================================
+        // P U B L I C   M E T H O D S
+        void StartDetectionTask(
+                std::shared_ptr<ros::NodeHandle> node_handle,
+                MediaStreamer::Ptr media_streamer,
+                Filterchain::Ptr filterchain,
+                const std::string &execution_name) noexcept;
 
-  std::vector<DetectionTask::Ptr> GetAllDetectionTasks() const noexcept;
+        void StopDetectionTask(const std::string &execution_name) noexcept;
 
-  DetectionTask::Ptr GetDetectionTask(const std::string &execution_name) const;
+        std::vector<std::string> GetAllDetectionTasks() const noexcept;
 
-  DetectionTask::Ptr CreateDetectionTask(
-      std::shared_ptr<ros::NodeHandle> node_handle,
-      MediaStreamer::Ptr acquisition_loop, Filterchain::Ptr filterchain,
-      const std::string &execution_name) noexcept;
+    private:
 
-  void StopDetectionTask(const std::string &execution_name) noexcept;
+        DetectionTask::Ptr GetDetectionTask(const std::string &execution_name) const;
 
-  void StopDetectionTask(DetectionTask::Ptr) noexcept;
+        //==========================================================================
+        // P R I V A T E   M E M B E R S
 
-  std::vector<MediaStreamer::Ptr> GetAllMediaStreamers() const noexcept;
-
-  MediaStreamer::Ptr GetMediaStreamer(const std::string &execution_name,
-                                      const std::string &media_name) const
-      noexcept;
-
-  Filterchain::Ptr GetRunningFilterchains(
-      const std::string &execution_name) const noexcept;
-
-  std::vector<Filterchain::Ptr> GetAllRunningFilterchains() const noexcept;
-
-  bool IsMediaUsed(const std::string &media_name);
-
- private:
-  //==========================================================================
-  // P R I V A T E   M E M B E R S
-
-  std::vector<DetectionTask::Ptr> detection_tasks_;
-};
+        std::vector<DetectionTask::Ptr> detection_tasks_;
+    };
 
 }  // namespace vision_server
 

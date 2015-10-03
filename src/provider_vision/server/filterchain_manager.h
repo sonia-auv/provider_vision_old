@@ -33,10 +33,12 @@ class FilterchainManager {
 
   using Ptr = std::shared_ptr<FilterchainManager>;
 
+  static const std::string FILTERCHAIN_MANAGER_TAG ;
+
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  explicit FilterchainManager();
+  FilterchainManager();
 
   ~FilterchainManager();
 
@@ -123,19 +125,9 @@ class FilterchainManager {
    */
   std::string GetFilterchainPath(const std::string &filterchain) const;
 
-  /**
-   * Display all the available filterchains on the standard output.
-   */
-  void ListAvailableFilterchains();
-
  private:
   //==========================================================================
   // P R I V A T E   M E M B E R S
-
-  /**
-   * CameraConfig _cam_config
-   */
-  const char *FILTERCHAIN_MANAGER_TAG;
 
   /**
    * List of current instances of filterchains

@@ -22,10 +22,10 @@ namespace vision_server {
 //------------------------------------------------------------------------------
 //
 VideoFile::VideoFile(const std::string &path_to_file, bool looping)
-    : VideoCapture(path_to_file),
-      BaseMedia(CameraConfiguration(path_to_file)),
-      path_(path_to_file),
+    : BaseMedia(CameraConfiguration(path_to_file)),
+      VideoCapture(path_to_file),
       current_image_(),
+      path_(path_to_file),
       looping_(looping) {
   LoadVideo(path_);
 }
@@ -33,9 +33,9 @@ VideoFile::VideoFile(const std::string &path_to_file, bool looping)
 //------------------------------------------------------------------------------
 //
 VideoFile::VideoFile()
-    : path_(std::string("")),
-      BaseMedia(CameraConfiguration("NO_PATH")),
+    : BaseMedia(CameraConfiguration("NO_PATH")),
       current_image_(),
+      path_(std::string("")),
       looping_(true) {}
 
 //------------------------------------------------------------------------------

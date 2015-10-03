@@ -8,7 +8,7 @@
  */
 
 #include <std_msgs/String.h>
-#include <lib_atlas/typedef.h>
+#include <lib_atlas/macros.h>
 #include "provider_vision/proc/detection_task.h"
 
 namespace vision_server {
@@ -16,7 +16,7 @@ namespace vision_server {
 //==============================================================================
 // C O N S T A N T S   S E C T I O N
 
-static const char *EXEC_TAG = "[EXECUTION]";
+const std::string DetectionTask::EXEC_TAG = "[EXECUTION]";
 
 //==============================================================================
 // C / D T O R S   S E C T I O N
@@ -27,16 +27,17 @@ DetectionTask::DetectionTask(std::shared_ptr<ros::NodeHandle> node_handle,
                              MediaStreamer::Ptr acquisition_loop,
                              Filterchain::Ptr filterchain,
                              const std::string &execution_name)
-    : media_streamer_(acquisition_loop),
-      filterchain_(filterchain),
-      running_(false),
+    : name_(kRosNodeName + execution_name),
       image_publisher_(node_handle, kRosNodeName + execution_name + "_image"),
       result_publisher_(),
-      name_(kRosNodeName + execution_name),
-      close_attemps_(3),
-      _new_image_ready(false) {
+      media_streamer_(acquisition_loop),
+      filterchain_(filterchain),
+      _new_image_ready(false),
+      running_(false),
+      close_attemps_(3)
+{
   assert(node_handle.get() != nullptr);
-  image_publisher_.start();
+  image_publisher_.Start();
   result_publisher_ =
       node_handle->advertise<std_msgs::String>(name_ + "_result", 50);
 
@@ -47,15 +48,16 @@ DetectionTask::DetectionTask(std::shared_ptr<ros::NodeHandle> node_handle,
 //------------------------------------------------------------------------------
 //
 DetectionTask::~DetectionTask() {
-  if (running_ == true) StopExec();
+  if (running_ == true)
+    Stop();
   // No need to destroy _image_topic, it is a smart pointer
-  ROS_INFO_NAMED(EXEC_TAG, "Destroying execution");
+  ROS_INFO_NAMED(EXEC_TAG.c_str(), "Destroying execution");
   unsigned int tries = 0;
   while (!_newest_image_mutex.try_lock()) {
-    atlas::MilliTimer::sleep(20);
+    atlas::MilliTimer::Sleep(20);
     tries++;
     if (tries > 100) {
-      ROS_WARN_NAMED(EXEC_TAG,
+      ROS_WARN_NAMED(EXEC_TAG.c_str(),
                      "CANNOT UNLOCKED THE MUTEX BECAUSE IT IS LOCKED.");
       tries = 0;
     }
@@ -67,7 +69,7 @@ DetectionTask::~DetectionTask() {
 
 //------------------------------------------------------------------------------
 //
-void DetectionTask::start() {
+void DetectionTask::Start() {
   if (media_streamer_.get() == nullptr) {
     throw std::runtime_error("Cannot start task with null media streamer");
   }
@@ -76,7 +78,7 @@ void DetectionTask::start() {
     throw std::runtime_error("Cannot start task with null filterchain");
   }
 
-  if (running()) {
+  if (IsRunning()) {
     throw std::logic_error("This excecution is already running.");
   }
 
@@ -87,21 +89,21 @@ void DetectionTask::start() {
 
   ROS_INFO_NAMED(EXEC_TAG, "Starting execution ");
   running_ = true;
-  Runnable::start();
+  Runnable::Start();
 }
 
 //------------------------------------------------------------------------------
 //
-void DetectionTask::stop() {
+void DetectionTask::Stop() {
   std::lock_guard<std::mutex> guard(_newest_image_mutex);
-  if (!running()) {
+  if (!IsRunning()) {
     throw std::logic_error("This excecution is not running.");
   }
 
-  Runnable::stop();
+  Runnable::Stop();
   media_streamer_->Detach(*this);
   filterchain_->CloseFilters();
-  image_publisher_.stop();
+  image_publisher_.Stop();
   running_ = false;
 }
 
@@ -115,11 +117,11 @@ void DetectionTask::OnSubjectNotify(atlas::Subject<> &subject) noexcept {
 
 //------------------------------------------------------------------------------
 //
-void DetectionTask::run() {
-  while (!must_stop()) {
+void DetectionTask::Run() {
+  while (!MustStop()) {
     // Prevent to process data twice for fast processing
     if (!_new_image_ready) {
-      atlas::MilliTimer::sleep(10);
+      atlas::MilliTimer::Sleep(10);
       continue;
     }
     _newest_image_mutex.lock();
@@ -146,7 +148,7 @@ void DetectionTask::run() {
                        CV_GRAY2BGR);
         }
 
-        image_publisher_.write(_image_being_processed);
+        image_publisher_.Write(_image_being_processed);
       }
       if (return_string != "") {
         std_msgs::String msg;

@@ -13,6 +13,7 @@
 #include <memory>
 #include <string>
 #include <opencv2/opencv.hpp>
+#include "lib_atlas/macros.h"
 
 namespace vision_server {
 
@@ -61,7 +62,7 @@ class CameraUndistordMatrices {
 
 //------------------------------------------------------------------------------
 //
-ATLAS_INLINE void CameraUndistordMatrices::GetMatrices(
+inline void CameraUndistordMatrices::GetMatrices(
     cv::Mat &cameraMatrix, cv::Mat &distortionMatrix) {
   camera_matrix_.copyTo(cameraMatrix);
   distortion_matrix_.copyTo(distortionMatrix);
@@ -69,13 +70,13 @@ ATLAS_INLINE void CameraUndistordMatrices::GetMatrices(
 
 //------------------------------------------------------------------------------
 //
-ATLAS_INLINE bool CameraUndistordMatrices::IsCorrectionEnable() {
+inline bool CameraUndistordMatrices::IsCorrectionEnable() {
   return matrices_founded_;
 };
 
 //------------------------------------------------------------------------------
 //
-ATLAS_INLINE void CameraUndistordMatrices::CorrectInmage(const cv::Mat &in,
+inline void CameraUndistordMatrices::CorrectInmage(const cv::Mat &in,
                                                          cv::Mat &out) const {
   if (matrices_founded_) {
     cv::undistort(in, out, camera_matrix_, distortion_matrix_);

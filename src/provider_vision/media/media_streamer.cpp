@@ -10,28 +10,26 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
-#include <ros/ros.h>
-#include <lib_atlas/sys/timer.h>
-#include <lib_atlas/sys/fsinfo.h>
 #include "provider_vision/media/media_streamer.h"
 
 namespace vision_server {
 
+const std::string MediaStreamer::LOOP_TAG = "[MediaStreamer]";
 //==============================================================================
 // C / D T O R S   S E C T I O N
 
 //------------------------------------------------------------------------------
 //
 MediaStreamer::MediaStreamer(BaseMedia::Ptr cam, int artificialFrameRateMs)
-    : media_(cam),
-      LOOP_TAG("[Acquisition Loop]"),
-      is_streaming_(false),
+    : is_streaming_(false),
+      media_(cam),
       artificial_framerate_(artificialFrameRateMs),
       // here 30 in case we forget to set it, so the cpu doesn't blow off.
       framerate_mili_sec_(1000 / 30),
       image_(),
       video_writer_(),
-      is_recording_(false) {
+      is_recording_(false)
+    {
   if (media_->HasArtificialFramerate() && artificial_framerate_ != 0)
     framerate_mili_sec_ = 1000 / artificial_framerate_;
 }
@@ -61,8 +59,8 @@ bool MediaStreamer::StartStreaming() {
 
   // Start thread
   std::lock_guard<std::mutex> guard(image_access_);
-  start();
-  if (running()) {
+  Start();
+  if (IsRunning()) {
     is_streaming_ = true;
     return true;
   }
@@ -77,12 +75,13 @@ bool MediaStreamer::StopStreaming() {
   // Send message on the line.
   ROS_INFO_NAMED(LOOP_TAG, "Stopping streaming on camera");
   // Stop thread
-  if (running()) {
-    stop();
-    return true;
+  if (IsRunning()) {
+    Stop();
+    is_streaming_ = true;
   } else {
     ROS_WARN_NAMED(LOOP_TAG, "Thread is not alive");
   }
+  return is_streaming_;
 }
 
 //------------------------------------------------------------------------------
@@ -128,7 +127,7 @@ bool MediaStreamer::StopRecording() {
 
 //------------------------------------------------------------------------------
 //
-void MediaStreamer::run() {
+void MediaStreamer::Run() {
   bool acquival = false;
   bool must_set_record = false;
 
@@ -137,7 +136,7 @@ void MediaStreamer::run() {
     must_set_record = true;
   }
 
-  while (!must_stop()) {
+  while (!MustStop()) {
     //_logger->LogInfo(LOOP_TAG, "Taking mutex for publishing");
     image_access_.lock();
     //_logger->LogInfo(LOOP_TAG, "Took mutex for publishing");
@@ -159,7 +158,7 @@ void MediaStreamer::run() {
         must_set_record = false;
       }
 
-      if (IsRecording() && atlas::percentage_used_physical_memory() < .8) {
+      if (IsRecording() && atlas::PercentageUsedPhysicalMemory() < .8) {
         //        cv::Mat image_with_correct_format;
         //        cv::cvtColor(_image, image_with_correct_format, CV_BGR2RGB);
         //        video_writer_.write(image_with_correct_format);
@@ -173,7 +172,7 @@ void MediaStreamer::run() {
       }
     }
 
-    atlas::MilliTimer::sleep(framerate_mili_sec_);
+    atlas::MilliTimer::Sleep(framerate_mili_sec_);
   }
 
   if (IsRecording()) {

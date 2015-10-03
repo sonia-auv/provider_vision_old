@@ -21,7 +21,7 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-WebcamContext::WebcamContext()
+WebcamContext::WebcamContext() noexcept
     : BaseContext(),
       DRIVER_TAG("[Webcam Driver]"),
       WEBCAM_NAME("Webcam"),
@@ -81,7 +81,7 @@ void WebcamContext::GetFeature(BaseCamera::Feature feat,
 
 //------------------------------------------------------------------------------
 //
-void WebcamContext::run() {}
+void WebcamContext::Run() {}
 
 //------------------------------------------------------------------------------
 //

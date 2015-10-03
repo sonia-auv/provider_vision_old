@@ -13,12 +13,13 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
+#include <string>
+#include <vector>
 #include <opencv2/opencv.hpp>
-#include "provider_vision/media/camera/base_media.h"
+#include "provider_vision/media/camera/video_file.h"
+#include "provider_vision/media/camera/image_file.h"
 #include "provider_vision/media/context/base_context.h"
 #include "provider_vision/config.h"
-#include "provider_vision/media/camera/video_file.h"
-
 namespace vision_server {
 
 //==============================================================================
@@ -74,7 +75,7 @@ class FileContext : public BaseContext {
 
   bool ContainsMedia(const std::string &nameMedia) const override;
 
-  void run() override;
+  void Run() override;
 
   bool WatchDogFunc() override;
 

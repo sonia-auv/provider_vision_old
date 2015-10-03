@@ -11,7 +11,10 @@
 #define PROVIDER_VISION_ACQUISITION_LOOP_H_
 
 #include <mutex>
+#include <ros/ros.h>
 #include <opencv2/opencv.hpp>
+#include <lib_atlas/sys/timer.h>
+#include <lib_atlas/sys/fsinfo.h>
 #include <lib_atlas/pattern/subject.h>
 #include <lib_atlas/pattern/runnable.h>
 #include "provider_vision/media/camera/base_media.h"
@@ -34,7 +37,7 @@ class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
   //============================================================================
   // C O N S T A N T S   M E M B E R S
 
-  const std::string LOOP_TAG;
+  static const std::string LOOP_TAG;
 
   //==========================================================================
   // P U B L I C   C / D T O R S
@@ -64,7 +67,7 @@ class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
    * Returns the media name... to be deleted since we have the GetMediaID()
    * method.
    */
-  std::string GetMediaName() const;
+  const std::string &GetMediaName() const;
 
   /**
    * Return the acquisition loop status.
@@ -133,7 +136,7 @@ class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
    * Acquisition thread, from HTThread
    * main loop to call NextImage on the media.
    */
-  void run() override;
+  void Run() override;
 
   //==========================================================================
   // P R I V A T E   M E M B E R S
@@ -198,19 +201,24 @@ class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
 
 //------------------------------------------------------------------------------
 //
-inline std::string MediaStreamer::GetMediaName() const {
+inline const std::string &
+MediaStreamer::GetMediaName() const
+{
   return media_->GetName();
 };
 
 //------------------------------------------------------------------------------
 //
-inline bool MediaStreamer::IsRecording() const {
+inline bool
+MediaStreamer::IsRecording() const
+{
   return is_recording_ && video_writer_.isOpened();
 }
 
 //------------------------------------------------------------------------------
 //
-inline bool MediaStreamer::IsStreaming() const { return is_streaming_; }
+inline bool
+MediaStreamer::IsStreaming() const { return is_streaming_; }
 
 }  // namespace vision_server
 

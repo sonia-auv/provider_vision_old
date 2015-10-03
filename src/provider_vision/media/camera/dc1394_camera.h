@@ -32,7 +32,7 @@ class DC1394Camera : public BaseCamera {
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
 
-  using Ptr = DC1394Camera::Ptr;
+  using Ptr = std::shared_ptr<DC1394Camera>;
 
   //==========================================================================
   // P U B L I C   C / D T O R S
@@ -117,7 +117,7 @@ inline std::string DC1394Camera::GetModel() const {
 //
 inline double DC1394Camera::GetAcquistionTimerValue() const {
   timer_access_.lock();
-  double timer = acquisition_timer_.time();
+  double timer = acquisition_timer_.Time();
   timer_access_.unlock();
   return timer;
 };

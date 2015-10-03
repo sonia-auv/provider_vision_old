@@ -61,7 +61,7 @@ class WebcamContext : public BaseContext {
 
   bool IsMyCamera(std::string &nameMedia) const;
 
-  void run() override;
+  void Run() override;
 
   bool WatchDogFunc() override;
 

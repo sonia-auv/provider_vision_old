@@ -30,7 +30,7 @@ static const std::string XML_CAMERA_UNDISTORTION_MATRICE_NODE =
 //------------------------------------------------------------------------------
 //
 ConfigurationHandler::ConfigurationHandler(const std::string &file) {
-  if (!atlas::is_file_exist(file)) {
+  if (!atlas::FileExists(file)) {
     throw std::ios_base::failure("File not found or inaccessible");
   }
   file_ = file;
@@ -46,7 +46,7 @@ ConfigurationHandler::~ConfigurationHandler() {}
 //
 std::vector<CameraConfiguration> ConfigurationHandler::ParseConfiguration() {
   // If the file has been change since constructor
-  if (!atlas::is_file_exist(file_)) {
+  if (!atlas::FileExists(file_)) {
     throw std::ios_base::failure("File not found or inaccessible");
   }
 

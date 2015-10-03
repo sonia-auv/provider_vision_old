@@ -22,7 +22,7 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-DC1394Context::DC1394Context()
+DC1394Context::DC1394Context() noexcept
     : BaseContext(), DRIVER_TAG("[DC1394 Driver]"), _context(nullptr) {}
 
 //------------------------------------------------------------------------------
@@ -63,15 +63,14 @@ void DC1394Context::InitContext(
           throw std::runtime_error("Error creating the DC1394 camera");
         }
 
-        std::unique_ptr<DC1394Camera> cam(
+        std::shared_ptr<DC1394Camera> cam(
             new DC1394Camera(camera_dc, cam_config));
 
         if (!cam->Open()) {
           throw std::runtime_error("Error opening the camera");
         }
 
-        media_list_.insert(
-            std::make_pair(cam_config.GetName(), std::move(cam)));
+        media_list_.push_back(cam);
       }
     }
   }
@@ -81,15 +80,14 @@ void DC1394Context::InitContext(
 //------------------------------------------------------------------------------
 //
 void DC1394Context::CloseContext() {
-  for (auto &active_camera : media_list_) {
-    DC1394Camera &cam = GetCameraFromPair(active_camera);
-
+  for (auto &media : media_list_) {
+    DC1394Camera::Ptr cam = GetDC1394Camera(media);
     // Stop if running
-    if (!cam.Stop()) {
+    if (!cam->Stop()) {
       throw std::runtime_error("Cannot stop camera");
     }
 
-    if (!cam.Close()) {
+    if (!cam->Close()) {
       throw std::runtime_error("Cannot close camera");
     }
   }
@@ -104,9 +102,9 @@ void DC1394Context::CloseContext() {
 bool DC1394Context::StartCamera(const std::string &name) {
   bool result = false;
 
-  DC1394Camera &cam = GetCameraFromMap(name);
+  DC1394Camera::Ptr cam = GetDC1394Camera(name);
 
-  if (cam.Start()) {
+  if (cam->Start()) {
     result = true;
   } else {
     ROS_ERROR_NAMED(DRIVER_TAG, " Camera opened but not started started ");
@@ -118,9 +116,9 @@ bool DC1394Context::StartCamera(const std::string &name) {
 //
 bool DC1394Context::StopCamera(const std::string &name) {
   bool result = false;
-  DC1394Camera &cam = GetCameraFromMap(name);
+  DC1394Camera::Ptr cam = GetDC1394Camera(name);
 
-  if (cam.Stop()) {
+  if (cam->Stop()) {
     result = true;
   } else {
     ROS_ERROR_NAMED(DRIVER_TAG, "Camera opened but not started started ");
@@ -131,12 +129,12 @@ bool DC1394Context::StopCamera(const std::string &name) {
 
 //------------------------------------------------------------------------------
 //
-void DC1394Context::run() {
-  while (!must_stop()) {
-    atlas::SecTimer::sleep(5);
+void DC1394Context::Run() {
+  while (!MustStop()) {
+    atlas::SecTimer::Sleep(5);
     if (!WatchDogFunc()) {
       ROS_WARN_NAMED(DRIVER_TAG, "Watchdog returned with error");
-      atlas::SecTimer::sleep(2);
+      atlas::SecTimer::Sleep(2);
     }
   }
 }
@@ -147,10 +145,9 @@ bool DC1394Context::WatchDogFunc() {
   bool fail = false;
 
   for (auto &active_camera : media_list_) {
-    DC1394Camera &cam =
-        dynamic_cast<DC1394Camera &>(*(active_camera.second.get()));
+    DC1394Camera::Ptr cam = GetDC1394Camera(active_camera);
 
-    if (cam.GetAcquistionTimerValue() > TIME_FOR_BUS_ERROR) {
+    if (cam->GetAcquistionTimerValue() > TIME_FOR_BUS_ERROR) {
       ROS_FATAL_NAMED(DRIVER_TAG, "Camera is not feeding!");
       fail = true;
     }
@@ -162,9 +159,9 @@ bool DC1394Context::WatchDogFunc() {
 //
 void DC1394Context::SetFeature(BaseCamera::Feature feat,
                                const std::string &name, float val) {
-  DC1394Camera &cam = GetCameraFromMap(name);
+  DC1394Camera::Ptr cam = GetDC1394Camera(name);
 
-  if (!cam.SetFeature(feat, val)) {
+  if (!cam->SetFeature(feat, val)) {
     ROS_ERROR_NAMED(DRIVER_TAG, "Feature setting failed.");
   }
 }
@@ -173,9 +170,9 @@ void DC1394Context::SetFeature(BaseCamera::Feature feat,
 //
 void DC1394Context::GetFeature(BaseCamera::Feature feat,
                                const std::string &name, float &val) const {
-  DC1394Camera &cam = GetCameraFromMap(name);
+  DC1394Camera::Ptr cam = GetDC1394Camera(name);
 
-  val = cam.GetFeature(feat);
+  val = cam->GetFeature(feat);
 }
 
 }  // namespace vision_server

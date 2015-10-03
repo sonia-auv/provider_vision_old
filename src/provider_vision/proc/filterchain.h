@@ -90,11 +90,11 @@ class Filterchain : public Serializable {
 
   void AddFilter(const std::string &filter_name);
 
-  void RemoveFilter(const int index);
+  void RemoveFilter(const size_t index);
 
-  void MoveFilterDown(const int filterIndex);
+  void MoveFilterDown(const size_t filterIndex);
 
-  void MoveFilterUp(const int filterIndex);
+  void MoveFilterUp(const size_t filterIndex);
 
   // Getter for the filter list in string (for the client)
   std::string GetFilterList();
@@ -116,7 +116,7 @@ class Filterchain : public Serializable {
   void SetExecutionName(const std::string &executionName);
 
   // Communication from the UI goes on the form
-  int GetFilterIndexFromUIName(const std::string &name) const;
+  size_t GetFilterIndexFromUIName(const std::string &name) const;
 
   std::string GetName() const;
 
@@ -208,18 +208,18 @@ inline void Filterchain::SetName(const std::string &name) { name_ = name; }
 
 //------------------------------------------------------------------------------
 //
-inline int Filterchain::GetFilterIndexFromUIName(
+inline size_t Filterchain::GetFilterIndexFromUIName(
     const std::string &name) const {
   // So a filer name goes like this: #_filterName,
   // where the # is the position in the list, 0 based.
   // So we need to strip the number and get the coressponding filter.
-  int pos = name.find("_");
+  size_t pos = name.find("_");
   // Did not find the filter index.
   if (pos == std::string::npos) {
-    return -1;
+    return std::string::npos;
   }
   std::string position = name.substr(pos + 1, name.size() - 1);
-  return atoi(position.c_str());
+  return size_t(atoi(position.c_str()));
 }
 
 }  // namespace vision_server

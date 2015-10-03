@@ -11,6 +11,7 @@
 #define PROVIDER_VISION_CAM_DRIVER_H_
 
 #include <mutex>
+#include <memory>
 #include <lib_atlas/pattern/runnable.h>
 #include <provider_vision/media/configuration_handler.h>
 #include "provider_vision/media/camera/base_media.h"
@@ -32,9 +33,9 @@ class BaseContext : public atlas::Runnable {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  BaseContext() noexcept = default;
+  BaseContext(){};
 
-  virtual ~BaseContext() noexcept = default;
+  virtual ~BaseContext(){};
 
   //==========================================================================
   // P U B L I C   M E T H O D S
@@ -82,9 +83,11 @@ class BaseContext : public atlas::Runnable {
 
   virtual bool WatchDogFunc() = 0;
 
- private:
+ protected:
   //==========================================================================
   // P R I V A T E   M E M B E R S
+
+  virtual void EraseMedia(const std::string &name_media);
 
   std::vector<BaseMedia::Ptr> media_list_;
 };
@@ -94,25 +97,50 @@ class BaseContext : public atlas::Runnable {
 
 //-----------------------------------------------------------------------------
 //
-inline bool BaseContext::ContainsMedia(const std::string &nameMedia) const {
-  return GetMedia(nameMedia) != media_list_.end();
+inline bool
+BaseContext::ContainsMedia(const std::string &nameMedia) const {
+   if(GetMedia(nameMedia))
+   {
+     return true;
+  }
+  return false;
 }
 
 //-----------------------------------------------------------------------------
 //
-inline std::vector<BaseMedia::Ptr> BaseContext::GetMediaList() const {
+inline std::vector<BaseMedia::Ptr>
+BaseContext::GetMediaList() const {
   return media_list_;
 }
 
 //-----------------------------------------------------------------------------
 //
-inline BaseMedia::Ptr BaseContext::GetMedia(const std::string &name) const {
-  auto camera = GetMedia(name);
-  if (camera == media_list_.end()) {
-    throw std::invalid_argument("Camera is not from this context.");
-  }
+inline BaseMedia::Ptr
+BaseContext::GetMedia(const std::string &name) const {
 
-  return (*camera).second;
+  BaseMedia::Ptr media(nullptr);
+
+  for(auto &elem : media_list_)
+  {
+    if( elem.get()->GetName().compare(name) == 0)
+      media = elem;
+  }
+  return media;
+}
+
+//-----------------------------------------------------------------------------
+//
+inline void
+BaseContext::EraseMedia(const std::string &name_media)
+{
+  for( auto iter = media_list_.begin(); iter != media_list_.end(); iter++)
+  {
+    if( iter->get()->GetName().compare(name_media) == 0)
+    {
+      media_list_.erase(iter);
+      return;
+    }
+  }
 }
 
 }  // namespace vision_server

@@ -10,7 +10,6 @@
 #ifndef PROVIDER_VISION_CAM_DRIVER_DC1394_H_
 #define PROVIDER_VISION_CAM_DRIVER_DC1394_H_
 
-#include <memory>
 #include <inttypes.h>
 #include <dc1394/dc1394.h>
 #include "provider_vision/config.h"
@@ -65,37 +64,60 @@ class DC1394Context : public BaseContext {
 
   bool ContainsMedia(const std::string &nameMedia) const override;
 
-  void run() override;
+  void Run() override;
 
   bool WatchDogFunc() override;
 
  private:
-  DC1394Camera &GetCameraFromMap(const std::string &name) const;
-  DC1394Camera &GetCameraFromPair(
-      const std::pair<std::string, BaseMedia::Ptr> &pair) const;
+  DC1394Camera::Ptr GetDC1394Camera(const std::string &name) const;
+  DC1394Camera::Ptr GetDC1394Camera(BaseMedia::Ptr media) const;
 
   //==========================================================================
   // P R I V A T E   M E M B E R S
-
   dc1394_t *_context;
 };
 
 //-----------------------------------------------------------------------------
 //
-DC1394Camera &DC1394Context::GetCameraFromMap(const std::string &name) const {
-  auto camera = GetMedia(name);
-  if (camera != media_list_.end()) {
-    throw std::invalid_argument("Camera does not exist");
+inline bool
+DC1394Context::ContainsMedia(const std::string &nameMedia) const
+{
+  for(const auto &cam : this->media_list_)
+  {
+    if( nameMedia.compare(cam->GetName())==0)
+    {
+      return true;
+    }
   }
-  return GetCameraFromPair(*camera);
+  return false;
 }
 
 //-----------------------------------------------------------------------------
 //
-DC1394Camera &DC1394Context::GetCameraFromPair(
-    const std::pair<std::string, BaseMedia::Ptr> &pair) const {
-  return dynamic_cast<DC1394Camera &>(*pair.second);
+inline DC1394Camera::Ptr
+DC1394Context::GetDC1394Camera(const std::string &name) const
+{
+  return GetDC1394Camera(GetMedia(name));
 }
+
+//-----------------------------------------------------------------------------
+//
+inline DC1394Camera::Ptr
+DC1394Context::GetDC1394Camera(BaseMedia::Ptr media) const
+{
+  DC1394Camera::Ptr tmp = std::dynamic_pointer_cast<DC1394Camera>(media);
+
+  // Should not happen since if we get here, we are probably in a for
+  // loop that iters through media_list_
+  // OR we received a name which returned true at ContainsMedia call
+  // since it is the first step for calling camera function on a context
+  if(!tmp)
+  {
+    throw std::invalid_argument("Media is not a DC1394 camera");
+  }
+  return tmp;
+}
+
 
 }  // namespace vision_server
 #endif  // PROVIDER_VISION_CAM_DRIVER_DC1394_H_

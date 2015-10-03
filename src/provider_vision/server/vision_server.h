@@ -10,6 +10,9 @@
 #ifndef PROVIDER_VISION_PROVIDER_VISION_H_
 #define PROVIDER_VISION_PROVIDER_VISION_H_
 
+#include <memory>
+#include <vector>
+
 #include <lib_atlas/ros/service_server_manager.h>
 #include <vision_server/vision_server_execute_cmd.h>
 #include <vision_server/vision_server_get_information_list.h>
@@ -27,6 +30,7 @@
 #include <vision_server/vision_server_get_filterchain_from_execution.h>
 #include <vision_server/vision_server_get_media_from_execution.h>
 #include <vision_server/vision_server_set_filterchain_filter_observer.h>
+
 #include "provider_vision/config.h"
 #include "provider_vision/media/camera/base_media.h"
 #include "provider_vision/proc/detection_task.h"
@@ -71,13 +75,7 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    * COMPONENT_SEPARATOR given a list of the executions.
    */
   std::string BuildRosMessage(
-      const std::vector<DetectionTask> &detection_tasks) const noexcept;
-
-  std::string BuildRosMessage(
-      const std::vector<Filterchain> &filterchains) const noexcept;
-
-  std::string BuildRosMessage(const std::vector<BaseMedia> &medias) const
-      noexcept;
+      const std::vector<std::string> &name_vec) const noexcept;
 
   /**
    * \brief Copies a filterchain which is not used by a running execution.
@@ -374,36 +372,13 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
 
 //==============================================================================
 // I N L I N E   F U N C T I O N S   D E F I N I T I O N S
-
 //------------------------------------------------------------------------------
 //
 inline std::string VisionServer::BuildRosMessage(
-    const std::vector<DetectionTask> &detection_tasks) const noexcept {
+    const std::vector<std::string> &name_vec) const noexcept {
   std::string msg = {""};
-  for (const auto &detection_task : detection_tasks) {
-    msg += detection_task.GetName() + ";";
-  }
-  return msg;
-}
-
-//------------------------------------------------------------------------------
-//
-inline std::string VisionServer::BuildRosMessage(
-    const std::vector<Filterchain> &filterchains) const noexcept {
-  std::string msg = {""};
-  for (const auto &filterchain : filterchains) {
-    msg += filterchain.GetName() + ";";
-  }
-  return msg;
-}
-
-//------------------------------------------------------------------------------
-//
-inline std::string VisionServer::BuildRosMessage(
-    const std::vector<BaseMedia> &medias) const noexcept {
-  std::string msg = {""};
-  for (const auto &media : medias) {
-    msg += media.GetName() + ";";
+  for (const auto &name: name_vec) {
+    msg += name + ";";
   }
   return msg;
 }
