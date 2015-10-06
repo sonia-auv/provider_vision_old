@@ -12,78 +12,71 @@
 
 namespace vision_server {
 
-    //==============================================================================
-    // C / D T O R S   S E C T I O N
+//==============================================================================
+// C / D T O R S   S E C T I O N
 
-    //------------------------------------------------------------------------------
-    //
-    DetectionTaskManager::DetectionTaskManager() {}
+//------------------------------------------------------------------------------
+//
+DetectionTaskManager::DetectionTaskManager() {}
 
-    //------------------------------------------------------------------------------
-    //
-    DetectionTaskManager::~DetectionTaskManager() {}
+//------------------------------------------------------------------------------
+//
+DetectionTaskManager::~DetectionTaskManager() {}
 
-    //==============================================================================
-    // M E T H O D   S E C T I O N
+//==============================================================================
+// M E T H O D   S E C T I O N
 
-    //------------------------------------------------------------------------------
-    //
-    void DetectionTaskManager::StartDetectionTask(
-            std::shared_ptr<ros::NodeHandle> node_handle,
-            MediaStreamer::Ptr media_streamer,
-            Filterchain::Ptr filterchain,
-            const std::string &execution_name) noexcept {
-        try
-        {
-            GetDetectionTask(execution_name);
-        }
-        catch (const std::exception &e)
-        {
-            std::cout << "Execution already exist" << std::endl;
-        }
+//------------------------------------------------------------------------------
+//
+void DetectionTaskManager::StartDetectionTask(
+    std::shared_ptr<ros::NodeHandle> node_handle,
+    MediaStreamer::Ptr media_streamer, Filterchain::Ptr filterchain,
+    const std::string &execution_name) noexcept {
+  try {
+    GetDetectionTask(execution_name);
+  } catch (const std::exception &e) {
+    std::cout << "Execution already exist" << std::endl;
+  }
 
-        auto task = std::make_shared<DetectionTask>(node_handle, media_streamer,
-                                                    filterchain, execution_name);
-        detection_tasks_.push_back(task);
+  auto task = std::make_shared<DetectionTask>(node_handle, media_streamer,
+                                              filterchain, execution_name);
+  detection_tasks_.push_back(task);
+}
+
+//------------------------------------------------------------------------------
+//
+void DetectionTaskManager::StopDetectionTask(
+    const std::string &execution_name) noexcept {
+  for (auto it = detection_tasks_.begin(); it != detection_tasks_.cend();
+       it++) {
+    if ((*it)->GetName().compare(execution_name) == 0) {
+      (*it)->Stop();
+      detection_tasks_.erase(it);
     }
+  }
+}
 
-    //------------------------------------------------------------------------------
-    //
-    void DetectionTaskManager::StopDetectionTask(
-            const std::string &execution_name) noexcept {
+//------------------------------------------------------------------------------
+//
+std::vector<std::string> DetectionTaskManager::GetAllDetectionTasks() const
+    noexcept {
+  std::vector<std::string> names;
+  for (const auto &task : detection_tasks_) {
+    names.push_back(task->GetName());
+  }
+  return names;
+}
 
-        for( auto it = detection_tasks_.begin();
-             it != detection_tasks_.cend(); it++) {
-            if ((*it)->GetName().compare(execution_name) == 0 ) {
-                (*it)->Stop();
-                detection_tasks_.erase(it);
-            }
-        }
+//------------------------------------------------------------------------------
+//
+DetectionTask::Ptr DetectionTaskManager::GetDetectionTask(
+    const std::string &execution_name) const {
+  for (const auto &task : detection_tasks_) {
+    if (task->GetName() == execution_name) {
+      return task;
     }
-
-    //------------------------------------------------------------------------------
-    //
-    std::vector<std::string>
-    DetectionTaskManager::GetAllDetectionTasks()
-    const noexcept {
-        std::vector<std::string> names;
-        for( const auto &task : detection_tasks_)
-        {
-            names.push_back(task->GetName());
-        }
-        return names;
-    }
-
-    //------------------------------------------------------------------------------
-    //
-    DetectionTask::Ptr DetectionTaskManager::GetDetectionTask(
-            const std::string &execution_name) const {
-        for (const auto &task : detection_tasks_) {
-            if (task->GetName() == execution_name) {
-                return task;
-            }
-        }
-        throw std::invalid_argument("This detection task does not exists.");
-    }
+  }
+  throw std::invalid_argument("This detection task does not exists.");
+}
 
 }  // namespace vision_server

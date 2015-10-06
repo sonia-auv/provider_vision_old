@@ -12,7 +12,6 @@
 
 #include <provider_vision/media/context/file_context.h>
 
-
 namespace vision_server {
 
 //==============================================================================
@@ -20,7 +19,8 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-FileContext::FileContext() noexcept : BaseContext(), DRIVER_TAG("[MEDIA Driver]") {}
+FileContext::FileContext() noexcept : BaseContext(),
+                                      DRIVER_TAG("[MEDIA Driver]") {}
 
 //------------------------------------------------------------------------------
 //
@@ -44,24 +44,18 @@ bool FileContext::StartCamera(const std::string &name) {
   // in the videoFile context, camera in list are existing camera.
   bool ret_val = false;
   BaseMedia::Ptr media = GetMedia(name);
-  if( !media )
-  {
+  if (!media) {
     MediaType type = GetMediaType(name);
 
-    if (type == MediaType::IMAGE)
-    {
+    if (type == MediaType::IMAGE) {
       ImageFile::Ptr file(std::make_shared<ImageFile>(name));
       ret_val = file->Start();
       media_list_.push_back(std::dynamic_pointer_cast<BaseMedia>(file));
-    }
-    else if (type == MediaType::VIDEO)
-    {
+    } else if (type == MediaType::VIDEO) {
       VideoFile::Ptr file(std::make_shared<VideoFile>(name));
       ret_val = file->Start();
       media_list_.push_back(std::dynamic_pointer_cast<BaseMedia>(file));
-    }
-    else
-    {
+    } else {
       throw std::invalid_argument("Not my camera type");
     }
   }
@@ -72,7 +66,6 @@ bool FileContext::StartCamera(const std::string &name) {
 //
 bool FileContext::StopCamera(const std::string &name) {
   // in the videoFile context, camera in list are existing camera.
-
 
   auto file = GetMedia(name);
   bool result = file->Stop();
@@ -86,7 +79,7 @@ bool FileContext::StopCamera(const std::string &name) {
 bool FileContext::ContainsMedia(const std::string &nameMedia) const {
   bool result = false;
   // cherche si la camera existe
-  if ( GetMedia(nameMedia) ) {
+  if (GetMedia(nameMedia)) {
     // already existing
     result = true;
   }  // N'existe pas dans le systeme, est-ce qu'on peut la creer?

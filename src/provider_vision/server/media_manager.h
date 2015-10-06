@@ -13,7 +13,7 @@
 
 #include <memory>
 #include <vector>
-#include <bits/shared_ptr.h>
+#include <string>
 #include <provider_vision/media/camera/base_media.h>
 #include "provider_vision/media/camera/base_camera.h"
 #include "provider_vision/media/context/base_context.h"
@@ -21,138 +21,123 @@
 
 namespace vision_server {
 
-    class MediaManager {
-    public:
-        //==========================================================================
-        // T Y P E D E F   A N D   E N U M
+class MediaManager {
+ public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
 
-        using Ptr = std::shared_ptr<MediaManager>;
+  using Ptr = std::shared_ptr<MediaManager>;
 
-        //==========================================================================
-        // P U B L I C   C / D T O R S
+  //==========================================================================
+  // P U B L I C   C / D T O R S
 
-        MediaManager() noexcept;
+  MediaManager() noexcept;
 
-        ~MediaManager() noexcept;
+  ~MediaManager() noexcept;
 
-        //==========================================================================
-        // P U B L I C   M E T H O D S
+  //==========================================================================
+  // P U B L I C   M E T H O D S
 
-        MediaStreamer::Ptr StartMedia(const std::string &media_name);
+  MediaStreamer::Ptr StartMedia(const std::string &media_name);
 
-        void StopMedia(const std::string &media) noexcept;
+  void StopMedia(const std::string &media) noexcept;
 
-        std::vector<std::string> GetAllMediasName() const noexcept;
+  std::vector<std::string> GetAllMediasName() const noexcept;
 
-        /**
-         * If the media is a camera, set the feature to a specific value.
-         *
-         * This will try to convert the media to a camera. If this work, calls the
-         * method to set a feature on it. If it does not, this throws an exception.
-         *
-         * \param media_name The name of the media to set the feature to.
-         * \param feature The feature to change the value of.
-         * \param value The value to set on the given feature.
-         */
-        void SetCameraFeature(const std::string &media_name,
-                              const std::string &feature, float value);
+  /**
+   * If the media is a camera, set the feature to a specific value.
+   *
+   * This will try to convert the media to a camera. If this work, calls the
+   * method to set a feature on it. If it does not, this throws an exception.
+   *
+   * \param media_name The name of the media to set the feature to.
+   * \param feature The feature to change the value of.
+   * \param value The value to set on the given feature.
+   */
+  void SetCameraFeature(const std::string &media_name,
+                        const std::string &feature, float value);
 
-        /**
-         * If the media is a camera, get the value of the given feature.
-         *
-         * This will try to convert the media to a camera. If this work, calls the
-         * method to ge the value of a feature on it. If it does not, this throws
-         * an exception.
-         *
-         * \param media_name The name of the media to set the feature to.
-         * \param feature The feature to change the value of.
-         */
-        float GetCameraFeature(const std::string &media_name,
-                               const std::string &feature);
+  /**
+   * If the media is a camera, get the value of the given feature.
+   *
+   * This will try to convert the media to a camera. If this work, calls the
+   * method to ge the value of a feature on it. If it does not, this throws
+   * an exception.
+   *
+   * \param media_name The name of the media to set the feature to.
+   * \param feature The feature to change the value of.
+   */
+  float GetCameraFeature(const std::string &media_name,
+                         const std::string &feature);
 
-    private:
-        //==========================================================================
-        // P R I V A T E   M E T H O D S
-        BaseMedia::Ptr GetMedia(const std::string &name) const noexcept;
+ private:
+  //==========================================================================
+  // P R I V A T E   M E T H O D S
 
-        MediaStreamer::Ptr GetMediaStreamer( const std::string &name );
+  BaseMedia::Ptr GetMedia(const std::string &name) const noexcept;
 
-        bool IsMediaStreamerExist(const std::string &name );
+  MediaStreamer::Ptr GetMediaStreamer(const std::string &name);
 
-        void InitializeContext();
+  bool IsMediaStreamerExist(const std::string &name);
 
-        void CloseContext();
+  BaseContext::Ptr GetContextFromMedia(const std::string &name) const;
 
-        BaseContext::Ptr GetContextFromMedia(const std::string &name) const;
+  BaseCamera::Feature GetFeatureFromName(const std::string &name) const;
 
-        BaseCamera::Feature GetFeatureFromName(const std::string &name) const;
+  void AddMediaStreamer(MediaStreamer::Ptr media_streamer);
 
-        void AddMediaStreamer(MediaStreamer::Ptr media_streamer);
-        void RemoveMediaStreamer(const std::string &name);
+  void RemoveMediaStreamer(const std::string &name);
 
-        //==========================================================================
-        // P R I V A T E   M E M B E R S
+  //==========================================================================
+  // P R I V A T E   M E M B E R S
 
-        std::vector<BaseContext::Ptr> contexts_;
-        std::vector<MediaStreamer::Ptr> media_streamers_;
-    };
+  std::vector<BaseContext::Ptr> contexts_;
 
-//-----------------------------------------------------------------------------
-//
-    inline MediaStreamer::Ptr
-    MediaManager::GetMediaStreamer( const std::string &name )
-    {
-        MediaStreamer::Ptr media_ptr(nullptr);
-
-        for( const auto &elem : media_streamers_)
-        {
-            if( elem->GetMediaName().compare(name) == 0 )
-            {
-                media_ptr = elem;
-            }
-        }
-        return media_ptr;
-    }
+  std::vector<MediaStreamer::Ptr> media_streamers_;
+};
 
 //-----------------------------------------------------------------------------
 //
-    inline void
-    MediaManager::AddMediaStreamer(MediaStreamer::Ptr media_streamer)
-    {
-        media_streamers_.push_back(media_streamer);
+inline MediaStreamer::Ptr MediaManager::GetMediaStreamer(
+    const std::string &name) {
+  MediaStreamer::Ptr media_ptr(nullptr);
+
+  for (const auto &elem : media_streamers_) {
+    if (elem->GetMediaName().compare(name) == 0) {
+      media_ptr = elem;
     }
+  }
+  return media_ptr;
+}
 
 //-----------------------------------------------------------------------------
 //
-    inline void
-    MediaManager::RemoveMediaStreamer(const std::string &name)
-    {
+inline void MediaManager::AddMediaStreamer(MediaStreamer::Ptr media_streamer) {
+  media_streamers_.push_back(media_streamer);
+}
 
-        for( auto elem = media_streamers_.begin(); elem != media_streamers_.end(); elem++ )
-        {
-            if( (*elem)->GetMediaName().compare(name) == 0 )
-            {
-                media_streamers_.erase(elem);
-                return;
-            }
-        }
+//-----------------------------------------------------------------------------
+//
+inline void MediaManager::RemoveMediaStreamer(const std::string &name) {
+  for (auto elem = media_streamers_.begin(); elem != media_streamers_.end();
+       elem++) {
+    if ((*elem)->GetMediaName().compare(name) == 0) {
+      media_streamers_.erase(elem);
+      return;
     }
+  }
+}
 
-    //-------------------------------------------------------------------------
-    //
-    inline bool
-    MediaManager::IsMediaStreamerExist(const std::string &name )
-    {
-        for( const auto &elem : media_streamers_)
-        {
-            if( name.compare(elem->GetMediaName()) == 0)
-            {
-                return true;
-            }
-        }
-        return false;
+//-------------------------------------------------------------------------
+//
+inline bool MediaManager::IsMediaStreamerExist(const std::string &name) {
+  for (const auto &elem : media_streamers_) {
+    if (name.compare(elem->GetMediaName()) == 0) {
+      return true;
     }
-
+  }
+  return false;
+}
 
 }  // namespace vision_server
 

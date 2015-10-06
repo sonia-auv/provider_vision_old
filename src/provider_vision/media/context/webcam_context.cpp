@@ -21,11 +21,10 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-WebcamContext::WebcamContext() noexcept
-    : BaseContext(),
-      DRIVER_TAG("[Webcam Driver]"),
-      WEBCAM_NAME("Webcam"),
-      webcam_() {}
+WebcamContext::WebcamContext() noexcept : BaseContext(),
+                                          DRIVER_TAG("[Webcam Driver]"),
+                                          WEBCAM_NAME("Webcam"),
+                                          webcam_() {}
 
 //------------------------------------------------------------------------------
 //

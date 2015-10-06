@@ -12,6 +12,7 @@
 
 #include <memory>
 #include <vector>
+#include <string>
 
 #include <lib_atlas/ros/service_server_manager.h>
 #include <vision_server/vision_server_execute_cmd.h>
@@ -74,8 +75,8 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    * Return a string of each execution separated by the current
    * COMPONENT_SEPARATOR given a list of the executions.
    */
-  std::string BuildRosMessage(
-      const std::vector<std::string> &name_vec) const noexcept;
+  std::string BuildRosMessage(const std::vector<std::string> &name_vec) const
+      noexcept;
 
   /**
    * \brief Copies a filterchain which is not used by a running execution.
@@ -372,12 +373,13 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
 
 //==============================================================================
 // I N L I N E   F U N C T I O N S   D E F I N I T I O N S
+
 //------------------------------------------------------------------------------
 //
 inline std::string VisionServer::BuildRosMessage(
     const std::vector<std::string> &name_vec) const noexcept {
-  std::string msg = {""};
-  for (const auto &name: name_vec) {
+  std::string msg("");
+  for (const auto &name : name_vec) {
     msg += name + ";";
   }
   return msg;

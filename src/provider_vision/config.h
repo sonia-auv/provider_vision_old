@@ -11,6 +11,7 @@
 #define PROVIDER_VISION_CONFIG_H_
 
 #include <lib_atlas/config.h>
+#include <string>
 
 namespace vision_server {
 

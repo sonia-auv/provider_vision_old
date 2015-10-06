@@ -22,14 +22,13 @@ namespace vision_server {
 //------------------------------------------------------------------------------
 //
 ImageFile::ImageFile(std::string path_to_file)
-    : BaseMedia(CameraConfiguration(path_to_file)),
-      path_(path_to_file) {
+    : BaseMedia(CameraConfiguration(path_to_file)), path_(path_to_file) {
   LoadImage(path_);
 }
 
 //------------------------------------------------------------------------------
 //
-ImageFile::ImageFile() : BaseMedia(CameraConfiguration("NO_PATH")) , path_("") {}
+ImageFile::ImageFile() : BaseMedia(CameraConfiguration("NO_PATH")), path_("") {}
 
 //==============================================================================
 // M E T H O D   S E C T I O N

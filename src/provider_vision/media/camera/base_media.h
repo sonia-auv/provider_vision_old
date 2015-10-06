@@ -28,7 +28,7 @@ class BaseMedia {
 
   using Ptr = std::shared_ptr<BaseMedia>;
 
-  enum class Status {OPEN, STREAMING, CLOSE, ERROR};
+  enum class Status { OPEN, STREAMING, CLOSE, ERROR };
 
   //==========================================================================
   // P U B L I C   C / D T O R S
@@ -108,7 +108,9 @@ inline const CameraConfiguration &BaseMedia::GetCameraConfiguration() const {
 
 //------------------------------------------------------------------------------
 //
-inline const std::string &BaseMedia::GetName() const { return config_.GetName(); }
+inline const std::string &BaseMedia::GetName() const {
+  return config_.GetName();
+}
 
 //------------------------------------------------------------------------------
 //
@@ -116,12 +118,13 @@ inline bool BaseMedia::IsOpened() const { return Status::OPEN == status_; }
 
 //------------------------------------------------------------------------------
 //
-inline bool
-BaseMedia::IsClosed() const { return Status::CLOSE == status_; }
+inline bool BaseMedia::IsClosed() const { return Status::CLOSE == status_; }
 
 //------------------------------------------------------------------------------
 //
-inline bool BaseMedia::IsStreaming() const { return Status::STREAMING == status_; }
+inline bool BaseMedia::IsStreaming() const {
+  return Status::STREAMING == status_;
+}
 
 }  // namespace vision_server
 #endif  // PROVIDER_VISION_BaseMedia_H_

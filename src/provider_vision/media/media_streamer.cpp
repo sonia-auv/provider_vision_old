@@ -28,8 +28,7 @@ MediaStreamer::MediaStreamer(BaseMedia::Ptr cam, int artificialFrameRateMs)
       framerate_mili_sec_(1000 / 30),
       image_(),
       video_writer_(),
-      is_recording_(false)
-    {
+      is_recording_(false) {
   if (media_->HasArtificialFramerate() && artificial_framerate_ != 0)
     framerate_mili_sec_ = 1000 / artificial_framerate_;
 }
@@ -54,7 +53,7 @@ void MediaStreamer::SetFramerate(int framePerSecond) {
 
 //------------------------------------------------------------------------------
 //
-bool MediaStreamer::StartStreaming() {
+void MediaStreamer::StartStreaming() {
   ROS_INFO_NAMED(LOOP_TAG, "Starting streaming on camera");
 
   // Start thread
@@ -69,24 +68,27 @@ bool MediaStreamer::StartStreaming() {
 
 //------------------------------------------------------------------------------
 //
-bool MediaStreamer::StopStreaming() {
-  is_streaming_ = false;
+void MediaStreamer::StopStreaming() {
+  if (elem->IsStreaming()) {
+    is_streaming_ = false;
+    // Send message on the line.
+    ROS_INFO_NAMED(LOOP_TAG, "Stopping streaming on camera");
+    // Stop thread
+    StopRecording();
 
-  // Send message on the line.
-  ROS_INFO_NAMED(LOOP_TAG, "Stopping streaming on camera");
-  // Stop thread
-  if (IsRunning()) {
-    Stop();
-    is_streaming_ = true;
-  } else {
-    ROS_WARN_NAMED(LOOP_TAG, "Thread is not alive");
+    if (IsRunning()) {
+      Stop();
+      is_streaming_ = true;
+    } else {
+      ROS_WARN_NAMED(LOOP_TAG, "Thread is not alive");
+    }
   }
   return is_streaming_;
 }
 
 //------------------------------------------------------------------------------
 //
-bool MediaStreamer::StartRecording(const std::string &filename) {
+void MediaStreamer::StartRecording(const std::string &filename) {
   if (IsRecording()) {
     // ROS_INFO("[VISION_CLIENT] startVideoCapture not opened.");
     return false;
@@ -115,14 +117,11 @@ bool MediaStreamer::StartRecording(const std::string &filename) {
 
 //------------------------------------------------------------------------------
 //
-bool MediaStreamer::StopRecording() {
+void MediaStreamer::StopRecording() {
   if (IsRecording()) {
     video_writer_.release();
     is_recording_ = false;
-    return true;
   }
-  // ROS_INFO("[VISION_CLIENT]","StopVideoCapture video is not running.");
-  return false;
 }
 
 //------------------------------------------------------------------------------

@@ -21,8 +21,7 @@ namespace vision_server {
 //
 WebcamCamera::WebcamCamera() noexcept
     : BaseCamera(CameraConfiguration("Webcam")),
-      cv::VideoCapture(0)
-    {
+      cv::VideoCapture(0) {
   if (isOpened()) {
     status_ = Status::OPEN;
   }
@@ -31,9 +30,8 @@ WebcamCamera::WebcamCamera() noexcept
 //------------------------------------------------------------------------------
 //
 WebcamCamera::WebcamCamera(int webcamIdx) noexcept
-    : BaseCamera(CameraConfiguration("Webcam")) ,
-      cv::VideoCapture(webcamIdx)
-      {
+    : BaseCamera(CameraConfiguration("Webcam")),
+      cv::VideoCapture(webcamIdx) {
   if (isOpened()) {
     status_ = Status::OPEN;
   }
@@ -50,8 +48,7 @@ WebcamCamera::~WebcamCamera() {}
 //
 bool WebcamCamera::Start() {
   // Construction also start the camera for a videoCapture
-  if ( IsOpened())
-    status_ = Status::STREAMING;
+  if (IsOpened()) status_ = Status::STREAMING;
   return IsOpened();
 }
 
@@ -59,8 +56,7 @@ bool WebcamCamera::Start() {
 //
 bool WebcamCamera::Stop() {
   // Always stream when asking to capture only...
-  if ( IsOpened())
-    status_ = Status::OPEN;
+  if (IsOpened()) status_ = Status::OPEN;
   return IsOpened();
 }
 

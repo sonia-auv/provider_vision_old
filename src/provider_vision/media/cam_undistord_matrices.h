@@ -62,8 +62,8 @@ class CameraUndistordMatrices {
 
 //------------------------------------------------------------------------------
 //
-inline void CameraUndistordMatrices::GetMatrices(
-    cv::Mat &cameraMatrix, cv::Mat &distortionMatrix) {
+inline void CameraUndistordMatrices::GetMatrices(cv::Mat &cameraMatrix,
+                                                 cv::Mat &distortionMatrix) {
   camera_matrix_.copyTo(cameraMatrix);
   distortion_matrix_.copyTo(distortionMatrix);
 }
@@ -77,7 +77,7 @@ inline bool CameraUndistordMatrices::IsCorrectionEnable() {
 //------------------------------------------------------------------------------
 //
 inline void CameraUndistordMatrices::CorrectInmage(const cv::Mat &in,
-                                                         cv::Mat &out) const {
+                                                   cv::Mat &out) const {
   if (matrices_founded_) {
     cv::undistort(in, out, camera_matrix_, distortion_matrix_);
   } else {

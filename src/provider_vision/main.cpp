@@ -10,23 +10,9 @@
 #include <string>
 #include "provider_vision/server/vision_server.h"
 
-// void RunUnitTestIfNeeded(int argc, char **argv) {
-//  TCHolder::RegisterAllObjects(argv[0]);
-//  for (int i = 1; i < argc; i++) {
-//    if (std::string(argv[i]) == "RunTest") {
-//      TCTestManager *testManager = TCTestManager::GetInstance();
-//      testManager->PerformUnitTests(std::string(argv[i + 1]), false);
-//      return;
-//    }
-//  }
-//}
-
 //------------------------------------------------------------------------------
 //
 int main(int argc, char **argv) {
-  // Runs unit test if needed.
-  // RunUnitTestIfNeeded(argc, argv);
-
   ros::init(argc, argv, "vision_server");
   std::shared_ptr<ros::NodeHandle> node_handle =
       std::make_shared<ros::NodeHandle>();

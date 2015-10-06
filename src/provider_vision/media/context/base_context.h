@@ -97,46 +97,35 @@ class BaseContext : public atlas::Runnable {
 
 //-----------------------------------------------------------------------------
 //
-inline bool
-BaseContext::ContainsMedia(const std::string &nameMedia) const {
-   if(GetMedia(nameMedia))
-   {
-     return true;
+inline bool BaseContext::ContainsMedia(const std::string &nameMedia) const {
+  if (GetMedia(nameMedia)) {
+    return true;
   }
   return false;
 }
 
 //-----------------------------------------------------------------------------
 //
-inline std::vector<BaseMedia::Ptr>
-BaseContext::GetMediaList() const {
+inline std::vector<BaseMedia::Ptr> BaseContext::GetMediaList() const {
   return media_list_;
 }
 
 //-----------------------------------------------------------------------------
 //
-inline BaseMedia::Ptr
-BaseContext::GetMedia(const std::string &name) const {
-
+inline BaseMedia::Ptr BaseContext::GetMedia(const std::string &name) const {
   BaseMedia::Ptr media(nullptr);
 
-  for(auto &elem : media_list_)
-  {
-    if( elem.get()->GetName().compare(name) == 0)
-      media = elem;
+  for (auto &elem : media_list_) {
+    if (elem.get()->GetName().compare(name) == 0) media = elem;
   }
   return media;
 }
 
 //-----------------------------------------------------------------------------
 //
-inline void
-BaseContext::EraseMedia(const std::string &name_media)
-{
-  for( auto iter = media_list_.begin(); iter != media_list_.end(); iter++)
-  {
-    if( iter->get()->GetName().compare(name_media) == 0)
-    {
+inline void BaseContext::EraseMedia(const std::string &name_media) {
+  for (auto iter = media_list_.begin(); iter != media_list_.end(); iter++) {
+    if (iter->get()->GetName().compare(name_media) == 0) {
       media_list_.erase(iter);
       return;
     }

@@ -103,9 +103,9 @@ class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
   /**
    * Start/stop the loop.
    */
-  bool StartStreaming();
+  void StartStreaming();
 
-  bool StopStreaming();
+  void StopStreaming();
 
   /**
    * If the camera is a Real camera, we want to record a video feed for test
@@ -118,7 +118,7 @@ class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
    *
    * \return True if the record can be processed, False if something went wrong.
    */
-  bool StartRecording(const std::string &filename = "");
+  void StartRecording(const std::string &filename = "");
 
   /**
    * Stop the record of the camera by closing the file the image are saved to
@@ -126,7 +126,7 @@ class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
    *
    * \return True if the function closed the file.
    */
-  bool StopRecording();
+  void StopRecording();
 
  private:
   //==========================================================================
@@ -201,24 +201,19 @@ class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
 
 //------------------------------------------------------------------------------
 //
-inline const std::string &
-MediaStreamer::GetMediaName() const
-{
+inline const std::string &MediaStreamer::GetMediaName() const {
   return media_->GetName();
 };
 
 //------------------------------------------------------------------------------
 //
-inline bool
-MediaStreamer::IsRecording() const
-{
+inline bool MediaStreamer::IsRecording() const {
   return is_recording_ && video_writer_.isOpened();
 }
 
 //------------------------------------------------------------------------------
 //
-inline bool
-MediaStreamer::IsStreaming() const { return is_streaming_; }
+inline bool MediaStreamer::IsStreaming() const { return is_streaming_; }
 
 }  // namespace vision_server
 

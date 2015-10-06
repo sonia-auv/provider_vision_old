@@ -22,8 +22,9 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-DC1394Context::DC1394Context() noexcept
-    : BaseContext(), DRIVER_TAG("[DC1394 Driver]"), _context(nullptr) {}
+DC1394Context::DC1394Context() noexcept : BaseContext(),
+                                          DRIVER_TAG("[DC1394 Driver]"),
+                                          _context(nullptr) {}
 
 //------------------------------------------------------------------------------
 //

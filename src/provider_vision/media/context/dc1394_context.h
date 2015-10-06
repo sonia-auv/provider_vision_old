@@ -79,13 +79,9 @@ class DC1394Context : public BaseContext {
 
 //-----------------------------------------------------------------------------
 //
-inline bool
-DC1394Context::ContainsMedia(const std::string &nameMedia) const
-{
-  for(const auto &cam : this->media_list_)
-  {
-    if( nameMedia.compare(cam->GetName())==0)
-    {
+inline bool DC1394Context::ContainsMedia(const std::string &nameMedia) const {
+  for (const auto &cam : this->media_list_) {
+    if (nameMedia.compare(cam->GetName()) == 0) {
       return true;
     }
   }
@@ -94,30 +90,26 @@ DC1394Context::ContainsMedia(const std::string &nameMedia) const
 
 //-----------------------------------------------------------------------------
 //
-inline DC1394Camera::Ptr
-DC1394Context::GetDC1394Camera(const std::string &name) const
-{
+inline DC1394Camera::Ptr DC1394Context::GetDC1394Camera(
+    const std::string &name) const {
   return GetDC1394Camera(GetMedia(name));
 }
 
 //-----------------------------------------------------------------------------
 //
-inline DC1394Camera::Ptr
-DC1394Context::GetDC1394Camera(BaseMedia::Ptr media) const
-{
+inline DC1394Camera::Ptr DC1394Context::GetDC1394Camera(
+    BaseMedia::Ptr media) const {
   DC1394Camera::Ptr tmp = std::dynamic_pointer_cast<DC1394Camera>(media);
 
   // Should not happen since if we get here, we are probably in a for
   // loop that iters through media_list_
   // OR we received a name which returned true at ContainsMedia call
   // since it is the first step for calling camera function on a context
-  if(!tmp)
-  {
+  if (!tmp) {
     throw std::invalid_argument("Media is not a DC1394 camera");
   }
   return tmp;
 }
-
 
 }  // namespace vision_server
 #endif  // PROVIDER_VISION_CAM_DRIVER_DC1394_H_

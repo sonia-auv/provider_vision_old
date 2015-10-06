@@ -33,7 +33,7 @@ class FilterchainManager {
 
   using Ptr = std::shared_ptr<FilterchainManager>;
 
-  static const std::string FILTERCHAIN_MANAGER_TAG ;
+  static const std::string FILTERCHAIN_MANAGER_TAG;
 
   //==========================================================================
   // P U B L I C   C / D T O R S

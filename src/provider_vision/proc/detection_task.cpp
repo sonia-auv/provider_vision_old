@@ -34,8 +34,7 @@ DetectionTask::DetectionTask(std::shared_ptr<ros::NodeHandle> node_handle,
       filterchain_(filterchain),
       _new_image_ready(false),
       running_(false),
-      close_attemps_(3)
-{
+      close_attemps_(3) {
   assert(node_handle.get() != nullptr);
   image_publisher_.Start();
   result_publisher_ =
@@ -48,8 +47,7 @@ DetectionTask::DetectionTask(std::shared_ptr<ros::NodeHandle> node_handle,
 //------------------------------------------------------------------------------
 //
 DetectionTask::~DetectionTask() {
-  if (running_ == true)
-    Stop();
+  if (running_ == true) Stop();
   // No need to destroy _image_topic, it is a smart pointer
   ROS_INFO_NAMED(EXEC_TAG.c_str(), "Destroying execution");
   unsigned int tries = 0;
