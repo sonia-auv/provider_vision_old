@@ -81,23 +81,30 @@ MediaStreamer::Ptr MediaManager::StartMedia(const std::string &media_name) {
 //------------------------------------------------------------------------------
 //
 void MediaManager::StopMedia(const std::string &media) noexcept {
-  MediaStreamer::Ptr elem = GetMediaStreamer(media);
+        MediaStreamer::Ptr elem = GetMediaStreamer(media);
 
-  if (elem) {
-    if (elem->IsStreaming()) {
-      elem->StopStreaming();
-      RemoveMediaStreamer(media);
-    } else {
-      throw std::invalid_argument("Media is not streaming.");
-    }
+        if (elem) {
+            // Check to make sure no other task is using this media.
+            if( elem->ObserverCount() > 0 )
+            {
+                return;
+            }
 
-    BaseMedia::Ptr media_ptr = GetMedia(media);
-    if (media_ptr) {
-      media_ptr->Stop();
-    } else {
-      throw std::runtime_error("Media do now exist");
+            if (elem->IsStreaming()) {
+                elem->StopStreaming();
+                RemoveMediaStreamer(media);
+            } else {
+                throw std::invalid_argument("Media is not streaming.");
+            }
+
+            BaseMedia::Ptr media_ptr = GetMedia(media);
+            if (media_ptr) {
+                media_ptr->Stop();
+            } else {
+                throw std::runtime_error("Media do now exist");
+            }
+        }
     }
-  }
 
   //------------------------------------------------------------------------------
   //

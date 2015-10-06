@@ -33,9 +33,9 @@ class BaseContext : public atlas::Runnable {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  BaseContext(){};
+  BaseContext() = default;
 
-  virtual ~BaseContext(){};
+  virtual ~BaseContext() = default;
 
   //==========================================================================
   // P U B L I C   M E T H O D S
@@ -116,7 +116,9 @@ inline BaseMedia::Ptr BaseContext::GetMedia(const std::string &name) const {
   BaseMedia::Ptr media(nullptr);
 
   for (auto &elem : media_list_) {
-    if (elem.get()->GetName().compare(name) == 0) media = elem;
+    if (elem.get()->GetName().compare(name) == 0) {
+        media = elem;
+    }
   }
   return media;
 }

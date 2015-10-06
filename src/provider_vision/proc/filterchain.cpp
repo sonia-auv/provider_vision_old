@@ -7,9 +7,6 @@
  * found in the LICENSE file.
  */
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
 #include "provider_vision/utils/pugixml.h"
 #include "provider_vision/proc/filterchain.h"
 #include "provider_vision/config.h"

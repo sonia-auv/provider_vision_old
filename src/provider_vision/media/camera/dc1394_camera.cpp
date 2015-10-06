@@ -37,7 +37,7 @@ DC1394Camera::~DC1394Camera() { dc1394_camera_free(dc1394_camera_); }
 
 //------------------------------------------------------------------------------
 //
-bool DC1394Camera::Open() {
+void DC1394Camera::Open() {
   if (IsOpened()) return true;
 
   dc1394error_t err;
@@ -77,7 +77,7 @@ bool DC1394Camera::Open() {
 
 //------------------------------------------------------------------------------
 //
-bool DC1394Camera::Close() {
+void DC1394Camera::Close() {
   if (IsClosed()) return true;
 
   std::lock_guard<std::mutex> guard(cam_access_);
@@ -102,7 +102,7 @@ bool DC1394Camera::Close() {
 
 //------------------------------------------------------------------------------
 //
-bool DC1394Camera::Start() {
+void DC1394Camera::Start() {
   if (IsStreaming()) return true;
 
   cam_access_.lock();
@@ -126,7 +126,7 @@ bool DC1394Camera::Start() {
 
 //------------------------------------------------------------------------------
 //
-bool DC1394Camera::Stop() {
+void DC1394Camera::Stop() {
   // If not running, do not stop
   if (!IsStreaming()) return true;
 
@@ -151,7 +151,7 @@ bool DC1394Camera::Stop() {
 
 //------------------------------------------------------------------------------
 //
-bool DC1394Camera::NextImage(cv::Mat &img) {
+void DC1394Camera::NextImage(cv::Mat &img) {
   dc1394video_frame_t *frame = nullptr;
   dc1394error_t error;
 
@@ -215,7 +215,7 @@ bool DC1394Camera::NextImage(cv::Mat &img) {
 
 //------------------------------------------------------------------------------
 //
-bool DC1394Camera::SetFeature(const Feature &feat, float value) {
+void DC1394Camera::SetFeature(const Feature &feat, float value) {
   std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
   uint32_t blue, red;

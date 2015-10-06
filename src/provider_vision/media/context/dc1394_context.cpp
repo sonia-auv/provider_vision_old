@@ -172,7 +172,6 @@ void DC1394Context::SetFeature(BaseCamera::Feature feat,
 void DC1394Context::GetFeature(BaseCamera::Feature feat,
                                const std::string &name, float &val) const {
   DC1394Camera::Ptr cam = GetDC1394Camera(name);
-
   val = cam->GetFeature(feat);
 }
 

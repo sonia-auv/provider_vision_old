@@ -31,7 +31,7 @@ class CameraUndistordMatrices {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  explicit CameraUndistordMatrices();
+  CameraUndistordMatrices();
 
   virtual ~CameraUndistordMatrices();
 
@@ -72,7 +72,7 @@ inline void CameraUndistordMatrices::GetMatrices(cv::Mat &cameraMatrix,
 //
 inline bool CameraUndistordMatrices::IsCorrectionEnable() {
   return matrices_founded_;
-};
+}
 
 //------------------------------------------------------------------------------
 //

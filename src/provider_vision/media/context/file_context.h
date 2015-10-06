@@ -39,7 +39,7 @@ namespace vision_server {
  */
 class FileContext : public BaseContext {
  public:
-  const char *DRIVER_TAG;
+  static const std::string DRIVER_TAG;
 
   //==========================================================================
   // T Y P E D E F   A N D   E N U M

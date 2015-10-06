@@ -105,8 +105,8 @@ bool VisionServer::CallbackExecutionCMD(
     try {
       MediaStreamer::Ptr media = media_mgr_.StartMedia(rqst.media_name);
 
-      Filterchain::Ptr filterchain = filterchain_mgr_.InstanciateFilterchain(
-          rqst.node_name, rqst.filterchain_name);
+      Filterchain::Ptr filterchain = filterchain_mgr_.StartFilterchain(
+              rqst.node_name, rqst.filterchain_name);
 
       detection_task_mgr_.StartDetectionTask(node_handle_, media, filterchain,
                                              rqst.node_name);
@@ -116,7 +116,7 @@ bool VisionServer::CallbackExecutionCMD(
   } else if (rqst.cmd == rqst.STOP) {
     try {
       detection_task_mgr_.StopDetectionTask(rqst.node_name);
-      filterchain_mgr_.CloseFilterchain(rqst.node_name, rqst.filterchain_name);
+        filterchain_mgr_.StopFilterchain(rqst.node_name, rqst.filterchain_name);
       // TODO jsprevost : Assert that there is no execution with this media
       // currently running
       media_mgr_.StopMedia(rqst.media_name);
@@ -133,9 +133,9 @@ bool vision_server::VisionServer::CallbackInfoListCMD(
     vision_server_get_information_list::Request &rqst,
     vision_server_get_information_list::Response &rep) {
   if (rqst.cmd == rqst.EXEC) {
-    rep.list = BuildRosMessage(detection_task_mgr_.GetAllDetectionTasks());
+    rep.list = BuildRosMessage(detection_task_mgr_.GetAllDetectionTasksName());
   } else if (rqst.cmd == rqst.FILTERCHAIN) {
-    rep.list = BuildRosMessage(filterchain_mgr_.GetAvailableFilterchains());
+    rep.list = BuildRosMessage(filterchain_mgr_.GetAllFilterchainName());
   } else if (rqst.cmd == rqst.FILTERS) {
     rep.list = vision_filter::FilterFactory::GetFilterList();
   } else if (rqst.cmd == rqst.MEDIA) {

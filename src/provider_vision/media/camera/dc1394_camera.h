@@ -46,17 +46,17 @@ class DC1394Camera : public BaseCamera {
   // P U B L I C   M E T H O D S
 
   // BaseCamera override
-  bool Open() override;
+  void Open() override;
 
-  bool Close() override;
+  void Close() override;
 
-  bool Start() override;
+  void Start() override;
 
-  bool Stop() override;
+  void Stop() override;
 
-  bool NextImage(cv::Mat &img) override;
+  void NextImage(cv::Mat &img) override;
 
-  bool SetFeature(const Feature &feat, float value) override;
+  void SetFeature(const Feature &feat, float value) override;
 
   float GetFeature(const Feature &feat) const override;
 

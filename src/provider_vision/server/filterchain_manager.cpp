@@ -32,7 +32,8 @@ FilterchainManager::~FilterchainManager() {}
 // M E T H O D   S E C T I O N
 //------------------------------------------------------------------------------
 //
-std::vector<std::string> FilterchainManager::GetAvailableFilterchains() {
+std::vector<std::string>
+    FilterchainManager::GetAllFilterchainName()  const noexcept{
   auto availableFilterchains = std::vector<std::string>{};
 
   if (auto dir = opendir(kConfigPath.c_str())) {
@@ -52,30 +53,25 @@ std::vector<std::string> FilterchainManager::GetAvailableFilterchains() {
 
 //------------------------------------------------------------------------------
 //
-bool FilterchainManager::CreateFilterchain(const std::string &filterchain) {
+void FilterchainManager::CreateFilterchain(const std::string &filterchain) {
   if (!FilterchainExists(filterchain)) {
     pugi::xml_document doc;
     doc.append_child("Filterchain");
     auto save_path = kConfigPath + filterchain + kFilterchainExt;
     doc.save_file(save_path.c_str());
-    return true;
   }
-  return false;
 }
 
 //------------------------------------------------------------------------------
 //
-bool FilterchainManager::DeleteFilterchain(const std::string &filterchain) {
-  if (remove(GetFilterchainPath(filterchain).c_str())) {
-    return true;
-  }
-  return false;
+void FilterchainManager::DeleteFilterchain(const std::string &filterchain) {
+  remove(GetFilterchainPath(filterchain).c_str());
 }
 
 //------------------------------------------------------------------------------
 //
 bool FilterchainManager::FilterchainExists(const std::string &filterchain) {
-  for (const auto &existing_filterchain : GetAvailableFilterchains()) {
+  for (const auto &existing_filterchain : GetAllFilterchainName()) {
     if (filterchain == existing_filterchain) {
       return true;
     }
@@ -85,8 +81,9 @@ bool FilterchainManager::FilterchainExists(const std::string &filterchain) {
 
 //------------------------------------------------------------------------------
 //
-Filterchain::Ptr FilterchainManager::InstanciateFilterchain(
-    std::string executionName, std::string filterchainName) {
+Filterchain::Ptr FilterchainManager::StartFilterchain(
+            const std::string &executionName,
+            const std::string &filterchainName) {
   if (FilterchainExists(filterchainName)) {
     Filterchain::Ptr filterchain =
         std::make_shared<Filterchain>(filterchainName, executionName);
@@ -101,34 +98,31 @@ Filterchain::Ptr FilterchainManager::InstanciateFilterchain(
 
 //------------------------------------------------------------------------------
 //
-bool FilterchainManager::CloseFilterchain(std::string executionName,
-                                          std::string filterchainName) {
+void FilterchainManager::StopFilterchain(const std::string &executionName,
+                                         const std::string &filterchainName) {
   auto filterchain = _runningFilterchains.begin();
-  const auto last_filterchain = _runningFilterchains.end();
+  const auto &last_filterchain = _runningFilterchains.end();
   for (; filterchain != last_filterchain; ++filterchain) {
     if ((*filterchain)->GetName().compare(filterchainName) == 0) {
       _runningFilterchains.erase(filterchain);
     }
   }
-  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-bool FilterchainManager::SaveFilterchain(std::string executionName,
-                                         std::string filterchainName) {
+void FilterchainManager::SaveFilterchain(const std::string &executionName,
+                                        const std::string &filterchainName)const {
   auto filterchain = GetRunningFilterchain(executionName);
   if (filterchain) {
     filterchain->Serialize();
-    return true;
   }
-  return false;
 }
 
 //------------------------------------------------------------------------------
 //
 Filterchain::Ptr FilterchainManager::GetRunningFilterchain(
-    const std::string &execution) {
+    const std::string &execution) const noexcept {
   for (const auto &filterchain : _runningFilterchains) {
     if (filterchain->GetName() == execution) {
       return filterchain;

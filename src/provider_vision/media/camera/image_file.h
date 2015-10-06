@@ -33,7 +33,7 @@ class ImageFile : public BaseMedia {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  explicit ImageFile(std::string path_to_file);
+  explicit ImageFile(const std::string &path_to_file);
 
   ImageFile();
 

@@ -25,9 +25,9 @@ namespace vision_server {
  */
 class WebcamContext : public BaseContext {
  public:
-  const std::string DRIVER_TAG;
+  static const std::string DRIVER_TAG;
 
-  const std::string WEBCAM_NAME;
+  static const std::string WEBCAM_NAME;
 
   //==========================================================================
   // T Y P E D E F   A N D   E N U M

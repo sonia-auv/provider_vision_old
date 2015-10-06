@@ -64,15 +64,13 @@ class BaseCamera : public BaseMedia {
    * therefore open and close are there to "make the camera exist in the
    * system"
    */
-  virtual bool Open() = 0;
+  virtual void Open() = 0;
 
-  virtual bool Close() = 0;
+  virtual void Close() = 0;
 
-  virtual bool SetFeature(const Feature &feat, float value) = 0;
+  virtual void SetFeature(const Feature &feat, float value) = 0;
 
   virtual float GetFeature(const Feature &feat) const = 0;
-
-  uint64_t GetGUID() const;
 
   bool HasArtificialFramerate() const override;
 
@@ -89,10 +87,6 @@ class BaseCamera : public BaseMedia {
 //------------------------------------------------------------------------------
 //
 inline bool BaseCamera::HasArtificialFramerate() const { return false; }
-
-//------------------------------------------------------------------------------
-//
-inline uint64_t BaseCamera::GetGUID() const { return config_.GetGUID(); }
 
 }  // namespace vision_server
 

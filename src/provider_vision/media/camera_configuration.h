@@ -21,20 +21,25 @@ class CameraConfiguration {
 
   using Ptr = std::shared_ptr<CameraConfiguration>;
 
-  CameraConfiguration(const std::string &name);
+  explicit CameraConfiguration(const std::string &name);
+
   virtual ~CameraConfiguration();
 
   void SetGUID(uint64_t guid);
+
   uint64_t GetGUID() const;
 
   void SetName(const std::string &name);
+
   const std::string &GetName() const;
 
   void SetUndistortionMatricePath(const std::string path);
+
   std::string GetUndistortionMatricePath() const;
 
   void AddConfiguration(const std::string &config_name,
                         const std::string &value);
+
   const std::map<std::string, std::string> &GetConfigurations() const;
 
   float GetFloat(const std::string &config_name) const;

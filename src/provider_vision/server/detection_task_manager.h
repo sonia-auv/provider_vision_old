@@ -30,12 +30,13 @@ class DetectionTaskManager {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  explicit DetectionTaskManager();
+  DetectionTaskManager();
 
   ~DetectionTaskManager();
 
   //==========================================================================
   // P U B L I C   M E T H O D S
+
   void StartDetectionTask(std::shared_ptr<ros::NodeHandle> node_handle,
                           MediaStreamer::Ptr media_streamer,
                           Filterchain::Ptr filterchain,
@@ -43,7 +44,7 @@ class DetectionTaskManager {
 
   void StopDetectionTask(const std::string &execution_name) noexcept;
 
-  std::vector<std::string> GetAllDetectionTasks() const noexcept;
+  std::vector<std::string> GetAllDetectionTasksName() const noexcept;
 
  private:
   DetectionTask::Ptr GetDetectionTask(const std::string &execution_name) const;

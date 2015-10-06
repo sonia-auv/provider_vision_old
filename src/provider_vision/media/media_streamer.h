@@ -26,6 +26,7 @@ namespace vision_server {
  * the system. It is basically a thread running and getting images from a media.
  * The protected method are for the MediaManager, since they affect the media
  * or the drivers.
+ * TODO jsprevost: Change the inheritance to use atlas::ImageSequenceCapture
  */
 class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
  public:
@@ -46,7 +47,7 @@ class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
    * Artificial frame rate simulate a frame rate for video and images.
    * It will run the loop at this speed.
    */
-  MediaStreamer(BaseMedia::Ptr cam, int artificialFrameRateMs = 30);
+  explicit MediaStreamer(BaseMedia::Ptr cam, int artificialFrameRateMs = 30);
 
   virtual ~MediaStreamer();
 
@@ -55,23 +56,12 @@ class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
 
   /**
    * Get the most recent image.
+   * TODO des0ps: Change the return type to cv::Mat
    */
   bool GetImage(cv::Mat &image) const;
 
-  /**
-   * Get the media CameraID on which we take the images.
-   */
-  uint64_t GetMediaGUID() const;
-
-  /**
-   * Returns the media name... to be deleted since we have the GetMediaID()
-   * method.
-   */
   const std::string &GetMediaName() const;
 
-  /**
-   * Return the acquisition loop status.
-   */
   BaseMedia::Status GetMediaStatus() const;
 
   /**

@@ -44,17 +44,17 @@ class BaseMedia {
   /**
    * Starts to get images
    */
-  virtual bool Start() = 0;
+  virtual void Start() = 0;
 
   /**
    * Stop getting images
    */
-  virtual bool Stop() = 0;
+  virtual void Stop() = 0;
 
   /**
    * Gives the most recent image
    */
-  virtual bool NextImage(cv::Mat &image) = 0;
+  virtual void NextImage(cv::Mat &image) = 0;
 
   //==========================================================================
   // G E T T E R S   A N D   S E T T E R S

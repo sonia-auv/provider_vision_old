@@ -26,12 +26,13 @@ namespace vision_server {
  * loop,
  * broadcast it on topic and apply the given filterchain.
  */
-class DetectionTask : public atlas::Runnable, public atlas::Observer<> {
+class DetectionTask : private atlas::Runnable, public atlas::Observer<> {
  public:
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
 
   using Ptr = std::shared_ptr<DetectionTask>;
+
   static const std::string EXEC_TAG;
 
   //==========================================================================
@@ -47,15 +48,15 @@ class DetectionTask : public atlas::Runnable, public atlas::Observer<> {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  void Start();
+  void StartDetectionTask();
 
-  void Stop();
+  void StopDetectionTask();
 
   MediaStreamer::Ptr GetMediaStreamer() const noexcept;
 
   Filterchain::Ptr GetFilterchain() const noexcept;
 
-  const std::string &GetName() const noexcept;
+  const std::string &GetDetectionTaskName() const noexcept;
 
   const std::string &GetMediaName() const noexcept;
 
@@ -113,19 +114,15 @@ class DetectionTask : public atlas::Runnable, public atlas::Observer<> {
 
   Filterchain::Ptr filterchain_;
 
-  mutable std::mutex _newest_image_mutex;
+  mutable std::mutex newest_image_mutex_;
 
   // Two image are needed since we don't want the mutex to block the process
   // on the image and we have to wait for it to be finish to release it so
   // the firenotification doesn't wait for a mutex.
-  cv::Mat _newest_image, _image_being_processed;
+  cv::Mat newest_image_, _image_being_processed;
 
   // Prevent to process data twice for fast processing
-  bool _new_image_ready;
-  /**
-   * DetectionTask's media
-   */
-  bool running_;
+  bool new_image_ready_;
 
   int close_attemps_;
 };
@@ -147,7 +144,7 @@ inline Filterchain::Ptr DetectionTask::GetFilterchain() const noexcept {
 
 //------------------------------------------------------------------------------
 //
-inline const std::string &DetectionTask::GetName() const noexcept {
+inline const std::string &DetectionTask::GetDetectionTaskName() const noexcept {
   return name_;
 }
 

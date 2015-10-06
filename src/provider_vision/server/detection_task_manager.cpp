@@ -49,8 +49,8 @@ void DetectionTaskManager::StopDetectionTask(
     const std::string &execution_name) noexcept {
   for (auto it = detection_tasks_.begin(); it != detection_tasks_.cend();
        it++) {
-    if ((*it)->GetName().compare(execution_name) == 0) {
-      (*it)->Stop();
+    if ((*it)->GetDetectionTaskName().compare(execution_name) == 0) {
+        (*it)->StopDetectionTask();
       detection_tasks_.erase(it);
     }
   }
@@ -58,11 +58,11 @@ void DetectionTaskManager::StopDetectionTask(
 
 //------------------------------------------------------------------------------
 //
-std::vector<std::string> DetectionTaskManager::GetAllDetectionTasks() const
+std::vector<std::string> DetectionTaskManager::GetAllDetectionTasksName() const
     noexcept {
   std::vector<std::string> names;
   for (const auto &task : detection_tasks_) {
-    names.push_back(task->GetName());
+    names.push_back(task->GetDetectionTaskName());
   }
   return names;
 }
@@ -72,7 +72,7 @@ std::vector<std::string> DetectionTaskManager::GetAllDetectionTasks() const
 DetectionTask::Ptr DetectionTaskManager::GetDetectionTask(
     const std::string &execution_name) const {
   for (const auto &task : detection_tasks_) {
-    if (task->GetName() == execution_name) {
+    if (task->GetDetectionTaskName() == execution_name) {
       return task;
     }
   }

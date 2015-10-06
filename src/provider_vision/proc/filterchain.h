@@ -10,9 +10,6 @@
 #ifndef PROVIDER_VISION_FILTERCHAIN_H_
 #define PROVIDER_VISION_FILTERCHAIN_H_
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
 #include <opencv2/opencv.hpp>
 #include <lib_vision/filter_factory.h>
 #include <lib_vision/global_param_handler.h>
@@ -20,9 +17,6 @@
 #include "provider_vision/utils/serializable.h"
 
 namespace vision_server {
-
-//==============================================================================
-// C L A S S E S
 
 class Filterchain : public Serializable {
  public:
@@ -34,14 +28,12 @@ class Filterchain : public Serializable {
   //============================================================================
   // P U B L I C   C / D T O R S
 
-  Filterchain(const std::string &name, const std::string &execution);
+  explicit Filterchain(const std::string &name, const std::string &execution);
 
-  /**
-   * Copy Constructor
-   */
-  Filterchain(const Filterchain &filterchain);
 
-  virtual ~Filterchain(){};
+  explicit Filterchain(const Filterchain &filterchain);
+
+  ~Filterchain();
 
   //============================================================================
   // P U B L I C   M E T H O D S

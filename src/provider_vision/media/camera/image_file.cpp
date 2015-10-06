@@ -21,7 +21,7 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-ImageFile::ImageFile(std::string path_to_file)
+ImageFile::ImageFile(const std::string &path_to_file)
     : BaseMedia(CameraConfiguration(path_to_file)), path_(path_to_file) {
   LoadImage(path_);
 }

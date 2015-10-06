@@ -61,15 +61,13 @@ void MediaStreamer::StartStreaming() {
   Start();
   if (IsRunning()) {
     is_streaming_ = true;
-    return true;
   }
-  return false;
 }
 
 //------------------------------------------------------------------------------
 //
 void MediaStreamer::StopStreaming() {
-  if (elem->IsStreaming()) {
+  if (IsStreaming()) {
     is_streaming_ = false;
     // Send message on the line.
     ROS_INFO_NAMED(LOOP_TAG, "Stopping streaming on camera");
@@ -83,15 +81,13 @@ void MediaStreamer::StopStreaming() {
       ROS_WARN_NAMED(LOOP_TAG, "Thread is not alive");
     }
   }
-  return is_streaming_;
 }
 
 //------------------------------------------------------------------------------
 //
 void MediaStreamer::StartRecording(const std::string &filename) {
   if (IsRecording()) {
-    // ROS_INFO("[VISION_CLIENT] startVideoCapture not opened.");
-    return false;
+    return;
   }
 
   std::string filepath = filename;
@@ -109,10 +105,11 @@ void MediaStreamer::StartRecording(const std::string &filename) {
 
   if (!video_writer_.isOpened()) {
     ROS_ERROR_NAMED(LOOP_TAG, "Video writer was not opened!");
-    return false;
+  } else
+  {
+    is_recording_ = true;
   }
-  is_recording_ = true;
-  return true;
+
 }
 
 //------------------------------------------------------------------------------
