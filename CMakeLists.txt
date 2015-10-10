@@ -45,6 +45,7 @@ find_package( catkin REQUIRED COMPONENTS
 )
 
 find_package( DC1394 REQUIRED )
+find_package( OpenCV REQUIRED )
 
 #===============================================================================
 # G E N E R A T E   M E S S A G E S   &   S E R V I C E S
@@ -110,6 +111,7 @@ include_directories(
     ${lib_atlas_INCLUDE_DIRS}
     ${lib_vision_INCLUDE_DIRS}
     ${catkin_INCLUDE_DIRS}
+    ${OpenCV_INCLUDE_DIRS}
 )
 
 #===============================================================================
@@ -126,6 +128,7 @@ target_link_libraries( vision_server_node
     ${catkin_LIBRARIES}
     ${lib_atlas_LIBRARIES}
     ${lib_vision_LIBRARIES}
+    ${OpenCV_LIBRARIES}
 )
 
 # As we use this folder on our project, we want it to be created before runtime.
