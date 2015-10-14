@@ -16,14 +16,16 @@
 
 namespace vision_server {
 
+const std::string WebcamContext::DRIVER_TAG("[Webcam Driver]");
+
+const std::string WebcamContext::WEBCAM_NAME("Webcam");
+
 //==============================================================================
 // C / D T O R S   S E C T I O N
 
 //------------------------------------------------------------------------------
 //
 WebcamContext::WebcamContext() noexcept : BaseContext(),
-                                          DRIVER_TAG("[Webcam Driver]"),
-                                          WEBCAM_NAME("Webcam"),
                                           webcam_() {}
 
 //------------------------------------------------------------------------------
@@ -44,20 +46,18 @@ void WebcamContext::CloseContext() {}
 
 //------------------------------------------------------------------------------
 //
-bool WebcamContext::StartCamera(const std::string &name) {
+void WebcamContext::StartCamera(const std::string &name) {
   if (WEBCAM_NAME.compare(name) == 0) {
-    return webcam_.Start();
+    webcam_.Start();
   }
-  return false;
 }
 
 //------------------------------------------------------------------------------
 //
-bool WebcamContext::StopCamera(const std::string &name) {
+void WebcamContext::StopCamera(const std::string &name) {
   if (WEBCAM_NAME.compare(name) == 0) {
-    return webcam_.Close();
+    webcam_.Close();
   }
-  return false;
 }
 
 //------------------------------------------------------------------------------
@@ -85,4 +85,5 @@ void WebcamContext::Run() {}
 //------------------------------------------------------------------------------
 //
 bool WebcamContext::WatchDogFunc() { return true; }
+
 }  // namespace vision_server

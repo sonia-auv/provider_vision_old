@@ -52,9 +52,9 @@ class DC1394Context : public BaseContext {
 
   void CloseContext() override;
 
-  bool StartCamera(const std::string &name) override;
+  void StartCamera(const std::string &name) override;
 
-  bool StopCamera(const std::string &name) override;
+  void StopCamera(const std::string &name) override;
 
   void SetFeature(BaseCamera::Feature feat, const std::string &name,
                   float val) override;

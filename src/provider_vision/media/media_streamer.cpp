@@ -7,14 +7,12 @@
  * found in the LICENSE file.
  */
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
 #include "provider_vision/media/media_streamer.h"
 
 namespace vision_server {
 
 const std::string MediaStreamer::LOOP_TAG = "[MediaStreamer]";
+
 //==============================================================================
 // C / D T O R S   S E C T I O N
 
@@ -105,8 +103,7 @@ void MediaStreamer::StartRecording(const std::string &filename) {
 
   if (!video_writer_.isOpened()) {
     ROS_ERROR_NAMED(LOOP_TAG, "Video writer was not opened!");
-  } else
-  {
+  } else {
     is_recording_ = true;
   }
 
@@ -133,14 +130,11 @@ void MediaStreamer::Run() {
   }
 
   while (!MustStop()) {
-    //_logger->LogInfo(LOOP_TAG, "Taking mutex for publishing");
     image_access_.lock();
-    //_logger->LogInfo(LOOP_TAG, "Took mutex for publishing");
-    acquival = media_->NextImage(image_);
+    media_->NextImage(image_);
     image_access_.unlock();
-    //_logger->LogInfo(LOOP_TAG, "Releasing mutex for publishing");
 
-    if (!acquival) {
+    if (!image_.empty()) {
       image_ = cv::Mat::zeros(100, 100, CV_8UC3);
       ROS_ERROR_NAMED(LOOP_TAG, "Error on NextImage. Providing empty image ");
     } else {
@@ -155,9 +149,6 @@ void MediaStreamer::Run() {
       }
 
       if (IsRecording() && atlas::PercentageUsedPhysicalMemory() < .8) {
-        //        cv::Mat image_with_correct_format;
-        //        cv::cvtColor(_image, image_with_correct_format, CV_BGR2RGB);
-        //        video_writer_.write(image_with_correct_format);
         video_writer_.write(image_);
       }
 
@@ -178,29 +169,22 @@ void MediaStreamer::Run() {
 
 //------------------------------------------------------------------------------
 //
-bool MediaStreamer::GetImage(cv::Mat &image) const {
-  bool retval = false;
-
-  //_logger->LogInfo(LOOP_TAG, "Taking mutex for getting image");
+void MediaStreamer::GetImage(cv::Mat &image) const {
   std::lock_guard<std::mutex> guard(image_access_);
-  //_logger->LogInfo(LOOP_TAG, "Took mutex for getting image");
   if (image_.empty()) {
     image = cv::Mat::zeros(100, 100, CV_8UC3);
     ROS_ERROR_NAMED(LOOP_TAG, "Image is empty");
-    return retval;
   }
 
   // Here we clone, since we want the acquisition loop to be the only
   // owner of the image. A copy would also give the memory address.
   try {
     image = image_.clone();
-    retval = true;
   } catch (cv::Exception &e) {
     ROS_ERROR_NAMED(LOOP_TAG, "Exception in cloning (%s)", e.what());
     image = cv::Mat::zeros(100, 100, CV_8UC3);
-    retval = false;
-  };
-  return retval;
+    throw;
+  }
 }
 
 //------------------------------------------------------------------------------

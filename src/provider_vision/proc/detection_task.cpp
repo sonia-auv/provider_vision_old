@@ -8,7 +8,6 @@
  */
 
 #include <std_msgs/String.h>
-#include <lib_atlas/macros.h>
 #include "provider_vision/proc/detection_task.h"
 
 namespace vision_server {

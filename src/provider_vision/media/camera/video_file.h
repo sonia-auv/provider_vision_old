@@ -48,11 +48,11 @@ class VideoFile : public BaseMedia, private cv::VideoCapture {
   bool LoadVideo(const std::string &path_to_file);
 
   // BaseMedia override
-  bool Start() override;
+  void Start() override;
 
-  bool Stop() override;
+  void Stop() override;
 
-  bool NextImage(cv::Mat &image) override;
+  void NextImage(cv::Mat &image) override;
 
  private:
   //==========================================================================

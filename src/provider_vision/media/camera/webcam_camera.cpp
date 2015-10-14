@@ -46,63 +46,70 @@ WebcamCamera::~WebcamCamera() {}
 
 //------------------------------------------------------------------------------
 //
-bool WebcamCamera::Start() {
-  // Construction also start the camera for a videoCapture
-  if (IsOpened()) status_ = Status::STREAMING;
-  return IsOpened();
-}
-
-//------------------------------------------------------------------------------
-//
-bool WebcamCamera::Stop() {
-  // Always stream when asking to capture only...
-  if (IsOpened()) status_ = Status::OPEN;
-  return IsOpened();
-}
-
-//------------------------------------------------------------------------------
-//
-bool WebcamCamera::NextImage(cv::Mat &image) {
+void WebcamCamera::Start() {
   if (isOpened()) {
-    this->operator>>(image);
-    return true;
+    throw std::logic_error("The video is already opened.");
+  } else {
+    status_ = Status::STREAMING;
   }
-  return false;
+
+  if (!isOpened()) {
+    // Check if the video could be opened.
+    throw std::runtime_error("The video could not be opened.");
+  }
 }
 
 //------------------------------------------------------------------------------
 //
-bool WebcamCamera::Open() {
+void WebcamCamera::Stop() {
+  if (!isOpened()) {
+    throw std::logic_error("The video is not opened.");
+  } else {
+    release();
+    status_ = Status::CLOSE;
+  }
+
+  if (isOpened()) {
+    // Check if the video could be opened.
+    throw std::runtime_error("The video could not be closed.");
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+void WebcamCamera::NextImage(cv::Mat &image) {
+  if (isOpened()) {
+    operator>>(image);
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+void WebcamCamera::Open() {
   // Already been open at constructor.
   if (!IsOpened()) {
     open(0);
   }
-
-  return IsOpened();
 }
 
 //------------------------------------------------------------------------------
 //
-bool WebcamCamera::Close() {
+void WebcamCamera::Close() {
   if (IsOpened()) {
     release();
   }
-  return !IsOpened();
 }
 
 //------------------------------------------------------------------------------
 //
-bool WebcamCamera::SetFeature(const Feature &feat, float value) { return true; }
+void WebcamCamera::SetFeature(const Feature &feat, float value) {
+  // For now we do not handle setting a feature on the webcam camera, it might
+  // come later.
+}
 
 //------------------------------------------------------------------------------
 //
 float WebcamCamera::GetFeature(const Feature &feat) const {
-  //  float val = 0.0f;
-  //  if (feat == Feature::FRAMERATE)
-  //  {
-  //    val = static_cast<float>(this->get(CV_CAP_PROP_FPS));
-  //  }
-
   return 0.0f;
 }
 

@@ -8,7 +8,6 @@
  */
 
 #include <stdexcept>
-#include <string>
 #include <vector>
 #include "ros/console.h"
 #include "provider_vision/server/media_manager.h"
@@ -61,18 +60,15 @@ MediaStreamer::Ptr MediaManager::StartMedia(const std::string &media_name) {
     if (!context) {
       throw std::invalid_argument("The media is not part of a context.");
     }
-    if (context->StartCamera(media_name)) {
-      BaseMedia::Ptr media = context->GetMedia(media_name);
+    context->StartCamera(media_name);
+    BaseMedia::Ptr media = context->GetMedia(media_name);
 
-      if (media) {
-        streamer = std::make_shared<MediaStreamer>(media, 30);
-        streamer->StartStreaming();
-        AddMediaStreamer(streamer);
-      } else {
-        throw std::runtime_error("Camera failed to be created");
-      }
+    if (media) {
+      streamer = std::make_shared<MediaStreamer>(media, 30);
+      streamer->StartStreaming();
+      AddMediaStreamer(streamer);
     } else {
-      throw std::runtime_error("Camera failed to start");
+      throw std::runtime_error("Camera failed to be created");
     }
   }
   return streamer;

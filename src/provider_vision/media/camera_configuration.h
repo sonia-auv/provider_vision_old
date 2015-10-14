@@ -84,7 +84,7 @@ inline uint64_t CameraConfiguration::GetGUID() const { return guid_; }
 //
 inline void CameraConfiguration::SetName(const std::string &name) {
   name_ = name;
-};
+}
 
 //-----------------------------------------------------------------------------
 //

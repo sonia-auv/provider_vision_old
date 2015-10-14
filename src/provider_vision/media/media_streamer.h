@@ -56,9 +56,9 @@ class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
 
   /**
    * Get the most recent image.
-   * TODO des0ps: Change the return type to cv::Mat
+   * TODO jsprevost: Change the return type to cv::Mat
    */
-  bool GetImage(cv::Mat &image) const;
+  void GetImage(cv::Mat &image) const;
 
   const std::string &GetMediaName() const;
 

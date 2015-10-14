@@ -46,31 +46,25 @@ bool ImageFile::LoadImage(std::string path_to_file) {
 
 //------------------------------------------------------------------------------
 //
-bool ImageFile::Start() {
-  // if the media is open, then the image is not empty.
-  if (image_.empty()) {
-    return image_.empty();
-  }
-  return true;
+void ImageFile::Start() {
+  // Do nothing here...
 }
 
 //------------------------------------------------------------------------------
 //
-bool ImageFile::Stop() {
-  // At destruction, will close the image... No method to close
-  return true;
+void ImageFile::Stop() {
+  // Do nothing here...
 }
 
 //------------------------------------------------------------------------------
 //
-bool ImageFile::NextImage(cv::Mat &image) {
+void ImageFile::NextImage(cv::Mat &image) {
   // Here, since cv::Mat are smart pointer, we can just
   // clone the image, and the "garbage collection"
   // will be handle later on in the program.
   if (!image_.empty()) {
     image = image_.clone();
-    return true;
   }
-  return false;
 }
+
 }  // namespace vision_server

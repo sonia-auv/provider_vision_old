@@ -38,115 +38,80 @@ DC1394Camera::~DC1394Camera() { dc1394_camera_free(dc1394_camera_); }
 //------------------------------------------------------------------------------
 //
 void DC1394Camera::Open() {
-  if (IsOpened()) return true;
+  if (IsOpened()) {
+    throw std::logic_error("The media is already started");
+  }
 
   dc1394error_t err;
-  bool init_result = true;
 
   std::lock_guard<std::mutex> guard(cam_access_);
 
-  if (!SetFormat7()) {
-    //    ROS_ERROR_NAMED(CAM_TAG,
-    //                    "Error while setting the Format 7 %s with message:
-    //                    %s",
-    //                    config_.GetGUID(), dc1394_error_get_string(err));
-    init_result = false;
-  }
-
-  if (init_result) {
-    err = dc1394_capture_setup(dc1394_camera_, DMA_BUFFER,
-                               DC1394_CAPTURE_FLAGS_DEFAULT);
-    if (err != DC1394_SUCCESS) {
-      //        std::stringstream ss;
-      //        std::cout <<" Could not set the DMA buffer size on
-      //        "<<config_.GetName()
-      //              << " with message: "<< dc1394_error_get_string(err);
-      //        ROS_ERROR_NAMED(CAM_TAG.c_str() , ss.str().c_str() );
-
-      init_result = false;
-    }
-  }
-  if (init_result) {
-    status_ = Status::OPEN;
-  } else {
-    status_ = Status::ERROR;
-  }
-
-  return init_result;
+  SetFormat7();
+  err = dc1394_capture_setup(dc1394_camera_, DMA_BUFFER,
+                             DC1394_CAPTURE_FLAGS_DEFAULT);
+  status_ = Status::OPEN;
 }
 
 //------------------------------------------------------------------------------
 //
 void DC1394Camera::Close() {
-  if (IsClosed()) return true;
+  if (!IsOpened()) {
+    throw std::logic_error("The media is not started");
+  }
 
   std::lock_guard<std::mutex> guard(cam_access_);
 
   bool close_result = true;
-  if (status_ == Status::STREAMING) close_result = Stop();
+  if (status_ == Status::STREAMING) {
+    Stop();
+  }
 
   dc1394error_t error = dc1394_capture_stop(dc1394_camera_);
   if (error != DC1394_SUCCESS) {
-    //      std::stringstream ss;
-    //      ss <<" Capture was not stop properly on "<<config_.GetName()
-    //              << " with message: "<< dc1394_error_get_string(error);
-    //      ROS_ERROR_NAMED(CAM_TAG.c_str() , ss.str().c_str() );
-
     close_result = false;
   }
 
   close_result == true ? status_ = Status::CLOSE : status_ = Status::ERROR;
-
-  return close_result;
 }
 
 //------------------------------------------------------------------------------
 //
 void DC1394Camera::Start() {
-  if (IsStreaming()) return true;
+  if (IsStreaming()) {
+    throw std::logic_error("The media is already streaming");
+  }
 
   cam_access_.lock();
   dc1394error_t error =
       dc1394_video_set_transmission(dc1394_camera_, DC1394_ON);
   if (error != DC1394_SUCCESS) {
-    //      std::stringstream ss;
-    //      ss <<"Transmission could not start on "<<config_.GetName()
-    //                 << " with message: "<< dc1394_error_get_string(error);
-    //      ROS_ERROR_NAMED(CAM_TAG.c_str() , ss.str().c_str() );
-
     status_ = Status::ERROR;
-    return false;
   }
   cam_access_.unlock();
   SetCameraParams();
 
   status_ = Status::STREAMING;
-  return true;
 }
 
 //------------------------------------------------------------------------------
 //
 void DC1394Camera::Stop() {
-  // If not running, do not stop
-  if (!IsStreaming()) return true;
+  if (IsStreaming()) {
+    throw std::logic_error("The media is not streaming");
+  }
 
   std::lock_guard<std::mutex> guard(cam_access_);
 
   dc1394error_t error =
       dc1394_video_set_transmission(dc1394_camera_, DC1394_OFF);
   if (error != DC1394_SUCCESS) {
-    //      std::stringstream ss;
-    //      ss <<"Transmission could not stop on "<<config_.GetName()
-    //                 << " with message: "<< dc1394_error_get_string(error);
-    //      ROS_ERROR_NAMED(CAM_TAG.c_str() , ss.str().c_str() );
     status_ = Status::ERROR;
-    return false;
+    throw std::runtime_error("The media could not be stoped");
   }
 
   status_ = Status::OPEN;
   // Here stopping timer just in case... Should already be closed....
   std::lock_guard<std::mutex> guard2(timer_access_);
-  return true;
 }
 
 //------------------------------------------------------------------------------
@@ -171,12 +136,8 @@ void DC1394Camera::NextImage(cv::Mat &img) {
 
   /// Here we take exactly the camera1394 method... it works so... :P
   if (error != DC1394_SUCCESS || frame == nullptr) {
-    //      std::stringstream ss;
-    //      ss <<"Capture dequeue failed on "<<config_.GetName()
-    //                 << " with message: "<< dc1394_error_get_string(error);
-    //      ROS_ERROR_NAMED(CAM_TAG.c_str() , ss.str().c_str() );
     status_ = Status::ERROR;
-    return false;
+    throw std::runtime_error("The media is not accessible");
   }
 
   try {
@@ -186,31 +147,19 @@ void DC1394Camera::NextImage(cv::Mat &img) {
     undistord_matrix_.CorrectInmage(tmp, img);
 
   } catch (cv::Exception &e) {
-    //      std::stringstream ss;
-    //      ss <<"Conversion from DC1394 frame to cv::Mat failed on
-    //      "<<config_.GetName()
-    //                 << " with message: "<< dc1394_error_get_string(error);
-    //      ROS_ERROR_NAMED(CAM_TAG.c_str() , ss.str().c_str() );
     status_ = Status::ERROR;
-    return false;
+    throw;
   }
 
   // Clean, prepare for new frame.
   error = dc1394_capture_enqueue(dc1394_camera_, frame);
   if (error != DC1394_SUCCESS) {
-    //      std::stringstream ss;
-    //      ss <<"Capture enqueue failed on "<<config_.GetName()
-    //                 << " with message: "<< dc1394_error_get_string(error);
-    //      ROS_ERROR_NAMED(CAM_TAG.c_str() , ss.str().c_str() );
     status_ = Status::ERROR;
-    return false;
+    throw std::runtime_error("The media is not accessible");
   }
   if (img.empty() || img.size().height == 0 || img.size().height == 0) {
-    //      ROS_ERROR_NAMED(CAM_TAG.c_str(), "Error in image getting on %s",
-    //      config_.GetGUID());
-    return false;
+    throw std::runtime_error("The image is empty, there is a problem with the media");
   }
-  return true;
 }
 
 //------------------------------------------------------------------------------
@@ -303,14 +252,8 @@ void DC1394Camera::SetFeature(const Feature &feat, float value) {
   }
 
   if (error != DC1394_SUCCESS) {
-    //      ROS_ERROR_NAMED(CAM_TAG,
-    //                      "Error while setting parameter on %s with message:
-    //                      %s",
-    //                      config_.GetGUID(), dc1394_error_get_string(error));
-    return false;
+    throw std::runtime_error("The media is not accessible");
   }
-
-  return true;
 }
 
 //------------------------------------------------------------------------------
@@ -366,10 +309,6 @@ float DC1394Camera::GetFeature(const Feature &feat) const {
   }
 
   if (error != DC1394_SUCCESS) {
-    //    ROS_ERROR_NAMED(CAM_TAG,
-    //                    "Error while setting parameter on %s with message:
-    //                    %s",
-    //                    config_.GetGUID(), dc1394_error_get_string(error));
     return -1.0f;
   }
 
@@ -406,9 +345,11 @@ float DC1394Camera::ConvertFramerateToFloat(uint32_t val) const {
 
 //------------------------------------------------------------------------------
 //
-bool DC1394Camera::SetFormat7() {
-  bool init_result = false;
-  if (dc1394_camera_ == nullptr) return init_result;
+void DC1394Camera::SetFormat7() {
+  if (dc1394_camera_ == nullptr) {
+    // TODO Jérémie St-Jules: Change the exception error.
+    throw std::runtime_error("An error occurenced");
+  }
 
   dc1394error_t err;
   // Sets the ISO speed to maximum.
@@ -423,26 +364,15 @@ bool DC1394Camera::SetFormat7() {
   }
 
   if (err != DC1394_SUCCESS) {
-    //    ROS_ERROR_NAMED(
-    //        CAM_TAG,
-    //        " Could not set operating mode or ISO speed.on %s with message:
-    //        %s",
-    //        config_.GetGUID(),
-    //
-    //        dc1394_error_get_string(err));
-    return init_result;
+    // TODO Jérémie St-Jules: Change the exception error.
+    throw std::runtime_error("An error occurenced");
   }
 
   // Sets the mode to format 7
   err = dc1394_video_set_mode(dc1394_camera_, DC1394_VIDEO_MODE_FORMAT7_0);
   if (err != DC1394_SUCCESS) {
-    //    ROS_ERROR_NAMED(CAM_TAG,
-    //                    "Could not set video mode to format7on %s with
-    //                    message: %s",
-    //                    config_.GetGUID(),
-    //
-    //                    dc1394_error_get_string(err));
-    return init_result;
+    // TODO Jérémie St-Jules: Change the exception error.
+    throw std::runtime_error("An error occurenced");
   }
 
   // Sets the image width and height. Depending if Unibrain or Guppy Pro, we use
@@ -460,101 +390,79 @@ bool DC1394Camera::SetFormat7() {
                                w, h);                 // width, height
 
   if (err != DC1394_SUCCESS) {
-    //    ROS_ERROR_NAMED(
-    //        CAM_TAG, "Could not set the video size properly on %s with
-    //        message: %s",
-    //        config_.GetGUID(),
-    //
-    //        dc1394_error_get_string(err));
-    return init_result;
+    // TODO Jérémie St-Jules: Change the exception error.
+    throw std::runtime_error("An error occurenced");
   }
-  init_result = true;
-  return init_result;
 }
 
 //------------------------------------------------------------------------------
 //
-bool DC1394Camera::SetNormalFormat() {
-  if (dc1394_camera_ == nullptr) return false;
+void DC1394Camera::SetNormalFormat() {
+  if (dc1394_camera_ == nullptr) {
+    // TODO Jérémie St-Jules: Change the exception error.
+    throw std::runtime_error("An error occurenced");
+  }
 
   dc1394error_t err;
 
   err = dc1394_video_set_iso_speed(dc1394_camera_, DC1394_ISO_SPEED_400);
   if (err != DC1394_SUCCESS) {
-    //    ROS_ERROR_NAMED(CAM_TAG,
-    //                    "Could not set ISO speed to 400 on %s with message:
-    //                    %s",
-    //                    config_.GetGUID(),
-    //
-    //                    dc1394_error_get_string(err));
-    return false;
+    // TODO Jérémie St-Jules: Change the exception error.
+    throw std::runtime_error("An error occurenced");
   }
 
   err = dc1394_video_set_mode(dc1394_camera_, DC1394_VIDEO_MODE_800x600_YUV422);
   if (err != DC1394_SUCCESS) {
-    //    ROS_ERROR_NAMED(CAM_TAG,
-    //                    "Could not set the video mode on %s with message",
-    //                    config_.GetGUID(),
-    //                    dc1394_error_get_string(err));
-    return false;
+    // TODO Jérémie St-Jules: Change the exception error.
+    throw std::runtime_error("An error occurenced");
   }
 
   err = dc1394_video_set_framerate(dc1394_camera_, DC1394_FRAMERATE_15);
   if (err != DC1394_SUCCESS) {
-    //    ROS_ERROR_NAMED(CAM_TAG,
-    //                    "Could not set the framerate on %s with message: %s",
-    //                    config_.GetGUID(),
-    //
-    //                    dc1394_error_get_string(err));
-    return false;
+    // TODO Jérémie St-Jules: Change the exception error.
+    throw std::runtime_error("An error occurenced");
   }
-  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-bool DC1394Camera::SetCameraParams() {
+void DC1394Camera::SetCameraParams() {
   if (dc1394_camera_ == nullptr) {
-    //      ROS_ERROR_NAMED(CAM_TAG, "Camera is null when setting params");
-    return false;
+    // TODO Jérémie St-Jules: Change the exception error.
+    throw std::runtime_error("An error occurenced");
   }
-  bool retVal = true;
   // We have a guppy
   if (std::string(dc1394_camera_->vendor).compare(std::string("AVT")) == 0) {
-    ////ROS_INFO_NAMED(CAM_TAG, "Setting parameters for guppy");
-    retVal &= SetFeature(Feature::GAIN_AUTO, 0.0f);
+    SetFeature(Feature::GAIN_AUTO, 0.0f);
     atlas::MilliTimer::Sleep(100);
-    retVal &= SetFeature(Feature::GAIN, 420.0f);
+    SetFeature(Feature::GAIN, 420.0f);
     atlas::MilliTimer::Sleep(100);
-    retVal &= SetFeature(Feature::SHUTTER_AUTO, 0.0f);
+    SetFeature(Feature::SHUTTER_AUTO, 0.0f);
     atlas::MilliTimer::Sleep(100);
-    retVal &= SetFeature(Feature::SHUTTER, 32.0f);
+    SetFeature(Feature::SHUTTER, 32.0f);
     atlas::MilliTimer::Sleep(100);
-    retVal &= SetFeature(Feature::WHITE_BALANCE_AUTO, 0.0f);
+    SetFeature(Feature::WHITE_BALANCE_AUTO, 0.0f);
     atlas::MilliTimer::Sleep(100);
-    retVal &= SetFeature(Feature::WHITE_BALANCE_BLUE, 381.0f);
+    SetFeature(Feature::WHITE_BALANCE_BLUE, 381.0f);
     atlas::MilliTimer::Sleep(100);
-    retVal &= SetFeature(Feature::WHITE_BALANCE_RED, 568.0f);
+    SetFeature(Feature::WHITE_BALANCE_RED, 568.0f);
     atlas::MilliTimer::Sleep(100);
-  } else {  // We have a unibrain
-    ////ROS_INFO_NAMED(CAM_TAG, "Setting parameters for unibrain");
-    retVal &= SetFeature(Feature::GAIN_AUTO, 0.0f);
+  } else {
+    SetFeature(Feature::GAIN_AUTO, 0.0f);
     atlas::MilliTimer::Sleep(100);
-    retVal &= SetFeature(Feature::GAIN, 350.0f);
+    SetFeature(Feature::GAIN, 350.0f);
     atlas::MilliTimer::Sleep(100);
-    retVal &= SetFeature(Feature::SHUTTER_AUTO, 0.0f);  // SET TO MANUAL
+    SetFeature(Feature::SHUTTER_AUTO, 0.0f);
     atlas::MilliTimer::Sleep(100);
-    retVal &= SetFeature(Feature::SHUTTER, 500.0f);
+    SetFeature(Feature::SHUTTER, 500.0f);
     atlas::MilliTimer::Sleep(100);
-    retVal &= SetFeature(Feature::WHITE_BALANCE_AUTO, 0.0f);
+    SetFeature(Feature::WHITE_BALANCE_AUTO, 0.0f);
     atlas::MilliTimer::Sleep(100);
-    retVal &= SetFeature(Feature::WHITE_BALANCE_BLUE, 412.0f);
+    SetFeature(Feature::WHITE_BALANCE_BLUE, 412.0f);
     atlas::MilliTimer::Sleep(100);
-    retVal &= SetFeature(Feature::WHITE_BALANCE_RED, 511.0f);
+    SetFeature(Feature::WHITE_BALANCE_RED, 511.0f);
     atlas::MilliTimer::Sleep(100);
   }
-
-  return retVal;
 }
 
 }  // namespace vision_server

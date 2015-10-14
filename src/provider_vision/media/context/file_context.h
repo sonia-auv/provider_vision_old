@@ -10,9 +10,6 @@
 #ifndef PROVIDER_VISION_CAM_DRIVER_MEDIA_H_
 #define PROVIDER_VISION_CAM_DRIVER_MEDIA_H_
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
 #include <string>
 #include <vector>
 #include <opencv2/opencv.hpp>
@@ -20,10 +17,8 @@
 #include "provider_vision/media/camera/image_file.h"
 #include "provider_vision/media/context/base_context.h"
 #include "provider_vision/config.h"
-namespace vision_server {
 
-//==============================================================================
-// C L A S S E S
+namespace vision_server {
 
 /**
  * Class managing medias from a hard drive.
@@ -63,9 +58,9 @@ class FileContext : public BaseContext {
 
   void CloseContext() override;
 
-  bool StartCamera(const std::string &name) override;
+  void StartCamera(const std::string &name) override;
 
-  bool StopCamera(const std::string &name) override;
+  void StopCamera(const std::string &name) override;
 
   void SetFeature(BaseCamera::Feature feat, const std::string &name,
                   float val) override;

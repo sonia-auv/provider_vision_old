@@ -67,10 +67,7 @@ void DC1394Context::InitContext(
         std::shared_ptr<DC1394Camera> cam(
             new DC1394Camera(camera_dc, cam_config));
 
-        if (!cam->Open()) {
-          throw std::runtime_error("Error opening the camera");
-        }
-
+        cam->Open();
         media_list_.push_back(cam);
       }
     }
@@ -84,13 +81,9 @@ void DC1394Context::CloseContext() {
   for (auto &media : media_list_) {
     DC1394Camera::Ptr cam = GetDC1394Camera(media);
     // Stop if running
-    if (!cam->Stop()) {
-      throw std::runtime_error("Cannot stop camera");
-    }
+    cam->Stop();
 
-    if (!cam->Close()) {
-      throw std::runtime_error("Cannot close camera");
-    }
+    cam->Close();
   }
 
   media_list_.clear();
@@ -100,32 +93,16 @@ void DC1394Context::CloseContext() {
 
 //------------------------------------------------------------------------------
 //
-bool DC1394Context::StartCamera(const std::string &name) {
-  bool result = false;
-
+void DC1394Context::StartCamera(const std::string &name) {
   DC1394Camera::Ptr cam = GetDC1394Camera(name);
-
-  if (cam->Start()) {
-    result = true;
-  } else {
-    ROS_ERROR_NAMED(DRIVER_TAG, " Camera opened but not started started ");
-  }
-  return result;
+  cam->Start();
 }
 
 //------------------------------------------------------------------------------
 //
-bool DC1394Context::StopCamera(const std::string &name) {
-  bool result = false;
+void DC1394Context::StopCamera(const std::string &name) {
   DC1394Camera::Ptr cam = GetDC1394Camera(name);
-
-  if (cam->Stop()) {
-    result = true;
-  } else {
-    ROS_ERROR_NAMED(DRIVER_TAG, "Camera opened but not started started ");
-  }
-
-  return result;
+  cam->Stop();
 }
 
 //------------------------------------------------------------------------------
@@ -161,10 +138,7 @@ bool DC1394Context::WatchDogFunc() {
 void DC1394Context::SetFeature(BaseCamera::Feature feat,
                                const std::string &name, float val) {
   DC1394Camera::Ptr cam = GetDC1394Camera(name);
-
-  if (!cam->SetFeature(feat, val)) {
-    ROS_ERROR_NAMED(DRIVER_TAG, "Feature setting failed.");
-  }
+  cam->SetFeature(feat, val);
 }
 
 //------------------------------------------------------------------------------

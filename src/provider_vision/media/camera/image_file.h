@@ -45,13 +45,13 @@ class ImageFile : public BaseMedia {
   bool LoadImage(std::string path_to_file);
 
   /** Method override from Media */
-  bool Start() override;
+  void Start() override;
 
   /** Method override from Media */
-  bool Stop() override;
+  void Stop() override;
 
   /** Method override from Media */
-  bool NextImage(cv::Mat &image) override;
+  void NextImage(cv::Mat &image) override;
 
  private:
   //==========================================================================

@@ -66,47 +66,54 @@ bool VideoFile::LoadVideo(const std::string &path_to_file) {
 
 //------------------------------------------------------------------------------
 //
-bool VideoFile::Start() {
-  if (!isOpened()) {
+void VideoFile::Start() {
+  if (isOpened()) {
+    throw std::logic_error("The video is already opened.");
+  } else {
     LoadVideo(path_);
   }
-  return isOpened();
+
+  if (!isOpened()) {
+    // Check if the video could be opened.
+    throw std::runtime_error("The video could not be opened.");
+  }
 }
 
 //------------------------------------------------------------------------------
 //
-bool VideoFile::Stop() {
-  if (isOpened()) release();
-  return true;
+void VideoFile::Stop() {
+  if (!isOpened()) {
+    throw std::logic_error("The video is not opened.");
+  } else {
+    release();
+  }
+
+  if (isOpened()) {
+    // Check if the video could be opened.
+    throw std::runtime_error("The video could not be closed.");
+  }
 }
 
 //------------------------------------------------------------------------------
 //
-bool VideoFile::NextImage(cv::Mat &image) {
-  // Here, since cv::Mat are smart pointer, we can just
-  // clone the image, and the "garbage collection"
-  // will be handle later on in the program.
-  bool video_status = false;
+void VideoFile::NextImage(cv::Mat &image) {
   if (isOpened()) {
     // Clear the previous image.
     current_image_ = cv::Mat();
 
-    this->operator>>(current_image_);
+    operator>>(current_image_);
     if (!current_image_.empty()) {
       // Next image has loaded
       image = current_image_;
-      video_status = true;
     } else if (looping_) {
       // end of sequence, going back to first frame.
       // Delay will happen, but it's part of the lib...
       set(CV_CAP_PROP_POS_AVI_RATIO, 0);
-      video_status = true;
     } else {
       // No more frame and not looping, end of sequence.
-      video_status = false;
+      throw std::logic_error("No image could be acquiered from this media");
     }
   }
-
-  return video_status;
 }
+
 }  // namespace vision_server

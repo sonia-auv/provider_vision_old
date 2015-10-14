@@ -52,9 +52,9 @@ class BaseContext : public atlas::Runnable {
   /**
    * Method to handle cameras
    */
-  virtual bool StartCamera(const std::string &name) = 0;
+  virtual void StartCamera(const std::string &name) = 0;
 
-  virtual bool StopCamera(const std::string &name) = 0;
+  virtual void StopCamera(const std::string &name) = 0;
 
   /**
    * Feature setting/getting handler

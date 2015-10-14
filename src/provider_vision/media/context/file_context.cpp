@@ -19,8 +19,7 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-FileContext::FileContext() noexcept : BaseContext(),
-                                      DRIVER_TAG("[MEDIA Driver]") {}
+FileContext::FileContext() noexcept : BaseContext() {}
 
 //------------------------------------------------------------------------------
 //
@@ -40,7 +39,7 @@ void FileContext::CloseContext() { media_list_.clear(); }
 
 //------------------------------------------------------------------------------
 //
-bool FileContext::StartCamera(const std::string &name) {
+void FileContext::StartCamera(const std::string &name) {
   // in the videoFile context, camera in list are existing camera.
   bool ret_val = false;
   BaseMedia::Ptr media = GetMedia(name);
@@ -49,29 +48,25 @@ bool FileContext::StartCamera(const std::string &name) {
 
     if (type == MediaType::IMAGE) {
       ImageFile::Ptr file(std::make_shared<ImageFile>(name));
-      ret_val = file->Start();
+      file->Start();
       media_list_.push_back(std::dynamic_pointer_cast<BaseMedia>(file));
     } else if (type == MediaType::VIDEO) {
       VideoFile::Ptr file(std::make_shared<VideoFile>(name));
-      ret_val = file->Start();
+      file->Start();
       media_list_.push_back(std::dynamic_pointer_cast<BaseMedia>(file));
     } else {
       throw std::invalid_argument("Not my camera type");
     }
   }
-  return ret_val;
 }
 
 //------------------------------------------------------------------------------
 //
-bool FileContext::StopCamera(const std::string &name) {
+void FileContext::StopCamera(const std::string &name) {
   // in the videoFile context, camera in list are existing camera.
-
   auto file = GetMedia(name);
-  bool result = file->Stop();
+  file->Stop();
   EraseMedia(name);
-
-  return result;
 }
 
 //------------------------------------------------------------------------------

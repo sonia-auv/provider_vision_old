@@ -111,7 +111,7 @@ bool VisionServer::CallbackExecutionCMD(
       detection_task_mgr_.StartDetectionTask(node_handle_, media, filterchain,
                                              rqst.node_name);
     } catch (const std::exception &e) {
-      ROS_ERROR("Starting execution error: %s", e.what().c_str());
+      ROS_ERROR("Starting execution error: %s", e.what());
     }
   } else if (rqst.cmd == rqst.STOP) {
     try {
@@ -121,7 +121,7 @@ bool VisionServer::CallbackExecutionCMD(
       // currently running
       media_mgr_.StopMedia(rqst.media_name);
     } catch (const std::exception &e) {
-      ROS_ERROR("Closing execution error: %s", e.what().c_str());
+      ROS_ERROR("Closing execution error: %s", e.what());
     }
   }
   return true;
@@ -155,7 +155,7 @@ bool VisionServer::CallbackGetCMD(
     return true;
   } catch (const std::invalid_argument &e) {
     ROS_ERROR("An error occured while getting the feature: %s",
-              e.what().c_str());
+              e.what());
     return false;
   }
 }
@@ -172,7 +172,7 @@ bool VisionServer::CallbackSetCMD(
   } catch (const std::invalid_argument &e) {
     rep.success = rep.FAIL;
     ROS_ERROR("An error occured while setting the feature: %s",
-              e.what().c_str());
+              e.what());
     return false;
   }
 }
@@ -345,12 +345,8 @@ bool VisionServer::CallbackManageFc(
   std::string filterchain_name(rqst.filterchain);
   bool response = true;
   if (rqst.cmd == rqst.ADD) {
-    if (filterchain_mgr_.CreateFilterchain(filterchain_name)) {
-      rep.success = rep.SUCCESS;
-
-    } else {
-      rep.success = rep.FAIL;
-    }
+    filterchain_mgr_.CreateFilterchain(filterchain_name);
+    rep.success = rep.SUCCESS;
   } else if (rqst.cmd == rqst.DELETE) {
     filterchain_mgr_.DeleteFilterchain(filterchain_name);
   }
@@ -365,10 +361,8 @@ bool VisionServer::CallbackSaveFc(
   std::string execution_name(rqst.exec_name);
   std::string filterchain_name(rqst.filterchain);
   if (rqst.cmd == rqst.SAVE) {
-    if (filterchain_mgr_.SaveFilterchain(execution_name, filterchain_name))
-      rep.success = rep.SUCCESS;
-    else
-      rep.success = rep.FAIL;
+    filterchain_mgr_.SaveFilterchain(execution_name, filterchain_name);
+    rep.success = rep.SUCCESS;
   }
   return true;
 }

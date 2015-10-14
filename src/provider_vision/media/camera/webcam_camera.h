@@ -41,25 +41,39 @@ class WebcamCamera : public BaseCamera, private cv::VideoCapture {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  /** Method override from Media */
-  bool Start() override;
+  /**
+   * Method override from Media
+   */
+  void Start() override;
 
-  /** Method override from Media */
-  bool Stop() override;
+  /**
+   * Method override from Media
+   */
+  void Stop() override;
 
-  /** Method override from Media */
-  bool NextImage(cv::Mat &image) override;
+  /**
+   * Method override from Media
+   */
+  void NextImage(cv::Mat &image) override;
 
-  /** Method override from Media */
-  bool Open() override;
+  /**
+   * Method override from Media
+   */
+  void Open() override;
 
-  /** Method override from Media */
-  bool Close() override;
+  /**
+   * Method override from Media
+   */
+  void Close() override;
 
-  /** Method override from Media */
-  bool SetFeature(const Feature &feat, float value) override;
+  /**
+   * Method override from Media
+   */
+  void SetFeature(const Feature &feat, float value) override;
 
-  /** Method override from Media */
+  /**
+   * Method override from Media
+   */
   float GetFeature(const Feature &feat) const override;
 };
 

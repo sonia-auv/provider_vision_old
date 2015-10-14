@@ -61,11 +61,11 @@ class DC1394Camera : public BaseCamera {
   float GetFeature(const Feature &feat) const override;
 
   // Sets to different streaming format.
-  bool SetFormat7();
+  void SetFormat7();
 
-  bool SetNormalFormat();
+  void SetNormalFormat();
 
-  bool SetCameraParams();
+  void SetCameraParams();
 
   //==========================================================================
   // G E T T E R S   A N D   S E T T E R S
