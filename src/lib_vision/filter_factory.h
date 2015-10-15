@@ -44,6 +44,7 @@
 #include <lib_vision/filters/adaptive_threshold.h>
 #include <lib_vision/filters/handle_detector.h>
 #include <lib_vision/filters/white_noise_takedown.h>
+#include <lib_vision/filters/bilateral_filter.h>
 
 namespace vision_filter {
 
@@ -165,6 +166,9 @@ class FilterFactory {
     if (name == "WhiteNoiseTakedown") {
       return new WhiteNoiseTakedown(globalParams);
     }
+    if (name == "BilateralFilter") {
+      return new BilateralFilter(globalParams);
+    }
     // Case were not found.
     return nullptr;
   }
@@ -177,7 +181,7 @@ class FilterFactory {
            "TrainDetector;ObjectFinder;PipeDetector;TrackDetector;Sobel;"
            "DeloreanDetector;SubmarineFrameMasker;InRange;ConvexHull;"
            "TorpedoesDetector;Laplacian;Canny;HoughLine;AdaptiveThreshold;"
-           "HandleDetector;WhiteNoiseTakedown;";
+           "HandleDetector;WhiteNoiseTakedown;BilateralFilter;";
   }
 };
 
