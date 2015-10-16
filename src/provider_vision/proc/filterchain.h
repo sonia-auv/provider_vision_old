@@ -129,7 +129,7 @@ class Filterchain : public Serializable {
 
   std::vector<vision_filter::Filter *> filters_;
 
-  int _observer_index;
+  int observer_index_;
 };
 
 //==============================================================================
@@ -181,7 +181,7 @@ inline bool Filterchain::HasFilter(const std::string &filter_name) const {
 //------------------------------------------------------------------------------
 //
 inline void Filterchain::SetObserver(const std::string &filterName) {
-  _observer_index = GetFilterIndexFromUIName(filterName);
+  observer_index_ = GetFilterIndexFromUIName(filterName);
 }
 
 //------------------------------------------------------------------------------

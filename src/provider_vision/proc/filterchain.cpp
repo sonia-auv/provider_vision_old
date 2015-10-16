@@ -23,9 +23,9 @@ Filterchain::Filterchain(const std::string &name, const std::string &execution)
     : Serializable(kConfigPath + name + kFilterchainExt),
       name_(name),
       _global_params(),
-      _observer_index(0) {
+      observer_index_(0) {
   Deserialize();
-  _observer_index = static_cast<int>(filters_.size() - 1);
+  observer_index_ = static_cast<int>(filters_.size() - 1);
 }
 
 //------------------------------------------------------------------------------
@@ -34,8 +34,11 @@ Filterchain::Filterchain(const Filterchain &filterchain)
     : Serializable(kConfigPath + filterchain.name_ + "_copy" + kFilterchainExt),
       name_(filterchain.name_ + "_copy"),
       _global_params(filterchain._global_params),
-      _observer_index(filterchain._observer_index) {}
+      observer_index_(filterchain.observer_index_) {}
 
+//------------------------------------------------------------------------------
+//
+Filterchain::~Filterchain(){}
 //==============================================================================
 // M E T H O D   S E C T I O N
 
@@ -113,7 +116,7 @@ std::string Filterchain::ExecuteFilterChain(cv::Mat &image) {
           (*it)->execute(imageToProcess);
         }
 
-        if (filterIndex == _observer_index) {
+        if (filterIndex == observer_index_) {
           imageToProcess.copyTo(image);
         }
 

@@ -121,7 +121,6 @@ void MediaStreamer::StopRecording() {
 //------------------------------------------------------------------------------
 //
 void MediaStreamer::Run() {
-  bool acquival = false;
   bool must_set_record = false;
 
   // If the media is a real camera, start recording the feed.

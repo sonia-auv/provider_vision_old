@@ -41,7 +41,6 @@ void FileContext::CloseContext() { media_list_.clear(); }
 //
 void FileContext::StartCamera(const std::string &name) {
   // in the videoFile context, camera in list are existing camera.
-  bool ret_val = false;
   BaseMedia::Ptr media = GetMedia(name);
   if (!media) {
     MediaType type = GetMediaType(name);
