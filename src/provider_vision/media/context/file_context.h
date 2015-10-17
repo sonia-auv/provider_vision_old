@@ -16,7 +16,7 @@
 #include "provider_vision/media/camera/video_file.h"
 #include "provider_vision/media/camera/image_file.h"
 #include "provider_vision/media/context/base_context.h"
-#include "provider_vision/config.h"
+#include "provider_vision/utils/config.h"
 
 namespace vision_server {
 

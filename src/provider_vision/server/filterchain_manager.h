@@ -15,7 +15,7 @@
 #include <functional>
 #include <lib_atlas/ros/service_server_manager.h>
 #include <lib_vision/filter.h>
-#include "provider_vision/config.h"
+#include "provider_vision/utils/config.h"
 #include "provider_vision/proc/filterchain.h"
 
 namespace vision_server {

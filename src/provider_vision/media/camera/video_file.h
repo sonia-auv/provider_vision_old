@@ -13,7 +13,7 @@
 #include <memory>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
-#include "provider_vision/config.h"
+#include "provider_vision/utils/config.h"
 #include "provider_vision/media/camera/base_media.h"
 
 namespace vision_server {

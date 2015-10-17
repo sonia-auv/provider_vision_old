@@ -1,11 +1,13 @@
 <CameraList>
-  <Camera name="Front" guid="0123456789">
-    <Shutter value="1"/>
-    <Gain value="1"/>
-    <UndistortionMatrice value="/test/for/path/lol"/>
+  <Camera name="Front" guid="FF">
+    <Shutter value="1.0"/>
+    <Gain value="32"/>
+      <AutoWB value="True"/>
+    <UndistortionMatrice value="test/front_guppy_calibration.xml"/>
   </Camera>
-  <Camera name="Bottom" guid="9876543210">
-    <Shutter value="2"/>
+  <Camera name="Bottom" guid="11">
+    <Shutter value="2.0"/>
+      <AutoWB value="False"/>
     <Gain value="3"/>
   </Camera>
 </CameraList>

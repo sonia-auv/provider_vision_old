@@ -100,8 +100,14 @@ set( vision_server_SRC_DIR "src" )
 
 # Get all the files of the projects.
 file( GLOB_RECURSE vision_server_FILES
-    "${vision_server_SRC_DIR}/*.h"
-    "${vision_server_SRC_DIR}/*.cpp"
+    "${vision_server_SRC_DIR}/provider_vision/media/*.h"
+    "${vision_server_SRC_DIR}/provider_vision/media/*.cpp"
+    "${vision_server_SRC_DIR}/provider_vision/server/*.h"
+    "${vision_server_SRC_DIR}/provider_vision/server/*.cpp"
+    "${vision_server_SRC_DIR}/provider_vision/proc/*.h"
+    "${vision_server_SRC_DIR}/provider_vision/proc/*.cpp"
+    "${vision_server_SRC_DIR}/provider_vision/utils/*.h"
+    "${vision_server_SRC_DIR}/provider_vision/utils/*.cpp"
 )
 
 # Include all the directories where source can be found.
@@ -114,9 +120,8 @@ include_directories(
 
 #===============================================================================
 # C R E A T E   E X E C U T A B L E
-
 # Create a CXX file from the given sources
-add_executable( vision_server_node
+add_executable( vision_server_node ${vision_server_SRC_DIR}/provider_vision/main.cpp
     ${vision_server_FILES}
 )
 
@@ -126,4 +131,14 @@ target_link_libraries( vision_server_node
     ${catkin_LIBRARIES}
     ${lib_atlas_LIBRARIES}
     ${lib_vision_LIBRARIES}
+)
+
+#===============================================================================
+# C R E A T I N G    U N I T    T E S T S
+catkin_add_gtest( utest_configuration_handler test/configuration_handler_test.cc ${vision_server_FILES})
+target_link_libraries( utest_configuration_handler
+        dc1394
+        ${catkin_LIBRARIES}
+        ${lib_atlas_LIBRARIES}
+        ${lib_vision_LIBRARIES}
 )

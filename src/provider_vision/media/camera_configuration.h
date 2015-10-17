@@ -25,27 +25,25 @@ class CameraConfiguration {
 
   virtual ~CameraConfiguration();
 
-  void SetGUID(uint64_t guid);
-
   uint64_t GetGUID() const;
-
-  void SetName(const std::string &name);
-
   const std::string &GetName() const;
-
-  void SetUndistortionMatricePath(const std::string path);
-
   std::string GetUndistortionMatricePath() const;
 
-  void AddConfiguration(const std::string &config_name,
-                        const std::string &value);
-
-  const std::map<std::string, std::string> &GetConfigurations() const;
+  void SetGUID(uint64_t guid);
+  void SetName(const std::string &name);
+  void SetUndistortionMatricePath(const std::string path);
 
   float GetFloat(const std::string &config_name) const;
   int GetInteger(const std::string &config_name) const;
   bool GetBoolean(const std::string &config_name) const;
   std::string GetString(const std::string &config_name) const;
+
+  void AddConfiguration(const std::string &config_name,
+                        const std::string &value);
+
+  const std::string &GetParam(const std::string &config_name) const;
+
+  const std::map<std::string, std::string> &GetConfigurations() const;
 
  private:
   std::map<std::string, std::string> configuration_;
@@ -102,5 +100,50 @@ inline void CameraConfiguration::SetUndistortionMatricePath(
 inline std::string CameraConfiguration::GetUndistortionMatricePath() const {
   return undistortion_matrice_path_;
 }
+
+//-----------------------------------------------------------------------------
+//
+inline const std::string &
+CameraConfiguration::GetParam(const std::string &config_name) const
+{
+  auto config = configuration_.find(config_name);
+  if( config == configuration_.end())
+  {
+    throw std::invalid_argument("Param not found");
+  }
+  return config->second;
+}
+
+//-----------------------------------------------------------------------------
+//
+inline float CameraConfiguration::GetFloat(const std::string &config_name) const
+{
+  return atof(GetParam(config_name).c_str());
+}
+
+//-----------------------------------------------------------------------------
+//
+inline int CameraConfiguration::GetInteger(const std::string &config_name) const
+{
+  return atoi(GetParam(config_name).c_str());
+}
+
+//-----------------------------------------------------------------------------
+//
+inline bool CameraConfiguration::GetBoolean(const std::string &config_name) const
+{
+  bool ret_val = false;
+  if( GetParam(config_name).compare("True")==0 )
+    ret_val = true;
+  return ret_val;
+}
+
+//-----------------------------------------------------------------------------
+//
+inline std::string CameraConfiguration::GetString(const std::string &config_name) const
+{
+  return GetParam(config_name);
+}
+
 }
 #endif /* PROVIDER_VISION_SRC_MEDIA_CAMERA_CONFIGURATION_H_ */

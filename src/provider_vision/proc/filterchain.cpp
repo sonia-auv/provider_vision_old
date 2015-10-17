@@ -9,7 +9,7 @@
 
 #include "provider_vision/utils/pugixml.h"
 #include "provider_vision/proc/filterchain.h"
-#include "provider_vision/config.h"
+#include "provider_vision/utils/config.h"
 #include <ros/ros.h>
 
 namespace vision_server {

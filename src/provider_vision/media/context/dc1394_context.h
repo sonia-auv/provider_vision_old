@@ -12,7 +12,7 @@
 
 #include <inttypes.h>
 #include <dc1394/dc1394.h>
-#include "provider_vision/config.h"
+#include "provider_vision/utils/config.h"
 #include "provider_vision/media/camera/base_media.h"
 #include "provider_vision/media/context/base_context.h"
 #include "provider_vision/media/camera/dc1394_camera.h"

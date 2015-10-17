@@ -11,7 +11,7 @@
 #define PROVIDER_VISION_CAMERA_H_
 
 #include <memory>
-#include "provider_vision/config.h"
+#include "provider_vision/utils/config.h"
 #include "provider_vision/media/camera/base_media.h"
 #include "provider_vision/media/cam_undistord_matrices.h"
 

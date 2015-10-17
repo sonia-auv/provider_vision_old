@@ -17,7 +17,7 @@
 #include "lib_atlas/sys/fsinfo.h"
 #include "provider_vision/utils/pugixml.h"
 #include "provider_vision/media/camera_configuration.h"
-#include "provider_vision/config.h"
+#include "provider_vision/utils/config.h"
 
 namespace vision_server {
 
@@ -45,7 +45,7 @@ class ConfigurationHandler {
 
   std::vector<CameraConfiguration> ParseConfiguration();
   void SaveConfiguration(
-      const std::map<std::string, CameraConfiguration> &system_config);
+      const std::vector<CameraConfiguration> &system_config);
 
  private:
   std::string file_;
