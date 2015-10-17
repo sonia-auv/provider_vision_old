@@ -63,7 +63,7 @@ TEST(ConfigurationHandler, saving)
 // Reread to be sure
   ConfigurationHandler cfHdl_re(file_path );
   std::vector<CameraConfiguration> cams_config_re = cfHdl_re.ParseConfiguration();
-  ASSERT_EQ(cams_config_re.size(),1);
+  ASSERT_GE(cams_config_re.size(),1);
   ASSERT_EQ(cams_config_re[0].GetName().compare("Front"), 0);
   ASSERT_EQ(cams_config_re[0].GetBoolean("conf1"), true);
   ASSERT_EQ(cams_config_re[0].GetFloat("conf2"), 1.0);
