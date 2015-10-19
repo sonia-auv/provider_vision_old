@@ -1,7 +1,7 @@
 /**
  * \file	bilateral_filter.h
- * \author  Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
- * \date	14/12/2014
+ * \author  Pierluc Bédard <pierlucbed@gmail.com>
+ * \date	16/10/2015
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
@@ -14,44 +14,81 @@
 
 namespace vision_filter {
 
+/**
+ * The filter bilateral aims to blurr an image without loosing edge sharpness.
+ * This act like a proxy for the OpenCv bilateralFilter method.
+ */
 class BilateralFilter : public Filter {
  public:
   //============================================================================
   // P U B L I C   C / D T O R
 
-  explicit BilateralFilter(const GlobalParamHandler &globalParams)
+  explicit BilateralFilter(const GlobalParamHandler &globalParams) noexcept
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _diameter("Diameter", -100, 0, 100, parameters_),
-        _sigma_color("Sigm_color", 0, 0, 300, parameters_),
-        _sigma_space("Sigma_space", 0, 0, 300, parameters_) {
+        enable_("Enable", false, parameters_),
+        diameter_("Diameter", -100, 0, 100, parameters_),
+        sigma_color_("Sigm_color", 0, 0, 300, parameters_),
+        sigma_space_("Sigma_space", 0, 0, 300, parameters_) {
     setName("BilateralFilter");
   }
 
-  virtual ~BilateralFilter() {}
+  virtual ~BilateralFilter() noexcept {}
 
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
-    if (_enable()) {
+  /**
+   * Override the execute function from the Filter class.
+   * This is the function that is going to be called for processing the image.
+   * This takes an image as a parameter and modify it with the filtered image.
+   *
+   * \param image The image to process.
+   */
+  void execute(cv::Mat &image) override {
+    if (enable_()) {
       cv::Mat blurred;
-      cv::bilateralFilter(image, blurred, _diameter(), _sigma_color(),
-                          _sigma_space());
+      cv::bilateralFilter(image, blurred, diameter_.getValue(),
+                          sigma_color_.getValue(), sigma_space_.getValue());
 
       blurred.copyTo(image);
     }
   }
 
  private:
-  // Params
-  BooleanParameter _enable;
+  //============================================================================
+  // P R I V A T E   M E M B E R S
 
-  IntegerParameter _diameter;
+  /**
+   * State if the filter is enabled or not.
+   * This is being used by the vision server for calling the filter in the
+   * filterchain.
+   */
+  BooleanParameter enable_;
 
-    IntegerParameter _sigma_color;
+  /**
+   * From the OpenCV definition:
+   * Diameter of each pixel neighborhood that is used during filtering.
+   * If it is non-positive, it is computed from sigmaSpace .
+   */
+  IntegerParameter diameter_;
 
-    IntegerParameter _sigma_space;
+  /**
+   * From the OpenCV definition:
+   * Filter sigma in the color space. A larger value of the parameter means
+   * that farther colors within the pixel neighborhood (see sigmaSpace )
+   * will be mixed together, resulting in larger areas of semi-equal color.
+   */
+  IntegerParameter sigma_color_;
+
+  /**
+   * From the OpenCV definition:
+   * Filter sigma in the coordinate space. A larger value of the parameter
+   * means that farther pixels will influence each other as long as their
+   * colors are close enough (see sigmaColor ). When d>0 , it specifies
+   * the neighborhood size regardless of sigmaSpace . Otherwise, d is
+   * proportional to sigmaSpace .
+   */
+  IntegerParameter sigma_space_;
 };
 
 }  // namespace vision_filter
