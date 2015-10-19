@@ -41,7 +41,8 @@ class ObjectFeatureCalculator : public Filter {
         _id("ID", "buoy", parameters_),
         _spec_1("spec1", "red", parameters_),
         _spec_2("spec2", "blue", parameters_),
-        _output_folder("output_folder", "/home/jeremie/aidata/rec1/", parameters_),
+        _output_folder("output_folder", "/home/jeremie/aidata/rec1/",
+                       parameters_),
         _min_area("Min_area", 200, 0, 10000, parameters_),
         _feature_factory(5) {
     setName("ObjectFeatureCalculator");

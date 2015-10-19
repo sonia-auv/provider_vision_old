@@ -10,9 +10,8 @@
 
 #include <opencv2/opencv.hpp>
 
-class Contour
-{
-public:
+class Contour {
+ public:
   Contour(const std::vector<cv::Point> ctr);
   Contour(const cv::RotatedRect &rect);
 
@@ -22,7 +21,7 @@ public:
   void ApproximateBySize();
 
   // Draw contour in the image.
-  void DrawContours( cv::Mat &image, const cv::Scalar &color, int thickness );
+  void DrawContours(cv::Mat &image, const cv::Scalar &color, int thickness);
 
   // Vector overload
   size_t size();
@@ -33,17 +32,15 @@ public:
 
 //-----------------------------------------------------------------------------
 //
-inline void Contour::Approximate(double accuracy)
-{
+inline void Contour::Approximate(double accuracy) {
   std::vector<cv::Point> output;
-  cv::approxPolyDP(_contour, output, accuracy,false );
+  cv::approxPolyDP(_contour, output, accuracy, false);
   std::swap(_contour, output);
 }
 
 //-----------------------------------------------------------------------------
 //
-inline void Contour::ApproximateBySize()
-{
+inline void Contour::ApproximateBySize() {
   double arc_length = 0.1 * cv::arcLength(_contour, true);
   std::vector<cv::Point> output;
   cv::approxPolyDP(_contour, output, arc_length, false);
@@ -52,27 +49,20 @@ inline void Contour::ApproximateBySize()
 
 //-----------------------------------------------------------------------------
 //
-inline void
-Contour::DrawContours( cv::Mat &image, const cv::Scalar &color, int thickness)
-{
-  std::vector < Contour > ctrs;
+inline void Contour::DrawContours(cv::Mat &image, const cv::Scalar &color,
+                                  int thickness) {
+  std::vector<Contour> ctrs;
   ctrs.push_back(_contour);
   cv::polylines(image, ctrs, true, color, thickness);
 }
 
 //-----------------------------------------------------------------------------
 //
-inline size_t
-Contour::size()
-{
-  return _contour.size();
-}
+inline size_t Contour::size() { return _contour.size(); }
 
 //-----------------------------------------------------------------------------
 //
-inline cv::Point
-Contour::operator[](unsigned int index)
-{
+inline cv::Point Contour::operator[](unsigned int index) {
   return _contour[index];
 }
 

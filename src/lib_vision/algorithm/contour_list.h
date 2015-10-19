@@ -13,11 +13,8 @@
 #include "contour.h"
 // Contour finding
 
-
-class ContourList
-{
-public:
-
+class ContourList {
+ public:
   // Contour navigation constant
   static const unsigned int NEXT_CTR = 0;
   static const unsigned int PREV_CTR = 1;
@@ -25,25 +22,23 @@ public:
   static const unsigned int PARENT_CTR = 3;
 
   enum METHOD {
-    ALL, // All the contour in the image
-    INNER, // Every contour with a parent
-    INNER_MOST, // Every contour with a parent AND no child
-    OUTER, // Every contour without a parent
-    OUTER_NO_CHILD, // Ever contour without a parent AND no child
-    HIERARCHY // All the contours, fills the hierarchy member
+    ALL,             // All the contour in the image
+    INNER,           // Every contour with a parent
+    INNER_MOST,      // Every contour with a parent AND no child
+    OUTER,           // Every contour without a parent
+    OUTER_NO_CHILD,  // Ever contour without a parent AND no child
+    HIERARCHY        // All the contours, fills the hierarchy member
   };
 
-  ContourList (const cv::Mat &image, const METHOD method);
+  ContourList(const cv::Mat &image, const METHOD method);
 
-  void DrawContours(cv::Mat &img, const cv::Scalar &color,
-                    int thickness = 2);
+  void DrawContours(cv::Mat &img, const cv::Scalar &color, int thickness = 2);
 
   // Vector overload
   size_t size();
   std::vector<cv::Point> operator[](unsigned int index);
 
-private:
-
+ private:
   bool HasChild(const cv::Vec4i &hierarchy_def);
   bool HasParent(const cv::Vec4i &hierarchy_def);
 
@@ -65,8 +60,7 @@ private:
   // All contour that has no child AND no parent
   void retrieveOutNoChildContours(const cv::Mat &image);
 
-public:
-
+ public:
   std::vector<std::vector<cv::Point> > _contour_list;
   // Contains the hierachy when METHOD used is HIERACHY
   std::vector<cv::Vec4i> _hierarchy;
@@ -76,40 +70,31 @@ public:
 //
 //-----------------------------------------------------------------------------
 //
-inline size_t
-ContourList::size()
-{
-  return _contour_list.size();
-}
+inline size_t ContourList::size() { return _contour_list.size(); }
 
 //-----------------------------------------------------------------------------
 //
-inline std::vector<cv::Point>
-ContourList::operator[](unsigned int index)
-{
+inline std::vector<cv::Point> ContourList::operator[](unsigned int index) {
   return _contour_list[index];
 }
 
 //-----------------------------------------------------------------------------
 //
-inline bool ContourList::HasChild(const cv::Vec4i &hierarchy_def)
-{
-   return hierarchy_def[FIRST_CHILD_CTR] != -1;
+inline bool ContourList::HasChild(const cv::Vec4i &hierarchy_def) {
+  return hierarchy_def[FIRST_CHILD_CTR] != -1;
 }
 
 //-----------------------------------------------------------------------------
 //
-inline bool ContourList::HasParent(const cv::Vec4i &hierarchy_def)
-{
+inline bool ContourList::HasParent(const cv::Vec4i &hierarchy_def) {
   return hierarchy_def[PARENT_CTR] != -1;
 }
 
 //-----------------------------------------------------------------------------
 //
 inline void ContourList::DrawContours(cv::Mat &img, const cv::Scalar &color,
-                                      int thickness)
-{
-   cv::drawContours(img, _contour_list, -1, color, thickness);
+                                      int thickness) {
+  cv::drawContours(img, _contour_list, -1, color, thickness);
 }
 
 #endif /* LIB_VISION_SRC_LIB_VISION_ALGORITHM_CONTOUR_FINDER_H_ */

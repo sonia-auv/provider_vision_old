@@ -35,7 +35,6 @@ class PerformanceEvaluator {
   void UpdateStartTime();
 
  private:
-
   double _start_tick_count;
   double _tick_frequency;
 };
@@ -45,15 +44,13 @@ class PerformanceEvaluator {
 
 //-----------------------------------------------------------------------------
 //
-inline double
-PerformanceEvaluator::GetExecTimeSec() {
+inline double PerformanceEvaluator::GetExecTimeSec() {
   return (cv::getTickCount() - _start_tick_count) / _tick_frequency;
 }
 
 //-----------------------------------------------------------------------------
 //
-inline void
-PerformanceEvaluator::UpdateStartTime() {
+inline void PerformanceEvaluator::UpdateStartTime() {
   _start_tick_count = cv::getTickCount();
 }
 
