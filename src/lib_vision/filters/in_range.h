@@ -1,5 +1,5 @@
 /**
- * \file	bilateral_filter.h
+ * \file	in_range.h
  * \author  Pierluc Bédard <pierlucbed@gmail.com>
  * \date	16/10/2015
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
@@ -17,13 +17,14 @@
 
 namespace vision_filter {
 
-//==============================================================================
-// C L A S S E S
-
+/**
+ * The filter inRange check if array elements lie between certain value of HSV
+ * and Luv. If it does, value of pixel = 1. If not, value of pixel = 0.
+ */
 class InRange : public Filter {
  public:
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R
 
   explicit InRange(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -43,11 +44,18 @@ class InRange : public Filter {
     setName("InRange");
   }
 
-  virtual ~InRange() {}
+  virtual ~InRange() noexcept {}
 
   //============================================================================
   // P U B L I C   M E T H O D S
 
+  /**
+   * Override the execute function from the Filter class.
+   * This is the function that is going to be called for processing the image.
+   * This takes an image as a parameter and modify it with the filtered image.
+   *
+   * \param image The image to process.
+   */
   virtual void execute(cv::Mat &image) {
     if (_enable()) {
       cv::Mat HSV, LUV;
@@ -70,19 +78,74 @@ class InRange : public Filter {
   }
 
  private:
-  // Params
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
+  /**
+   * State if the filter is enabled or not.
+   * This is being used by the vision server for calling the filter in the
+   * filterchain.
+   */
   BooleanParameter _enable;
+
+  /**
+   * Inclusive Hue lower boundary.
+   */
   IntegerParameter _HSVlowH;
+
+  /**
+   * Inclusive Hue upper boundary.
+   */
   IntegerParameter _HSVhighH;
+
+  /**
+   * Inclusive Saturation lower boundary.
+   */
   IntegerParameter _HSVlowS;
+
+  /**
+   * Inclusive Saturation upper boundary.
+   */
   IntegerParameter _HSVhighS;
+
+  /**
+   * Inclusive Value lower boundary.
+   */
   IntegerParameter _HSVlowV;
+
+  /**
+   * Inclusive Value upper boundary.
+   */
   IntegerParameter _HSVhighV;
+
+  /**
+   * Inclusive Lightness lower boundary.
+   */
   IntegerParameter _LUVlowL;
+
+  /**
+   * Inclusive Lightness upper boundary.
+   */
   IntegerParameter _LUVhighL;
+
+  /**
+   * Inclusive u lower boundary.
+   */
   IntegerParameter _LUVlowU;
+
+  /**
+   * Inclusive u upper boundary.
+   */
   IntegerParameter _LUVhighU;
+
+  /**
+   * Inclusive v lower boundary.
+   */
   IntegerParameter _LUVlowV;
+
+  /**
+   * Inclusive v upper boundary.
+   */
   IntegerParameter _LUVhighV;
 };
 
