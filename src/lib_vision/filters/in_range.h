@@ -7,8 +7,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef LIB_VISION_FILTERS_BILATERAL_FILTER_H_
-#define LIB_VISION_FILTERS_BILATERAL_FILTER_H_
+#ifndef LIB_VISION_FILTERS_IN_RANGE_FILTER_H_
+#define LIB_VISION_FILTERS_IN_RANGE_FILTER_H_
 
 //==============================================================================
 // I N C L U D E   F I L E S
@@ -35,11 +35,11 @@ class InRange : public Filter {
         _HSVlowV("HSVLowV", 0, 0, 255, parameters_),
         _HSVhighV("HSVHighV", 255, 0, 255, parameters_),
         _LUVlowL("LUVlowL", 0, 0, 255, parameters_),
-        _LUVhighL("LUVhighL", 0, 255, 255, parameters_),
+        _LUVhighL("LUVhighL", 255, 0, 255, parameters_),
         _LUVlowU("LUVlowU", 0, 0, 255, parameters_),
-        _LUVhighU("LUVhighU", 0, 255, 255, parameters_),
+        _LUVhighU("LUVhighU", 255, 0, 255, parameters_),
         _LUVlowV("LUVlowV", 0, 0, 255, parameters_),
-        _LUVhighV("LUVhighV", 0, 255, 255, parameters_) {
+        _LUVhighV("LUVhighV", 255, 0, 255, parameters_) {
     setName("InRange");
   }
 
@@ -88,4 +88,4 @@ class InRange : public Filter {
 
 }  // namespace vision_filter
 
-#endif  // LIB_VISION_FILTERS_BILATERAL_FILTER_H_
+#endif  // LIB_VISION_FILTERS_IN_RANGE_FILTER_H_
