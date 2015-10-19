@@ -66,7 +66,7 @@ SET( LIBS_TO_LINK
   ${OpenCV_LIBRARIES}
 )
 
-add_library( ${TARGET_NAME} ${lib_vision_SRC_FILES} )
+add_library( ${TARGET_NAME} ${lib_vision_SRC_FILES} ${lib_vision_HDR_FILES} )
 target_link_libraries( ${TARGET_NAME} ${LIBS_TO_LINK})
 
 set_target_properties( ${TARGET_NAME}

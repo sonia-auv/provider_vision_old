@@ -1,14 +1,14 @@
 /**
- * \file	InRange.h
- * \author  Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
- * \date	14/12/2014
+ * \file	bilateral_filter.h
+ * \author  Pierluc Bédard <pierlucbed@gmail.com>
+ * \date	16/10/2015
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
 
-#ifndef VISION_FILTER_INRANGE_H_
-#define VISION_FILTER_INRANGE_H_
+#ifndef LIB_VISION_FILTERS_BILATERAL_FILTER_H_
+#define LIB_VISION_FILTERS_BILATERAL_FILTER_H_
 
 //==============================================================================
 // I N C L U D E   F I L E S
@@ -34,9 +34,12 @@ class InRange : public Filter {
         _HSVhighS("HSVHighS", 255, 0, 255, parameters_),
         _HSVlowV("HSVLowV", 0, 0, 255, parameters_),
         _HSVhighV("HSVHighV", 255, 0, 255, parameters_),
-        _LUVlowL(),
-        _LUVhighL(),
-        _LUVlow{
+        _LUVlowL("LUVlowL", 0, 0, 255, parameters_),
+        _LUVhighL("LUVhighL", 0, 255, 255, parameters_),
+        _LUVlowU("LUVlowU", 0, 0, 255, parameters_),
+        _LUVhighU("LUVhighU", 0, 255, 255, parameters_),
+        _LUVlowV("LUVlowV", 0, 0, 255, parameters_),
+        _LUVhighV("LUVhighV", 0, 255, 255, parameters_) {
     setName("InRange");
   }
 
@@ -47,18 +50,42 @@ class InRange : public Filter {
 
   virtual void execute(cv::Mat &image) {
     if (_enable()) {
-      cv::cvtColor(image, image, cv::COLOR_RGB2HSV_FULL);
-      cv::inRange(image, cv::Scalar(_HSVlowH(), _HSVlowS(), _HSVlowV()),
-                  cv::Scalar(_HSVhighH(), _HSVhighS(), _HSVhighV()), image);
+      cv::Mat HSV, LUV;
+
+      cv::cvtColor(image, HSV, cv::COLOR_RGB2HSV_FULL);
+      cv::inRange(HSV, cv::Scalar(_HSVlowH.getValue(), _HSVlowS.getValue(),
+                                  _HSVlowV.getValue()),
+                  cv::Scalar(_HSVhighH.getValue(), _HSVhighS.getValue(),
+                             _HSVhighV.getValue()),
+                  HSV);
+
+      cv::cvtColor(image, LUV, cv::COLOR_RGB2Luv);
+      cv::inRange(LUV, cv::Scalar(_LUVlowL.getValue(), _LUVlowU.getValue(),
+                                  _LUVlowV.getValue()),
+                  cv::Scalar(_LUVhighL.getValue(), _LUVhighU.getValue(),
+                             _LUVhighV.getValue()),
+                  LUV);
+      cv::bitwise_and(HSV, LUV, image);
     }
   }
 
  private:
   // Params
   BooleanParameter _enable;
-  IntegerParameter _HSVlowH, _HSVhighH, _HSVlowS, _HSVhighS, _HSVlowV, _HSVhighV;
+  IntegerParameter _HSVlowH;
+  IntegerParameter _HSVhighH;
+  IntegerParameter _HSVlowS;
+  IntegerParameter _HSVhighS;
+  IntegerParameter _HSVlowV;
+  IntegerParameter _HSVhighV;
+  IntegerParameter _LUVlowL;
+  IntegerParameter _LUVhighL;
+  IntegerParameter _LUVlowU;
+  IntegerParameter _LUVhighU;
+  IntegerParameter _LUVlowV;
+  IntegerParameter _LUVhighV;
 };
 
 }  // namespace vision_filter
 
-#endif  // VISION_FILTER_INRANGE_H_
+#endif  // LIB_VISION_FILTERS_BILATERAL_FILTER_H_
