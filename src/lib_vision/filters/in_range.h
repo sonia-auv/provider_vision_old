@@ -28,12 +28,15 @@ class InRange : public Filter {
   explicit InRange(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
         _enable("Enable", false, parameters_),
-        _lowH("LowH", 0, 0, 179, parameters_),
-        _highH("HighH", 178, 0, 179, parameters_),
-        _lowS("LowS", 0, 0, 255, parameters_),
-        _highS("HighS", 254, 0, 255, parameters_),
-        _lowV("LowV", 0, 0, 255, parameters_),
-        _highV("HighV", 254, 0, 255, parameters_) {
+        _HSVlowH("HSVLowH", 0, 0, 255, parameters_),
+        _HSVhighH("HSVHighH", 255, 0, 255, parameters_),
+        _HSVlowS("HSVLowS", 0, 0, 255, parameters_),
+        _HSVhighS("HSVHighS", 255, 0, 255, parameters_),
+        _HSVlowV("HSVLowV", 0, 0, 255, parameters_),
+        _HSVhighV("HSVHighV", 255, 0, 255, parameters_),
+        _LUVlowL(),
+        _LUVhighL(),
+        _LUVlow{
     setName("InRange");
   }
 
@@ -44,16 +47,16 @@ class InRange : public Filter {
 
   virtual void execute(cv::Mat &image) {
     if (_enable()) {
-      cv::cvtColor(image, image, cv::COLOR_RGB2HSV);
-      cv::inRange(image, cv::Scalar(_lowH(), _lowS(), _lowV()),
-                  cv::Scalar(_highH(), _highS(), _highV()), image);
+      cv::cvtColor(image, image, cv::COLOR_RGB2HSV_FULL);
+      cv::inRange(image, cv::Scalar(_HSVlowH(), _HSVlowS(), _HSVlowV()),
+                  cv::Scalar(_HSVhighH(), _HSVhighS(), _HSVhighV()), image);
     }
   }
 
  private:
   // Params
   BooleanParameter _enable;
-  IntegerParameter _lowH, _highH, _lowS, _highS, _lowV, _highV;
+  IntegerParameter _HSVlowH, _HSVhighH, _HSVlowS, _HSVhighS, _HSVlowV, _HSVhighV;
 };
 
 }  // namespace vision_filter
