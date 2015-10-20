@@ -51,7 +51,8 @@ MediaManager::~MediaManager() noexcept {
 
 //------------------------------------------------------------------------------
 //
-MediaStreamer::Ptr MediaManager::StartMedia(const std::string &media_name) {
+MediaStreamer::Ptr MediaManager::StartMedia(const std::string &media_name,
+                                            bool stream) {
   MediaStreamer::Ptr streamer(nullptr);
   if (IsMediaStreamerExist(media_name)) {
     streamer = GetMediaStreamer(media_name);
@@ -65,7 +66,9 @@ MediaStreamer::Ptr MediaManager::StartMedia(const std::string &media_name) {
 
     if (media) {
       streamer = std::make_shared<MediaStreamer>(media, 30);
-      streamer->StartStreaming();
+      if (stream) {
+        streamer->StartStreaming();
+      }
       AddMediaStreamer(streamer);
     } else {
       throw std::runtime_error("Camera failed to be created");
@@ -87,10 +90,8 @@ void MediaManager::StopMedia(const std::string &media) noexcept {
 
     if (elem->IsStreaming()) {
       elem->StopStreaming();
-      RemoveMediaStreamer(media);
-    } else {
-      throw std::invalid_argument("Media is not streaming.");
     }
+    RemoveMediaStreamer(media);
 
     BaseMedia::Ptr media_ptr = GetMedia(media);
     if (media_ptr) {

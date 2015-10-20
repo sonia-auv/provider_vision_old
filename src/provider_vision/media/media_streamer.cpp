@@ -27,8 +27,9 @@ MediaStreamer::MediaStreamer(BaseMedia::Ptr cam, int artificialFrameRateMs)
       image_(),
       video_writer_(),
       is_recording_(false) {
-  if (media_->HasArtificialFramerate() && artificial_framerate_ != 0)
+  if (media_->HasArtificialFramerate() && artificial_framerate_ != 0) {
     framerate_mili_sec_ = 1000 / artificial_framerate_;
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -128,36 +129,35 @@ void MediaStreamer::Run() {
   }
 
   while (!MustStop()) {
-    image_access_.lock();
-    media_->NextImage(image_);
-    image_access_.unlock();
+    // Adding this here, because if the thread has been close,
+    // but we have not pass through the while yet, we want to check that...
+    if (IsStreaming()) {
+      image_access_.lock();
+      media_->NextImage(image_);
+      image_access_.unlock();
 
-    if (!image_.empty()) {
-      image_ = cv::Mat::zeros(100, 100, CV_8UC3);
-      ROS_ERROR_NAMED(LOOP_TAG, "Error on NextImage. Providing empty image ");
-    } else {
-      // This should not be the proper way to do this.
-      // Actually the media, or even better the camera driver sould provide a
-      // way
-      // to know the size of the video feed they (are going to) send.
-      // But for testing purpose we won't do such a modification.
-      if (must_set_record) {
-        // StartRecording();
-        must_set_record = false;
-      }
+      if (!image_.empty()) {
+        image_ = cv::Mat::zeros(100, 100, CV_8UC3);
+        ROS_ERROR_NAMED(LOOP_TAG, "Error on NextImage. Providing empty image ");
+      } else {
+        // This should not be the proper way to do this.
+        // Actually the media, or even better the camera driver sould provide a
+        // way
+        // to know the size of the video feed they (are going to) send.
+        // But for testing purpose we won't do such a modification.
+        if (must_set_record) {
+          // StartRecording();
+          must_set_record = false;
+        }
 
-      if (IsRecording() && atlas::PercentageUsedPhysicalMemory() < .8) {
-        video_writer_.write(image_);
-      }
-
-      // Adding this here, because if the thread has been close,
-      // but we have not pass through the while yet, we want to check that...
-      if (IsStreaming()) {
+        if (IsRecording() && atlas::PercentageUsedPhysicalMemory() < .8) {
+          video_writer_.write(image_);
+        }
         Notify();
       }
-    }
 
-    atlas::MilliTimer::Sleep(framerate_mili_sec_);
+      atlas::MilliTimer::Sleep(framerate_mili_sec_);
+    }
   }
 
   if (IsRecording()) {
@@ -168,20 +168,28 @@ void MediaStreamer::Run() {
 //------------------------------------------------------------------------------
 //
 void MediaStreamer::GetImage(cv::Mat &image) const {
-  std::lock_guard<std::mutex> guard(image_access_);
-  if (image_.empty()) {
-    image = cv::Mat::zeros(100, 100, CV_8UC3);
-    ROS_ERROR_NAMED(LOOP_TAG, "Image is empty");
-  }
+  // The user is not supposed to call GetImage if it is streaming.
+  // Handling it for compatibility, but this feature is deprecated.
+  // TODO Thibaut Mattio: Change the media streamer to send images
+  // on notification and remove streaming call to GetImage().
+  if (IsStreaming()) {
+    std::lock_guard<std::mutex> guard(image_access_);
+    if (image_.empty()) {
+      image = cv::Mat::zeros(100, 100, CV_8UC3);
+      ROS_ERROR_NAMED(LOOP_TAG, "Image is empty");
+    }
 
-  // Here we clone, since we want the acquisition loop to be the only
-  // owner of the image. A copy would also give the memory address.
-  try {
-    image = image_.clone();
-  } catch (cv::Exception &e) {
-    ROS_ERROR_NAMED(LOOP_TAG, "Exception in cloning (%s)", e.what());
-    image = cv::Mat::zeros(100, 100, CV_8UC3);
-    throw;
+    try {
+      image = image_;
+    } catch (cv::Exception &e) {
+      ROS_ERROR_NAMED(LOOP_TAG, "Exception in cloning (%s)", e.what());
+      image = cv::Mat::zeros(100, 100, CV_8UC3);
+      throw;
+    }
+  } else {
+    image_access_.lock();
+    media_->NextImage(image);
+    image_access_.unlock();
   }
 }
 

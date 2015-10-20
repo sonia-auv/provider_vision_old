@@ -53,6 +53,10 @@ class WebcamContext : public BaseContext {
 
   void StopCamera(const std::string &name) override;
 
+  std::vector<BaseMedia::Ptr> GetMediaList() const override;
+
+  BaseMedia::Ptr GetMedia(const std::string &name) const override;
+
   void SetFeature(BaseCamera::Feature feat, const std::string &name,
                   float val) override;
 
@@ -66,9 +70,17 @@ class WebcamContext : public BaseContext {
   bool WatchDogFunc() override;
 
  private:
-  WebcamCamera webcam_;
+  //==========================================================================
+  // P R I V A T E   M E M B E R S
+
+  WebcamCamera::Ptr webcam_;
 };
 
+//==============================================================================
+// I N L I N E   F U N C T I O N S   D E F I N I T I O N S
+
+//-----------------------------------------------------------------------------
+//
 inline bool WebcamContext::IsMyCamera(std::string &nameMedia) const {
   return WEBCAM_NAME.compare(nameMedia) == 0;
 }

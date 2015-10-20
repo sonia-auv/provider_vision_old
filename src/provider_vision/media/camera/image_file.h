@@ -33,16 +33,12 @@ class ImageFile : public BaseMedia {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  explicit ImageFile(const std::string &path_to_file);
+  explicit ImageFile(const std::string &path_to_file) noexcept;
 
-  ImageFile();
-
-  virtual ~ImageFile(){};
+  virtual ~ImageFile() noexcept;
 
   //==========================================================================
   // P U B L I C   M E T H O D S
-
-  bool LoadImage(std::string path_to_file);
 
   /** Method override from Media */
   void Start() override;
@@ -50,8 +46,23 @@ class ImageFile : public BaseMedia {
   /** Method override from Media */
   void Stop() override;
 
-  /** Method override from Media */
+  /**
+   * Method override from Media.
+   *
+   * We are forced to clone the image here as the user could modify the image,
+   * we do not want to loose the origin image neither to relaunch at each
+   * NextImage() call
+   */
   void NextImage(cv::Mat &image) override;
+
+  /**
+   * Get a deep copy of the image.
+   *
+   * We must override this method as we do not want the user to clone the
+   * image twice by calling it.
+   * We will simply call NextImage and return a swallow copy.
+   */
+  void NextImageCopy(cv::Mat &image) noexcept override;
 
  private:
   //==========================================================================
@@ -61,9 +72,6 @@ class ImageFile : public BaseMedia {
 
   cv::Mat image_;
 };
-
-//==============================================================================
-// I N L I N E   F U N C T I O N S   D E F I N I T I O N S
 
 }  // namespace vision_server
 

@@ -21,50 +21,44 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-ImageFile::ImageFile(const std::string &path_to_file)
-    : BaseMedia(CameraConfiguration(path_to_file)), path_(path_to_file) {
-  LoadImage(path_);
-}
+ImageFile::ImageFile(const std::string &path_to_file) noexcept
+    : BaseMedia(CameraConfiguration(path_to_file)),
+      path_(path_to_file) {}
 
 //------------------------------------------------------------------------------
 //
-ImageFile::ImageFile() : BaseMedia(CameraConfiguration("NO_PATH")), path_("") {}
+ImageFile::~ImageFile() noexcept {}
 
 //==============================================================================
 // M E T H O D   S E C T I O N
 
 //------------------------------------------------------------------------------
 //
-bool ImageFile::LoadImage(std::string path_to_file) {
-  image_ =
-      cv::imread(path_to_file, CV_LOAD_IMAGE_ANYDEPTH | CV_LOAD_IMAGE_ANYCOLOR);
-  if (image_.empty()) {
-    return false;
-  }
-  return true;
-}
-
-//------------------------------------------------------------------------------
-//
 void ImageFile::Start() {
-  // Do nothing here...
+  status_ = Status::STREAMING;
+  image_ = cv::imread(path_, CV_LOAD_IMAGE_ANYDEPTH | CV_LOAD_IMAGE_ANYCOLOR);
+  if (image_.empty()) {
+    throw std::runtime_error("There is no image file with this path");
+  }
 }
 
 //------------------------------------------------------------------------------
 //
-void ImageFile::Stop() {
-  // Do nothing here...
-}
+void ImageFile::Stop() { status_ = Status::CLOSE; }
 
 //------------------------------------------------------------------------------
 //
 void ImageFile::NextImage(cv::Mat &image) {
-  // Here, since cv::Mat are smart pointer, we can just
-  // clone the image, and the "garbage collection"
-  // will be handle later on in the program.
   if (!image_.empty()) {
-    image = image_.clone();
+    image_.copyTo(image);
+  } else {
+    throw std::runtime_error(
+        "The image could not be loaded, an error occurenced");
   }
 }
+
+//------------------------------------------------------------------------------
+//
+void ImageFile::NextImageCopy(cv::Mat &image) noexcept { NextImage(image); }
 
 }  // namespace vision_server

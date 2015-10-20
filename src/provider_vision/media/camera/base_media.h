@@ -56,6 +56,13 @@ class BaseMedia {
    */
   virtual void NextImage(cv::Mat &image) = 0;
 
+  /**
+   * Call the next image and make a deep copy of it.
+   * Warning, this method is very costly, use it only if you want the media to
+   * keep the original image.
+   */
+  virtual void NextImageCopy(cv::Mat &image) noexcept;
+
   //==========================================================================
   // G E T T E R S   A N D   S E T T E R S
 
@@ -91,6 +98,14 @@ class BaseMedia {
 
 //==============================================================================
 // I N L I N E   F U N C T I O N S   D E F I N I T I O N S
+
+//------------------------------------------------------------------------------
+//
+inline void BaseMedia::NextImageCopy(cv::Mat &image) noexcept {
+  cv::Mat tmp_image;
+  NextImage(tmp_image);
+  image = tmp_image.clone();
+}
 
 //------------------------------------------------------------------------------
 //

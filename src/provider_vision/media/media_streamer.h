@@ -154,7 +154,10 @@ class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
   int framerate_mili_sec_;
 
   /**
-   * Most updated image.
+   * Keeping a reference to the most recent image.
+   * This is not supposed to be an image owned by the media streamer
+   * as it will call the swallow copy of the media image in order
+   * to store it.
    */
   cv::Mat image_;
 

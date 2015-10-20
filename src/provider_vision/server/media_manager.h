@@ -38,7 +38,15 @@ class MediaManager {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  MediaStreamer::Ptr StartMedia(const std::string &media_name);
+  /**
+   * Start the acquisition of the images on the given media.
+   *
+   * By default, the media streamer will not be streaming, if the stream flag
+   * is set to true, it will start a thread and notify all observers whenever
+   * there is an image. See MediaStreamer class for more informations.
+   */
+  MediaStreamer::Ptr StartMedia(const std::string &media_name,
+                                bool stream = false);
 
   void StopMedia(const std::string &media) noexcept;
 

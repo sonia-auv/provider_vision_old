@@ -25,8 +25,9 @@ const std::string WebcamContext::WEBCAM_NAME("Webcam");
 
 //------------------------------------------------------------------------------
 //
-WebcamContext::WebcamContext() noexcept : BaseContext(),
-                                          webcam_() {}
+WebcamContext::WebcamContext() noexcept
+    : BaseContext(),
+      webcam_(std::make_shared<WebcamCamera>()) {}
 
 //------------------------------------------------------------------------------
 //
@@ -48,7 +49,7 @@ void WebcamContext::CloseContext() {}
 //
 void WebcamContext::StartCamera(const std::string &name) {
   if (WEBCAM_NAME.compare(name) == 0) {
-    webcam_.Start();
+    webcam_->Start();
   }
 }
 
@@ -56,7 +57,23 @@ void WebcamContext::StartCamera(const std::string &name) {
 //
 void WebcamContext::StopCamera(const std::string &name) {
   if (WEBCAM_NAME.compare(name) == 0) {
-    webcam_.Close();
+    webcam_->Close();
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+std::vector<BaseMedia::Ptr> WebcamContext::GetMediaList() const {
+  return std::vector<BaseMedia::Ptr>({webcam_});
+}
+
+//------------------------------------------------------------------------------
+//
+BaseMedia::Ptr WebcamContext::GetMedia(const std::string &name) const {
+  if (name == WEBCAM_NAME) {
+    return webcam_;
+  } else {
+    return nullptr;
   }
 }
 
@@ -65,7 +82,7 @@ void WebcamContext::StopCamera(const std::string &name) {
 void WebcamContext::SetFeature(BaseCamera::Feature feat,
                                const std::string &name, float val) {
   if (WEBCAM_NAME.compare(name) == 0) {
-    webcam_.SetFeature(feat, val);
+    webcam_->SetFeature(feat, val);
   }
 }
 
@@ -74,7 +91,7 @@ void WebcamContext::SetFeature(BaseCamera::Feature feat,
 void WebcamContext::GetFeature(BaseCamera::Feature feat,
                                const std::string &name, float &val) const {
   if (WEBCAM_NAME.compare(name) == 0) {
-    val = webcam_.GetFeature(feat);
+    val = webcam_->GetFeature(feat);
   }
 }
 
