@@ -117,7 +117,7 @@ inline BaseMedia::Ptr BaseContext::GetMedia(const std::string &name) const {
 
   for (auto &elem : media_list_) {
     if (elem.get()->GetName().compare(name) == 0) {
-        media = elem;
+      media = elem;
     }
   }
   return media;

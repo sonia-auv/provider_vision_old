@@ -50,7 +50,7 @@ void DetectionTaskManager::StopDetectionTask(
   for (auto it = detection_tasks_.begin(); it != detection_tasks_.cend();
        it++) {
     if ((*it)->GetDetectionTaskName().compare(execution_name) == 0) {
-        (*it)->StopDetectionTask();
+      (*it)->StopDetectionTask();
       detection_tasks_.erase(it);
     }
   }

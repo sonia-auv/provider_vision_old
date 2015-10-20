@@ -93,8 +93,8 @@ class FilterchainManager {
    * \param filterchainName string
    * \return filterchain Filterchain*
    */
-  Filterchain::Ptr GetRunningFilterchain(const std::string &execution)
-          const noexcept ;
+  Filterchain::Ptr GetRunningFilterchain(const std::string &execution) const
+      noexcept;
 
   /**
    * If the does not filterchain exists, create it.

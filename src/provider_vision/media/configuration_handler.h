@@ -44,10 +44,12 @@ class ConfigurationHandler {
   // P U B L I C   M E T H O D S
 
   std::vector<CameraConfiguration> ParseConfiguration();
-  void SaveConfiguration(
-      const std::vector<CameraConfiguration> &system_config);
+  void SaveConfiguration(const std::vector<CameraConfiguration> &system_config);
 
  private:
+  //==========================================================================
+  // P R I V A T E   M E M B E R S
+
   std::string file_;
 };
 

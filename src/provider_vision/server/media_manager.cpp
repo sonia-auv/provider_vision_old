@@ -77,115 +77,113 @@ MediaStreamer::Ptr MediaManager::StartMedia(const std::string &media_name) {
 //------------------------------------------------------------------------------
 //
 void MediaManager::StopMedia(const std::string &media) noexcept {
-        MediaStreamer::Ptr elem = GetMediaStreamer(media);
+  MediaStreamer::Ptr elem = GetMediaStreamer(media);
 
-        if (elem) {
-            // Check to make sure no other task is using this media.
-            if( elem->ObserverCount() > 0 )
-            {
-                return;
-            }
-
-            if (elem->IsStreaming()) {
-                elem->StopStreaming();
-                RemoveMediaStreamer(media);
-            } else {
-                throw std::invalid_argument("Media is not streaming.");
-            }
-
-            BaseMedia::Ptr media_ptr = GetMedia(media);
-            if (media_ptr) {
-                media_ptr->Stop();
-            } else {
-                throw std::runtime_error("Media do now exist");
-            }
-        }
+  if (elem) {
+    // Check to make sure no other task is using this media.
+    if (elem->ObserverCount() > 0) {
+      return;
     }
 
-  //------------------------------------------------------------------------------
-  //
-  BaseMedia::Ptr MediaManager::GetMedia(const std::string &name)
-      const noexcept {
-    BaseMedia::Ptr media(nullptr);
-    for (const auto &context : contexts_) {
-      if (context->ContainsMedia(name)) {
-        media = context->GetMedia(name);
-      }
-    }
-    return media;
-  }
-
-  //------------------------------------------------------------------------------
-  //
-  std::vector<std::string> MediaManager::GetAllMediasName() const noexcept {
-    std::vector<std::string> medias;
-
-    for (auto &context : contexts_) {
-      auto context_media_list = context->GetMediaList();
-      for (const auto &media : context_media_list) {
-        medias.push_back(media->GetName());
-      }
-    }
-    return medias;
-  }
-
-  //------------------------------------------------------------------------------
-  //
-  void MediaManager::SetCameraFeature(const std::string &media_name,
-                                      const std::string &feature, float value) {
-    BaseContext::Ptr context = GetContextFromMedia(media_name);
-    if (context) {
-      context->SetFeature(GetFeatureFromName(feature), media_name, value);
+    if (elem->IsStreaming()) {
+      elem->StopStreaming();
+      RemoveMediaStreamer(media);
     } else {
-      throw std::invalid_argument("Context not found");
+      throw std::invalid_argument("Media is not streaming.");
     }
-  }
 
-  //------------------------------------------------------------------------------
-  //
-  float MediaManager::GetCameraFeature(const std::string &media_name,
-                                       const std::string &feature) {
-    BaseContext::Ptr context = GetContextFromMedia(media_name);
-    float value = -1.0f;
-    if (context) {
-      context->GetFeature(GetFeatureFromName(feature), media_name, value);
+    BaseMedia::Ptr media_ptr = GetMedia(media);
+    if (media_ptr) {
+      media_ptr->Stop();
     } else {
-      throw std::invalid_argument("Context not found");
+      throw std::runtime_error("Media do now exist");
     }
-    return value;
   }
+}
 
-  //------------------------------------------------------------------------------
-  //
-  BaseContext::Ptr MediaManager::GetContextFromMedia(const std::string &name)
-      const {
-    for (auto &context : contexts_) {
-      if (context->ContainsMedia(name)) {
-        return context;
-      }
+//------------------------------------------------------------------------------
+//
+BaseMedia::Ptr MediaManager::GetMedia(const std::string &name) const noexcept {
+  BaseMedia::Ptr media(nullptr);
+  for (const auto &context : contexts_) {
+    if (context->ContainsMedia(name)) {
+      media = context->GetMedia(name);
     }
-    throw std::invalid_argument("No context contains this media");
   }
+  return media;
+}
 
-  //------------------------------------------------------------------------------
-  //
-  BaseCamera::Feature MediaManager::GetFeatureFromName(const std::string &name)
-      const {
-    if (name == "SHUTTER_AUTO") {
-      return BaseCamera::Feature::SHUTTER_AUTO;
-    } else if (name == "SHUTTER") {
-      return BaseCamera::Feature::SHUTTER;
-    } else if (name == "WHITE_BALANCE_AUTO") {
-      return BaseCamera::Feature::WHITE_BALANCE_AUTO;
-    } else if (name == "WHITE_BALANCE_RED") {
-      return BaseCamera::Feature::WHITE_BALANCE_RED;
-    } else if (name == "WHITE_BALANCE_BLUE") {
-      return BaseCamera::Feature::WHITE_BALANCE_BLUE;
-    } else if (name == "FRAMERATE") {
-      return BaseCamera::Feature::FRAMERATE;
-    } else {
-      throw std::invalid_argument("No feature with this name");
+//------------------------------------------------------------------------------
+//
+std::vector<std::string> MediaManager::GetAllMediasName() const noexcept {
+  std::vector<std::string> medias;
+
+  for (auto &context : contexts_) {
+    auto context_media_list = context->GetMediaList();
+    for (const auto &media : context_media_list) {
+      medias.push_back(media->GetName());
     }
   }
+  return medias;
+}
+
+//------------------------------------------------------------------------------
+//
+void MediaManager::SetCameraFeature(const std::string &media_name,
+                                    const std::string &feature, float value) {
+  BaseContext::Ptr context = GetContextFromMedia(media_name);
+  if (context) {
+    context->SetFeature(GetFeatureFromName(feature), media_name, value);
+  } else {
+    throw std::invalid_argument("Context not found");
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+float MediaManager::GetCameraFeature(const std::string &media_name,
+                                     const std::string &feature) {
+  BaseContext::Ptr context = GetContextFromMedia(media_name);
+  float value = -1.0f;
+  if (context) {
+    context->GetFeature(GetFeatureFromName(feature), media_name, value);
+  } else {
+    throw std::invalid_argument("Context not found");
+  }
+  return value;
+}
+
+//------------------------------------------------------------------------------
+//
+BaseContext::Ptr MediaManager::GetContextFromMedia(
+    const std::string &name) const {
+  for (auto &context : contexts_) {
+    if (context->ContainsMedia(name)) {
+      return context;
+    }
+  }
+  throw std::invalid_argument("No context contains this media");
+}
+
+//------------------------------------------------------------------------------
+//
+BaseCamera::Feature MediaManager::GetFeatureFromName(
+    const std::string &name) const {
+  if (name == "SHUTTER_AUTO") {
+    return BaseCamera::Feature::SHUTTER_AUTO;
+  } else if (name == "SHUTTER") {
+    return BaseCamera::Feature::SHUTTER;
+  } else if (name == "WHITE_BALANCE_AUTO") {
+    return BaseCamera::Feature::WHITE_BALANCE_AUTO;
+  } else if (name == "WHITE_BALANCE_RED") {
+    return BaseCamera::Feature::WHITE_BALANCE_RED;
+  } else if (name == "WHITE_BALANCE_BLUE") {
+    return BaseCamera::Feature::WHITE_BALANCE_BLUE;
+  } else if (name == "FRAMERATE") {
+    return BaseCamera::Feature::FRAMERATE;
+  } else {
+    throw std::invalid_argument("No feature with this name");
+  }
+}
 
 }  // namespace vision_server

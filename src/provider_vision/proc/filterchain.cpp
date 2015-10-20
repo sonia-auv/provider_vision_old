@@ -38,7 +38,7 @@ Filterchain::Filterchain(const Filterchain &filterchain)
 
 //------------------------------------------------------------------------------
 //
-Filterchain::~Filterchain(){}
+Filterchain::~Filterchain() {}
 //==============================================================================
 // M E T H O D   S E C T I O N
 

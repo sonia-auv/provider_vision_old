@@ -24,7 +24,7 @@ namespace vision_server {
 //
 DC1394Context::DC1394Context() noexcept : BaseContext(),
                                           DRIVER_TAG("[DC1394 Driver]"),
-                                          _context(nullptr) {}
+                                          driver_(nullptr) {}
 
 //------------------------------------------------------------------------------
 //
@@ -37,14 +37,14 @@ DC1394Context::~DC1394Context() {}
 //
 void DC1394Context::InitContext(
     const std::vector<CameraConfiguration> &cam_configuration_lists) {
-  _context = dc1394_new();
-  ROS_INFO_NAMED(DRIVER_TAG, "Initializing DC1394 context");
+  driver_ = dc1394_new();
+  ROS_INFO_NAMED(DRIVER_TAG, "Initializing DC1394 driver");
 
   dc1394error_t error;
   dc1394camera_list_t *list;
   media_list_.clear();
 
-  error = dc1394_camera_enumerate(_context, &list);
+  error = dc1394_camera_enumerate(driver_, &list);
   if (error != DC1394_SUCCESS) {
     ROS_ERROR_NAMED(DRIVER_TAG, "Could not enumerate camera.");
     return;
@@ -59,7 +59,7 @@ void DC1394Context::InitContext(
   for (uint i = 0; i < list->num; i++) {
     for (auto const &cam_config : cam_configuration_lists) {
       if (cam_config.GetGUID() == list->ids[i].guid) {
-        camera_dc = dc1394_camera_new(_context, list->ids[i].guid);
+        camera_dc = dc1394_camera_new(driver_, list->ids[i].guid);
         if (camera_dc == nullptr) {
           throw std::runtime_error("Error creating the DC1394 camera");
         }
@@ -88,7 +88,7 @@ void DC1394Context::CloseContext() {
 
   media_list_.clear();
 
-  dc1394_free(_context);
+  dc1394_free(driver_);
 }
 
 //------------------------------------------------------------------------------

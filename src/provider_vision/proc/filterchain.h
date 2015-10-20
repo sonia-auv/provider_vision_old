@@ -30,7 +30,6 @@ class Filterchain : public Serializable {
 
   explicit Filterchain(const std::string &name, const std::string &execution);
 
-
   explicit Filterchain(const Filterchain &filterchain);
 
   ~Filterchain();

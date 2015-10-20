@@ -85,9 +85,6 @@ class FileContext : public BaseContext {
   virtual MediaType GetMediaType(const std::string &nameMedia) const;
 };
 
-//==============================================================================
-// I N L I N E   F U N C T I O N S   D E F I N I T I O N S
-
 }  // namespace vision_server
 
 #endif  // PROVIDER_VISION_CAM_DRIVER_MEDIA_H_

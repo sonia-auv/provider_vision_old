@@ -49,8 +49,7 @@ void DC1394Camera::Open() {
   SetFormat7();
   err = dc1394_capture_setup(dc1394_camera_, DMA_BUFFER,
                              DC1394_CAPTURE_FLAGS_DEFAULT);
-  if( err != DC1394_SUCCESS)
-  {
+  if (err != DC1394_SUCCESS) {
     throw std::runtime_error(dc1394_error_get_string(err));
   }
   status_ = Status::OPEN;
@@ -162,7 +161,8 @@ void DC1394Camera::NextImage(cv::Mat &img) {
     throw std::runtime_error("The media is not accessible");
   }
   if (img.empty() || img.size().height == 0 || img.size().height == 0) {
-    throw std::runtime_error("The image is empty, there is a problem with the media");
+    throw std::runtime_error(
+        "The image is empty, there is a problem with the media");
   }
 }
 

@@ -32,8 +32,8 @@ FilterchainManager::~FilterchainManager() {}
 // M E T H O D   S E C T I O N
 //------------------------------------------------------------------------------
 //
-std::vector<std::string>
-    FilterchainManager::GetAllFilterchainName()  const noexcept{
+std::vector<std::string> FilterchainManager::GetAllFilterchainName() const
+    noexcept {
   auto availableFilterchains = std::vector<std::string>{};
 
   if (auto dir = opendir(kConfigPath.c_str())) {
@@ -82,8 +82,7 @@ bool FilterchainManager::FilterchainExists(const std::string &filterchain) {
 //------------------------------------------------------------------------------
 //
 Filterchain::Ptr FilterchainManager::StartFilterchain(
-            const std::string &executionName,
-            const std::string &filterchainName) {
+    const std::string &executionName, const std::string &filterchainName) {
   if (FilterchainExists(filterchainName)) {
     Filterchain::Ptr filterchain =
         std::make_shared<Filterchain>(filterchainName, executionName);
@@ -111,8 +110,9 @@ void FilterchainManager::StopFilterchain(const std::string &executionName,
 
 //------------------------------------------------------------------------------
 //
-void FilterchainManager::SaveFilterchain(const std::string &executionName,
-                                        const std::string &filterchainName)const {
+void FilterchainManager::SaveFilterchain(
+    const std::string &executionName,
+    const std::string &filterchainName) const {
   auto filterchain = GetRunningFilterchain(executionName);
   if (filterchain) {
     filterchain->Serialize();

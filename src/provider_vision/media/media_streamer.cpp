@@ -106,7 +106,6 @@ void MediaStreamer::StartRecording(const std::string &filename) {
   } else {
     is_recording_ = true;
   }
-
 }
 
 //------------------------------------------------------------------------------

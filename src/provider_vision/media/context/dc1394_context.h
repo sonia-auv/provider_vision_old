@@ -69,13 +69,21 @@ class DC1394Context : public BaseContext {
   bool WatchDogFunc() override;
 
  private:
+  //==========================================================================
+  // P R I V A T E   M E T H O D S
+
   DC1394Camera::Ptr GetDC1394Camera(const std::string &name) const;
+
   DC1394Camera::Ptr GetDC1394Camera(BaseMedia::Ptr media) const;
 
   //==========================================================================
   // P R I V A T E   M E M B E R S
-  dc1394_t *_context;
+
+  dc1394_t *driver_;
 };
+
+//==============================================================================
+// I N L I N E   F U N C T I O N S   D E F I N I T I O N S
 
 //-----------------------------------------------------------------------------
 //

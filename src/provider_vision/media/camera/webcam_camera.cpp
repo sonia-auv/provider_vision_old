@@ -109,8 +109,6 @@ void WebcamCamera::SetFeature(const Feature &feat, float value) {
 
 //------------------------------------------------------------------------------
 //
-float WebcamCamera::GetFeature(const Feature &feat) const {
-  return 0.0f;
-}
+float WebcamCamera::GetFeature(const Feature &feat) const { return 0.0f; }
 
 }  // namespace vision_server

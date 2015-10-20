@@ -31,7 +31,6 @@
 #include <vision_server/vision_server_get_filterchain_from_execution.h>
 #include <vision_server/vision_server_get_media_from_execution.h>
 #include <vision_server/vision_server_set_filterchain_filter_observer.h>
-
 #include "provider_vision/utils/config.h"
 #include "provider_vision/media/camera/base_media.h"
 #include "provider_vision/proc/detection_task.h"

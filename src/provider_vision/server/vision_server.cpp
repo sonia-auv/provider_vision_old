@@ -106,7 +106,7 @@ bool VisionServer::CallbackExecutionCMD(
       MediaStreamer::Ptr media = media_mgr_.StartMedia(rqst.media_name);
 
       Filterchain::Ptr filterchain = filterchain_mgr_.StartFilterchain(
-              rqst.node_name, rqst.filterchain_name);
+          rqst.node_name, rqst.filterchain_name);
 
       detection_task_mgr_.StartDetectionTask(node_handle_, media, filterchain,
                                              rqst.node_name);
@@ -116,7 +116,7 @@ bool VisionServer::CallbackExecutionCMD(
   } else if (rqst.cmd == rqst.STOP) {
     try {
       detection_task_mgr_.StopDetectionTask(rqst.node_name);
-        filterchain_mgr_.StopFilterchain(rqst.node_name, rqst.filterchain_name);
+      filterchain_mgr_.StopFilterchain(rqst.node_name, rqst.filterchain_name);
       // TODO jsprevost : Assert that there is no execution with this media
       // currently running
       media_mgr_.StopMedia(rqst.media_name);
@@ -154,8 +154,7 @@ bool VisionServer::CallbackGetCMD(
     rep.value = media_mgr_.GetCameraFeature(rqst.media_name, rqst.param_name);
     return true;
   } catch (const std::invalid_argument &e) {
-    ROS_ERROR("An error occured while getting the feature: %s",
-              e.what());
+    ROS_ERROR("An error occured while getting the feature: %s", e.what());
     return false;
   }
 }
@@ -171,8 +170,7 @@ bool VisionServer::CallbackSetCMD(
     return true;
   } catch (const std::invalid_argument &e) {
     rep.success = rep.FAIL;
-    ROS_ERROR("An error occured while setting the feature: %s",
-              e.what());
+    ROS_ERROR("An error occured while setting the feature: %s", e.what());
     return false;
   }
 }

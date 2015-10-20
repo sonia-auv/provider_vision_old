@@ -103,8 +103,7 @@ void DetectionTask::Run() {
 
     std::string return_string;
 
-    return_string =
-        filterchain_->ExecuteFilterChain(_image_being_processed);
+    return_string = filterchain_->ExecuteFilterChain(_image_being_processed);
 
     // We don't want to send stuff for nothing.
     if (!_image_being_processed.empty()) {
@@ -124,7 +123,6 @@ void DetectionTask::Run() {
       msg.data = return_string.c_str();
       result_publisher_.publish(msg);
     }
-
   }
 }
 

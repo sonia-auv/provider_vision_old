@@ -7,9 +7,6 @@
  * found in the LICENSE file.
  */
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
 #include "provider_vision/media/configuration_handler.h"
 
 namespace vision_server {
@@ -30,7 +27,7 @@ static const std::string XML_CAMERA_UNDISTORTION_MATRICE_NODE =
 //------------------------------------------------------------------------------
 //
 ConfigurationHandler::ConfigurationHandler(const std::string &file)
-: file_(file){ }
+    : file_(file) {}
 
 //------------------------------------------------------------------------------
 //
@@ -55,13 +52,12 @@ std::vector<CameraConfiguration> ConfigurationHandler::ParseConfiguration() {
 
   pugi::xml_node camera_list = doc.first_child();
   // Ensure we get Camera list tag
-  while(camera_list && std::string(camera_list.name()).compare(XML_CAMERA_LIST_TAG) != 0)
-  {
+  while (camera_list &&
+         std::string(camera_list.name()).compare(XML_CAMERA_LIST_TAG) != 0) {
     camera_list = doc.next_sibling();
   }
 
   pugi::xml_node camera = camera_list.first_child();
-
 
   for (; camera; camera = camera.next_sibling()) {
     std::string name;
@@ -82,7 +78,6 @@ std::vector<CameraConfiguration> ConfigurationHandler::ParseConfiguration() {
         uint64_t guid;
         ss >> guid;
         camera_config.SetGUID(guid);
-
       }
     }
 
@@ -95,8 +90,8 @@ std::vector<CameraConfiguration> ConfigurationHandler::ParseConfiguration() {
 
       if (XML_CAMERA_UNDISTORTION_MATRICE_NODE.compare(config_element.name()) ==
           0) {
-            std::string pathUndistord = kProjectPath + attrib.value();
-            camera_config.SetUndistortionMatricePath(pathUndistord);
+        std::string pathUndistord = kProjectPath + attrib.value();
+        camera_config.SetUndistortionMatricePath(pathUndistord);
       } else {
         camera_config.AddConfiguration(config_element.name(), attrib.value());
       }
@@ -121,7 +116,6 @@ void ConfigurationHandler::SaveConfiguration(
   }
   file_ += "_tmp.xml";
 
-
   pugi::xml_document doc;
   pugi::xml_node camera_list = doc.append_child();
   camera_list.set_name(XML_CAMERA_LIST_TAG.c_str());
@@ -139,7 +133,8 @@ void ConfigurationHandler::SaveConfiguration(
     attribute.set_value(ss.str().c_str());
 
     auto undistord_matrice_node = camera_node.append_child();
-    undistord_matrice_node.set_name(XML_CAMERA_UNDISTORTION_MATRICE_NODE.c_str());
+    undistord_matrice_node.set_name(
+        XML_CAMERA_UNDISTORTION_MATRICE_NODE.c_str());
     undistord_matrice_node.set_value(
         config.GetUndistortionMatricePath().c_str());
 
@@ -155,7 +150,6 @@ void ConfigurationHandler::SaveConfiguration(
   doc.save_file(file_.c_str());
 
   std::rename(file_.c_str(), orignal_file.c_str());
-
 }
 
 }  // namespace vision_server
