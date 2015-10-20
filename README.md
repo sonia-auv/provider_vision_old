@@ -1,17 +1,27 @@
-In order to compile, the vision server needs 
-the vision_filter library, the vision_lib library and vitals library.
-Before doing anything, pull the lastest version of every repo.
+[![S.O.N.I.A. Logo](docs/assets/logo.jpg)](http://sonia.etsmtl.ca/en/)
 
-Then do those command:
-- cmake ./
-- make -j8
-- sudo make install
+:zap: *A software used by S.O.NI.A. team at RoboSub* :zap:
 
-in the following folders, IN THE SAME ORDER AS HERE:
-vitals
-sonia_lib
-sonia_filter
+## Installation
 
-NOTE:
-Be sure to have followed the Installation OpenCv page on the wiki 
-AND to have set your SONIA_WORKSPACE_ROOT environnement variable.
+???
+
+## Launch
+
+???
+
+## Directory Structure
+
+???
+
+## Documentation
+
+???
+
+## Contribute
+
+???
+
+## License
+
+???
