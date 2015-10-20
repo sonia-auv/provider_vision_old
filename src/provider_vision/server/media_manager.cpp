@@ -29,8 +29,8 @@ MediaManager::MediaManager() noexcept : contexts_() {
   std::vector<CameraConfiguration> list = configHandler.ParseConfiguration();
   // Each time you have a new driver (Gige, usb, etc.) add it to
   // the list here.
-  contexts_.push_back(std::make_shared<DC1394Context>());
   contexts_.push_back(std::make_shared<WebcamContext>());
+  contexts_.push_back(std::make_shared<DC1394Context>());
   contexts_.push_back(std::make_shared<FileContext>());
 
   for (auto &elem : contexts_) {

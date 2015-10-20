@@ -1,4 +1,5 @@
 <CameraList>
+
   <Camera name="Front" guid="FF">
     <Shutter value="1.0"/>
     <Gain value="32"/>

@@ -142,3 +142,11 @@ target_link_libraries( utest_configuration_handler
         ${lib_atlas_LIBRARIES}
         ${lib_vision_LIBRARIES}
 )
+
+catkin_add_gtest( utest_behavior test/behavior_test.cc ${vision_server_FILES})
+target_link_libraries( utest_behavior
+        dc1394
+        ${catkin_LIBRARIES}
+        ${lib_atlas_LIBRARIES}
+        ${lib_vision_LIBRARIES}
+)
