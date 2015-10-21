@@ -259,12 +259,12 @@ namespace vision_filter {
           std::shared_ptr<ObjectFullData> object = objVec[0];
           cv::Point center = object->GetCenter();
           setCameraOffset(&center, image.rows, image.cols);
-          target.setTarget(center.x, center.y, object->GetLength(),
+          target.SetTarget(center.x, center.y, object->GetLength(),
                            object->GetLength(), object->GetRotatedRect().angle);
-          target.setSpecField_1(_spec_1());
-          target.setSpecField_2(_spec_2());
+          target.SetSpecField_1(_spec_1());
+          target.SetSpecField_2(_spec_2());
           std::stringstream ss;
-          ss << _id() << target.outputString();
+          ss << _id() << target.OutputString();
           notify_str(ss.str().c_str());
           if (_debug_contour()) {
             cv::circle(_output_image, objVec[0]->GetCenter(), 3,

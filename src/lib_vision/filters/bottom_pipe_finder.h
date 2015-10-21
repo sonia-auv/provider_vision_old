@@ -136,11 +136,11 @@ class ObjectFinder : public Filter {
         std::shared_ptr<ObjectFullData> object = objVec[0];
         cv::Point center = object->GetCenter();
         setCameraOffset(&center, image.rows, image.cols);
-        target.setTarget(center.x, center.y, object->GetLength(),
+        target.SetTarget(center.x, center.y, object->GetLength(),
                          object->GetLength(),
                          abs(object->GetRotatedRect().angle - 90));
         std::stringstream ss;
-        ss << "train:" << target.outputString();
+        ss << "train:" << target.OutputString();
         notify_str(ss.str().c_str());
         if (_debug_contour()) {
           cv::circle(_output_image, objVec[0]->GetCenter(), 3,

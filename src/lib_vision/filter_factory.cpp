@@ -6,7 +6,7 @@
 #include "lib_vision/filter_factory.h"
 namespace vision_filter {
 // KEEPING A REFERENCE TO GlobalParamHandler. VERY IMPORTANT
-static Filter *FilterFactory::createInstance(const std::string &name,
+Filter *FilterFactory::createInstance(const std::string &name,
                                              const GlobalParamHandler &globalParams) {
   if (name == "Blurr") {
     return new Blurr(globalParams);
@@ -121,7 +121,7 @@ static Filter *FilterFactory::createInstance(const std::string &name,
   return nullptr;
 }
 
-static std::string FilterFactory::GetFilterList() {
+std::string FilterFactory::GetFilterList() {
   return "Blurr;Dilate;Erode;MissionTestFakeString;TestFilter;"
       "BuoySingle;Morphology;OriginalImage;Scharr;ScharrAdding;"
       "StatsThreshold;SubtractAllPlanes;Threshold;BuoySingle;Rotate;"

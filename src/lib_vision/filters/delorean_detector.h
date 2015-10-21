@@ -158,13 +158,13 @@ class DeloreanDetector : public Filter {
                   (2 * 3.1416);
         }
         setCameraOffset(&center_big, image.rows, image.cols);
-        target.setTarget(center_big.x, center_big.y, object_big->GetLength(),
+        target.SetTarget(center_big.x, center_big.y, object_big->GetLength(),
                          object_big->GetLength(), float(angle));
         std::stringstream ss;
         if (_output_train()) {
-          ss << "train:" << target.outputString();
+          ss << "train:" << target.OutputString();
         } else {
-          ss << "delorean:" << target.outputString();
+          ss << "delorean:" << target.OutputString();
         }
         notify_str(ss.str().c_str());
         if (_debug_contour()) {

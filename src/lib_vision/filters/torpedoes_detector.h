@@ -83,9 +83,9 @@ class TorpedoesDetector : public Filter {
         if (nb_of_element == 1) {
           std::shared_ptr<ObjectFullData> obj = interior_squares[0];
           Target current_square_target;
-          current_square_target.setTarget(obj);
-          current_square_target.setSpecField_1("a");
-          current_square_target.setSpecField_2("small");
+          current_square_target.SetTarget(obj);
+          current_square_target.SetSpecField_1("a");
+          current_square_target.SetSpecField_2("small");
           target_vec.push_back(current_square_target);
           if (_debug_contour()) {
             cv::circle(_output_image, obj->GetCenter(), 4, CV_RGB(0, 255, 0),
@@ -107,14 +107,14 @@ class TorpedoesDetector : public Filter {
             big = interior_squares[0];
           }
           Target small_target, big_target;
-          small_target.setTarget(small);
-          small_target.setSpecField_1("a");
-          small_target.setSpecField_2("small");
+          small_target.SetTarget(small);
+          small_target.SetSpecField_1("a");
+          small_target.SetSpecField_2("small");
           target_vec.push_back(small_target);
 
-          big_target.setTarget(big);
-          big_target.setSpecField_1("b");
-          big_target.setSpecField_2("big");
+          big_target.SetTarget(big);
+          big_target.SetSpecField_1("b");
+          big_target.SetSpecField_2("big");
           target_vec.push_back(big_target);
 
           if (_debug_contour()) {
@@ -139,7 +139,7 @@ class TorpedoesDetector : public Filter {
             //-------
             // B | D
             Target current_square_target;
-            current_square_target.setTarget(inner_square);
+            current_square_target.SetTarget(inner_square);
 
             // Big square
             float area_dist_from_bigger =
@@ -151,14 +151,14 @@ class TorpedoesDetector : public Filter {
             // or the smaller object right now. If so, set their values
             // if not check it is near wich one.
             if (area_dist_from_bigger < 1) {
-              current_square_target.setSpecField_2("big");
+              current_square_target.SetSpecField_2("big");
             } else if (area_dist_from_smaller < 1) {
-              current_square_target.setSpecField_2("small");
+              current_square_target.SetSpecField_2("small");
             } else if (area_dist_from_bigger < area_dist_from_smaller) {
-              current_square_target.setSpecField_2("big");
+              current_square_target.SetSpecField_2("big");
             } else  // Small square
             {
-              current_square_target.setSpecField_2("small");
+              current_square_target.SetSpecField_2("small");
             }
             // LEFT
             if (square_center.x < panel_center.x) {
@@ -168,10 +168,10 @@ class TorpedoesDetector : public Filter {
 
               // UP
               if (square_center.y < panel_center.y) {
-                current_square_target.setSpecField_1("d");
+                current_square_target.SetSpecField_1("d");
               }  // DOWN
               else {
-                current_square_target.setSpecField_1("c");
+                current_square_target.SetSpecField_1("c");
               }
             } else  // RIGHT
             {
@@ -181,18 +181,18 @@ class TorpedoesDetector : public Filter {
 
               // UP
               if (square_center.y < panel_center.y) {
-                current_square_target.setSpecField_1("b");
+                current_square_target.SetSpecField_1("b");
               }  // DOWN
               else {
-                current_square_target.setSpecField_1("a");
+                current_square_target.SetSpecField_1("a");
               }
             }
             target_vec.push_back(current_square_target);
             if (_debug_contour()) {
               cv::circle(_output_image, square_center, 4, CV_RGB(0, 255, 0), 4);
               std::stringstream ss;
-              ss << current_square_target.getSpecField_1() << "-"
-                 << current_square_target.getSpecField_2();
+              ss << current_square_target.GetSpecField_1() << "-"
+                 << current_square_target.GetSpecField_2();
               cv::putText(_output_image, ss.str(), square_center,
                           cv::FONT_HERSHEY_SIMPLEX, 1 /*fontscale*/,
                           cv::Scalar(255, 0, 0), 3 /*thickness*/,
@@ -205,7 +205,7 @@ class TorpedoesDetector : public Filter {
       std::stringstream message;
       message << "torpedoes:";
       for (auto &target : target_vec) {
-        message << target.outputString();
+        message << target.OutputString();
       }
       notify_str(message.str());
 

@@ -146,10 +146,10 @@ class TrackDetector : public Filter {
         std::shared_ptr<ObjectFullData> object = contour_vote[0].first;
         cv::Point center = object->GetCenter();
         setCameraOffset(&center, image.rows, image.cols);
-        target.setTarget(center.x, center.y, object->GetLength(),
+        target.SetTarget(center.x, center.y, object->GetLength(),
                          object->GetLength(), object->GetRotatedRect().angle);
         std::stringstream ss;
-        ss << "track:" << target.outputString();
+        ss << "track:" << target.OutputString();
         notify_str(ss.str().c_str());
         if (_debug_contour()) {
           cv::circle(_output_image, objVec[0]->GetCenter(), 3,

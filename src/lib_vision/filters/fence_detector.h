@@ -170,7 +170,7 @@ class FenceDetector : public Filter {
       Target fence;
       cv::Point center = (rect_from_hori_bar.center);
       setCameraOffset(&center, image.rows, image.cols);
-      fence.setTarget(center.x, center.y, rect_from_hori_bar.size.width,
+      fence.SetTarget(center.x, center.y, rect_from_hori_bar.size.width,
                       rect_from_hori_bar.size.height, rect_from_hori_bar.angle,
                       "", "");
 
@@ -184,7 +184,7 @@ class FenceDetector : public Filter {
         }
         setCameraOffset(&center, image.rows, image.cols);
 
-        fence.setCenter(center);
+        fence.SetCenter(center);
 
       } else  // Gets the two best vertical bar to compute our y center.
       {
@@ -230,7 +230,7 @@ class FenceDetector : public Filter {
             cv::circle(_output_image, center, 5, CV_RGB(0, 255, 255), 20);
           }
           setCameraOffset(&center, image.rows, image.cols);
-          fence.setCenter(center);
+          fence.SetCenter(center);
         } else if (bar_founded == 1) {
           int y = (y_coord_from_bottom + final_vert_bar[0].y) / 2;
           center = cv::Point(rect_from_hori_bar.center.x, y);
@@ -238,19 +238,19 @@ class FenceDetector : public Filter {
             cv::circle(_output_image, center, 5, CV_RGB(0, 255, 255), 20);
           }
           setCameraOffset(&center, image.rows, image.cols);
-          fence.setCenter(center);
+          fence.SetCenter(center);
         } else {
           center = cv::Point(rect_from_hori_bar.center.x, y_coord_from_bottom);
           if (_debug_contour()) {
             cv::circle(_output_image, center, 5, CV_RGB(0, 255, 255), 20);
           }
           setCameraOffset(&center, image.rows, image.cols);
-          fence.setCenter(center);
+          fence.SetCenter(center);
         }
       }
 
       std::stringstream message;
-      message << "fence_big:" << fence.outputString();
+      message << "fence_big:" << fence.OutputString();
       notify_str(message.str());
     }
     if (_debug_contour()) {

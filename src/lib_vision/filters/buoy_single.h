@@ -197,8 +197,8 @@ class BuoySingle : public Filter {
       if (featuresVect.size() != 0) {
         Target buoy;
         std::stringstream message;
-        buoy.setTarget(featuresVect[0]);
-        message << "buoy_" << _color() << ":" << buoy.outputString();
+        buoy.SetTarget(featuresVect[0]);
+        message << "buoy_" << _color() << ":" << buoy.OutputString();
         notify_str(message.str());
 
         if (_debug_good_contour()) {
