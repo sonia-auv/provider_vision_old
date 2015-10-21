@@ -10,15 +10,11 @@
 #include <gtest/gtest.h>
 #include <lib_vision/algorithm/object_ranking_data.h>
 
-TEST(AITrainer, AllTest) {
-  printf("Starting unit test on ObjectRankingData");
-
+TEST(RankingData, AllTest) {
   ObjectRankingData obj;
   obj.SetAreaRank(1);
   obj.SetLengthRank(2);
   ASSERT_TRUE(obj.GetAreaRank() == 1 && obj.GetLengthRank() == 2);
-
-  printf("System all clear and good to go");
 }
 
 int main(int argc, char **argv) {

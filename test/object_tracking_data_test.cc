@@ -10,12 +10,10 @@
 #include <gtest/gtest.h>
 #include <lib_vision/algorithm/object_tracking_data.h>
 
-TEST(AITrainer, AllTest) {
-  printf("Starting unit test on ObjectTrackingData");
+TEST(TrackingData, AllTest) {
   OBjectTrackingData tkData;
   tkData.SetPresenceCount(2);
   ASSERT_TRUE(tkData.GetPresenceCount() == 2);
-  printf("System all clear and good to go");
 }
 
 int main(int argc, char **argv) {

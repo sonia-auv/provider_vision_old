@@ -8,23 +8,21 @@
  */
 
 #include <gtest/gtest.h>
-#include <lib_vision/algorithm/object_frame_memory.h>
+#include "lib_vision/algorithm/object_frame_memory.h"
+#include "lib_vision/algorithm/contour_list.h"
 
-TEST(AITrainer, AllTest) {
-  printf("Starting unit test on ObjectFrameMemory\n");
-
-  contourList_t contours;
-  cv::Mat binaryImage(1000, 1000, CV_8UC1, cv::Scalar::all(0));
-  cv::Mat originalImage(1000, 1000, CV_8UC3, cv::Scalar::all(0));
+void CreateImage(cv::Mat &original, cv::Mat &binary)
+{
+  std::vector< std::vector<cv::Point> > contours;
 
   // square contour 100 of area, 1 of ratio
   // 100 filled, convexity 0 , circularity ?
   // last in area rank and length rank
   std::vector<cv::Point> tmpContour;
-  tmpContour.push_back(cv::Point(0, 0));
-  tmpContour.push_back(cv::Point(0, 10));
-  tmpContour.push_back(cv::Point(10, 10));
-  tmpContour.push_back(cv::Point(10, 0));
+  tmpContour.push_back(cv::Point(5, 5));
+  tmpContour.push_back(cv::Point(5, 15));
+  tmpContour.push_back(cv::Point(15, 15));
+  tmpContour.push_back(cv::Point(15, 5));
   contours.push_back(tmpContour);
   tmpContour.clear();
 
@@ -43,10 +41,22 @@ TEST(AITrainer, AllTest) {
   tmpContour.push_back(cv::Point(400, 800));
   contours.push_back(tmpContour);
   tmpContour.clear();
-  cv::drawContours(originalImage, contours, -1, CV_RGB(255, 0, 255), -1);
-  cv::cvtColor(originalImage, binaryImage, CV_BGR2GRAY);
+
+  cv::drawContours(original, contours, -1, CV_RGB(255, 0, 255), -1);
+  cv::cvtColor(original, binary, CV_BGR2GRAY);
+}
+
+TEST(FrameMemory, AllTest) {
+
+  cv::Mat binaryImage(1000, 1000, CV_8UC1, cv::Scalar::all(0));
+  cv::Mat originalImage(1000, 1000, CV_8UC3, cv::Scalar::all(0));
+
+  CreateImage(originalImage, binaryImage);
 
   ObjectFullData::FullObjectPtrVec tmp;
+
+  ContourList contours(binaryImage, ContourList::OUTER);
+
   tmp.push_back(
       std::shared_ptr<ObjectFullData>(std::make_shared<ObjectFullData>(
           originalImage, binaryImage, contours[0])));
@@ -57,24 +67,17 @@ TEST(AITrainer, AllTest) {
       std::shared_ptr<ObjectFullData>(std::make_shared<ObjectFullData>(
           originalImage, binaryImage, contours[2])));
 
-  ObjectFrameMemory frameMemory(3);
-  // Fill history buffer.
-  frameMemory.AddFrameObjects(tmp);
-  frameMemory.AddFrameObjects(tmp);
-  frameMemory.AddFrameObjects(tmp);
+  // Testing retrieval by center and ratio
 
-  printf("Testing retrieval by center and ratio\n");
-
-  /// Split the M shape to prevent retrieval of the object via center.
+  // Split the M shape to prevent retrieval of the object via center.
   // We create a frame where we should miss the M form.
-  cv::Mat tmpBinary, tmpOriginal;
-  tmpOriginal = originalImage.clone();
-  cv::rectangle(tmpOriginal, cv::Point(100, 290), cv::Point(200, 310),
-                CV_RGB(0, 0, 0), -1);
+  cv::Mat tmpBinary, tmpOriginal= originalImage.clone();
+  cv::rectangle(tmpOriginal, cv::Point(100, 290), cv::Point(200, 310), CV_RGB(0, 0, 0), -1);
   cv::cvtColor(tmpOriginal, tmpBinary, CV_BGR2GRAY);
-  contourList_t contoursTemp;
-  retrieveAllContours(tmpBinary, contoursTemp);
+  ContourList contoursTemp(tmpBinary, ContourList::OUTER);
+
   ASSERT_TRUE(contoursTemp.size() == 4);
+
   // Push faulty object
   ObjectFullData::FullObjectPtrVec tmp2;
   for (int i = 0; i < contoursTemp.size(); i++) {
@@ -83,24 +86,24 @@ TEST(AITrainer, AllTest) {
             originalImage, binaryImage, contoursTemp[i])));
   }
 
+  ObjectFrameMemory frameMemory(3);
+  // Fill history buffer.
+  frameMemory.AddFrameObjects(tmp);
   // Add the frame where the M form is missing
   frameMemory.AddFrameObjects(tmp2);
-
   // Add another frame where all the object are ok.
   // Update with real contour to find it in the past objects
   frameMemory.AddFrameObjects(tmp);
 
   // Here we altered only the biggest object in time, so the one with the
-  // current
-  // highest area rating should have only 2 ancestor, since one of them was
-  // splitted
+  // current highest area rating should have only 2 ancestor,
+  // since one of them was split
   int objectSum = 0;
   for (int i = 0, size = tmp.size(); i < size; i++) {
     std::shared_ptr<ObjectFullData> tmpObj = tmp[i];
     ObjectFullData::FullObjectPtrVec vec = frameMemory.GetPastObjectsViaCenter(
         tmpObj->GetCenter(), tmpObj->GetRatio());
-    cv::Point center = tmpObj->GetCenter();
-    float ratio = tmpObj->GetRatio();
+
     objectSum += vec.size();
   }
   // We have 3 contours in tmp. In the past, one of them ( the M )
@@ -109,7 +112,6 @@ TEST(AITrainer, AllTest) {
   // in 3 frame
   // but one of them is missing so 3*3 - 1 = 8 retrieve form in the past.
   ASSERT_TRUE(objectSum == 8);
-  printf("System all clear and good to go");
 }
 
 int main(int argc, char **argv) {

@@ -12,8 +12,6 @@
 #include <lib_vision/algorithm/contour_list.h>
 
 TEST(ContourTest, AllTest) {
-  printf("Starting unit test on Contour \n");
-
   std::string path = atlas::kWorkspaceRoot +
       std::string("src/lib_vision/test/contour_test_img.png");
 
@@ -70,8 +68,6 @@ TEST(ContourTest, AllTest) {
   ctr2.ApproximateBySize();
   ASSERT_TRUE( ctr._contour.size() == 4 );
   ASSERT_TRUE( ctr2._contour.size() == 4 );
-
-  printf("System all clear and good to go");
 }
 
 int main(int argc, char **argv) {
