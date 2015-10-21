@@ -14,11 +14,10 @@
 //
 int main(int argc, char **argv) {
   ros::init(argc, argv, "vision_server");
-  std::shared_ptr<ros::NodeHandle> node_handle =
-      std::make_shared<ros::NodeHandle>();
+  ros::NodeHandle nh;
   ros::Rate loop_rate(15);
 
-  vision_server::VisionServer vision_server{node_handle};
+  vision_server::VisionServer vision_server{};
 
   while (ros::ok()) {
     ros::spinOnce();

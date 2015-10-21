@@ -34,6 +34,11 @@ class WebcamCamera : public BaseCamera, private cv::VideoCapture {
 
   WebcamCamera() noexcept;
 
+  /**
+   * By giving the id of the camera, OpenCv will open it from it's own,
+   * do not try to start the webcam if you already started it with
+   * this constructor.
+   */
   explicit WebcamCamera(int webcamIdx) noexcept;
 
   virtual ~WebcamCamera();

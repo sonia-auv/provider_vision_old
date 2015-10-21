@@ -62,7 +62,7 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
   //============================================================================
   // P U B L I C   C / D T O R S
 
-  explicit VisionServer(std::shared_ptr<ros::NodeHandle> node_handle);
+  explicit VisionServer();
 
   ~VisionServer();
 
@@ -361,7 +361,7 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    * This is mainly for performance purpose as we could also recreate a
    * ros::NodeHandle on the different instance of the objects.
    */
-  std::shared_ptr<ros::NodeHandle> node_handle_;
+  ros::NodeHandle node_handle_;
 
   MediaManager media_mgr_;
 

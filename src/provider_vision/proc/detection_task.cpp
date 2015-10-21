@@ -7,6 +7,7 @@
  * found in the LICENSE file.
  */
 
+#include <ros/ros.h>
 #include <std_msgs/String.h>
 #include "provider_vision/proc/detection_task.h"
 
@@ -22,22 +23,19 @@ const std::string DetectionTask::EXEC_TAG = "[EXECUTION]";
 
 //------------------------------------------------------------------------------
 //
-DetectionTask::DetectionTask(std::shared_ptr<ros::NodeHandle> node_handle,
-                             MediaStreamer::Ptr acquisition_loop,
+DetectionTask::DetectionTask(MediaStreamer::Ptr acquisition_loop,
                              Filterchain::Ptr filterchain,
                              const std::string &execution_name)
     : name_(kRosNodeName + execution_name),
-      image_publisher_(node_handle, kRosNodeName + execution_name + "_image"),
+      image_publisher_(kRosNodeName + execution_name + "_image"),
       result_publisher_(),
       media_streamer_(acquisition_loop),
       filterchain_(filterchain),
       new_image_ready_(false),
       close_attemps_(3) {
-  assert(node_handle);
   assert(filterchain);
   assert(acquisition_loop);
-  result_publisher_ =
-      node_handle->advertise<std_msgs::String>(name_ + "_result", 50);
+  result_publisher_ = ros::NodeHandle().advertise<std_msgs::String>(name_ + "_result", 50);
 }
 
 //------------------------------------------------------------------------------

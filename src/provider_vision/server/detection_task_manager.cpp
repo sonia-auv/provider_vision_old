@@ -29,7 +29,6 @@ DetectionTaskManager::~DetectionTaskManager() {}
 //------------------------------------------------------------------------------
 //
 void DetectionTaskManager::StartDetectionTask(
-    std::shared_ptr<ros::NodeHandle> node_handle,
     MediaStreamer::Ptr media_streamer, Filterchain::Ptr filterchain,
     const std::string &execution_name) noexcept {
   try {
@@ -38,7 +37,7 @@ void DetectionTaskManager::StartDetectionTask(
     std::cout << "Execution already exist" << std::endl;
   }
 
-  auto task = std::make_shared<DetectionTask>(node_handle, media_streamer,
+  auto task = std::make_shared<DetectionTask>(media_streamer,
                                               filterchain, execution_name);
   detection_tasks_.push_back(task);
 }

@@ -17,9 +17,9 @@ namespace vision_server {
 
 //------------------------------------------------------------------------------
 //
-VisionServer::VisionServer(std::shared_ptr<ros::NodeHandle> node_handle)
-    : atlas::ServiceServerManager<VisionServer>(node_handle),
-      node_handle_(node_handle),
+VisionServer::VisionServer()
+    : atlas::ServiceServerManager<VisionServer>(),
+      node_handle_(),
       media_mgr_(),
       filterchain_mgr_() {
   auto base_node_name = std::string{kRosNodeName};
@@ -108,7 +108,7 @@ bool VisionServer::CallbackExecutionCMD(
       Filterchain::Ptr filterchain = filterchain_mgr_.StartFilterchain(
           rqst.node_name, rqst.filterchain_name);
 
-      detection_task_mgr_.StartDetectionTask(node_handle_, media, filterchain,
+      detection_task_mgr_.StartDetectionTask(media, filterchain,
                                              rqst.node_name);
     } catch (const std::exception &e) {
       ROS_ERROR("Starting execution error: %s", e.what());

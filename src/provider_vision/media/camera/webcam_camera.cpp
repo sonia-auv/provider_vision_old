@@ -21,7 +21,7 @@ namespace vision_server {
 //
 WebcamCamera::WebcamCamera() noexcept
     : BaseCamera(CameraConfiguration("Webcam")),
-      cv::VideoCapture(0) {
+      cv::VideoCapture() {
   if (isOpened()) {
     status_ = Status::OPEN;
   }
@@ -50,6 +50,9 @@ void WebcamCamera::Start() {
   if (isOpened()) {
     throw std::logic_error("The video is already opened.");
   } else {
+    // It seems like there the only way to start the webcam with openCV
+    // is to start the system default camera... Let's do that.
+    open(0);
     status_ = Status::STREAMING;
   }
 

@@ -37,8 +37,7 @@ class DetectionTaskManager {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  void StartDetectionTask(std::shared_ptr<ros::NodeHandle> node_handle,
-                          MediaStreamer::Ptr media_streamer,
+  void StartDetectionTask(MediaStreamer::Ptr media_streamer,
                           Filterchain::Ptr filterchain,
                           const std::string &execution_name) noexcept;
 

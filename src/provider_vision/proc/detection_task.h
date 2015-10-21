@@ -38,8 +38,7 @@ class DetectionTask : private atlas::Runnable, public atlas::Observer<> {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  explicit DetectionTask(std::shared_ptr<ros::NodeHandle> node_handle,
-                         MediaStreamer::Ptr acquisition_loop,
+  explicit DetectionTask(MediaStreamer::Ptr acquisition_loop,
                          Filterchain::Ptr filterchain,
                          const std::string &execution_name);
 
