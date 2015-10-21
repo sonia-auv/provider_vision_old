@@ -41,19 +41,12 @@ class FeatureFactory {
   // feature funcitions
   // For the ranking, require to call ObjectRanking first
   float AreaFeature(std::shared_ptr<ObjectFullData> object);
-
   float LengthFeature(std::shared_ptr<ObjectFullData> object);
-
   float RatioFeature(std::shared_ptr<ObjectFullData> object);
-
   float ConvexityFeature(std::shared_ptr<ObjectFullData> object);
-
   float PercentFilledFeature(std::shared_ptr<ObjectFullData> object);
-
   float CircularityFeature(std::shared_ptr<ObjectFullData> object);
-
   float PresenceConsistencyFeature(std::shared_ptr<ObjectFullData> object);
-
   float HueMeanFeature(std::shared_ptr<ObjectFullData> object);
 
  private:
