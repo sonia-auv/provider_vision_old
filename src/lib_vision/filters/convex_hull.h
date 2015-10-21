@@ -83,13 +83,13 @@ class ConvexHull : public Filter {
 
       // Find the convex hull object for each contour
       cv::vector<cv::vector<cv::Point> > hull(contours.size());
-      for (int i = 0; i < contours.size(); i++) {
+      for (size_t i = 0; i < contours.size(); i++) {
         cv::convexHull(cv::Mat(contours[i]), hull[i], false);
       }
 
       // Draw Hull contour
       image = cv::Mat::zeros(image.size(), CV_8UC1);
-      for (int i = 0; i < contours.size(); i++) {
+      for (size_t i = 0; i < contours.size(); i++) {
         cv::drawContours(image, hull, i, cv::Scalar(255, 255, 255), CV_FILLED);
       }
     }

@@ -33,7 +33,7 @@ class GlobalParamHandler {
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
   explicit GlobalParamHandler()
-      : _notify_string(std::string()), _original_image(), _params_vec() {}
+      : _notify_string(std::string()), _params_vec(),_original_image() {}
 
   // Since we erase everything, it is easier to delete objet first
   // then calling clear method, since erase invalidate pointer AND
@@ -44,7 +44,7 @@ class GlobalParamHandler {
   ~GlobalParamHandler() {
     // Using index base for performance.
     auto size = _params_vec.size();
-    for (int i = 0; i < size; i++) {
+    for (size_t i = 0; i < size; i++) {
       // Delete the object
       delete (_params_vec[i]);
     }
@@ -95,7 +95,7 @@ class GlobalParamHandler {
 
   inline Parameter *getParam(const std::string &name) const {
     // Using [] accessor for optimisation.
-    for (int i = 0, size = _params_vec.size(); i < size; i++) {
+    for (size_t i = 0, size = _params_vec.size(); i < size; i++) {
       if (_params_vec[i]->getName() == name) {
         return _params_vec[i];
       }

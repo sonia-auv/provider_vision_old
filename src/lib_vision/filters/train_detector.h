@@ -40,7 +40,9 @@ class TrainDetector : public Filter {
     explicit ObjectPair(std::shared_ptr<ObjectFullData> object1,
                         std::shared_ptr<ObjectFullData> object2,
                         FeatureFactory &featFactory)
-        : _object1(object1), _object2(object2), _convexity_mean(0) {
+        : _object1(object1),
+          _object2(object2),
+          _convexity_mean(0) {
       _convexity_mean = featFactory.ConvexityFeature(_object1);
       _convexity_mean += featFactory.ConvexityFeature(_object2);
       _convexity_mean /= 2.0f;
@@ -63,9 +65,10 @@ class TrainDetector : public Filter {
       : Filter(globalParams),
         _enable("Enable", false, parameters_),
         _debug_contour("Debug_contour", false, parameters_),
-        _min_area("Min_area", 200, 0, 10000, parameters_),
         _pair_distance_maximum("Pair_distance_maximum", 200, 0, 10000,
                                parameters_),
+        _min_area("Min_area", 200, 0, 10000, parameters_),
+
         _feat_factory(3) {
     setName("TrainDetector");
   }

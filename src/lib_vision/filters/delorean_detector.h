@@ -34,13 +34,13 @@ class DeloreanDetector : public Filter {
       : Filter(globalParams),
         _enable("Enable", false, parameters_),
         _debug_contour("Debug_contour", false, parameters_),
+        _output_train("Output_train", false, parameters_),
         _min_area("Min_area", 200, 0, 10000, parameters_),
         _targeted_ratio_big("Ratio_target_big", 0.5f, 0.0f, 1.0f, parameters_),
         _targeted_ratio_small("Ratio_target_small", 0.5f, 0.0f, 1.0f,
                               parameters_),
         _difference_from_target_ratio("Diff_from_ratio_target", 0.10f, 0.0f,
                                       1.0f, parameters_),
-        _output_train("Output_train", false, parameters_),
         _feat_factory(3) {
     setName("DeloreanDetector");
   }

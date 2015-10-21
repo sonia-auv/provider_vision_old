@@ -135,7 +135,6 @@ class TorpedoesDetector : public Filter {
         } else {  // See everything, the world is beautiful
           for (auto &inner_square : interior_squares) {
             cv::Point2f square_center = inner_square->GetCenter();
-            double square_size = inner_square->GetLength();
             // A | C
             //-------
             // B | D
