@@ -39,9 +39,6 @@ catkin_package(
 find_package( OpenCV REQUIRED)
 
 #===============================================================================
-# O T H E R   P A C K A G E S   D E P E N D E N C I E S
-
-#===============================================================================
 # I N C L U D E   F I L E S
 
 set( lib_vision_SRC_DIR "src" )
@@ -55,6 +52,7 @@ include_directories(
     ${lib_vision_SRC_DIR}
     ${catkin_INCLUDE_DIRS}
     ${lib_atlas_INCLUDE_DIRS}
+    ${OpenCV_INCLUDE_DIRS}
 )
 
 #===============================================================================
@@ -65,7 +63,7 @@ set( TARGET_NAME sonia_vision )
 SET( LIBS_TO_LINK
   ${catkin_LIBRARIES}
   ${lib_atlas_LIBRARIES}
-  ${OpenCV_LIBS}
+  ${OpenCV_LIBRARIES}
 )
 
 add_library( ${TARGET_NAME} ${lib_vision_SRC_FILES} )
@@ -76,6 +74,7 @@ set_target_properties( ${TARGET_NAME}
     LINKER_LANGUAGE CXX
 )
 SET( LIBS_TO_LINK ${LIBS_TO_LINK} ${TARGET_NAME})
+
 #==========================================================================
 # C R E A T I N G   U N I T   T E S T S
 

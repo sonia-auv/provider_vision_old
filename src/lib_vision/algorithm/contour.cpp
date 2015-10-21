@@ -4,15 +4,11 @@
 //
 //-----------------------------------------------------------------------------
 //
-Contour::Contour(const std::vector<cv::Point> ctr)
-: _contour(ctr)
-{
-}
+Contour::Contour(const std::vector<cv::Point> ctr) : _contour(ctr) {}
 
 //-----------------------------------------------------------------------------
 //
-Contour::Contour(const cv::RotatedRect &rect)
-{
+Contour::Contour(const cv::RotatedRect &rect) {
   cv::Point2f pts[4];
   rect.points(pts);
 

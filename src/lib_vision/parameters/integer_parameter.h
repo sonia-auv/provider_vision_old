@@ -128,9 +128,9 @@ class IntegerParameter : public Parameter {
   }
 
   // Get
-  int operator()() const { return value; }
+  inline int operator()() const { return getValue(); }
 
-  inline int getValue() const { return this->operator()(); }
+  inline int getValue() const { return value; }
 
   virtual inline std::string GetStringValue() const override {
     return std::to_string(value);

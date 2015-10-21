@@ -11,12 +11,10 @@
 //=================================================================
 //  CONSTRUCTOR
 PerformanceEvaluator::PerformanceEvaluator()
-: _tick_frequency(cv::getTickFrequency()),
-  _start_tick_count(cv::getTickCount())
-{
+    : _tick_frequency(cv::getTickFrequency()),
+      _start_tick_count(cv::getTickCount()) {
   // Should never occur but...
-  if ( _tick_frequency == 0.0f)
-  {
+  if (_tick_frequency == 0.0f) {
     _tick_frequency = 1;
   }
 }
