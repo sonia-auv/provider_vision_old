@@ -19,10 +19,10 @@ class ContourList
 public:
 
   // Contour navigation constant
-  static const unsigned int NEXT_CTR = 0;
-  static const unsigned int PREV_CTR = 1;
-  static const unsigned int FIRST_CHILD_CTR = 2;
-  static const unsigned int PARENT_CTR = 3;
+  static const unsigned int NEXT = 0;
+  static const unsigned int PREVIOUS = 1;
+  static const unsigned int FIRST_CHILD = 2;
+  static const unsigned int PARENT = 3;
 
   enum METHOD {
     ALL, // All the contour in the image
@@ -94,14 +94,14 @@ ContourList::operator[](unsigned int index)
 //
 inline bool ContourList::HasChild(const cv::Vec4i &hierarchy_def)
 {
-   return hierarchy_def[FIRST_CHILD_CTR] != -1;
+   return hierarchy_def[FIRST_CHILD] != -1;
 }
 
 //-----------------------------------------------------------------------------
 //
 inline bool ContourList::HasParent(const cv::Vec4i &hierarchy_def)
 {
-  return hierarchy_def[PARENT_CTR] != -1;
+  return hierarchy_def[PARENT] != -1;
 }
 
 //-----------------------------------------------------------------------------
