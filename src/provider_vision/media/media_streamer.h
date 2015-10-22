@@ -7,10 +7,11 @@
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_ACQUISITION_LOOP_H_
-#define PROVIDER_VISION_ACQUISITION_LOOP_H_
+#ifndef PROVIDER_VISION_MEDIA_MEDIA_STREAMER_H_
+#define PROVIDER_VISION_MEDIA_MEDIA_STREAMER_H_
 
 #include <mutex>
+#include <string>
 #include <ros/ros.h>
 #include <opencv2/opencv.hpp>
 #include <lib_atlas/sys/timer.h>
@@ -31,6 +32,14 @@ namespace vision_server {
 class MediaStreamer : public atlas::Subject<const cv::Mat &>,
                       public atlas::Runnable {
  public:
+  //==========================================================================
+  // C L A S S   F R I E N D S H  I P
+
+  /**
+   * MediaManager needs more control over acquisition loop than normal users.
+   */
+  friend class MediaManager;
+
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
 
@@ -175,14 +184,6 @@ class MediaStreamer : public atlas::Subject<const cv::Mat &>,
   bool is_recording_;
 
   mutable std::mutex list_access_;
-
-  //==========================================================================
-  // C L A S S   F R I E N D S H  I P
-
-  /**
-   * MediaManager needs more control over acquisition loop than normal users.
-   */
-  friend class MediaManager;
 };
 
 //==============================================================================

@@ -7,8 +7,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_CONFIG_H_
-#define PROVIDER_VISION_CONFIG_H_
+#ifndef PROVIDER_VISION_UTILS_CONFIG_H_
+#define PROVIDER_VISION_UTILS_CONFIG_H_
 
 #include <lib_atlas/config.h>
 #include <string>

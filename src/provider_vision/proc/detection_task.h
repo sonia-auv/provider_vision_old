@@ -108,21 +108,22 @@ class DetectionTask : private atlas::Runnable,
    */
   ros::Publisher result_publisher_;
 
-  /**
-   * DetectionTask core.
-   */
   MediaStreamer::Ptr media_streamer_;
 
   Filterchain::Ptr filterchain_;
 
   mutable std::mutex newest_image_mutex_;
 
-  // Two image are needed since we don't want the mutex to block the process
-  // on the image and we have to wait for it to be finish to release it so
-  // the firenotification doesn't wait for a mutex.
-  cv::Mat newest_image_, _image_being_processed;
+  /**
+   * Two image are needed since we don't want the mutex to block the process
+   * on the image and we have to wait for it to be finish to release it so
+   * the firenotification doesn't wait for a mutex.
+   */
+  cv::Mat newest_image_;
 
-  // Prevent to process data twice for fast processing
+  cv::Mat image_being_processed_;
+
+  /** Prevent to process data twice for fast processing */
   bool new_image_ready_;
 
   int close_attemps_;

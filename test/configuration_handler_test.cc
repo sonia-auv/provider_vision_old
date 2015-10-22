@@ -1,5 +1,5 @@
 /**
- * \file  contour_test.cc
+ * \file  configuration_handler_test.cc
  * \author  Jeremie St-Jules-Prevost <jeremie.st.jules.prevost@gmail.com>
  * \date  28/06/2015
  * \copyright Copyright (c) 2015 Thibaut Mattio. All rights reserved.

@@ -7,8 +7,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_CAM_DRIVER_MEDIA_H_
-#define PROVIDER_VISION_CAM_DRIVER_MEDIA_H_
+#ifndef PROVIDER_VISION_MEDIA_CONTEXT_FILE_CONTEXT_H_
+#define PROVIDER_VISION_MEDIA_CONTEXT_FILE_CONTEXT_H_
 
 #include <string>
 #include <vector>

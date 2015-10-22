@@ -7,9 +7,6 @@
  * found in the LICENSE file.
  */
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
 #include <string>
 #include <ros/ros.h>
 #include "provider_vision/media/camera/dc1394_camera.h"
@@ -17,6 +14,7 @@
 namespace vision_server {
 
 const std::string DC1394Camera::CAM_TAG = "[DC1394 Camera]";
+
 //==============================================================================
 // C / D T O R S   S E C T I O N
 

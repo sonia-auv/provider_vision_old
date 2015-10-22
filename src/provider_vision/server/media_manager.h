@@ -8,8 +8,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_CAMERA_MANAGER_H_
-#define PROVIDER_VISION_CAMERA_MANAGER_H_
+#ifndef PROVIDER_VISION_SERVER_MEDIA_MANAGER_H_
+#define PROVIDER_VISION_SERVER_MEDIA_MANAGER_H_
 
 #include <memory>
 #include <vector>

@@ -7,8 +7,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_FILTERCHAIN_H_
-#define PROVIDER_VISION_FILTERCHAIN_H_
+#ifndef PROVIDER_VISION_PROC_FILTERCHAIN_H_
+#define PROVIDER_VISION_PROC_FILTERCHAIN_H_
 
 #include <opencv2/opencv.hpp>
 #include <lib_vision/filter_factory.h>

@@ -5,8 +5,8 @@
  *      Author: jeremie
  */
 
-#ifndef PROVIDER_VISION_camera_configuration_
-#define PROVIDER_VISION_camera_configuration_
+#ifndef PROVIDER_VISION_MEDIA_CAMERA_CONFIGURATION_H_
+#define PROVIDER_VISION_MEDIA_CAMERA_CONFIGURATION_H_
 
 #include <map>
 #include <memory>

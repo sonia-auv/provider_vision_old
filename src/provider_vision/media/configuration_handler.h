@@ -7,8 +7,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_CAM_CONFIG_H_
-#define PROVIDER_VISION_CAM_CONFIG_H_
+#ifndef PROVIDER_VISION_MEDIA_CONFIGURATION_HANDLER_H_
+#define PROVIDER_VISION_MEDIA_CONFIGURATION_HANDLER_H_
 
 #include <string>
 #include <sstream>

@@ -7,8 +7,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_CAMERA_H_
-#define PROVIDER_VISION_CAMERA_H_
+#ifndef PROVIDER_VISION_MEDIA_CAMERA_BASE_CAMERA_H_
+#define PROVIDER_VISION_MEDIA_CAMERA_BASE_CAMERA_H_
 
 #include <memory>
 #include "provider_vision/utils/config.h"
@@ -16,9 +16,6 @@
 #include "provider_vision/media/cam_undistord_matrices.h"
 
 namespace vision_server {
-
-//==============================================================================
-// C L A S S E S
 
 /**
  * Every camera (i.e. not video or image) should inherit this instead of

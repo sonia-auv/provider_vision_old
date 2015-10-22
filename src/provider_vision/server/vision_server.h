@@ -7,8 +7,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_PROVIDER_VISION_H_
-#define PROVIDER_VISION_PROVIDER_VISION_H_
+#ifndef PROVIDER_VISION_SERVER_VISION_SERVER_H_
+#define PROVIDER_VISION_SERVER_VISION_SERVER_H_
 
 #include <memory>
 #include <vector>

@@ -9,8 +9,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_FILTERCHAIN_MANAGER_H_
-#define PROVIDER_VISION_FILTERCHAIN_MANAGER_H_
+#ifndef PROVIDER_VISION_SERVER_FILTERCHAIN_MANAGER_H_
+#define PROVIDER_VISION_SERVER_FILTERCHAIN_MANAGER_H_
 
 #include <functional>
 #include <lib_atlas/ros/service_server_manager.h>

@@ -7,8 +7,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_CAM_WEBCAM_H_
-#define PROVIDER_VISION_CAM_WEBCAM_H_
+#ifndef PROVIDER_VISION_MEDIA_CAMERA_WEBCAM_CAMERA_H_
+#define PROVIDER_VISION_MEDIA_CAMERA_WEBCAM_CAMERA_H_
 
 #include <memory>
 #include <opencv2/opencv.hpp>

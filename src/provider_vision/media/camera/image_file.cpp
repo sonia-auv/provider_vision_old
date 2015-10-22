@@ -7,9 +7,6 @@
  * found in the LICENSE file.
  */
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
 #include <string>
 #include <vector>
 #include "provider_vision/media/camera/image_file.h"

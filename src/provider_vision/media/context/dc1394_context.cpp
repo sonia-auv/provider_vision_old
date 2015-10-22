@@ -7,9 +7,6 @@
  * found in the LICENSE file.
  */
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
 #include <string>
 #include <vector>
 #include <ros/ros.h>

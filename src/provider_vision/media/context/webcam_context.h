@@ -7,8 +7,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_CAM_DRIVER_WEBCAM_H_
-#define PROVIDER_VISION_CAM_DRIVER_WEBCAM_H_
+#ifndef PROVIDER_VISION_MEDIA_CONTEXT_WEBCAM_CONTEXT_H_
+#define PROVIDER_VISION_MEDIA_CONTEXT_WEBCAM_CONTEXT_H_
 
 #include <opencv2/opencv.hpp>
 #include "provider_vision/media/context/base_context.h"
@@ -25,8 +25,6 @@ namespace vision_server {
  */
 class WebcamContext : public BaseContext {
  public:
-  static const std::string DRIVER_TAG;
-
   static const std::string WEBCAM_NAME;
 
   //==========================================================================

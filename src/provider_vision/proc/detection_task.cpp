@@ -97,26 +97,26 @@ void DetectionTask::Run() {
       continue;
     }
     newest_image_mutex_.lock();
-    _image_being_processed = newest_image_.clone();
+    image_being_processed_ = newest_image_.clone();
     new_image_ready_ = false;
     newest_image_mutex_.unlock();
 
     std::string return_string;
 
-    return_string = filterchain_->ExecuteFilterChain(_image_being_processed);
+    return_string = filterchain_->ExecuteFilterChain(image_being_processed_);
 
     // We don't want to send stuff for nothing.
-    if (!_image_being_processed.empty()) {
-      if (_image_being_processed.depth() != CV_8U) {
-        _image_being_processed.convertTo(_image_being_processed, CV_8U);
+    if (!image_being_processed_.empty()) {
+      if (image_being_processed_.depth() != CV_8U) {
+        image_being_processed_.convertTo(image_being_processed_, CV_8U);
       }
 
-      if (_image_being_processed.channels() == 1) {
-        cv::cvtColor(_image_being_processed, _image_being_processed,
+      if (image_being_processed_.channels() == 1) {
+        cv::cvtColor(image_being_processed_, image_being_processed_,
                      CV_GRAY2BGR);
       }
 
-      image_publisher_.Write(_image_being_processed);
+      image_publisher_.Write(image_being_processed_);
     }
     if (return_string != "") {
       std_msgs::String msg;

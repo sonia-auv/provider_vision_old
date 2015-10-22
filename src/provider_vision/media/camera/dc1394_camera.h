@@ -7,8 +7,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_CAM_CAMERA_DC1394_H_
-#define PROVIDER_VISION_CAM_CAMERA_DC1394_H_
+#ifndef PROVIDER_VISION_MEDIA_CAMERA_DC1394_CAMERA_H_
+#define PROVIDER_VISION_MEDIA_CAMERA_DC1394_CAMERA_H_
 
 #include <mutex>
 #include <memory>
