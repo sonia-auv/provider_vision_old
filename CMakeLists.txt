@@ -135,16 +135,16 @@ target_link_libraries( vision_server_node
 
 #===============================================================================
 # C R E A T I N G    U N I T    T E S T S
-catkin_add_gtest( utest_configuration_handler test/configuration_handler_test.cc ${vision_server_FILES})
-target_link_libraries( utest_configuration_handler
+catkin_add_gtest( configuration_handler_test test/configuration_handler_test.cc ${vision_server_FILES})
+target_link_libraries( configuration_handler_test
         dc1394
         ${catkin_LIBRARIES}
         ${lib_atlas_LIBRARIES}
         ${lib_vision_LIBRARIES}
 )
 
-catkin_add_gtest( utest_behavior test/behavior_test.cc ${vision_server_FILES})
-target_link_libraries( utest_behavior
+catkin_add_gtest( media_manager_test test/media_manager_test.cc ${vision_server_FILES})
+target_link_libraries( media_manager_test
         dc1394
         ${catkin_LIBRARIES}
         ${lib_atlas_LIBRARIES}
