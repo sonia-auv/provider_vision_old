@@ -28,7 +28,8 @@ namespace vision_server {
  * or the drivers.
  * TODO jsprevost: Change the inheritance to use atlas::ImageSequenceCapture
  */
-class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
+class MediaStreamer : public atlas::Subject<const cv::Mat &>,
+                      public atlas::Runnable {
  public:
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
@@ -132,11 +133,6 @@ class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
   // P R I V A T E   M E M B E R S
 
   /**
-   * Flag to know if the loop is streaming.
-   */
-  bool is_streaming_;
-
-  /**
    * Protection of concurrency access between getImage and run.
    */
   mutable std::mutex image_access_;
@@ -206,7 +202,9 @@ inline bool MediaStreamer::IsRecording() const {
 
 //------------------------------------------------------------------------------
 //
-inline bool MediaStreamer::IsStreaming() const { return is_streaming_; }
+inline bool MediaStreamer::IsStreaming() const {
+  return media_->GetStatus() == BaseMedia::Status::STREAMING;
+}
 
 }  // namespace vision_server
 

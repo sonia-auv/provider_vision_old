@@ -72,7 +72,8 @@ void MediaManager::CloseMedia(const std::string &media_name) {
 
 //------------------------------------------------------------------------------
 //
-MediaStreamer::Ptr MediaManager::StartStreamingMedia(const std::string &media_name) {
+MediaStreamer::Ptr MediaManager::StartStreamingMedia(
+    const std::string &media_name) {
   MediaStreamer::Ptr streamer(nullptr);
   if (IsMediaStreaming(media_name)) {
     streamer = GetMediaStreamer(media_name);
@@ -106,25 +107,30 @@ void MediaManager::StopStreamingMedia(const std::string &media) noexcept {
 
 //------------------------------------------------------------------------------
 //
-void MediaManager::StopStreamingMedia(const MediaStreamer::Ptr &streamer) noexcept {
+void MediaManager::StopStreamingMedia(
+    const MediaStreamer::Ptr &streamer) noexcept {
   assert(streamer != nullptr);
-
-  // Check to make sure no other task is using this media.
-  if (streamer->ObserverCount() > 0) {
-    return;
-  }
-
   if (streamer->IsStreaming()) {
     streamer->StopStreaming();
   }
+}
 
-  std::string media_name = streamer->GetMediaName();
-  BaseMedia::Ptr media_ptr = GetMedia(media_name);
+//------------------------------------------------------------------------------
+//
+void MediaManager::StopStreamingMediaIfNoListener(
+    const std::string &media) noexcept {
+  MediaStreamer::Ptr streamer = GetMediaStreamer(media);
+  StopStreamingMediaIfNoListener(streamer);
+}
 
-  if (media_ptr) {
-    media_ptr->StopStreaming();
-  } else {
-    throw std::runtime_error("The media does not exist.");
+//------------------------------------------------------------------------------
+//
+void MediaManager::StopStreamingMediaIfNoListener(
+    const MediaStreamer::Ptr &streamer) noexcept {
+  assert(streamer != nullptr);
+  // Check to make sure no other task is using this media.
+  if (streamer->ObserverCount() == 0) {
+    StopStreamingMedia(streamer);
   }
 }
 

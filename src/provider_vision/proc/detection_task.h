@@ -26,7 +26,8 @@ namespace vision_server {
  * loop,
  * broadcast it on topic and apply the given filterchain.
  */
-class DetectionTask : private atlas::Runnable, public atlas::Observer<> {
+class DetectionTask : private atlas::Runnable,
+                      public atlas::Observer<const cv::Mat &> {
  public:
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
@@ -67,7 +68,8 @@ class DetectionTask : private atlas::Runnable, public atlas::Observer<> {
    * HTObserver override
    * Catches the acquisitionLoop's notification that an image is ready.
    */
-  void OnSubjectNotify(atlas::Subject<> &subject) noexcept override;
+  void OnSubjectNotify(atlas::Subject<const cv::Mat &> &subject,
+                       const cv::Mat &image) noexcept override;
 
   /**
    * HTThread override

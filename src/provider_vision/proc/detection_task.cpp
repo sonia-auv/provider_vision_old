@@ -35,7 +35,8 @@ DetectionTask::DetectionTask(MediaStreamer::Ptr acquisition_loop,
       close_attemps_(3) {
   assert(filterchain);
   assert(acquisition_loop);
-  result_publisher_ = ros::NodeHandle().advertise<std_msgs::String>(name_ + "_result", 50);
+  result_publisher_ =
+      ros::NodeHandle().advertise<std_msgs::String>(name_ + "_result", 50);
 }
 
 //------------------------------------------------------------------------------
@@ -79,9 +80,10 @@ void DetectionTask::StopDetectionTask() {
 
 //------------------------------------------------------------------------------
 //
-void DetectionTask::OnSubjectNotify(atlas::Subject<> &subject) noexcept {
+void DetectionTask::OnSubjectNotify(atlas::Subject<const cv::Mat &> &subject,
+                                    const cv::Mat &image) noexcept {
   std::lock_guard<std::mutex> guard(newest_image_mutex_);
-  media_streamer_->GetImage(newest_image_);
+  newest_image_ = image;
   new_image_ready_ = true;
 }
 

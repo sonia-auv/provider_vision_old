@@ -44,7 +44,6 @@ WebcamCamera::~WebcamCamera() {}
 //==============================================================================
 // M E T H O D   S E C T I O N
 
-
 //------------------------------------------------------------------------------
 //
 void WebcamCamera::Open() {
@@ -75,10 +74,10 @@ void WebcamCamera::SetStreamingModeOff() { status_ = Status::OPEN; }
 //------------------------------------------------------------------------------
 //
 void WebcamCamera::NextImage(cv::Mat &image) {
-  if (isOpened() && status_ == Status::OPEN || status_ == Status::STREAMING) {
+  if (isOpened() && (status_ == Status::OPEN || status_ == Status::STREAMING)) {
     operator>>(image);
   } else {
-    image = cv::Mat();
+    image = cv::Mat().clone();
   }
 }
 

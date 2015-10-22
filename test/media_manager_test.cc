@@ -15,6 +15,22 @@
 
 using namespace vision_server;
 
+/**
+ * Observer class that will store the image object from the media streamer
+ * whenever it send a notification.
+ */
+class ImageObserver : public atlas::Observer<const cv::Mat &> {
+ public:
+  ImageObserver() noexcept : Observer() {}
+  virtual ~ImageObserver() noexcept {}
+  cv::Mat image_;
+
+ private:
+  void OnSubjectNotify(atlas::Subject<const cv::Mat &> &subject, const cv::Mat &image) noexcept override {
+    image_ = image;
+  }
+};
+
 TEST(MediaManagerTest, webcam) {
   MediaManager mmng;
 
@@ -39,13 +55,20 @@ TEST(MediaManagerTest, webcam) {
     auto test = mstreamer->GetMediaStatus();
     ASSERT_EQ(mstreamer->GetMediaStatus(), BaseMedia::Status::STREAMING);
 
+    // Creating the observer for the image.
+    auto image_observer = ImageObserver();
+    image_observer.Observe(*mstreamer);
+
     // Waiting for the first image from the webcam..
-    atlas::MilliTimer::Sleep(100);
+    atlas::MilliTimer::Sleep(1000);
 
     // We cam acquire an image from the media.
+    ASSERT_EQ(image_observer.image_.empty(), false);
+
+    // This should throw, not supposed to call GetImage when the media is
+    // streaming...
     cv::Mat image;
-    mstreamer->GetImage(image);
-    ASSERT_EQ(image.empty(), false);
+    ASSERT_THROW(mstreamer->GetImage(image), std::logic_error);
 
     // We can close the media.
     mmng.StopStreamingMedia("Webcam");

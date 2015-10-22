@@ -103,7 +103,8 @@ bool VisionServer::CallbackExecutionCMD(
     vision_server_execute_cmd::Response &rep) {
   if (rqst.cmd == rqst.START) {
     try {
-      MediaStreamer::Ptr media = media_mgr_.StartStreamingMedia(rqst.media_name);
+      MediaStreamer::Ptr media =
+          media_mgr_.StartStreamingMedia(rqst.media_name);
 
       Filterchain::Ptr filterchain = filterchain_mgr_.StartFilterchain(
           rqst.node_name, rqst.filterchain_name);

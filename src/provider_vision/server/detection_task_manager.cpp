@@ -32,12 +32,12 @@ void DetectionTaskManager::StartDetectionTask(
     MediaStreamer::Ptr media_streamer, Filterchain::Ptr filterchain,
     const std::string &execution_name) noexcept {
   DetectionTask::Ptr task = GetDetectionTask(execution_name);
-  if(task == nullptr) {
-	  task = std::make_shared<DetectionTask>(media_streamer,
-	                                         filterchain, execution_name);
-	  detection_tasks_.push_back(task);
+  if (task == nullptr) {
+    task = std::make_shared<DetectionTask>(media_streamer, filterchain,
+                                           execution_name);
+    detection_tasks_.push_back(task);
   } else {
-	  throw std::logic_error("This execution already exist !");
+    throw std::logic_error("This execution already exist !");
   }
 }
 

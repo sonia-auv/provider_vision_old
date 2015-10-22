@@ -53,7 +53,12 @@ class MediaManager {
 
   void StopStreamingMedia(const std::string &media) noexcept;
 
-  void StopStreamingMedia(const MediaStreamer::Ptr &media) noexcept;
+  void StopStreamingMedia(const MediaStreamer::Ptr &streamer) noexcept;
+
+  void StopStreamingMediaIfNoListener(const std::string &media) noexcept;
+
+  void StopStreamingMediaIfNoListener(
+      const MediaStreamer::Ptr &streamer) noexcept;
 
   const BaseMedia::Status &GetMediaStatus(const std::string &name);
 

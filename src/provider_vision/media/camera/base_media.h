@@ -132,7 +132,9 @@ inline void BaseMedia::NextImageCopy(cv::Mat &image) noexcept {
 
 //------------------------------------------------------------------------------
 //
-inline const BaseMedia::Status &BaseMedia::GetStatus() const { return status_; };
+inline const BaseMedia::Status &BaseMedia::GetStatus() const {
+  return status_;
+};
 
 //------------------------------------------------------------------------------
 //
@@ -175,7 +177,8 @@ inline void BaseMedia::StartStreaming() {
   } else if (GetStatus() == Status::STREAMING) {
     throw std::logic_error("The media is already streaming");
   } else {
-    throw std::runtime_error("The media is on an unstable status. Cannot stream.");
+    throw std::runtime_error(
+        "The media is on an unstable status. Cannot stream.");
   }
 }
 
@@ -189,7 +192,8 @@ inline void BaseMedia::StopStreaming() {
   } else if (GetStatus() == Status::OPEN) {
     throw std::logic_error("The media is not streaming.");
   } else {
-    throw std::runtime_error("The media is on an unstable status. Cannot stream.");
+    throw std::runtime_error(
+        "The media is on an unstable status. Cannot stream.");
   }
 }
 
