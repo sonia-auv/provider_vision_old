@@ -49,12 +49,13 @@ class BaseContext : public atlas::Runnable {
 
   virtual void CloseContext() = 0;
 
-  /**
-   * Method to handle cameras
-   */
-  virtual void StartCamera(const std::string &name) = 0;
+  virtual void OpenMedia(const std::string &name) = 0;
 
-  virtual void StopCamera(const std::string &name) = 0;
+  virtual void CloseMedia(const std::string &name) = 0;
+
+  virtual void StartStreamingMedia(const std::string &name) = 0;
+
+  virtual void StopStreamingMedia(const std::string &name) = 0;
 
   /**
    * Feature setting/getting handler

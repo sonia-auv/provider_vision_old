@@ -137,9 +137,6 @@ void MediaStreamer::Run() {
       image_access_.unlock();
 
       if (!image_.empty()) {
-        image_ = cv::Mat::zeros(100, 100, CV_8UC3);
-        ROS_ERROR_NAMED(LOOP_TAG, "Error on NextImage. Providing empty image ");
-      } else {
         // This should not be the proper way to do this.
         // Actually the media, or even better the camera driver sould provide a
         // way
@@ -155,7 +152,6 @@ void MediaStreamer::Run() {
         }
         Notify();
       }
-
       atlas::MilliTimer::Sleep(framerate_mili_sec_);
     }
   }
@@ -174,13 +170,13 @@ void MediaStreamer::GetImage(cv::Mat &image) const {
   // on notification and remove streaming call to GetImage().
   if (IsStreaming()) {
     std::lock_guard<std::mutex> guard(image_access_);
-    if (image_.empty()) {
-      image = cv::Mat::zeros(100, 100, CV_8UC3);
-      ROS_ERROR_NAMED(LOOP_TAG, "Image is empty");
-    }
 
     try {
-      image = image_;
+      if (image_.empty()) {
+        throw std::runtime_error("The media has returned an empty image.");
+      } else {
+        image = image_;
+      }
     } catch (cv::Exception &e) {
       ROS_ERROR_NAMED(LOOP_TAG, "Exception in cloning (%s)", e.what());
       image = cv::Mat::zeros(100, 100, CV_8UC3);
@@ -190,6 +186,9 @@ void MediaStreamer::GetImage(cv::Mat &image) const {
     image_access_.lock();
     media_->NextImage(image);
     image_access_.unlock();
+    if (image.empty()) {
+      throw std::runtime_error("The media has returned an empty image.");
+    }
   }
 }
 

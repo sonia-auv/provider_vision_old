@@ -58,9 +58,13 @@ class FileContext : public BaseContext {
 
   void CloseContext() override;
 
-  void StartCamera(const std::string &name) override;
+  void OpenMedia(const std::string &name) override;
 
-  void StopCamera(const std::string &name) override;
+  void CloseMedia(const std::string &name) override;
+
+  void StartStreamingMedia(const std::string &name) override;
+
+  void StopStreamingMedia(const std::string &name) override;
 
   void SetFeature(BaseCamera::Feature feat, const std::string &name,
                   float val) override;

@@ -39,19 +39,18 @@ void FileContext::CloseContext() { media_list_.clear(); }
 
 //------------------------------------------------------------------------------
 //
-void FileContext::StartCamera(const std::string &name) {
-  // in the videoFile context, camera in list are existing camera.
+void FileContext::OpenMedia(const std::string &name) {
   BaseMedia::Ptr media = GetMedia(name);
   if (!media) {
     MediaType type = GetMediaType(name);
 
     if (type == MediaType::IMAGE) {
       ImageFile::Ptr file(std::make_shared<ImageFile>(name));
-      file->StartStreaming();
+      file->Open();
       media_list_.push_back(std::dynamic_pointer_cast<BaseMedia>(file));
     } else if (type == MediaType::VIDEO) {
       VideoFile::Ptr file(std::make_shared<VideoFile>(name));
-      file->StartStreaming();
+      file->Open();
       media_list_.push_back(std::dynamic_pointer_cast<BaseMedia>(file));
     } else {
       throw std::invalid_argument("Not my camera type");
@@ -61,28 +60,41 @@ void FileContext::StartCamera(const std::string &name) {
 
 //------------------------------------------------------------------------------
 //
-void FileContext::StopCamera(const std::string &name) {
-  // in the videoFile context, camera in list are existing camera.
+void FileContext::CloseMedia(const std::string &name) {
   auto file = GetMedia(name);
-  file->StopStreaming();
-  EraseMedia(name);
+  if (file != nullptr) {
+    file->Close();
+    EraseMedia(name);
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+void FileContext::StartStreamingMedia(const std::string &name) {
+  auto file = GetMedia(name);
+  if (file != nullptr) {
+    file->StartStreaming();
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+void FileContext::StopStreamingMedia(const std::string &name) {
+  auto file = GetMedia(name);
+  if (file != nullptr) {
+    file->StopStreaming();
+  }
 }
 
 //------------------------------------------------------------------------------
 //
 bool FileContext::ContainsMedia(const std::string &nameMedia) const {
   bool result = false;
-  // cherche si la camera existe
   if (GetMedia(nameMedia)) {
-    // already existing
     result = true;
-  }  // N'existe pas dans le systeme, est-ce qu'on peut la creer?
-  else if (GetMediaType(nameMedia) != MediaType::NONE) {
-    // C'est un video ou une image
+  } else if (GetMediaType(nameMedia) != MediaType::NONE) {
     result = true;
   }
-
-  // N'est pas un video ni une image ou un media existant pour ce driver.
   return result;
 }
 //------------------------------------------------------------------------------

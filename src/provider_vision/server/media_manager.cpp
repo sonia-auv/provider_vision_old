@@ -52,14 +52,22 @@ MediaManager::~MediaManager() noexcept {
 
 //------------------------------------------------------------------------------
 //
-MediaStreamer::Ptr OpenMedia(const std::string &media_name) {
-
+void MediaManager::OpenMedia(const std::string &media_name) {
+  BaseContext::Ptr context = GetContextFromMedia(media_name);
+  if (context == nullptr) {
+    throw std::invalid_argument("The media is not part of a context.");
+  }
+  context->OpenMedia(media_name);
 }
 
 //------------------------------------------------------------------------------
 //
-MediaStreamer::Ptr CloseMedia(const std::string &media_name) {
-
+void MediaManager::CloseMedia(const std::string &media_name) {
+  BaseContext::Ptr context = GetContextFromMedia(media_name);
+  if (context == nullptr) {
+    throw std::invalid_argument("The media is not part of a context.");
+  }
+  context->CloseMedia(media_name);
 }
 
 //------------------------------------------------------------------------------
@@ -73,9 +81,9 @@ MediaStreamer::Ptr MediaManager::StartStreamingMedia(const std::string &media_na
     if (!context) {
       throw std::invalid_argument("The media is not part of a context.");
     }
-    context->StartCamera(media_name);
-    BaseMedia::Ptr media = context->GetMedia(media_name);
+    context->StartStreamingMedia(media_name);
 
+    BaseMedia::Ptr media = context->GetMedia(media_name);
     if (media) {
       streamer = std::make_shared<MediaStreamer>(media, 30);
       if (streamer != nullptr) {
@@ -117,6 +125,17 @@ void MediaManager::StopStreamingMedia(const MediaStreamer::Ptr &streamer) noexce
     media_ptr->StopStreaming();
   } else {
     throw std::runtime_error("The media does not exist.");
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+const BaseMedia::Status &MediaManager::GetMediaStatus(const std::string &name) {
+  auto media = GetMedia(name);
+  if (media != nullptr) {
+    return media->GetStatus();
+  } else {
+    throw std::invalid_argument("This media does not exist.");
   }
 }
 

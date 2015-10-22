@@ -54,16 +54,6 @@ class BaseMedia {
   /**
    * Starts to get images
    */
-  virtual void SetStreamingModeOn() = 0;
-
-  /**
-   * Stop getting images
-   */
-  virtual void SetStreamingModeOff() = 0;
-
-  /**
-   * Starts to get images
-   */
   void StartStreaming();
 
   /**
@@ -86,7 +76,7 @@ class BaseMedia {
   /**
    * Returns the current camera Status
    */
-  virtual Status GetStatus() const;
+  virtual const Status &GetStatus() const;
 
   /**
    * Makes return true if it does not have a proper framerate
@@ -109,9 +99,23 @@ class BaseMedia {
 
  protected:
   //==========================================================================
+  // P R O T E C T E D   M E T H O D S
+
+  /**
+   * Starts to get images
+   */
+  virtual void SetStreamingModeOn() = 0;
+
+  /**
+   * Stop getting images
+   */
+  virtual void SetStreamingModeOff() = 0;
+
+  //==========================================================================
   // P R O T E C T E D   M E M B E R S
 
   CameraConfiguration config_;
+
   Status status_;
 };
 
@@ -128,7 +132,7 @@ inline void BaseMedia::NextImageCopy(cv::Mat &image) noexcept {
 
 //------------------------------------------------------------------------------
 //
-inline BaseMedia::Status BaseMedia::GetStatus() const { return status_; };
+inline const BaseMedia::Status &BaseMedia::GetStatus() const { return status_; };
 
 //------------------------------------------------------------------------------
 //

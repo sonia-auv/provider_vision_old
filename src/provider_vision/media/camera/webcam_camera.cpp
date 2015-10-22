@@ -51,6 +51,7 @@ void WebcamCamera::Open() {
   // Already been open at constructor.
   if (!IsOpened()) {
     open(0);
+    status_ = Status::OPEN;
   }
 }
 
@@ -59,6 +60,7 @@ void WebcamCamera::Open() {
 void WebcamCamera::Close() {
   if (IsOpened()) {
     release();
+    status_ = Status::CLOSE;
   }
 }
 
@@ -73,8 +75,10 @@ void WebcamCamera::SetStreamingModeOff() { status_ = Status::OPEN; }
 //------------------------------------------------------------------------------
 //
 void WebcamCamera::NextImage(cv::Mat &image) {
-  if (isOpened()) {
+  if (isOpened() && status_ == Status::OPEN || status_ == Status::STREAMING) {
     operator>>(image);
+  } else {
+    image = cv::Mat();
   }
 }
 

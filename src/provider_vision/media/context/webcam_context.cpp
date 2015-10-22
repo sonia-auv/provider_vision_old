@@ -47,7 +47,23 @@ void WebcamContext::CloseContext() {}
 
 //------------------------------------------------------------------------------
 //
-void WebcamContext::StartCamera(const std::string &name) {
+void WebcamContext::OpenMedia(const std::string &name) {
+  if (WEBCAM_NAME.compare(name) == 0) {
+    webcam_->Open();
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+void WebcamContext::CloseMedia(const std::string &name) {
+  if (WEBCAM_NAME.compare(name) == 0) {
+    webcam_->Close();
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+void WebcamContext::StartStreamingMedia(const std::string &name) {
   if (WEBCAM_NAME.compare(name) == 0) {
     webcam_->StartStreaming();
   }
@@ -55,7 +71,7 @@ void WebcamContext::StartCamera(const std::string &name) {
 
 //------------------------------------------------------------------------------
 //
-void WebcamContext::StopCamera(const std::string &name) {
+void WebcamContext::StopStreamingMedia(const std::string &name) {
   if (WEBCAM_NAME.compare(name) == 0) {
     webcam_->Close();
   }

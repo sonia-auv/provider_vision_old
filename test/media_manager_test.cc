@@ -9,6 +9,7 @@
 
 #include <gtest/gtest.h>
 #include <opencv2/opencv.hpp>
+#include <lib_atlas/sys/timer.h>
 #include "provider_vision/utils/config.h"
 #include "provider_vision/server/media_manager.h"
 
@@ -21,6 +22,12 @@ TEST(MediaManagerTest, webcam) {
   // If not, just do nothing.
   std::vector<std::string> names = mmng.GetAllMediasName();
   if(std::find(names.begin(), names.end(), "Webcam") != names.end()) {
+    // The medias that has been created is streaming.
+    ASSERT_EQ(mmng.GetMediaStatus("Webcam"), BaseMedia::Status::CLOSE);
+
+    mmng.OpenMedia("Webcam");
+    ASSERT_EQ(mmng.GetMediaStatus("Webcam"), BaseMedia::Status::OPEN);
+
     // We are able to get the media streamer from the newly created media.
     MediaStreamer::Ptr mstreamer = mmng.StartStreamingMedia("Webcam");
     ASSERT_NE(mstreamer.get(), nullptr);
@@ -32,6 +39,9 @@ TEST(MediaManagerTest, webcam) {
     auto test = mstreamer->GetMediaStatus();
     ASSERT_EQ(mstreamer->GetMediaStatus(), BaseMedia::Status::STREAMING);
 
+    // Waiting for the first image from the webcam..
+    atlas::MilliTimer::Sleep(100);
+
     // We cam acquire an image from the media.
     cv::Mat image;
     mstreamer->GetImage(image);
@@ -39,11 +49,20 @@ TEST(MediaManagerTest, webcam) {
 
     // We can close the media.
     mmng.StopStreamingMedia("Webcam");
+    ASSERT_EQ(mstreamer->GetMediaStatus(), BaseMedia::Status::OPEN);
+
+    // Trying to get an image again. This should work as we did not closed
+    // the media.
+    mstreamer->GetImage(image);
+    ASSERT_EQ(image.empty(), false);
+
+    // We can close the media.
+    mmng.CloseMedia("Webcam");
     ASSERT_EQ(mstreamer->GetMediaStatus(), BaseMedia::Status::CLOSE);
 
     // If the media is closed, the system throw an exception
-    mstreamer->GetImage(image);
-    ASSERT_THROW(image.empty(), std::runtime_error);
+    ASSERT_THROW(mstreamer->GetImage(image), std::runtime_error);
+    ASSERT_TRUE(image.empty());
   }
 }
 
@@ -65,7 +84,6 @@ TEST(MediaManagerTest, image) {
   ASSERT_EQ(mstreamer->GetMediaName().compare(file_path), 0);
 
   // The medias that has been created is streaming.
-  auto test = mstreamer->GetMediaStatus();
   ASSERT_EQ(mstreamer->GetMediaStatus(), BaseMedia::Status::STREAMING);
 
   // We cam acquire an image from the media.

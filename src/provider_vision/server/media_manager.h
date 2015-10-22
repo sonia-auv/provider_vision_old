@@ -38,9 +38,9 @@ class MediaManager {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  MediaStreamer::Ptr OpenMedia(const std::string &media_name);
+  void OpenMedia(const std::string &media_name);
 
-  MediaStreamer::Ptr CloseMedia(const std::string &media_name);
+  void CloseMedia(const std::string &media_name);
 
   /**
    * Start the acquisition of the images on the given media.
@@ -54,6 +54,8 @@ class MediaManager {
   void StopStreamingMedia(const std::string &media) noexcept;
 
   void StopStreamingMedia(const MediaStreamer::Ptr &media) noexcept;
+
+  const BaseMedia::Status &GetMediaStatus(const std::string &name);
 
   MediaStreamer::Ptr GetMediaStreamer(const std::string &name);
 
