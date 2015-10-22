@@ -58,7 +58,7 @@ void ImageFile::SetStreamingModeOff() { status_ = Status::OPEN; }
 //
 void ImageFile::NextImage(cv::Mat &image) {
   if (!image_.empty()) {
-    if(IsClosed()) {
+    if (IsClosed()) {
       image = cv::Mat().clone();
     } else {
       image_.copyTo(image);

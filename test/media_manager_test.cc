@@ -26,7 +26,8 @@ class ImageObserver : public atlas::Observer<const cv::Mat &> {
   cv::Mat image_;
 
  private:
-  void OnSubjectNotify(atlas::Subject<const cv::Mat &> &subject, const cv::Mat &image) noexcept override {
+  void OnSubjectNotify(atlas::Subject<const cv::Mat &> &subject,
+                       const cv::Mat &image) noexcept override {
     image_ = image;
   }
 };
@@ -37,7 +38,7 @@ TEST(MediaManagerTest, webcam) {
   // Assert that there is a webcam object in the system.
   // If not, just do nothing.
   std::vector<std::string> names = mmng.GetAllMediasName();
-  if(std::find(names.begin(), names.end(), "Webcam") != names.end()) {
+  if (std::find(names.begin(), names.end(), "Webcam") != names.end()) {
     // The medias that has been created is streaming.
     ASSERT_EQ(mmng.GetMediaStatus("Webcam"), BaseMedia::Status::CLOSE);
 
@@ -101,7 +102,7 @@ TEST(MediaManagerTest, image) {
   auto size_after = mmng.GetAllMediasCount();
 
   // There is one and only one media that has been created in the system
-  ASSERT_NE(size_init +1, size_after);
+  ASSERT_NE(size_init + 1, size_after);
 
   // We are able to get the media streamer from the newly created media.
   mmng.OpenMedia(file_path);
