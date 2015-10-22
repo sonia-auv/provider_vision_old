@@ -10,6 +10,7 @@
 #include <stdexcept>
 #include <vector>
 #include "ros/console.h"
+#include "provider_vision/utils/config.h"
 #include "provider_vision/server/media_manager.h"
 #include "provider_vision/media/context/dc1394_context.h"
 #include "provider_vision/media/context/webcam_context.h"
@@ -51,10 +52,21 @@ MediaManager::~MediaManager() noexcept {
 
 //------------------------------------------------------------------------------
 //
-MediaStreamer::Ptr MediaManager::StartMedia(const std::string &media_name,
-                                            bool stream) {
+MediaStreamer::Ptr OpenMedia(const std::string &media_name) {
+
+}
+
+//------------------------------------------------------------------------------
+//
+MediaStreamer::Ptr CloseMedia(const std::string &media_name) {
+
+}
+
+//------------------------------------------------------------------------------
+//
+MediaStreamer::Ptr MediaManager::StartStreamingMedia(const std::string &media_name) {
   MediaStreamer::Ptr streamer(nullptr);
-  if (IsMediaStreamerExist(media_name)) {
+  if (IsMediaStreaming(media_name)) {
     streamer = GetMediaStreamer(media_name);
   } else {
     BaseContext::Ptr context = GetContextFromMedia(media_name);
@@ -66,7 +78,7 @@ MediaStreamer::Ptr MediaManager::StartMedia(const std::string &media_name,
 
     if (media) {
       streamer = std::make_shared<MediaStreamer>(media, 30);
-      if (stream) {
+      if (streamer != nullptr) {
         streamer->StartStreaming();
       }
       AddMediaStreamer(streamer);
@@ -79,26 +91,32 @@ MediaStreamer::Ptr MediaManager::StartMedia(const std::string &media_name,
 
 //------------------------------------------------------------------------------
 //
-void MediaManager::StopMedia(const std::string &media) noexcept {
-  MediaStreamer::Ptr elem = GetMediaStreamer(media);
+void MediaManager::StopStreamingMedia(const std::string &media) noexcept {
+  MediaStreamer::Ptr streamer = GetMediaStreamer(media);
+  StopStreamingMedia(streamer);
+}
 
-  if (elem) {
-    // Check to make sure no other task is using this media.
-    if (elem->ObserverCount() > 0) {
-      return;
-    }
+//------------------------------------------------------------------------------
+//
+void MediaManager::StopStreamingMedia(const MediaStreamer::Ptr &streamer) noexcept {
+  assert(streamer != nullptr);
 
-    if (elem->IsStreaming()) {
-      elem->StopStreaming();
-    }
-    RemoveMediaStreamer(media);
+  // Check to make sure no other task is using this media.
+  if (streamer->ObserverCount() > 0) {
+    return;
+  }
 
-    BaseMedia::Ptr media_ptr = GetMedia(media);
-    if (media_ptr) {
-      media_ptr->Stop();
-    } else {
-      throw std::runtime_error("Media do now exist");
-    }
+  if (streamer->IsStreaming()) {
+    streamer->StopStreaming();
+  }
+
+  std::string media_name = streamer->GetMediaName();
+  BaseMedia::Ptr media_ptr = GetMedia(media_name);
+
+  if (media_ptr) {
+    media_ptr->StopStreaming();
+  } else {
+    throw std::runtime_error("The media does not exist.");
   }
 }
 
@@ -126,6 +144,19 @@ std::vector<std::string> MediaManager::GetAllMediasName() const noexcept {
     }
   }
   return medias;
+}
+
+//------------------------------------------------------------------------------
+//
+size_t MediaManager::GetAllMediasCount() const noexcept {
+  size_t size = 0;
+  for (auto &context : contexts_) {
+    auto context_media_list = context->GetMediaList();
+    for (const auto &media : context_media_list) {
+      ++size;
+    }
+  }
+  return size;
 }
 
 //------------------------------------------------------------------------------

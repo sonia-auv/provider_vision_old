@@ -58,16 +58,6 @@ class BaseCamera : public BaseMedia {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  /**
-   * For a camera, you can open the camera (i.e create it in the system)
-   * but not make it stream (i.e. the hardware do not capture light)
-   * therefore open and close are there to "make the camera exist in the
-   * system"
-   */
-  virtual void Open() = 0;
-
-  virtual void Close() = 0;
-
   virtual void SetFeature(const Feature &feat, float value) = 0;
 
   virtual float GetFeature(const Feature &feat) const = 0;

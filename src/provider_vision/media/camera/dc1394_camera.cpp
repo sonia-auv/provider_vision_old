@@ -66,7 +66,7 @@ void DC1394Camera::Close() {
 
   bool close_result = true;
   if (status_ == Status::STREAMING) {
-    Stop();
+    StopStreaming();
   }
 
   dc1394error_t error = dc1394_capture_stop(dc1394_camera_);
@@ -79,11 +79,7 @@ void DC1394Camera::Close() {
 
 //------------------------------------------------------------------------------
 //
-void DC1394Camera::Start() {
-  if (IsStreaming()) {
-    throw std::logic_error("The media is already streaming");
-  }
-
+void DC1394Camera::SetStreamingModeOn() {
   cam_access_.lock();
   dc1394error_t error =
       dc1394_video_set_transmission(dc1394_camera_, DC1394_ON);
@@ -98,11 +94,7 @@ void DC1394Camera::Start() {
 
 //------------------------------------------------------------------------------
 //
-void DC1394Camera::Stop() {
-  if (IsStreaming()) {
-    throw std::logic_error("The media is not streaming");
-  }
-
+void DC1394Camera::SetStreamingModeOff() {
   std::lock_guard<std::mutex> guard(cam_access_);
 
   dc1394error_t error =

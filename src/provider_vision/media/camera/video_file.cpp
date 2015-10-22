@@ -48,6 +48,46 @@ VideoFile::~VideoFile() {
 
 //==============================================================================
 // M E T H O D   S E C T I O N
+
+//------------------------------------------------------------------------------
+//
+void VideoFile::Open() {
+  if (isOpened()) {
+    throw std::logic_error("The video is already opened.");
+  } else {
+    LoadVideo(path_);
+  }
+
+  if (!isOpened()) {
+    // Check if the video could be opened.
+    throw std::runtime_error("The video could not be opened.");
+  }
+  status_ = Status::OPEN;
+}
+
+//------------------------------------------------------------------------------
+//
+void VideoFile::Close() {
+  if (!isOpened()) {
+    throw std::logic_error("The video is not opened.");
+  } else {
+    release();
+  }
+
+  if (isOpened()) {
+    throw std::runtime_error("The video could not be closed.");
+  }
+  status_ = Status::CLOSE;
+}
+
+//------------------------------------------------------------------------------
+//
+void VideoFile::SetStreamingModeOn() { status_ = Status::STREAMING; }
+
+//------------------------------------------------------------------------------
+//
+void VideoFile::SetStreamingModeOff() {  status_ = Status::OPEN; }
+
 //------------------------------------------------------------------------------
 //
 void VideoFile::SetPathToVideo(const std::string &full_path) {
@@ -61,37 +101,7 @@ void VideoFile::SetLooping(bool looping) { looping_ = looping; }
 //------------------------------------------------------------------------------
 //
 bool VideoFile::LoadVideo(const std::string &path_to_file) {
-  return this->open(path_to_file);
-}
-
-//------------------------------------------------------------------------------
-//
-void VideoFile::Start() {
-  if (isOpened()) {
-    throw std::logic_error("The video is already opened.");
-  } else {
-    LoadVideo(path_);
-  }
-
-  if (!isOpened()) {
-    // Check if the video could be opened.
-    throw std::runtime_error("The video could not be opened.");
-  }
-}
-
-//------------------------------------------------------------------------------
-//
-void VideoFile::Stop() {
-  if (!isOpened()) {
-    throw std::logic_error("The video is not opened.");
-  } else {
-    release();
-  }
-
-  if (isOpened()) {
-    // Check if the video could be opened.
-    throw std::runtime_error("The video could not be closed.");
-  }
+  return open(path_to_file);
 }
 
 //------------------------------------------------------------------------------

@@ -40,11 +40,15 @@ class ImageFile : public BaseMedia {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  /** Method override from Media */
-  void Start() override;
+  void Open() override;
+
+  void Close() override;
 
   /** Method override from Media */
-  void Stop() override;
+  void SetStreamingModeOn() override;
+
+  /** Method override from Media */
+  void SetStreamingModeOff() override;
 
   /**
    * Method override from Media.

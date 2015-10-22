@@ -44,47 +44,6 @@ WebcamCamera::~WebcamCamera() {}
 //==============================================================================
 // M E T H O D   S E C T I O N
 
-//------------------------------------------------------------------------------
-//
-void WebcamCamera::Start() {
-  if (isOpened()) {
-    throw std::logic_error("The video is already opened.");
-  } else {
-    // It seems like there the only way to start the webcam with openCV
-    // is to start the system default camera... Let's do that.
-    open(0);
-    status_ = Status::STREAMING;
-  }
-
-  if (!isOpened()) {
-    // Check if the video could be opened.
-    throw std::runtime_error("The video could not be opened.");
-  }
-}
-
-//------------------------------------------------------------------------------
-//
-void WebcamCamera::Stop() {
-  if (!isOpened()) {
-    throw std::logic_error("The video is not opened.");
-  } else {
-    release();
-    status_ = Status::CLOSE;
-  }
-
-  if (isOpened()) {
-    // Check if the video could be opened.
-    throw std::runtime_error("The video could not be closed.");
-  }
-}
-
-//------------------------------------------------------------------------------
-//
-void WebcamCamera::NextImage(cv::Mat &image) {
-  if (isOpened()) {
-    operator>>(image);
-  }
-}
 
 //------------------------------------------------------------------------------
 //
@@ -100,6 +59,22 @@ void WebcamCamera::Open() {
 void WebcamCamera::Close() {
   if (IsOpened()) {
     release();
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+void WebcamCamera::SetStreamingModeOn() { status_ = Status::STREAMING; }
+
+//------------------------------------------------------------------------------
+//
+void WebcamCamera::SetStreamingModeOff() { status_ = Status::OPEN; }
+
+//------------------------------------------------------------------------------
+//
+void WebcamCamera::NextImage(cv::Mat &image) {
+  if (isOpened()) {
+    operator>>(image);
   }
 }
 

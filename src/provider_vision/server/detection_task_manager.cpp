@@ -31,15 +31,14 @@ DetectionTaskManager::~DetectionTaskManager() {}
 void DetectionTaskManager::StartDetectionTask(
     MediaStreamer::Ptr media_streamer, Filterchain::Ptr filterchain,
     const std::string &execution_name) noexcept {
-  try {
-    GetDetectionTask(execution_name);
-  } catch (const std::exception &e) {
-    std::cout << "Execution already exist" << std::endl;
+  DetectionTask::Ptr task = GetDetectionTask(execution_name);
+  if(task == nullptr) {
+	  task = std::make_shared<DetectionTask>(media_streamer,
+	                                         filterchain, execution_name);
+	  detection_tasks_.push_back(task);
+  } else {
+	  throw std::logic_error("This execution already exist !");
   }
-
-  auto task = std::make_shared<DetectionTask>(media_streamer,
-                                              filterchain, execution_name);
-  detection_tasks_.push_back(task);
 }
 
 //------------------------------------------------------------------------------
@@ -75,7 +74,7 @@ DetectionTask::Ptr DetectionTaskManager::GetDetectionTask(
       return task;
     }
   }
-  throw std::invalid_argument("This detection task does not exists.");
+  return nullptr;
 }
 
 }  // namespace vision_server

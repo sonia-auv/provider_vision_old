@@ -81,7 +81,7 @@ void DC1394Context::CloseContext() {
   for (auto &media : media_list_) {
     DC1394Camera::Ptr cam = GetDC1394Camera(media);
     // Stop if running
-    cam->Stop();
+    cam->StopStreaming();
 
     cam->Close();
   }
@@ -95,14 +95,14 @@ void DC1394Context::CloseContext() {
 //
 void DC1394Context::StartCamera(const std::string &name) {
   DC1394Camera::Ptr cam = GetDC1394Camera(name);
-  cam->Start();
+  cam->StartStreaming();
 }
 
 //------------------------------------------------------------------------------
 //
 void DC1394Context::StopCamera(const std::string &name) {
   DC1394Camera::Ptr cam = GetDC1394Camera(name);
-  cam->Stop();
+  cam->StopStreaming();
 }
 
 //------------------------------------------------------------------------------

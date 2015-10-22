@@ -103,7 +103,7 @@ bool VisionServer::CallbackExecutionCMD(
     vision_server_execute_cmd::Response &rep) {
   if (rqst.cmd == rqst.START) {
     try {
-      MediaStreamer::Ptr media = media_mgr_.StartMedia(rqst.media_name);
+      MediaStreamer::Ptr media = media_mgr_.StartStreamingMedia(rqst.media_name);
 
       Filterchain::Ptr filterchain = filterchain_mgr_.StartFilterchain(
           rqst.node_name, rqst.filterchain_name);
@@ -119,7 +119,7 @@ bool VisionServer::CallbackExecutionCMD(
       filterchain_mgr_.StopFilterchain(rqst.node_name, rqst.filterchain_name);
       // TODO jsprevost : Assert that there is no execution with this media
       // currently running
-      media_mgr_.StopMedia(rqst.media_name);
+      media_mgr_.StopStreamingMedia(rqst.media_name);
     } catch (const std::exception &e) {
       ROS_ERROR("Closing execution error: %s", e.what());
     }

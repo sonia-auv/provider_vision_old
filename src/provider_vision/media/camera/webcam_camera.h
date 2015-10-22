@@ -49,27 +49,27 @@ class WebcamCamera : public BaseCamera, private cv::VideoCapture {
   /**
    * Method override from Media
    */
-  void Start() override;
-
-  /**
-   * Method override from Media
-   */
-  void Stop() override;
-
-  /**
-   * Method override from Media
-   */
-  void NextImage(cv::Mat &image) override;
-
-  /**
-   * Method override from Media
-   */
   void Open() override;
 
   /**
    * Method override from Media
    */
   void Close() override;
+
+  /**
+   * Method override from Media
+   */
+  void SetStreamingModeOn() override;
+
+  /**
+   * Method override from Media
+   */
+  void SetStreamingModeOff() override;
+
+  /**
+   * Method override from Media
+   */
+  void NextImage(cv::Mat &image) override;
 
   /**
    * Method override from Media

@@ -88,7 +88,7 @@ class DC1394Context : public BaseContext {
 //-----------------------------------------------------------------------------
 //
 inline bool DC1394Context::ContainsMedia(const std::string &nameMedia) const {
-  for (const auto &cam : this->media_list_) {
+  for (const auto &cam : media_list_) {
     if (nameMedia.compare(cam->GetName()) == 0) {
       return true;
     }

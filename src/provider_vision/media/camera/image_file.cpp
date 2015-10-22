@@ -34,17 +34,28 @@ ImageFile::~ImageFile() noexcept {}
 
 //------------------------------------------------------------------------------
 //
-void ImageFile::Start() {
-  status_ = Status::STREAMING;
+void ImageFile::Open() {
   image_ = cv::imread(path_, CV_LOAD_IMAGE_ANYDEPTH | CV_LOAD_IMAGE_ANYCOLOR);
   if (image_.empty()) {
     throw std::runtime_error("There is no image file with this path");
   }
+  status_ = Status::OPEN;
 }
 
 //------------------------------------------------------------------------------
 //
-void ImageFile::Stop() { status_ = Status::CLOSE; }
+void ImageFile::Close() {
+  image_ = cv::Mat().clone();
+  status_ = Status::CLOSE;
+}
+
+//------------------------------------------------------------------------------
+//
+void ImageFile::SetStreamingModeOn() { status_ = Status::STREAMING; }
+
+//------------------------------------------------------------------------------
+//
+void ImageFile::SetStreamingModeOff() { status_ = Status::OPEN; }
 
 //------------------------------------------------------------------------------
 //

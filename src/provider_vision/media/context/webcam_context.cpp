@@ -49,7 +49,7 @@ void WebcamContext::CloseContext() {}
 //
 void WebcamContext::StartCamera(const std::string &name) {
   if (WEBCAM_NAME.compare(name) == 0) {
-    webcam_->Start();
+    webcam_->StartStreaming();
   }
 }
 

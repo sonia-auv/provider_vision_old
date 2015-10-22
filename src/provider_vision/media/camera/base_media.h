@@ -42,14 +42,34 @@ class BaseMedia {
   // P U B L I C   M E T H O D S
 
   /**
+   * For a camera, you can open the camera (i.e create it in the system)
+   * but not make it stream (i.e. the hardware do not capture light)
+   * therefore open and close are there to "make the camera exist in the
+   * system"
+   */
+  virtual void Open() = 0;
+
+  virtual void Close() = 0;
+
+  /**
    * Starts to get images
    */
-  virtual void Start() = 0;
+  virtual void SetStreamingModeOn() = 0;
 
   /**
    * Stop getting images
    */
-  virtual void Stop() = 0;
+  virtual void SetStreamingModeOff() = 0;
+
+  /**
+   * Starts to get images
+   */
+  void StartStreaming();
+
+  /**
+   * Stop getting images
+   */
+  void StopStreaming();
 
   /**
    * Gives the most recent image
@@ -62,9 +82,6 @@ class BaseMedia {
    * keep the original image.
    */
   virtual void NextImageCopy(cv::Mat &image) noexcept;
-
-  //==========================================================================
-  // G E T T E R S   A N D   S E T T E R S
 
   /**
    * Returns the current camera Status
@@ -85,7 +102,9 @@ class BaseMedia {
   const std::string &GetName() const;
 
   bool IsOpened() const;
+
   bool IsClosed() const;
+
   bool IsStreaming() const;
 
  protected:
@@ -141,5 +160,35 @@ inline bool BaseMedia::IsStreaming() const {
   return Status::STREAMING == status_;
 }
 
+//------------------------------------------------------------------------------
+//
+inline void BaseMedia::StartStreaming() {
+  if (GetStatus() == Status::OPEN) {
+    SetStreamingModeOn();
+  } else if (GetStatus() == Status::CLOSE) {
+    Open();
+    SetStreamingModeOn();
+  } else if (GetStatus() == Status::STREAMING) {
+    throw std::logic_error("The media is already streaming");
+  } else {
+    throw std::runtime_error("The media is on an unstable status. Cannot stream.");
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+inline void BaseMedia::StopStreaming() {
+  if (GetStatus() == Status::STREAMING) {
+    SetStreamingModeOff();
+  } else if (GetStatus() == Status::CLOSE) {
+    throw std::logic_error("The media is not opened, cannot stop stream.");
+  } else if (GetStatus() == Status::OPEN) {
+    throw std::logic_error("The media is not streaming.");
+  } else {
+    throw std::runtime_error("The media is on an unstable status. Cannot stream.");
+  }
+}
+
 }  // namespace vision_server
+
 #endif  // PROVIDER_VISION_BaseMedia_H_

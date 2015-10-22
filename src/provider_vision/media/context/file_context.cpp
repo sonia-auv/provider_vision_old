@@ -47,11 +47,11 @@ void FileContext::StartCamera(const std::string &name) {
 
     if (type == MediaType::IMAGE) {
       ImageFile::Ptr file(std::make_shared<ImageFile>(name));
-      file->Start();
+      file->StartStreaming();
       media_list_.push_back(std::dynamic_pointer_cast<BaseMedia>(file));
     } else if (type == MediaType::VIDEO) {
       VideoFile::Ptr file(std::make_shared<VideoFile>(name));
-      file->Start();
+      file->StartStreaming();
       media_list_.push_back(std::dynamic_pointer_cast<BaseMedia>(file));
     } else {
       throw std::invalid_argument("Not my camera type");
@@ -64,7 +64,7 @@ void FileContext::StartCamera(const std::string &name) {
 void FileContext::StopCamera(const std::string &name) {
   // in the videoFile context, camera in list are existing camera.
   auto file = GetMedia(name);
-  file->Stop();
+  file->StopStreaming();
   EraseMedia(name);
 }
 

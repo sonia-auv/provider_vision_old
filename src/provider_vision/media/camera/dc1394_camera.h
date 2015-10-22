@@ -50,9 +50,9 @@ class DC1394Camera : public BaseCamera {
 
   void Close() override;
 
-  void Start() override;
+  void SetStreamingModeOn() override;
 
-  void Stop() override;
+  void SetStreamingModeOff() override;
 
   void NextImage(cv::Mat &img) override;
 
