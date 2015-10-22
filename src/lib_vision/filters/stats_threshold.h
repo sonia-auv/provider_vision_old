@@ -28,10 +28,11 @@ class StatsThreshold : public Filter {
   explicit StatsThreshold(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
         _enable("Enable", false, parameters_),
+        _min_thresh("Min_thresh", 0, 0, 255, parameters_),
         _mean_multiplier("Mean_multiplier", 1, -10, 10, parameters_),
         _std_dev_multiplier("Standard_deviation_multiplier", 1, -10, 10,
-                            parameters_),
-        _min_thresh("Min_thresh", 0, 0, 255, parameters_) {
+                            parameters_)
+        {
     setName("StatsThreshold");
   }
 

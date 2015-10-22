@@ -10,8 +10,7 @@
 #include <gtest/gtest.h>
 #include <lib_vision/algorithm/object_full_data.h>
 
-TEST(AITrainer, AllTest) {
-  printf("Starting unit test on ObjectFullData");
+TEST(FullData, AllTest) {
   contourList_t contours;
   cv::Mat binaryImage(1000, 1000, CV_8UC1, cv::Scalar::all(0));
   cv::Mat originalImage(1000, 1000, CV_8UC3, cv::Scalar::all(0));
@@ -53,8 +52,6 @@ TEST(AITrainer, AllTest) {
       originalImage, binaryImage, contours[2]));
 
   // NO further testing since everything is tested in the parent classes.
-
-  printf("System all clear and good to go");
 }
 
 int main(int argc, char **argv) {

@@ -74,7 +74,7 @@ inline void FeatureVec::CreateFromMat(const cv::Mat &values) {
 //
 inline std::string FeatureVec::GenerateCVine() {
   std::stringstream ss;
-  for (int i = 0; i < _features_value.size(); i++) {
+  for (size_t i = 0; i < _features_value.size(); i++) {
     ss << _features_value[i] << ",";
   }
   return ss.str();

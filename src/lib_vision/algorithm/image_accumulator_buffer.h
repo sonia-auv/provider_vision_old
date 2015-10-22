@@ -17,7 +17,7 @@
 // Simple circular buffer
 // that returns the weighted sum of all images in his buffer.
 class ImageAccumulatorBuffer {
- public:
+public:
   enum METHOD { ACC_ALL_SAME_WEIGHT, ACC_50_PERCENT, ACC_ADJUST_WEIGHT };
 
   // Creates a circular buffer of bufferLength,
@@ -64,9 +64,9 @@ class ImageAccumulatorBuffer {
   // elementNumber == 1 will return 0, etc.
   int GetIndexFromOldest(int elementNumber);
 
-  void GetImage(unsigned int index, cv::Mat &image);
+  void GetImage(size_t index, cv::Mat &image);
 
- private:
+private:
   // Averaging methods
   // They all keep the image in CV_32FCN
   // All images in the buffer have the same weights
@@ -87,7 +87,7 @@ class ImageAccumulatorBuffer {
   void FillWithBlank();
 
   // Buffer size
-  int _buffer_size;
+  size_t _buffer_size;
   double _individual_weight;
   uint _buffer_current_index;
 
@@ -110,9 +110,12 @@ inline int ImageAccumulatorBuffer::GetBufferLength() { return _buffer_size; }
 
 //-----------------------------------------------------------------------------
 //
-inline void ImageAccumulatorBuffer::GetImage(unsigned int index,
+inline void ImageAccumulatorBuffer::GetImage(size_t index,
                                              cv::Mat &image) {
-  if (index < _buffer_size) _image_vec[index].copyTo(image);
+  if (index < _buffer_size)
+  {
+    _image_vec[index].copyTo(image);
+  }
 }
 
 //// Debug function to use with constant value image (i.e. al at 50)

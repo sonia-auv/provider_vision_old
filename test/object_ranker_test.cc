@@ -10,10 +10,7 @@
 #include <gtest/gtest.h>
 #include <lib_vision/algorithm/object_ranker.h>
 
-TEST(AITrainer, AllTest) {
-  printf("Starting unit test on ObjectRanker");
-  printf("Starting unit test on ObjectBasicData\n");
-
+TEST(Ranker, AllTest) {
   contourList_t contours;
   cv::Mat binaryImage(1000, 1000, CV_8UC1, cv::Scalar::all(0));
   cv::Mat originalImage(1000, 1000, CV_8UC3, cv::Scalar::all(0));
@@ -57,12 +54,11 @@ TEST(AITrainer, AllTest) {
   // should be like this loop.
   // Remember that when we sort the vector, we alter the order of the vector
   // so they are not in the order they were added.
-  for (int i = 0; i < tmp.size(); i++) {
-    printf("AreaRank Area LengthRank Length %f %f %f %f\n",
-           tmp[i]->GetAreaRank(), tmp[i]->GetArea(), tmp[i]->GetLengthRank(),
-           tmp[i]->GetLength());
-  }
-  printf("System all clear and good to go");
+//  for (int i = 0; i < tmp.size(); i++) {
+//    printf("AreaRank Area LengthRank Length %f %f %f %f\n",
+//           tmp[i]->GetAreaRank(), tmp[i]->GetArea(), tmp[i]->GetLengthRank(),
+//           tmp[i]->GetLength());
+//  }
 }
 
 int main(int argc, char **argv) {

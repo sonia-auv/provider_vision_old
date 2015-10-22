@@ -8,15 +8,15 @@
  */
 
 #include <gtest/gtest.h>
-#include <lib_vision/algorithm/feature_factory.h>
 #include <stdlib.h>
+#include "lib_vision/algorithm/feature_factory.h"
+#include "lib_atlas/config.h"
 
 TEST(FeatureFactory, AllTest) {
-  printf("Starting unit test on FeatureFactory\n");
 
   cv::Mat originalImage =
-      cv::imread("/home/jeremie/Videos/PercentFilledTry.png");
-  cv::Mat binaryImage = cv::imread("/home/jeremie/Videos/PercentFilledTry.png");
+      cv::imread(atlas::kWorkspaceRoot + "src/lib_vision/test/BasicObjectUnitTest.png");
+  cv::Mat binaryImage = cv::imread(atlas::kWorkspaceRoot + "src/lib_vision/test/BasicObjectUnitTest.png");
   cv::cvtColor(binaryImage, binaryImage, CV_BGR2GRAY);
   contourList_t contours;
   retrieveAllContours(binaryImage, contours);
@@ -61,21 +61,10 @@ TEST(FeatureFactory, AllTest) {
     std::vector<float> original = objectVector[i]->GetVec(),
                        generated = matToGen[i].GetVec();
     for (int j = 0; j < original.size(); j++) {
-      if (j == 6) {
-        printf("Length : %f\t", objectVector[i]->GetLength());
-        printf("Length rank: %f\t", objectVector[i]->GetLengthRank());
-
-        printf("Percent filled : %f\t", original[j]);
-      } else if (j == 7) {
-        printf(" Hue Mean %f\t", original[j]);
-      }
-      bool compareResult = generated[j] - original[j] == 0;
-      // TC_TEST_FAIL("Wrongly generated", compareResult);
+      bool compareResult = ((generated[j] - original[j]) == 0);
+      ASSERT_TRUE(compareResult);
     }
-    printf("\n");
   }
-
-  printf("System all clear and good to go\n");
 }
 
 int main(int argc, char **argv) {

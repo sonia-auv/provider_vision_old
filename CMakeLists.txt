@@ -96,18 +96,6 @@ target_link_libraries( utest_object_frame_memory ${LIBS_TO_LINK})
 catkin_add_gtest( utest_object_basic_data test/object_basic_data_test.cc )
 target_link_libraries(  utest_object_basic_data ${LIBS_TO_LINK})
 
-catkin_add_gtest( utest_major_edge_extractor test/major_edge_extractor_test.cc )
-target_link_libraries(  utest_major_edge_extractor ${LIBS_TO_LINK})
-
-catkin_add_gtest( utest_feature_vec test/feature_vec_test.cc )
-target_link_libraries( utest_feature_vec ${LIBS_TO_LINK})
-
-catkin_add_gtest( utest_ai_trainer test/ai_trainer_test.cc )
-target_link_libraries( utest_ai_trainer ${LIBS_TO_LINK})
-
-catkin_add_gtest( utest_scharr test/scharr_test.cc )
-target_link_libraries( utest_scharr ${LIBS_TO_LINK})
-
 catkin_add_gtest( utest_feature_factory test/feature_factory_test.cc )
 target_link_libraries( utest_feature_factory ${LIBS_TO_LINK})
 

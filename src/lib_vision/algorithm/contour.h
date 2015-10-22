@@ -26,7 +26,6 @@ class Contour {
   // Vector overload
   size_t size();
   cv::Point operator[](unsigned int index);
-
   std::vector<cv::Point> _contour;
 };
 

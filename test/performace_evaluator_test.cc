@@ -11,15 +11,12 @@
 #include <lib_vision/algorithm/performance_evaluator.h>
 
 TEST(PerformanceEvaluator, AllTest) {
-  printf("Starting unit test on PerformanceEvaluator");
-  PerformanceEvaluator pe;
+   PerformanceEvaluator pe;
 
   pe.UpdateStartTime();
   sleep(1);
   double execTime = pe.GetExecTimeSec();
   ASSERT_TRUE(execTime > 0.1f);
-
-  printf("System all clear and good to go");
 }
 
 int main(int argc, char **argv) {

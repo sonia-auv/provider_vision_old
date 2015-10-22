@@ -34,13 +34,13 @@ class BuoySingle : public Filter {
         _enable("Enable", false, parameters_),
         _debug_good_contour("Debug_contour", false, parameters_),
         _eliminate_same_x_targets("Eliminate_same_x", false, parameters_),
+        _detect_red("Detect_red", false, parameters_),
         _color("Buoy", "red", parameters_),
         _min_area("Min_area", 200, 0, 10000, parameters_),
         _max_ratio("Max_ratio", 50, 0, 100, parameters_),
         _min_filled_percent("Min_percent", 50, 0, 100, parameters_),
         _max_x_difference_for_elimination("Min_x_difference", 50.0f, 0.0f,
                                           1000.0f, parameters_),
-        _detect_red("Detect_red", false, parameters_),
         _ratio_for_angle_check(
             "Ratio_for_angle_check", 50, 0, 100, parameters_,
             "When ratio smaller, will discard if vertical contour"),
@@ -79,7 +79,7 @@ class BuoySingle : public Filter {
       std::vector<Features> featuresVect;
 
       // Filter contours
-      for (int j = 0; j < contours.size(); j++) {
+      for (size_t j = 0; j < contours.size(); j++) {
         if (contours[j].size() <= 2) continue;
 
         Features temp(contours[j], in, Features::DESC_BASIC);
@@ -171,8 +171,6 @@ class BuoySingle : public Filter {
       // Choose red if need be
       if (_detect_red() && featuresVect.size() > 1) {
         Features a = featuresVect[0], b = featuresVect[1];
-        int nb_test_point = 5;
-        float area_diff = abs(a.getArea() - b.getArea()) / a.getArea();
         cv::Mat original_img, hsv;
         cv::cvtColor(global_params_.getOriginalImage(), hsv, CV_BGR2HSV);
         cv::copyMakeBorder(hsv, hsv, 21, 21, 21, 21, cv::BORDER_CONSTANT);
