@@ -92,12 +92,22 @@ TEST(MediaManagerTest, webcam) {
 TEST(MediaManagerTest, image) {
   MediaManager mmng;
 
+  // Assert that there is a webcam object in the system.
+  // If not, just do nothing.
+  std::vector<std::string> names = mmng.GetAllMediasName();
+
   std::string file_path(kProjectPath + "test/test_image.png");
   auto size_init = mmng.GetAllMediasCount();
   auto size_after = mmng.GetAllMediasCount();
 
   // There is one and only one media that has been created in the system
   ASSERT_NE(size_init +1, size_after);
+
+  // We are able to get the media streamer from the newly created media.
+  mmng.OpenMedia(file_path);
+
+  // The medias that has been created is streaming.
+  ASSERT_EQ(mmng.GetMediaStatus(file_path), BaseMedia::Status::OPEN);
 
   // We are able to get the media streamer from the newly created media.
   MediaStreamer::Ptr mstreamer = mmng.StartStreamingMedia(file_path);
@@ -107,19 +117,40 @@ TEST(MediaManagerTest, image) {
   ASSERT_EQ(mstreamer->GetMediaName().compare(file_path), 0);
 
   // The medias that has been created is streaming.
+  auto test = mstreamer->GetMediaStatus();
   ASSERT_EQ(mstreamer->GetMediaStatus(), BaseMedia::Status::STREAMING);
 
+  // Creating the observer for the image.
+  auto image_observer = ImageObserver();
+  image_observer.Observe(*mstreamer);
+
+  // Waiting for the first image from the webcam..
+  atlas::MilliTimer::Sleep(100);
+
   // We cam acquire an image from the media.
+  ASSERT_EQ(image_observer.image_.empty(), false);
+
+  // This should throw, not supposed to call GetImage when the media is
+  // streaming...
   cv::Mat image;
+  ASSERT_THROW(mstreamer->GetImage(image), std::logic_error);
+
+  // We can close the media.
+  mmng.StopStreamingMedia(file_path);
+  ASSERT_EQ(mstreamer->GetMediaStatus(), BaseMedia::Status::OPEN);
+
+  // Trying to get an image again. This should work as we did not closed
+  // the media.
   mstreamer->GetImage(image);
   ASSERT_EQ(image.empty(), false);
 
   // We can close the media.
-  mmng.StopStreamingMedia(file_path);
+  mmng.CloseMedia(file_path);
   ASSERT_EQ(mstreamer->GetMediaStatus(), BaseMedia::Status::CLOSE);
 
-  // After we closed the media, it still exists in the system.
-  ASSERT_NE(size_init +1, size_after);
+  // If the media is closed, the system throw an exception
+  ASSERT_THROW(mstreamer->GetImage(image), std::runtime_error);
+  ASSERT_TRUE(image.empty());
 }
 
 int main(int argc, char **argv) {

@@ -44,10 +44,7 @@ void ImageFile::Open() {
 
 //------------------------------------------------------------------------------
 //
-void ImageFile::Close() {
-  image_ = cv::Mat().clone();
-  status_ = Status::CLOSE;
-}
+void ImageFile::Close() { status_ = Status::CLOSE; }
 
 //------------------------------------------------------------------------------
 //
@@ -61,7 +58,11 @@ void ImageFile::SetStreamingModeOff() { status_ = Status::OPEN; }
 //
 void ImageFile::NextImage(cv::Mat &image) {
   if (!image_.empty()) {
-    image_.copyTo(image);
+    if(IsClosed()) {
+      image = cv::Mat().clone();
+    } else {
+      image_.copyTo(image);
+    }
   } else {
     throw std::runtime_error(
         "The image could not be loaded, an error occurenced");
