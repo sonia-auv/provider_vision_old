@@ -88,7 +88,7 @@ Filterchain::Ptr FilterchainManager::StartFilterchain(
   if (FilterchainExists(filterchainName)) {
     Filterchain::Ptr filterchain =
         std::make_shared<Filterchain>(filterchainName, executionName);
-    _runningFilterchains.push_back(filterchain);
+    running_filterchains_.push_back(filterchain);
     return filterchain;
   }
   ROS_ERROR_NAMED(FILTERCHAIN_MANAGER_TAG.c_str(),
@@ -101,11 +101,11 @@ Filterchain::Ptr FilterchainManager::StartFilterchain(
 //
 void FilterchainManager::StopFilterchain(const std::string &executionName,
                                          const std::string &filterchainName) {
-  auto filterchain = _runningFilterchains.begin();
-  const auto &last_filterchain = _runningFilterchains.end();
+  auto filterchain = running_filterchains_.begin();
+  const auto &last_filterchain = running_filterchains_.end();
   for (; filterchain != last_filterchain; ++filterchain) {
     if ((*filterchain)->GetName().compare(filterchainName) == 0) {
-      _runningFilterchains.erase(filterchain);
+      running_filterchains_.erase(filterchain);
     }
   }
 }
@@ -125,7 +125,7 @@ void FilterchainManager::SaveFilterchain(
 //
 Filterchain::Ptr FilterchainManager::GetRunningFilterchain(
     const std::string &execution) const noexcept {
-  for (const auto &filterchain : _runningFilterchains) {
+  for (const auto &filterchain : running_filterchains_) {
     if (filterchain->GetName() == execution) {
       return filterchain;
     }

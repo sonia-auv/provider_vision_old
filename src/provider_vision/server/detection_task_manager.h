@@ -16,6 +16,7 @@
 #include <string>
 #include <memory>
 #include <mutex>
+#include <vector>
 #include "provider_vision/proc/detection_task.h"
 #include "provider_vision/proc/filterchain.h"
 
@@ -47,6 +48,9 @@ class DetectionTaskManager {
   std::vector<std::string> GetAllDetectionTasksName() const noexcept;
 
  private:
+  //==========================================================================
+  // P R I V A T E   M E T H O D S
+
   DetectionTask::Ptr GetDetectionTask(const std::string &execution_name) const;
 
   //==========================================================================

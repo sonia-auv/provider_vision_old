@@ -14,6 +14,8 @@
 #define PROVIDER_VISION_SERVER_FILTERCHAIN_MANAGER_H_
 
 #include <functional>
+#include <vector>
+#include <string>
 #include <lib_atlas/ros/service_server_manager.h>
 #include <lib_vision/filter.h>
 #include "provider_vision/utils/config.h"
@@ -136,7 +138,7 @@ class FilterchainManager {
   /**
    * List of current instances of filterchains
    */
-  std::vector<Filterchain::Ptr> _runningFilterchains;
+  std::vector<Filterchain::Ptr> running_filterchains_;
 };
 
 //==============================================================================
