@@ -36,6 +36,7 @@ class Filter {
   // KEEPING A REFERENCE TO GlobalParamHandler. VERY IMPORTANT
   explicit Filter(const GlobalParamHandler &globalParams)
       : global_params_(const_cast<GlobalParamHandler &>(globalParams)),
+        //enable_("Enable", false, parameters_),
         // Explicit construction not needed here... Just reminder it exist.
         parameters_() {}
 
@@ -204,6 +205,7 @@ class Filter {
  protected:
   // KEEPING A REFERENCE. VERY IMPORTANT
   GlobalParamHandler &global_params_;
+//  BooleanParameter enable_;
 
   // vector parameter, so we can list them.
   std::vector<Parameter *> parameters_;

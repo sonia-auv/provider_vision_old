@@ -34,7 +34,7 @@ void Target::SetTarget(const Features &feat) {
 
 //==============================================================
 //
-void Target::SetTarget(std::shared_ptr<ObjectFullData> obj) {
+void Target::SetTarget(ObjectFullData::Ptr obj) {
   target_is_inited_ = true;
   RotRect rrect = obj->GetRotatedRect();
   SetCenter(rrect.center.x, rrect.center.y);

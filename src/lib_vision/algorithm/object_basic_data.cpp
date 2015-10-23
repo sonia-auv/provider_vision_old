@@ -11,7 +11,7 @@
 
 ObjectBasicData::ObjectBasicData(const cv::Mat &originalImage,
                                  const cv::Mat &binaryImage,
-                                 const contour_t &contour)
+                                 const Contour &contour)
     : _area(0.0f),
       _convex_hull_area(0.0f),
       _circumference(0.0f),
@@ -37,7 +37,7 @@ ObjectBasicData::ObjectBasicData(const cv::Mat &originalImage,
 
 //-----------------------------------------------------------------------------
 //
-const cv::Mat ObjectBasicData::GetPlanes(int planesID) {
+const cv::Mat &ObjectBasicData::GetPlanes(int planesID) {
   if (!_is_calculated_map[PLANES]) {
     cv::Mat gray, hsi;
     _planes.resize(ObjectBasicData::NB_OF_PLANE);

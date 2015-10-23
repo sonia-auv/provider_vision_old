@@ -15,30 +15,31 @@
 //
 ObjectFeatureFactory::ObjectFeatureFactory(unsigned int memorySize)
     :_frame_memory(memorySize) {
+  using namespace std::placeholders;
   feature_fct_map.emplace(ObjectFeatureData::Feature::RATIO,
-                          ObjectFeatureFactory::RatioFeature);
+                          std::bind(&ObjectFeatureFactory::RatioFeature, this, _1));
   feature_fct_map.emplace(ObjectFeatureData::Feature::CONVEXITY,
-                          ObjectFeatureFactory::ConvexityFeature);
+                          std::bind(&ObjectFeatureFactory::ConvexityFeature, this, _1));
   feature_fct_map.emplace(ObjectFeatureData::Feature::PERCENT_FILLED,
-                          ObjectFeatureFactory::PercentFilledFeature);
+                          std::bind(&ObjectFeatureFactory::PercentFilledFeature, this, _1));
   feature_fct_map.emplace(ObjectFeatureData::Feature::CIRCULARITY,
-                          ObjectFeatureFactory::CircularityFeature);
+                          std::bind(&ObjectFeatureFactory::CircularityFeature, this, _1));
   feature_fct_map.emplace(ObjectFeatureData::Feature::PRESENCE_CONSISTENCY,
-                          ObjectFeatureFactory::PresenceConsistencyFeature);
+                          std::bind(&ObjectFeatureFactory::PresenceConsistencyFeature, this, _1));
   feature_fct_map.emplace(ObjectFeatureData::Feature::HUE_MEAN,
-                          ObjectFeatureFactory::HueMeanFeature);
+                          std::bind(&ObjectFeatureFactory::HueMeanFeature, this, _1));
   feature_fct_map.emplace(ObjectFeatureData::Feature::SAT_MEAN,
-                          ObjectFeatureFactory::SatMeanFeature);
+                          std::bind(&ObjectFeatureFactory::SatMeanFeature, this, _1));
   feature_fct_map.emplace(ObjectFeatureData::Feature::INTENSITY_MEAN,
-                          ObjectFeatureFactory::IntensityMeanFeature);
+                          std::bind(&ObjectFeatureFactory::IntensityMeanFeature, this, _1));
   feature_fct_map.emplace(ObjectFeatureData::Feature::RED_MEAN,
-                          ObjectFeatureFactory::RedMeanFeature);
+                          std::bind(&ObjectFeatureFactory::RedMeanFeature, this, _1));
   feature_fct_map.emplace(ObjectFeatureData::Feature::GREEN_MEAN,
-                          ObjectFeatureFactory::GreenMeanFeature);
+                          std::bind(&ObjectFeatureFactory::GreenMeanFeature, this, _1));
   feature_fct_map.emplace(ObjectFeatureData::Feature::BLUE_MEAN,
-                          ObjectFeatureFactory::BlueMeanFeature);
+                          std::bind(&ObjectFeatureFactory::BlueMeanFeature, this, _1));
   feature_fct_map.emplace(ObjectFeatureData::Feature::GRAY_MEAN,
-                          ObjectFeatureFactory::GrayMeanFeature);
+                          std::bind(&ObjectFeatureFactory::GrayMeanFeature, this, _1));
 }
 
 //=============================================================================
@@ -46,7 +47,7 @@ ObjectFeatureFactory::ObjectFeatureFactory(unsigned int memorySize)
 //-----------------------------------------------------------------------------
 //
 void ObjectFeatureFactory::PercentFilledFeature(ObjectFullData::Ptr object) {
-  if (object) {
+  if ((object.get() != nullptr) && (object->GetPercentFilled() == -1.0f)) {
     float percentFilled = 0.0f;
     cv::Size imageSize = object->GetImageSize();
     cv::Mat drawImage(imageSize, CV_8UC3, cv::Scalar::all(0));
@@ -60,7 +61,7 @@ void ObjectFeatureFactory::PercentFilledFeature(ObjectFullData::Ptr object) {
       contour[i].y = int(pts[i].y);
     }
     contours.push_back(contour);
-    contours.push_back(object->GetContourCopy());
+    contours.push_back(object->GetContourCopy().Get());
 
     // Draw the biggest one (contour by corners)
     // Then draw the contour in black over the biggest one.
@@ -84,7 +85,7 @@ float ObjectFeatureFactory::CalculatePlaneMean(ObjectFullData::Ptr object,
   if (object.get() != nullptr) {
     cv::Mat binaryImage(object->GetImageSize(), CV_8UC3, cv::Scalar::all(0));
     contourList_t contours;
-    contours.push_back(object->GetContourCopy());
+    contours.push_back(object->GetContourCopy().Get());
     cv::drawContours(binaryImage, contours, -1, CV_RGB(255, 255, 255), -1);
     cv::cvtColor(binaryImage, binaryImage, CV_BGR2GRAY);
     cv::Mat colorbinaryImage;

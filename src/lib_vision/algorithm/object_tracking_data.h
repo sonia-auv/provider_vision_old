@@ -14,11 +14,11 @@
 // about an object's past state in time. EX. In the past X frames, how
 // many time was the object present? Of How much the area or ratio changed
 // in the past frames?
-class OBjectTrackingData {
+class ObjectTrackingData {
  public:
-  OBjectTrackingData() : _presence_count(0.0f){};
+  ObjectTrackingData () : _presence_count(0.0f){};
 
-  virtual ~OBjectTrackingData(){};
+  virtual ~ObjectTrackingData (){};
 
   void SetPresenceCount(float presenceCount);
 
@@ -35,12 +35,12 @@ class OBjectTrackingData {
 //	INLINE METHOD CODE SECTION
 //-----------------------------------------------------------------------------
 //
-inline void OBjectTrackingData::SetPresenceCount(float presenceCount) {
+inline void ObjectTrackingData::SetPresenceCount(float presenceCount) {
   _presence_count = presenceCount;
 }
 
 //-----------------------------------------------------------------------------
 //
-inline float OBjectTrackingData::GetPresenceCount() { return _presence_count; }
+inline float ObjectTrackingData::GetPresenceCount() { return _presence_count; }
 
 #endif

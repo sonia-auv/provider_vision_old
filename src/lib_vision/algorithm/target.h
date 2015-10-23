@@ -27,7 +27,7 @@ class Target {
 
   // WILL USE OFFSETED CENTER !!!
   void SetTarget(const Features &feat);
-  void SetTarget(std::shared_ptr<ObjectFullData> obj);
+  void SetTarget(ObjectFullData::Ptr obj);
 
   void SetCenter(int x, int y);
 

@@ -16,7 +16,7 @@
 #include <lib_vision/algorithm/object_basic_data.h>
 #include <lib_vision/algorithm/object_tracking_data.h>
 #include <lib_vision/algorithm/object_ranking_data.h>
-#include "object_feature.h"
+#include "lib_vision/algorithm/object_feature.h"
 
 // Simple container class that is created with the contour.
 // It inherits from the different caracteristic of an object
@@ -27,7 +27,7 @@
 // we wont use.
 // Also, for tracking and ranking data, it is necessary
 // to fill the object with the help of ObjectRanker and FrameMemory.
-class ObjectFullData : public OBjectTrackingData,
+class ObjectFullData : public ObjectTrackingData,
                        public ObjectBasicData,
                        public ObjectRankingData,
                        public ObjectFeatureData {
@@ -36,9 +36,25 @@ class ObjectFullData : public OBjectTrackingData,
   typedef std::vector<ObjectFullData::Ptr> FullObjectPtrVec;
 
   ObjectFullData(const cv::Mat &originalImage, const cv::Mat &binaryImage,
-                 const contour_t &contour);
+                 const Contour &contour);
 
   virtual ~ObjectFullData(){};
+
 };
+//==============================================================================
+// SORTING INLINE FUNCTION
+//------------------------------------------------------------------------------
+//
+inline bool AreaSorts(ObjectFullData::Ptr a, ObjectFullData::Ptr b )
+{
+  return a->GetArea() < b->GetArea();
+}
+
+//------------------------------------------------------------------------------
+//
+inline bool RatioSorts(ObjectFullData::Ptr a, ObjectFullData::Ptr b )
+{
+  return a->GetRatio() < b->GetRatio();
+}
 
 #endif

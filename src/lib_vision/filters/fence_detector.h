@@ -79,14 +79,14 @@ class FenceDetector : public Filter {
 
     contourList_t contours;
     retrieveOuterContours(in, contours);
-    std::vector<std::shared_ptr<ObjectFullData>> verticalBars, horizontalBar,
+    std::vector<ObjectFullData::Ptr> verticalBars, horizontalBar,
         merged_horizontal_bar;
 
     cv::Mat originalImage = global_params_.getOriginalImage();
 
     // Parse contours into 2 categories, vertical or horizontal.
     for (int i = 0, size = contours.size(); i < size; i++) {
-      std::shared_ptr<ObjectFullData> object =
+      ObjectFullData::Ptr object =
           std::make_shared<ObjectFullData>(originalImage, image, contours[i]);
 
       if (object.get() == nullptr) {
@@ -110,8 +110,9 @@ class FenceDetector : public Filter {
       if (_debug_contour()) {
         cv::drawContours(_output_image, contours, i, CV_RGB(255, 255, 0), 3);
       }
+      _feat_factory.PercentFilledFeature(object);
 
-      if (int(_feat_factory.PercentFilledFeature(object) * 100.0f) <
+      if (int(object->GetPercentFilled() * 100.0f) <
           _min_percent_filled())
         continue;
       if (_debug_contour()) {
@@ -130,8 +131,8 @@ class FenceDetector : public Filter {
     // Sort the bars with different criteria
     // Here we look for horizontal bar because it's
     std::sort(horizontalBar.begin(), horizontalBar.end(),
-              [](std::shared_ptr<ObjectFullData> a,
-                 std::shared_ptr<ObjectFullData> b) -> bool {
+              [](ObjectFullData::Ptr a,
+                 ObjectFullData::Ptr b) -> bool {
                 return a->GetRotatedRect().size.height >
                        b->GetRotatedRect().size.height;
               });
@@ -142,8 +143,8 @@ class FenceDetector : public Filter {
            ref_idx++) {
         if (IsSplitBar(horizontalBar[0], horizontalBar[1])) {
           contour_t tmp, a, b;
-          a = horizontalBar[0]->GetContourCopy();
-          b = horizontalBar[1]->GetContourCopy();
+          a = horizontalBar[0]->GetContourCopy().Get();
+          b = horizontalBar[1]->GetContourCopy().Get();
 
           tmp.reserve(a.size() + b.size());
           tmp.insert(tmp.end(), a.begin(), a.end());
@@ -160,7 +161,7 @@ class FenceDetector : public Filter {
     // Also, you need to return a size to AUV6 so...
     if (horizontalBar.size() != 0) {
       // Gets bottom bar info.
-      std::shared_ptr<ObjectFullData> final_horizontal_bar = horizontalBar[0];
+      ObjectFullData::Ptr final_horizontal_bar = horizontalBar[0];
       RotRect rect_from_hori_bar = final_horizontal_bar->GetRotatedRect();
       if (_debug_contour()) {
         cv::circle(_output_image, rect_from_hori_bar.center, 3,
@@ -189,8 +190,8 @@ class FenceDetector : public Filter {
       } else  // Gets the two best vertical bar to compute our y center.
       {
         std::sort(verticalBars.begin(), verticalBars.end(),
-                  [](std::shared_ptr<ObjectFullData> a,
-                     std::shared_ptr<ObjectFullData> b) -> bool {
+                  [](ObjectFullData::Ptr a,
+                     ObjectFullData::Ptr b) -> bool {
                     return a->GetRotatedRect().size.height >
                            b->GetRotatedRect().size.height;
                   });
@@ -264,11 +265,11 @@ class FenceDetector : public Filter {
     return bar_y - offset;
   }
 
-  inline void GetBottomBarXExtremum(std::shared_ptr<ObjectFullData> bottom_bar,
+  inline void GetBottomBarXExtremum(ObjectFullData::Ptr bottom_bar,
                                     int &leftX, int &rightX) {
     leftX = 20000;
     rightX = -1;
-    contour_t contour = bottom_bar->GetContourCopy();
+    contour_t contour = bottom_bar->GetContourCopy().Get();
     for (auto pt : contour) {
       if (leftX > pt.x) {
         leftX = pt.x;
@@ -291,8 +292,8 @@ class FenceDetector : public Filter {
     return left_ok && right_ok;
   }
 
-  inline bool IsSplitBar(std::shared_ptr<ObjectFullData> ref,
-                         std::shared_ptr<ObjectFullData> &comp) {
+  inline bool IsSplitBar(ObjectFullData::Ptr ref,
+                         ObjectFullData::Ptr &comp) {
     float ratio_diff =
         abs(comp->GetRatio() - ref->GetRatio()) / ref->GetRatio();
     float y_diff =
@@ -310,7 +311,7 @@ class FenceDetector : public Filter {
       _max_diff_from_0_tbca_vertical, _min_percent_filled;
 
   cv::Mat _output_image;
-  FeatureFactory _feat_factory;
+  ObjectFeatureFactory _feat_factory;
 };
 
 }  // namespace vision_filter

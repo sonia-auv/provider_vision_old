@@ -22,17 +22,17 @@ class ObjectRanker {
   static void RankByLength(ObjectFullData::FullObjectPtrVec objects);
 
   // Function for std::sort function
-  static bool AreaSortFunction(std::shared_ptr<ObjectFullData> a,
-                               std::shared_ptr<ObjectFullData> b);
+  static bool AreaSortFunction(ObjectFullData::Ptr a,
+                               ObjectFullData::Ptr b);
 
-  static bool LengthSortFunction(std::shared_ptr<ObjectFullData> a,
-                                 std::shared_ptr<ObjectFullData> b);
+  static bool LengthSortFunction(ObjectFullData::Ptr a,
+                                 ObjectFullData::Ptr b);
 };
 
 //-----------------------------------------------------------------------------
 //
-inline bool ObjectRanker::AreaSortFunction(std::shared_ptr<ObjectFullData> a,
-                                           std::shared_ptr<ObjectFullData> b) {
+inline bool ObjectRanker::AreaSortFunction(ObjectFullData::Ptr a,
+                                           ObjectFullData::Ptr b) {
   if (a.get() != nullptr && b.get() != nullptr) {
     return a->GetArea() > b->GetArea();
   }
@@ -42,7 +42,7 @@ inline bool ObjectRanker::AreaSortFunction(std::shared_ptr<ObjectFullData> a,
 //-----------------------------------------------------------------------------
 //
 inline bool ObjectRanker::LengthSortFunction(
-    std::shared_ptr<ObjectFullData> a, std::shared_ptr<ObjectFullData> b) {
+    ObjectFullData::Ptr a, ObjectFullData::Ptr b) {
   if (a.get() != nullptr && b.get() != nullptr) {
     return a->GetLength() > b->GetLength();
   }

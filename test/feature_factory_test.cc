@@ -9,7 +9,7 @@
 
 #include <gtest/gtest.h>
 #include <stdlib.h>
-#include "lib_vision/algorithm/feature_factory.h"
+#include "object_feature_factory.h"
 #include "lib_atlas/config.h"
 
 TEST(FeatureFactory, AllTest) {

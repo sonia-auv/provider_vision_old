@@ -11,5 +11,5 @@
 
 ObjectFullData::ObjectFullData(const cv::Mat &originalImage,
                                const cv::Mat &binaryImage,
-                               const contour_t &contour)
+                               const Contour &contour)
     : ObjectBasicData(originalImage, binaryImage, contour) {}

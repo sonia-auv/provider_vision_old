@@ -12,7 +12,10 @@
 
 class Contour {
  public:
-  Contour(const std::vector<cv::Point> ctr);
+
+  typedef std::vector<cv::Point> ContourVec;
+
+  Contour(const std::vector<cv::Point> &ctr);
   Contour(const cv::RotatedRect &rect);
 
   // Approximate contours and merges vertex together
@@ -25,6 +28,7 @@ class Contour {
 
   // Vector overload
   size_t size();
+  std::vector<cv::Point> Get();
   cv::Point operator[](unsigned int index);
   std::vector<cv::Point> _contour;
 };
@@ -58,6 +62,13 @@ inline void Contour::DrawContours(cv::Mat &image, const cv::Scalar &color,
 //-----------------------------------------------------------------------------
 //
 inline size_t Contour::size() { return _contour.size(); }
+
+//-----------------------------------------------------------------------------
+//
+inline std::vector<cv::Point> Contour::Get()
+{
+  return _contour;
+}
 
 //-----------------------------------------------------------------------------
 //

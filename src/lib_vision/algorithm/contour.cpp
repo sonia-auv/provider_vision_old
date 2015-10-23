@@ -4,7 +4,7 @@
 //
 //-----------------------------------------------------------------------------
 //
-Contour::Contour(const std::vector<cv::Point> ctr) : _contour(ctr) {}
+Contour::Contour(const std::vector<cv::Point> &ctr) : _contour(ctr) {}
 
 //-----------------------------------------------------------------------------
 //

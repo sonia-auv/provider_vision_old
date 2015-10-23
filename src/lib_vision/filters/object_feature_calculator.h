@@ -46,7 +46,7 @@ class ObjectFeatureCalculator : public Filter {
         _min_area("Min_area", 200, 0, 10000, parameters_),
         _feature_factory(5) {
     setName("ObjectFeatureCalculator");
-    _feature_factory.SetAllFeatureToCompute();
+//    _feature_factory.SetAllFeatureToCompute();
     // Little goodies for cvs
     // area_rank,length_rank,circularity,convexity,ratio,presence,percent_filled,hueMean,
   }
@@ -75,7 +75,7 @@ class ObjectFeatureCalculator : public Filter {
       retrieveAllContours(image, contours);
       ObjectFullData::FullObjectPtrVec objVec;
       for (int i = 0, size = contours.size(); i < size; i++) {
-        std::shared_ptr<ObjectFullData> object =
+        ObjectFullData::Ptr object =
             std::make_shared<ObjectFullData>(originalImage, image, contours[i]);
         if (object.get() == nullptr) {
           continue;
@@ -98,11 +98,11 @@ class ObjectFeatureCalculator : public Filter {
       //			_feature_factory.CalculateFeatureVectors(objVec);
       //			printf("Image parsing took: %f seconds\n",
       // timer.GetExecTime());
-      if (_toggle_recording()) {
-        AITrainer::OutputFrameData(_output_folder(), objVec, originalImage,
-                                   image, _recording_frame_index);
-        _recording_frame_index++;
-      }
+//      if (_toggle_recording()) {
+//        AITrainer::OutputFrameData(_output_folder(), objVec, originalImage,
+//                                   image, _recording_frame_index);
+//        _recording_frame_index++;
+//      }
       if (_debug_contour()) {
         _output_image.copyTo(image);
       }
@@ -117,7 +117,7 @@ class ObjectFeatureCalculator : public Filter {
   StringParameter _id, _spec_1, _spec_2, _output_folder;
   DoubleParameter _min_area;
 
-  FeatureFactory _feature_factory;
+  ObjectFeatureFactory _feature_factory;
 };
 
 #define VISION_FILTER_PI 3.14159265

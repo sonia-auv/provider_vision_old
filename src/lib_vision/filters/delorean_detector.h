@@ -70,7 +70,7 @@ class DeloreanDetector : public Filter {
       ObjectFullData::FullObjectPtrVec objVec_big;
       ObjectFullData::FullObjectPtrVec objVec_small;
       for (size_t i = 0, size = contours.size(); i < size; i++) {
-        std::shared_ptr<ObjectFullData> object =
+        ObjectFullData::Ptr object =
             std::make_shared<ObjectFullData>(originalImage, image, contours[i]);
         if (object.get() == nullptr) {
           continue;
@@ -132,21 +132,21 @@ class DeloreanDetector : public Filter {
       }
 
       std::sort(objVec_big.begin(), objVec_big.end(),
-                [](std::shared_ptr<ObjectFullData> a,
-                   std::shared_ptr<ObjectFullData> b)
+                [](ObjectFullData::Ptr a,
+                   ObjectFullData::Ptr b)
                     -> bool { return a->GetArea() > b->GetArea(); });
       std::sort(objVec_small.begin(), objVec_small.end(),
-                [](std::shared_ptr<ObjectFullData> a,
-                   std::shared_ptr<ObjectFullData> b)
+                [](ObjectFullData::Ptr a,
+                   ObjectFullData::Ptr b)
                     -> bool { return a->GetArea() > b->GetArea(); });
 
       if (objVec_big.size() > 0) {
         Target target;
-        std::shared_ptr<ObjectFullData> object_big = objVec_big[0];
+        ObjectFullData::Ptr object_big = objVec_big[0];
         cv::Point center_big = object_big->GetCenter();
         double angle = 181;
         if (objVec_small.size() > 0) {
-          std::shared_ptr<ObjectFullData> object_small = objVec_small[0];
+          ObjectFullData::Ptr object_small = objVec_small[0];
           cv::Point center_small = object_small->GetCenter();
           if (_debug_contour()) {
             cv::circle(_output_image, center_small, 2, CV_RGB(255, 0, 255), 2);
@@ -185,7 +185,7 @@ class DeloreanDetector : public Filter {
   BooleanParameter _enable, _debug_contour, _output_train;
   DoubleParameter _min_area, _targeted_ratio_big, _targeted_ratio_small,
       _difference_from_target_ratio;
-  FeatureFactory _feat_factory;
+  ObjectFeatureFactory _feat_factory;
 };
 
 }  // namespace vision_filter

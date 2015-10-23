@@ -39,10 +39,10 @@ TEST(Ranker, AllTest) {
 
   ObjectFullData::FullObjectPtrVec tmp;
   tmp.push_back(
-      std::shared_ptr<ObjectFullData>(std::make_shared<ObjectFullData>(
+      ObjectFullData::Ptr(std::make_shared<ObjectFullData>(
           originalImage, binaryImage, contours[0])));
   tmp.push_back(
-      std::shared_ptr<ObjectFullData>(std::make_shared<ObjectFullData>(
+      ObjectFullData::Ptr(std::make_shared<ObjectFullData>(
           originalImage, binaryImage, contours[1])));
 
   ObjectRanker ranker;

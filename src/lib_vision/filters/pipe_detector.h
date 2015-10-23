@@ -63,7 +63,7 @@ class PipeDetector : public Filter {
       retrieveAllContours(image, contours);
       ObjectFullData::FullObjectPtrVec objVec;
       for (int i = 0, size = contours.size(); i < size; i++) {
-        std::shared_ptr<ObjectFullData> object =
+        ObjectFullData::Ptr object =
             std::make_shared<ObjectFullData>(originalImage, image, contours[i]);
         if (object.get() == nullptr) {
           continue;
@@ -92,14 +92,14 @@ class PipeDetector : public Filter {
       }
 
       std::sort(objVec.begin(), objVec.end(),
-                [](std::shared_ptr<ObjectFullData> a,
-                   std::shared_ptr<ObjectFullData> b)
+                [](ObjectFullData::Ptr a,
+                   ObjectFullData::Ptr b)
                     -> bool { return a->GetArea() > b->GetArea(); });
 
       // Since we search only one buoy, get the biggest from sort function
       if (objVec.size() > 0) {
         Target target;
-        std::shared_ptr<ObjectFullData> object = objVec[0];
+        ObjectFullData::Ptr object = objVec[0];
         cv::Point center = object->GetCenter();
         setCameraOffset(&center, image.rows, image.cols);
         target.SetTarget(center.x, center.y, object->GetLength(),

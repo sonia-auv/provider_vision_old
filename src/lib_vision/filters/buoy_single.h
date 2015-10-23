@@ -14,9 +14,11 @@
 // I N C L U D E   F I L E S
 
 #include <lib_vision/filter.h>
-#include <lib_vision/algorithm/features.h>
+#include <lib_vision/algorithm/object_feature_factory.h>
+#include <lib_vision/algorithm/object_full_data.h>
 #include <lib_vision/algorithm/general_function.h>
 #include <lib_vision/algorithm/target.h>
+#include <lib_vision/algorithm/contour_list.h>
 #include <math.h>
 
 namespace vision_filter {
@@ -24,13 +26,14 @@ namespace vision_filter {
 //==============================================================================
 // C L A S S E S
 
-class BuoySingle : public Filter {
+class BuoySingle: public Filter {
  public:
   //============================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
   explicit BuoySingle(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
+        feat_factory_(1),
         _enable("Enable", false, parameters_),
         _debug_good_contour("Debug_contour", false, parameters_),
         _eliminate_same_x_targets("Eliminate_same_x", false, parameters_),
@@ -50,7 +53,7 @@ class BuoySingle : public Filter {
     setName("BuoySingle");
   }
 
-  virtual ~BuoySingle() {}
+  virtual ~BuoySingle() { }
 
   //============================================================================
   // P U B L I C   M E T H O D S
@@ -73,37 +76,35 @@ class BuoySingle : public Filter {
         image.copyTo(in);
       }
       // find contours in the image
-      contourList_t contours;
-      retrieveContours(in, contours);
-
-      std::vector<Features> featuresVect;
+      ContourList contours(image, ContourList::OUTER);
 
       // Filter contours
-      for (size_t j = 0; j < contours.size(); j++) {
-        if (contours[j].size() <= 2) continue;
+      ObjectFullData::FullObjectPtrVec objectVec;
 
-        Features temp(contours[j], in, Features::DESC_BASIC);
+      for (size_t j = 0; j < contours.size(); j++) {
+        if (contours[j].size() <= 2) {
+          continue;
+        }
+
+        ObjectFullData::Ptr object = std::make_shared<ObjectFullData>(
+            global_params_.getOriginalImage(), image, contours[j]);
 
         // AREA
-        if (_min_area() > temp.getArea()) {
+        if (_min_area() > object->GetArea()) {
           continue;
         }
 
         if (_debug_good_contour()) {
-          temp.drawFeature(_outputImage, CV_RGB(255, 0, 0), CV_RGB(255, 0, 0),
-                           3);
+          contours[j].DrawContours(_outputImage, CV_RGB(255, 0, 0), 3);
         }
-
-        temp.UpgradeToStandard();
-
+        feat_factory_.RatioFeature(object);
         // RATIO
-        if (_max_ratio() > temp.getRatio()) {
+        if (_max_ratio() > object->GetRatio()) {
           continue;
         }
 
         if (_debug_good_contour()) {
-          temp.drawFeature(_outputImage, CV_RGB(150, 150, 0),
-                           CV_RGB(255, 255, 0), 3);
+          contours[j].DrawContours(_outputImage, CV_RGB(255, 255, 0), 3);
         }
 
         // Angle of contour. If more rectangular, check to make sure it is
@@ -111,101 +112,51 @@ class BuoySingle : public Filter {
         // not vertical, horizontal is caused by washed out buoy in the sun,
         // while
         // vertical is probably a pipe
-
-        if (temp.getRatio() < _ratio_for_angle_check() &&
-            fabs(temp.getAngle()) < _admissible_horizontal_angle()) {
+        if (object->GetAngle() < _ratio_for_angle_check() &&
+            fabs(object->GetAngle()) < _admissible_horizontal_angle()) {
           continue;
         }
 
         if (_debug_good_contour()) {
-          temp.drawFeature(_outputImage, CV_RGB(255, 255, 0),
-                           CV_RGB(255, 255, 0), 3);
+          contours[j].DrawContours(_outputImage, CV_RGB(255, 0, 255), 3);
         }
 
-        cv::Rect rect = cv::boundingRect(contours[j]);
-        float pourcentFilled = calculatePourcentFilled(in, rect);
-        if (_min_filled_percent() > pourcentFilled) {
+        feat_factory_.PercentFilledFeature(object);
+        if (_min_filled_percent() > object->GetPercentFilled()) {
           continue;
         }
 
-        featuresVect.push_back(temp);
+        objectVec.push_back(object);
       }
 
-      // Gets the contour that is rounder and bigger
-      std::sort(featuresVect.begin(), featuresVect.end(), areaSort);
+      // Gets the contour that is bigger
+      std::sort(objectVec.begin(), objectVec.end(), AreaSorts);
 
+      // Eliminate same target
       if (_eliminate_same_x_targets()) {
-        std::vector<unsigned int> index_to_eliminate;
-        //          std::cout << "New frame " << featuresVect[0].getArea() << "
-        //          " << featuresVect[1].getArea() << " " <<
-        //          featuresVect[2].getArea() << std::endl;
-        // We should not have much target, so double loop is ok...
-        for (unsigned int i = 0, size = featuresVect.size(); i < size; i++) {
-          for (unsigned int j = 0; j < size; j++) {
-            if (i == j) {
-              continue;
-            }
-
-            //              std::cout << "i " << featuresVect[i].center << "\t j
-            //              " << featuresVect[j].center
-            //                  << "\t IsSameX " << IsSameX(featuresVect[i],
-            //                  featuresVect[j]) << "\t IsHigher "
-            //                  << IsHigher( featuresVect[i], featuresVect[j] )
-            //                  << std::endl;
-            if (IsSameX(featuresVect[i], featuresVect[j])) {
-              // If I is higher, eliminate it
-              if (IsHigher(featuresVect[i], featuresVect[j])) {
-                index_to_eliminate.push_back(i);
-              }
-            }
-          }
-        }
-
-        if (index_to_eliminate.size() > 0) {
-          for (int i = index_to_eliminate.size() - 1; i >= 0; i--) {
-            featuresVect.erase(featuresVect.begin() + i);
-          }
-        }
+        EliminateSameXTarget(objectVec);
       }
 
       // Choose red if need be
-      if (_detect_red() && featuresVect.size() > 1) {
-        Features a = featuresVect[0], b = featuresVect[1];
-        cv::Mat original_img, hsv;
-        cv::cvtColor(global_params_.getOriginalImage(), hsv, CV_BGR2HSV);
-        cv::copyMakeBorder(hsv, hsv, 21, 21, 21, 21, cv::BORDER_CONSTANT);
-        cv::Mat out;
-        cv::cvtColor(image, out, CV_GRAY2BGR);
-        cv::Point center_a = featuresVect[0].getCenter(),
-                  center_b = featuresVect[1].getCenter();
-
-        cv::Mat roiA(hsv, cv::Rect(cv::Point(center_a.x - 5, (center_a.y)),
-                                   cv::Size(20, 20)));
-        cv::Mat roiB(hsv, cv::Rect(cv::Point(center_b.x - 5, (center_b.y)),
-                                   cv::Size(20, 20)));
-
-        cv::Scalar meanA = cv::mean(roiA);
-        cv::Scalar meanB = cv::mean(roiB);
-
-        // If a is more green, then it is yellow so we swap
-        if (meanB[0] > meanA[0]) {
-          std::swap(featuresVect[0], featuresVect[1]);
-        }
+      if (_detect_red() && objectVec.size() > 1) {
+        ChooseMostRed(objectVec);
       }
 
       // Since we search only one buoy, get the biggest from sort function
-      if (featuresVect.size() != 0) {
+      if (objectVec.size() != 0) {
         Target buoy;
         std::stringstream message;
-        buoy.SetTarget(featuresVect[0]);
+        buoy.SetTarget(objectVec[0]);
         message << "buoy_" << _color() << ":" << buoy.OutputString();
         notify_str(message.str());
 
         if (_debug_good_contour()) {
-          featuresVect[0].drawFeature(_outputImage, CV_RGB(0, 255, 0),
-                                      CV_RGB(0, 255, 0), 3);
+          objectVec[0]->GetContourCopy().DrawContours(_outputImage,
+                                                      CV_RGB(0, 255, 0),
+                                                      5);
         }
       }
+
       if (_debug_good_contour()) {
         _outputImage.copyTo(image);
       }
@@ -213,21 +164,16 @@ class BuoySingle : public Filter {
   }
 
  private:
-  inline float getRadiusFromRectangle(const Features &rectangle) {
-    return (rectangle.size.width / 2 + rectangle.size.height / 2) / 2;
-  }
+  float getRadiusFromRectangle(ObjectFullData::Ptr &rectangle);
 
-  inline bool IsSameX(const Features &a, const Features &b) {
-    double x_difference =
-        static_cast<double>(a.center.x) - static_cast<double>(b.center.x);
-    double abs_x_difference = fabs(x_difference);
-    return abs_x_difference < _max_x_difference_for_elimination();
-  }
+  bool IsSameX(ObjectFullData::Ptr a, ObjectFullData::Ptr b);
 
   // check if ref is higher than compared
-  inline bool IsHigher(const Features &ref, const Features &compared) {
-    return ref.center.y < compared.center.y;
-  }
+  bool IsHigher(ObjectFullData::Ptr ref, ObjectFullData::Ptr compared);
+
+  bool EliminateSameXTarget(ObjectFullData::FullObjectPtrVec &vec);
+
+  void ChooseMostRed(ObjectFullData::FullObjectPtrVec &vec);
 
   cv::Mat _outputImage;
 
@@ -238,7 +184,87 @@ class BuoySingle : public Filter {
   DoubleParameter _min_area, _max_ratio, _min_filled_percent,
       _max_x_difference_for_elimination, _ratio_for_angle_check,
       _admissible_horizontal_angle;
+
+  ObjectFeatureFactory feat_factory_;
 };
+//==============================================================================
+//    INLINE FUNCTION
+//------------------------------------------------------------------------------
+//
+inline float BuoySingle::getRadiusFromRectangle(ObjectFullData::Ptr &rectangle) {
+  return (rectangle->GetRotatedRect().size.width / 2 +
+      rectangle->GetRotatedRect().size.height / 2) / 2;
+}
+
+//------------------------------------------------------------------------------
+//
+inline bool BuoySingle::IsSameX(ObjectFullData::Ptr a, ObjectFullData::Ptr b) {
+  double x_difference =
+      static_cast<double>(a->GetCenter().x)
+          - static_cast<double>(b->GetCenter().x);
+  double abs_x_difference = fabs(x_difference);
+  return abs_x_difference < _max_x_difference_for_elimination();
+}
+
+//------------------------------------------------------------------------------
+//
+// check if ref is higher than compared
+inline bool BuoySingle::IsHigher(ObjectFullData::Ptr ref,
+                                 ObjectFullData::Ptr compared) {
+  return ref->GetCenter().y < compared->GetCenter().y;
+}
+
+//------------------------------------------------------------------------------
+//
+inline bool BuoySingle::EliminateSameXTarget(ObjectFullData::FullObjectPtrVec &vec) {
+  std::vector<unsigned int> index_to_eliminate;
+  // We should not have much target, so double loop is ok...
+  for (unsigned int i = 0, size = vec.size(); i < size; i++) {
+    for (unsigned int j = 0; j < size; j++) {
+      if (i == j) {
+        continue;
+      }
+      if (IsSameX(vec[i], vec[j])) {
+        // If I is higher, eliminate it
+        if (IsHigher(vec[i], vec[j])) {
+          index_to_eliminate.push_back(i);
+        }
+      }
+    }
+  }
+  // Erase from vector
+  if (index_to_eliminate.size() > 0) {
+    for (int i = index_to_eliminate.size() - 1; i >= 0; i--) {
+      vec.erase(vec.begin() + i);
+    }
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+inline void BuoySingle::ChooseMostRed(ObjectFullData::FullObjectPtrVec &vec) {
+  ObjectFullData::Ptr a = vec[0], b = vec[1];
+  cv::Mat original_img, hsv;
+  cv::cvtColor(global_params_.getOriginalImage(), hsv, CV_BGR2HSV);
+  cv::copyMakeBorder(hsv, hsv, 21, 21, 21, 21, cv::BORDER_CONSTANT);
+  cv::Mat out;
+  cv::cvtColor(a->GetBinaryImage(), out, CV_GRAY2BGR);
+  cv::Point center_a = vec[0]->GetCenter(),
+      center_b = vec[1]->GetCenter();
+
+  cv::Mat roiA(hsv, cv::Rect(cv::Point(center_a.x - 5, (center_a.y)),
+                             cv::Size(20, 20)));
+  cv::Mat roiB(hsv, cv::Rect(cv::Point(center_b.x - 5, (center_b.y)),
+                             cv::Size(20, 20)));
+
+  cv::Scalar meanA = cv::mean(roiA);
+  cv::Scalar meanB = cv::mean(roiB);
+
+  // If a is more green, then it is yellow so we swap
+  if (meanB[0] > meanA[0]) {
+    std::swap(vec[0], vec[1]);
+  }
+}
 
 }  // namespace vision_filter
 

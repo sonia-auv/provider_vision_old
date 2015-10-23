@@ -58,13 +58,13 @@ TEST(FrameMemory, AllTest) {
   ContourList contours(binaryImage, ContourList::OUTER);
 
   tmp.push_back(
-      std::shared_ptr<ObjectFullData>(std::make_shared<ObjectFullData>(
+      ObjectFullData::Ptr(std::make_shared<ObjectFullData>(
           originalImage, binaryImage, contours[0])));
   tmp.push_back(
-      std::shared_ptr<ObjectFullData>(std::make_shared<ObjectFullData>(
+      ObjectFullData::Ptr(std::make_shared<ObjectFullData>(
           originalImage, binaryImage, contours[1])));
   tmp.push_back(
-      std::shared_ptr<ObjectFullData>(std::make_shared<ObjectFullData>(
+      ObjectFullData::Ptr(std::make_shared<ObjectFullData>(
           originalImage, binaryImage, contours[2])));
 
   // Testing retrieval by center and ratio
@@ -82,7 +82,7 @@ TEST(FrameMemory, AllTest) {
   ObjectFullData::FullObjectPtrVec tmp2;
   for (int i = 0; i < contoursTemp.size(); i++) {
     tmp2.push_back(
-        std::shared_ptr<ObjectFullData>(std::make_shared<ObjectFullData>(
+        ObjectFullData::Ptr(std::make_shared<ObjectFullData>(
             originalImage, binaryImage, contoursTemp[i])));
   }
 
@@ -100,7 +100,7 @@ TEST(FrameMemory, AllTest) {
   // since one of them was split
   int objectSum = 0;
   for (int i = 0, size = tmp.size(); i < size; i++) {
-    std::shared_ptr<ObjectFullData> tmpObj = tmp[i];
+    ObjectFullData::Ptr tmpObj = tmp[i];
     ObjectFullData::FullObjectPtrVec vec = frameMemory.GetPastObjectsViaCenter(
         tmpObj->GetCenter(), tmpObj->GetRatio());
 

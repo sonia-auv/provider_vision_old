@@ -43,7 +43,7 @@ TEST(FullData, AllTest) {
   cv::drawContours(originalImage, contours, -1, CV_RGB(255, 0, 255), -1);
   cv::cvtColor(originalImage, binaryImage, CV_BGR2GRAY);
 
-  std::vector<std::shared_ptr<ObjectFullData>> objectVec;
+  std::vector<ObjectFullData::Ptr> objectVec;
   objectVec.push_back(std::make_shared<ObjectFullData>(
       originalImage, binaryImage, contours[0]));
   objectVec.push_back(std::make_shared<ObjectFullData>(

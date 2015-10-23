@@ -36,14 +36,18 @@ class TrainDetector : public Filter {
     //==========================================================================
     // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
-    explicit ObjectPair(std::shared_ptr<ObjectFullData> object1,
-                        std::shared_ptr<ObjectFullData> object2,
-                        FeatureFactory &featFactory)
+    explicit ObjectPair(ObjectFullData::Ptr object1, ObjectFullData::Ptr object2,
+                        ObjectFeatureFactory &featFactory)
         : _object1(object1),
           _object2(object2),
           _convexity_mean(0) {
-      _convexity_mean = featFactory.ConvexityFeature(_object1);
-      _convexity_mean += featFactory.ConvexityFeature(_object2);
+      assert(object1.get() != nullptr);
+      assert(object2.get() != nullptr);
+
+      featFactory.ConvexityFeature(object1);
+      featFactory.ConvexityFeature(object2);
+      _convexity_mean = _object1->GetConvexity();
+      _convexity_mean += _object2->GetConvexity();
       _convexity_mean /= 2.0f;
     }
 
@@ -53,7 +57,7 @@ class TrainDetector : public Filter {
       return a._convexity_mean > b._convexity_mean;
     }
 
-    std::shared_ptr<ObjectFullData> _object1, _object2;
+    ObjectFullData::Ptr _object1, _object2;
     float _convexity_mean;
   };
 
@@ -96,7 +100,7 @@ class TrainDetector : public Filter {
       retrieveAllContours(image, contours);
       ObjectFullData::FullObjectPtrVec objVec;
       for (int i = 0, size = contours.size(); i < size; i++) {
-        std::shared_ptr<ObjectFullData> object =
+        ObjectFullData::Ptr object =
             std::make_shared<ObjectFullData>(originalImage, image, contours[i]);
         if (object.get() == nullptr) {
           continue;
@@ -116,7 +120,7 @@ class TrainDetector : public Filter {
       std::vector<ObjectPair> pairs;
       // Iterate through object to find pair between objects
       for (int i = 0, size = objVec.size(); i < size; i++) {
-        std::shared_ptr<ObjectFullData> currentObj = objVec[i];
+        ObjectFullData::Ptr currentObj = objVec[i];
         if (currentObj.get() == nullptr) continue;
         for (int j = 0; j < size; j++) {
           if (j == i || objVec[j].get() == nullptr) continue;
@@ -138,13 +142,13 @@ class TrainDetector : public Filter {
         std::sort(pairs.begin(), pairs.end(), ObjectPair::ConvexitySort);
 
         Target target;
-        contour_t obj1(pairs[0]._object1->GetContourCopy()),
-            obj2(pairs[0]._object2->GetContourCopy());
+        contour_t obj1(pairs[0]._object1->GetContourCopy().Get()),
+            obj2(pairs[0]._object2->GetContourCopy().Get());
 
         for (int i = 0, size = obj2.size(); i < size; i++) {
           obj1.push_back(obj2[i]);
         }
-        std::shared_ptr<ObjectFullData> object =
+        ObjectFullData::Ptr object =
             std::make_shared<ObjectFullData>(originalImage, image, obj1);
         cv::Point center = object->GetCenter();
         setCameraOffset(&center, image.rows, image.cols);
@@ -175,7 +179,7 @@ class TrainDetector : public Filter {
   BooleanParameter _enable, _debug_contour;
   IntegerParameter _pair_distance_maximum, _min_area;
 
-  FeatureFactory _feat_factory;
+  ObjectFeatureFactory _feat_factory;
 };
 
 }  // namespace vision_filter

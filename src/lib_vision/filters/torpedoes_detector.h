@@ -24,7 +24,7 @@ namespace vision_filter {
 //==============================================================================
 // C L A S S E S
 
-class TorpedoesDetector : public Filter {
+class TorpedoesDetector: public Filter {
  public:
   //============================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
@@ -42,7 +42,7 @@ class TorpedoesDetector : public Filter {
     setName("TorpedoesDetector");
   }
 
-  virtual ~TorpedoesDetector() {}
+  virtual ~TorpedoesDetector() { }
 
   //============================================================================
   // P U B L I C   M E T H O D S
@@ -59,7 +59,7 @@ class TorpedoesDetector : public Filter {
       if (image.channels() != 1) cv::cvtColor(image, image, CV_BGR2GRAY);
 
       ObjectFullData::FullObjectPtrVec interior_squares;
-      std::shared_ptr<ObjectFullData> panel;
+      ObjectFullData::Ptr panel;
       std::vector<Target> target_vec;
       GetInnerSquare(image, interior_squares);
       GetBigSquare(image, panel, interior_squares);
@@ -81,7 +81,7 @@ class TorpedoesDetector : public Filter {
 
         // Approach real near, only one square.
         if (nb_of_element == 1) {
-          std::shared_ptr<ObjectFullData> obj = interior_squares[0];
+          ObjectFullData::Ptr obj = interior_squares[0];
           Target current_square_target;
           current_square_target.SetTarget(obj);
           current_square_target.SetSpecField_1("a");
@@ -98,7 +98,7 @@ class TorpedoesDetector : public Filter {
           // Approach, select the smallest one.
         } else if (nb_of_element == 2) {
           // Get the smallest one.
-          std::shared_ptr<ObjectFullData> small, big;
+          ObjectFullData::Ptr small, big;
           if (interior_squares[0]->GetArea() < interior_squares[1]->GetArea()) {
             small = interior_squares[0];
             big = interior_squares[1];
@@ -192,7 +192,7 @@ class TorpedoesDetector : public Filter {
               cv::circle(_output_image, square_center, 4, CV_RGB(0, 255, 0), 4);
               std::stringstream ss;
               ss << current_square_target.GetSpecField_1() << "-"
-                 << current_square_target.GetSpecField_2();
+                  << current_square_target.GetSpecField_2();
               cv::putText(_output_image, ss.str(), square_center,
                           cv::FONT_HERSHEY_SIMPLEX, 1 /*fontscale*/,
                           cv::Scalar(255, 0, 0), 3 /*thickness*/,
@@ -219,64 +219,49 @@ class TorpedoesDetector : public Filter {
   //
   void GetInnerSquare(const cv::Mat &in,
                       ObjectFullData::FullObjectPtrVec &object_data) {
-    contourList_t inner_contours, precontours;
-    hierachy_t hierarchy;
-
-    // Find contours
-
-    cv::findContours(in.clone(), precontours, hierarchy, CV_RETR_TREE,
-                     CV_CHAIN_APPROX_SIMPLE);
-
+    ContourList inner_contours(in, ContourList::INNER_MOST);
     cv::Mat original = global_params_.getOriginalImage();
-    for (int i = 0; i < (int)hierarchy.size(); i++) {
-      // No child means no contour inside that contours.
-      // 1 parent mean that it is inside a contour.
-      if (hierarchy[i][FIRST_CHILD_CTR] == -1 &&
-          hierarchy[i][PARENT_CTR] != -1) {
-        contour_t approx;
-        double admissible_error =
-            cv::arcLength(precontours[i], true) * _sensibility();
-        cv::approxPolyDP(precontours[i], approx, admissible_error, true);
 
-        if (IsSquare(approx, _min_area(), _angle(), _ratio_min(),
-                     _ratio_max())) {
-          object_data.push_back(
-              std::make_shared<ObjectFullData>(original, in, approx));
-        }
+    for (auto &contour : inner_contours.contour_vec_) {
+      contour.ApproximateBySize();
+      Contour::ContourVec ctr = contour.Get();
+      if (IsSquare(ctr, _min_area(), _angle(), _ratio_min(),
+                   _ratio_max())) {
+        object_data.push_back(
+            std::make_shared<ObjectFullData>(original, in, ctr));
+      }
+    }
+
+    std::sort(object_data.begin(), object_data.end(),
+              [](ObjectFullData::Ptr a,
+                 ObjectFullData::Ptr b)
+                  -> bool { return a->GetArea() > b->GetArea(); });
+
+    if (object_data.size() > 4) {
+      object_data.erase(object_data.begin() + 4, object_data.end());
+    }
+
+    if (_debug_contour()) {
+      for (auto &object : object_data) {
+        cv::polylines(_output_image, object->GetContourCopy().Get(), true,
+                      CV_RGB(255, 0, 0), 3);
       }
 
-      std::sort(object_data.begin(), object_data.end(),
-                [](std::shared_ptr<ObjectFullData> a,
-                   std::shared_ptr<ObjectFullData> b)
-                    -> bool { return a->GetArea() > b->GetArea(); });
-      if (object_data.size() > 4) {
-        object_data.erase(object_data.begin() + 4, object_data.end());
-      }
+    }  // End if was a square
+  }    // End iteration through contours.
 
-      if (_debug_contour()) {
-        for (auto &object : object_data) {
-          cv::polylines(_output_image, object->GetContourCopy(), true,
-                        CV_RGB(255, 0, 0), 3);
-        }
-
-      }  // End if was a square
-    }    // End iteration through contours.
-  }
-
-  //----------------------------------------------------------------------------
-  //
+//----------------------------------------------------------------------------
+//
   void GetBigSquare(const cv::Mat &in,
-                    std::shared_ptr<ObjectFullData> &big_square,
+                    ObjectFullData::Ptr &big_square,
                     const ObjectFullData::FullObjectPtrVec &inside_squares) {
-    contourList_t contours;
-    retrieveOuterContours(in, contours);
+    ContourList contours(in, ContourList::OUTER);
 
-    std::vector<std::pair<std::shared_ptr<ObjectFullData>, int> > contour_vote;
+    std::vector<std::pair<ObjectFullData::Ptr, int> > contour_vote;
 
     cv::Mat original(global_params_.getOriginalImage());
-    for (const auto &contour : contours) {
-      // if(cv::contourArea(contour, false) > _min_area() )
-      contour_vote.push_back(std::pair<std::shared_ptr<ObjectFullData>, int>(
+    for (const auto &contour : contours.GetAsPoint()) {
+      contour_vote.push_back(std::pair<ObjectFullData::Ptr, int>(
           std::make_shared<ObjectFullData>(original, in, contour), 0));
     }
 
@@ -284,27 +269,29 @@ class TorpedoesDetector : public Filter {
     // for each contours found, count how many inner square there is inside.
     for (auto &outer_square : contour_vote) {
       for (auto inner_square : inside_squares) {
-        if (cv::pointPolygonTest(outer_square.first->GetContourCopy(),
+        if (cv::pointPolygonTest(outer_square.first->GetContourCopy().Get(),
                                  inner_square->GetCenter(), false) > 0.0f) {
           outer_square.second += 1;
         }
       }
     }
+
     std::sort(contour_vote.begin(), contour_vote.end(),
-              [](const std::pair<std::shared_ptr<ObjectFullData>, int> &a,
-                 const std::pair<std::shared_ptr<ObjectFullData>, int> &b)
+              [](const std::pair<ObjectFullData::Ptr, int> &a,
+                 const std::pair<ObjectFullData::Ptr, int> &b)
                   -> bool { return a.second > b.second; });
+
     if (contour_vote.size() != 0) {
       big_square = contour_vote[0].first;
       if (_debug_contour()) {
-        cv::polylines(_output_image, big_square->GetContourCopy(), true,
+        cv::polylines(_output_image, big_square->GetContourCopy().Get(), true,
                       CV_RGB(255, 0, 255), 3);
       }
     }
   }
 
-  //----------------------------------------------------------------------------
-  //
+//----------------------------------------------------------------------------
+//
   void EliminateDoubleObjects(ObjectFullData::FullObjectPtrVec &object_data) {
     // Check if centers are near each other and delete if so
     // TODO: Might be dangerous to use erase...
@@ -317,8 +304,8 @@ class TorpedoesDetector : public Filter {
     //}
   }
 
-  //----------------------------------------------------------------------------
-  //
+//----------------------------------------------------------------------------
+//
   void EliminateNonFittingObjectsWithSize(
       ObjectFullData::FullObjectPtrVec &object_data) {
     //      // Check if square area is bigger than _median times median of areas
@@ -347,7 +334,7 @@ class TorpedoesDetector : public Filter {
   }
 
  private:
-  // Params
+// Params
   BooleanParameter _enable, _debug_contour;
   DoubleParameter _sensibility;
   DoubleParameter _min_area;

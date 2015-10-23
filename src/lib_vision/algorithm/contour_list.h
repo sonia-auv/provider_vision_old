@@ -10,11 +10,14 @@
 
 #include <opencv2/opencv.hpp>
 
-#include "contour.h"
+#include "lib_vision/algorithm/contour.h"
 // Contour finding
 
 class ContourList {
  public:
+
+  typedef std::vector<Contour::ContourVec> ContourListVector;
+
   // Contour navigation constant
   static const unsigned int NEXT = 0;
   static const unsigned int PREVIOUS = 1;
@@ -36,7 +39,10 @@ class ContourList {
 
   // Vector overload
   size_t size();
-  std::vector<cv::Point> operator[](unsigned int index);
+  Contour operator[](size_t index);
+  std::vector<std::vector<cv::Point>> GetAsPoint();
+  std::vector<Contour> GetAsContour();
+  std::vector<cv::Vec4i> GetHierachy();
 
  private:
   bool HasChild(const cv::Vec4i &hierarchy_def);
@@ -61,7 +67,8 @@ class ContourList {
   void retrieveOutNoChildContours(const cv::Mat &image);
 
  public:
-  std::vector<std::vector<cv::Point> > _contour_list;
+  ContourListVector contour_list_point_;
+  std::vector<Contour> contour_vec_;
   // Contains the hierachy when METHOD used is HIERACHY
   std::vector<cv::Vec4i> _hierarchy;
 };
@@ -70,12 +77,33 @@ class ContourList {
 //
 //-----------------------------------------------------------------------------
 //
-inline size_t ContourList::size() { return _contour_list.size(); }
+inline size_t ContourList::size() { return contour_vec_.size(); }
 
 //-----------------------------------------------------------------------------
 //
-inline std::vector<cv::Point> ContourList::operator[](unsigned int index) {
-  return _contour_list[index];
+inline std::vector<std::vector<cv::Point>> ContourList::GetAsPoint()
+{
+  return contour_list_point_;
+}
+
+//-----------------------------------------------------------------------------
+//
+inline std::vector<Contour> ContourList::GetAsContour()
+{
+  return contour_vec_;
+}
+
+//-----------------------------------------------------------------------------
+//
+inline std::vector<cv::Vec4i> ContourList::GetHierachy()
+{
+  return _hierarchy;
+}
+
+//-----------------------------------------------------------------------------
+//
+inline Contour ContourList::operator[](size_t index) {
+  return contour_vec_[index];
 }
 
 //-----------------------------------------------------------------------------
@@ -96,7 +124,7 @@ inline bool ContourList::HasParent(const cv::Vec4i &hierarchy_def)
 //
 inline void ContourList::DrawContours(cv::Mat &img, const cv::Scalar &color,
                                       int thickness) {
-  cv::drawContours(img, _contour_list, -1, color, thickness);
+  cv::drawContours(img, contour_list_point_, -1, color, thickness);
 }
 
 #endif /* LIB_VISION_SRC_LIB_VISION_ALGORITHM_CONTOUR_FINDER_H_ */

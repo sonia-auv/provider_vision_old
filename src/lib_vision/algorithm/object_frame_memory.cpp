@@ -42,12 +42,12 @@ ObjectFullData::FullObjectPtrVec ObjectFrameMemory::GetPastObjectsViaCenter(
   // For i frame
   for (int i = 0, buffSize = _previous_frames.size(); i < buffSize; i++) {
     float shortestDistance = 100000.0f;
-    std::shared_ptr<ObjectFullData> nearestObject = NULL;
+    ObjectFullData::Ptr nearestObject = NULL;
     ObjectFullData::FullObjectPtrVec currentFrameData = _previous_frames.at(i);
 
     // for all the object in the frame
     for (int j = 0, size = currentFrameData.size(); j < size; j++) {
-      std::shared_ptr<ObjectFullData> analysedObject = currentFrameData[j];
+      ObjectFullData::Ptr analysedObject = currentFrameData[j];
       if (analysedObject.get() != nullptr) {
         cv::Point analysedCenter = analysedObject->GetCenter();
         float distance = eucledianPointDistance(center, analysedCenter);
