@@ -1,6 +1,7 @@
 /**
- * \file	CamCameraDC1394.cpp
+ * \file	base_media.cpp
  * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
+ * \author	Thibaut Mattio <thibaut.mattio@gmail.com>
  * \date	18/10/2014
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
  * Use of this source code is governed by the MIT license that can be

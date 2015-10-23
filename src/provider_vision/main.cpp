@@ -1,5 +1,7 @@
 /**
  * \file	main.cpp
+ * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
+ * \author	Thibaut Mattio <thibaut.mattio@gmail.com>
  * \author  Karl Ritchie <ritchie.karl@gmail.com>
  * \date	28/12/2014
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.

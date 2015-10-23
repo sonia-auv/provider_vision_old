@@ -1,6 +1,7 @@
 /**
- * \file	VideoFile.cpp
+ * \file	video_file.cpp
  * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
+ * \author	Thibaut Mattio <thibaut.mattio@gmail.com>
  * \date	10/03/2015
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
  * Use of this source code is governed by the MIT license that can be

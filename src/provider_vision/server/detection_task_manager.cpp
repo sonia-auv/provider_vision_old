@@ -1,6 +1,8 @@
 /**
  * \file	detection_task_manager.cpp
+ * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
  * \author  Frédéric-Simon Mimeault <frederic.simon.mimeault@gmail.com>
+ * \author	Thibaut Mattio <thibaut.mattio@gmail.com>
  * \author	Thomas Fuhrmann <tomesman@gmail.com>
  * \date	24/01/2015
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
