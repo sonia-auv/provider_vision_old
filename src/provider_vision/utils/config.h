@@ -23,7 +23,11 @@ const std::string kProjectPath =
 
 const std::string kConfigPath = kProjectPath + "/config/";
 
-const std::string kFilterchainExt = ".fc";
+const std::string kFilterchainPath = kConfigPath + "/filterchain/";
+
+const std::string kCameraConfigPath = kConfigPath + "/camera/";
+
+const std::string kFilterchainExt = ".xml";
 
 };  // namespace vision_server
 
