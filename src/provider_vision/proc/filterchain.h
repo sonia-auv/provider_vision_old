@@ -217,4 +217,4 @@ inline size_t Filterchain::GetFilterIndexFromUIName(
 
 }  // namespace vision_server
 
-#endif  // PROVIDER_VISION_FILTERCHAIN_H_
+#endif  // PROVIDER_VISION_PROC_FILTERCHAIN_H_

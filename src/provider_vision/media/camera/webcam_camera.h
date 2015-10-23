@@ -85,4 +85,4 @@ class WebcamCamera : public BaseCamera, private cv::VideoCapture {
 
 }  // namespace vision_server
 
-#endif  // PROVIDER_VISION_CAM_WEBCAM_H_
+#endif  // PROVIDER_VISION_MEDIA_CAMERA_WEBCAM_CAMERA_H_

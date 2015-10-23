@@ -61,4 +61,4 @@ class DetectionTaskManager {
 
 }  // namespace vision_server
 
-#endif  // PROVIDER_VISION_DETECTION_TASK_MANAGER_H_
+#endif  // PROVIDER_VISION_SERVER_DETECTION_TASK_MANAGER_H_

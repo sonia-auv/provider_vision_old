@@ -172,4 +172,4 @@ inline bool MediaManager::IsMediaStreaming(const std::string &name) {
 
 }  // namespace vision_server
 
-#endif  // PROVIDER_VISION_CAMERA_MANAGER_H_
+#endif  // PROVIDER_VISION_SERVER_MEDIA_MANAGER_H_

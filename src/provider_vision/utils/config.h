@@ -31,4 +31,4 @@ const std::string kFilterchainExt = ".xml";
 
 };  // namespace vision_server
 
-#endif  // PROVIDER_VISION_CONFIG_H_
+#endif  // PROVIDER_VISION_UTILS_CONFIG_H_

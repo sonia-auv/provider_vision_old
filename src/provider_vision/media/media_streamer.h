@@ -210,4 +210,4 @@ inline bool MediaStreamer::IsStreaming() const {
 
 }  // namespace vision_server
 
-#endif  // PROVIDER_VISION_ACQUISITION_LOOP_H_
+#endif  // PROVIDER_VISION_MEDIA_MEDIA_STREAMER_H_

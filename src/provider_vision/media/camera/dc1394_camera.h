@@ -131,4 +131,4 @@ inline dc1394camera_t *DC1394Camera::GetCameraPtr() const {
 
 }  // namespace vision_server
 
-#endif  // PROVIDER_VISION_CAM_CAMERA_DC1394_H_
+#endif  // PROVIDER_VISION_MEDIA_CAMERA_DC1394_CAMERA_H_

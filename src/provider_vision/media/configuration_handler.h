@@ -56,4 +56,4 @@ class ConfigurationHandler {
 
 }  // namespace vision_server
 
-#endif  // PROVIDER_VISION_CAM_CONFIG_H_
+#endif  // PROVIDER_VISION_MEDIA_CONFIGURATION_HANDLER_H_

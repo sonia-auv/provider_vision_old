@@ -88,4 +88,4 @@ inline void CameraUndistordMatrices::CorrectInmage(const cv::Mat &in,
 
 }  // namespace vision_server
 
-#endif  // PROVIDER_VISION_CAM_UNDISTORD_MATRICES_H_
+#endif  // PROVIDER_VISION_MEDIA_UNDISTORD_MATRICES_H_

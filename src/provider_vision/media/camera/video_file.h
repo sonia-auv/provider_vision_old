@@ -71,4 +71,4 @@ class VideoFile : public BaseMedia, private cv::VideoCapture {
 };
 }  // namespace vision_server
 
-#endif  // PROVIDER_VISION_MEDIA_VIDEO_H_
+#endif  // PROVIDER_VISION_MEDIA_CAMERA_VIDEO_FILE_H_

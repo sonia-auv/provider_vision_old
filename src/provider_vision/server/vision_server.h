@@ -388,4 +388,4 @@ inline std::string VisionServer::BuildRosMessage(
 
 }  // namespace vision_server
 
-#endif  // PROVIDER_VISION_PROVIDER_VISION_H_
+#endif  // PROVIDER_VISION_SERVER_VISION_SERVER_H_

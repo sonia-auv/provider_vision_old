@@ -78,4 +78,4 @@ inline bool BaseCamera::HasArtificialFramerate() const { return false; }
 
 }  // namespace vision_server
 
-#endif  // PROVIDER_VISION_CAMERA_H_
+#endif  // PROVIDER_VISION_MEDIA_CAMERA_BASE_CAMERA_H_

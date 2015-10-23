@@ -80,4 +80,4 @@ class ImageFile : public BaseMedia {
 
 }  // namespace vision_server
 
-#endif  // PROVIDER_VISION_MEDIA_IMAGE_H_
+#endif  // PROVIDER_VISION_MEDIA_CAMERA_IMAGE_FILE_H_

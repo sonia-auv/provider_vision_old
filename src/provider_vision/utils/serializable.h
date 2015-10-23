@@ -66,4 +66,4 @@ inline void Serializable::set_filepath(const std::string &filepath) {
 
 }  // namespace vision_server
 
-#endif  // PROVIDER_VISION_SERIALIZABLE_H_
+#endif  // PROVIDER_VISION_UTILS_SERIALIZABLE_H_

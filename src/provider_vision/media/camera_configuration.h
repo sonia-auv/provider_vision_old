@@ -162,5 +162,7 @@ inline std::string CameraConfiguration::GetString(
     const std::string &config_name) const {
   return GetParam(config_name);
 }
-}
-#endif /* PROVIDER_VISION_SRC_MEDIA_CAMERA_CONFIGURATION_H_ */
+
+}  // namespace vision_server
+
+#endif  // PROVIDER_VISION_MEDIA_CAMERA_CONFIGURATION_H_
