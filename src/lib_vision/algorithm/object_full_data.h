@@ -16,7 +16,7 @@
 #include <lib_vision/algorithm/object_basic_data.h>
 #include <lib_vision/algorithm/object_tracking_data.h>
 #include <lib_vision/algorithm/object_ranking_data.h>
-#include <lib_vision/algorithm/feature_vec.h>
+#include "object_feature.h"
 
 // Simple container class that is created with the contour.
 // It inherits from the different caracteristic of an object
@@ -30,9 +30,10 @@
 class ObjectFullData : public OBjectTrackingData,
                        public ObjectBasicData,
                        public ObjectRankingData,
-                       public FeatureVec {
+                       public ObjectFeatureData {
  public:
-  typedef std::vector<std::shared_ptr<ObjectFullData>> FullObjectPtrVec;
+  typedef std::shared_ptr<ObjectFullData> Ptr;
+  typedef std::vector<ObjectFullData::Ptr> FullObjectPtrVec;
 
   ObjectFullData(const cv::Mat &originalImage, const cv::Mat &binaryImage,
                  const contour_t &contour);

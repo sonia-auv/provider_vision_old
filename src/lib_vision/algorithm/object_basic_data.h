@@ -27,16 +27,12 @@ class ObjectBasicData {
 
   enum OBJECT_DATA {
     AREA,
-    RATIO,
     CONVEX_HULL,
     CIRCUMFERENCE,
     ROTATED_RECT,
     UP_RIGHT_RECT,
     MOMENTS,
-    PLANES,
-    AREA_RANK,
-    LENGTH_RANK,
-    DISTANCE_FROM_CENTER
+    PLANES
   };
 
   ObjectBasicData(const cv::Mat &originalImage, const cv::Mat &binaryImage,
@@ -57,13 +53,9 @@ class ObjectBasicData {
 
   float GetLength();
 
-  float GetRatio();
-
   float GetConvexHullArea();
 
   float GetCircumference();
-
-  float GetDistanceFromCenter();
 
   const RotRect &GetRotatedRect();
 
@@ -102,8 +94,6 @@ class ObjectBasicData {
 
   cv::Mat _original_image, _binary_image;
   contour_t _contour;
-
-  friend class ObjectBasicDataUT;
 };
 
 //-----------------------------------------------------------------------------
@@ -137,17 +127,17 @@ inline float ObjectBasicData::GetLength() {
   }
   return _rect.size.height;
 }
-
-//-----------------------------------------------------------------------------
 //
-inline float ObjectBasicData::GetRatio() {
-  if (!_is_calculated_map[ROTATED_RECT]) {
-    _rect = RotRect(_contour);
-    _is_calculated_map[ROTATED_RECT] = true;
-  }
-  if (_rect.size.height != 0) return _rect.size.width / _rect.size.height;
-  return 0.0f;
-}
+////-----------------------------------------------------------------------------
+////
+//inline float ObjectBasicData::GetRatio() {
+//  if (!_is_calculated_map[ROTATED_RECT]) {
+//    _rect = RotRect(_contour);
+//    _is_calculated_map[ROTATED_RECT] = true;
+//  }
+//  if (_rect.size.height != 0) return _rect.size.width / _rect.size.height;
+//  return 0.0f;
+//}
 
 //-----------------------------------------------------------------------------
 //
@@ -195,20 +185,6 @@ inline const cv::Point2f &ObjectBasicData::GetCenter() {
   // Making sure it is calculated.
   GetRotatedRect();
   return _rect.center;
-}
-
-//-----------------------------------------------------------------------------
-//
-inline float ObjectBasicData::GetDistanceFromCenter() {
-  // Makes sure it is calculated
-  if (!_is_calculated_map[DISTANCE_FROM_CENTER]) {
-    cv::Point center = GetCenter();
-    float x_dist = abs(center.x - _original_image.cols / 2);
-    float y_dist = abs(center.y - _original_image.rows / 2);
-    _distance_from_center = x_dist * x_dist + y_dist + y_dist;
-    _is_calculated_map[DISTANCE_FROM_CENTER] = true;
-  }
-  return _distance_from_center;
 }
 
 //-----------------------------------------------------------------------------
