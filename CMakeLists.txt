@@ -120,6 +120,7 @@ include_directories(
 
 #===============================================================================
 # C R E A T E   E X E C U T A B L E
+
 # Create a CXX file from the given sources
 add_executable( vision_server_node ${vision_server_SRC_DIR}/provider_vision/main.cpp
     ${vision_server_FILES}
@@ -135,18 +136,35 @@ target_link_libraries( vision_server_node
 
 #===============================================================================
 # C R E A T I N G    U N I T    T E S T S
+
 catkin_add_gtest( configuration_handler_test test/configuration_handler_test.cc ${vision_server_FILES})
 target_link_libraries( configuration_handler_test
-        dc1394
-        ${catkin_LIBRARIES}
-        ${lib_atlas_LIBRARIES}
-        ${lib_vision_LIBRARIES}
-)
+    dc1394
+    ${catkin_LIBRARIES}
+    ${lib_atlas_LIBRARIES}
+    ${lib_vision_LIBRARIES}
+    )
 
 catkin_add_gtest( media_manager_test test/media_manager_test.cc ${vision_server_FILES})
 target_link_libraries( media_manager_test
-        dc1394
-        ${catkin_LIBRARIES}
-        ${lib_atlas_LIBRARIES}
-        ${lib_vision_LIBRARIES}
-)
+    dc1394
+    ${catkin_LIBRARIES}
+    ${lib_atlas_LIBRARIES}
+    ${lib_vision_LIBRARIES}
+    )
+
+catkin_add_gtest( detection_task_manager_test test/detection_task_manager_test.cc ${vision_server_FILES})
+target_link_libraries( detection_task_manager_test
+    dc1394
+    ${catkin_LIBRARIES}
+    ${lib_atlas_LIBRARIES}
+    ${lib_vision_LIBRARIES}
+    )
+
+catkin_add_gtest( filterchain_manager_test test/filterchain_manager_test.cc ${vision_server_FILES})
+target_link_libraries( filterchain_manager_test
+    dc1394
+    ${catkin_LIBRARIES}
+    ${lib_atlas_LIBRARIES}
+    ${lib_vision_LIBRARIES}
+    )
