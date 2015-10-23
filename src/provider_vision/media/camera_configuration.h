@@ -13,7 +13,6 @@
 
 #include <map>
 #include <memory>
-#include "pugixml.hpp"
 
 namespace vision_server {
 

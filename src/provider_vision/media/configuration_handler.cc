@@ -36,6 +36,7 @@ ConfigurationHandler::~ConfigurationHandler() {}
 
 //==============================================================================
 // M E T H O D   S E C T I O N
+
 //------------------------------------------------------------------------------
 //
 std::vector<CameraConfiguration> ConfigurationHandler::ParseConfiguration() {

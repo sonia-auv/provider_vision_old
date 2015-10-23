@@ -101,13 +101,14 @@ set( vision_server_SRC_DIR "src" )
 # Get all the files of the projects.
 file( GLOB_RECURSE vision_server_FILES
     "${vision_server_SRC_DIR}/provider_vision/media/*.h"
-    "${vision_server_SRC_DIR}/provider_vision/media/*.cpp"
+    "${vision_server_SRC_DIR}/provider_vision/media/*.cc"
     "${vision_server_SRC_DIR}/provider_vision/server/*.h"
-    "${vision_server_SRC_DIR}/provider_vision/server/*.cpp"
+    "${vision_server_SRC_DIR}/provider_vision/server/*.cc"
     "${vision_server_SRC_DIR}/provider_vision/proc/*.h"
-    "${vision_server_SRC_DIR}/provider_vision/proc/*.cpp"
+    "${vision_server_SRC_DIR}/provider_vision/proc/*.cc"
     "${vision_server_SRC_DIR}/provider_vision/utils/*.h"
-    "${vision_server_SRC_DIR}/provider_vision/utils/*.cpp"
+    "${vision_server_SRC_DIR}/provider_vision/utils/*.cc"
+    "${vision_server_SRC_DIR}/provider_vision/utils/*.cpp" # For pugixml
 )
 
 # Include all the directories where source can be found.
@@ -122,7 +123,7 @@ include_directories(
 # C R E A T E   E X E C U T A B L E
 
 # Create a CXX file from the given sources
-add_executable( vision_server_node ${vision_server_SRC_DIR}/provider_vision/main.cpp
+add_executable( vision_server_node ${vision_server_SRC_DIR}/provider_vision/main.cc
     ${vision_server_FILES}
 )
 
