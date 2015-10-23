@@ -53,7 +53,6 @@ TEST(MediaManagerTest, webcam) {
     ASSERT_EQ(mstreamer->GetMediaName().compare("Webcam"), 0);
 
     // The medias that has been created is streaming.
-    auto test = mstreamer->GetMediaStatus();
     ASSERT_EQ(mstreamer->GetMediaStatus(), BaseMedia::Status::STREAMING);
 
     // Creating the observer for the image.
