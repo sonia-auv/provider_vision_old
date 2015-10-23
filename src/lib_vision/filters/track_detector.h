@@ -19,7 +19,7 @@
 #include <lib_vision/algorithm/general_function.h>
 #include <lib_vision/algorithm/target.h>
 #include <lib_vision/algorithm/object_full_data.h>
-#include <lib_vision/algorithm/feature_factory.h>
+#include <lib_vision/algorithm/object_feature_factory.h>
 #include <lib_vision/algorithm/type_and_const.h>
 
 namespace vision_filter {
