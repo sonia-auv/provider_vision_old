@@ -1,14 +1,15 @@
 /**
- * \file	WebcamCamera.h
+ * \file	webcam_camera.h
  * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
+ * \author	Thibaut Mattio <thibaut.mattio@gmail.com>
  * \date	10/03/2015
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_CAM_WEBCAM_H_
-#define PROVIDER_VISION_CAM_WEBCAM_H_
+#ifndef PROVIDER_VISION_MEDIA_CAMERA_WEBCAM_CAMERA_H_
+#define PROVIDER_VISION_MEDIA_CAMERA_WEBCAM_CAMERA_H_
 
 #include <memory>
 #include <opencv2/opencv.hpp>
@@ -34,27 +35,17 @@ class WebcamCamera : public BaseCamera, private cv::VideoCapture {
 
   WebcamCamera() noexcept;
 
+  /**
+   * By giving the id of the camera, OpenCv will open it from it's own,
+   * do not try to start the webcam if you already started it with
+   * this constructor.
+   */
   explicit WebcamCamera(int webcamIdx) noexcept;
 
   virtual ~WebcamCamera();
 
   //==========================================================================
   // P U B L I C   M E T H O D S
-
-  /**
-   * Method override from Media
-   */
-  void Start() override;
-
-  /**
-   * Method override from Media
-   */
-  void Stop() override;
-
-  /**
-   * Method override from Media
-   */
-  void NextImage(cv::Mat &image) override;
 
   /**
    * Method override from Media
@@ -69,6 +60,21 @@ class WebcamCamera : public BaseCamera, private cv::VideoCapture {
   /**
    * Method override from Media
    */
+  void SetStreamingModeOn() override;
+
+  /**
+   * Method override from Media
+   */
+  void SetStreamingModeOff() override;
+
+  /**
+   * Method override from Media
+   */
+  void NextImage(cv::Mat &image) override;
+
+  /**
+   * Method override from Media
+   */
   void SetFeature(const Feature &feat, float value) override;
 
   /**
@@ -77,9 +83,6 @@ class WebcamCamera : public BaseCamera, private cv::VideoCapture {
   float GetFeature(const Feature &feat) const override;
 };
 
-//==============================================================================
-// I N L I N E   F U N C T I O N S   D E F I N I T I O N S
-
 }  // namespace vision_server
 
-#endif  // PROVIDER_VISION_CAM_WEBCAM_H_
+#endif  // PROVIDER_VISION_MEDIA_CAMERA_WEBCAM_CAMERA_H_

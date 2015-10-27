@@ -1,5 +1,7 @@
 /**
- * \file	VisionServer.cpp
+ * \file	vision_server.cpp
+ * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
+ * \author	Thibaut Mattio <thibaut.mattio@gmail.com>
  * \author	Karl Ritchie <ritchie.karl@gmail.com>
  * \date	24/12/2014
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
@@ -7,8 +9,8 @@
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_PROVIDER_VISION_H_
-#define PROVIDER_VISION_PROVIDER_VISION_H_
+#ifndef PROVIDER_VISION_SERVER_VISION_SERVER_H_
+#define PROVIDER_VISION_SERVER_VISION_SERVER_H_
 
 #include <memory>
 #include <vector>
@@ -31,7 +33,6 @@
 #include <vision_server/vision_server_get_filterchain_from_execution.h>
 #include <vision_server/vision_server_get_media_from_execution.h>
 #include <vision_server/vision_server_set_filterchain_filter_observer.h>
-
 #include "provider_vision/utils/config.h"
 #include "provider_vision/media/camera/base_media.h"
 #include "provider_vision/proc/detection_task.h"
@@ -63,7 +64,7 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
   //============================================================================
   // P U B L I C   C / D T O R S
 
-  explicit VisionServer(std::shared_ptr<ros::NodeHandle> node_handle);
+  explicit VisionServer();
 
   ~VisionServer();
 
@@ -362,7 +363,7 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    * This is mainly for performance purpose as we could also recreate a
    * ros::NodeHandle on the different instance of the objects.
    */
-  std::shared_ptr<ros::NodeHandle> node_handle_;
+  ros::NodeHandle node_handle_;
 
   MediaManager media_mgr_;
 
@@ -387,4 +388,4 @@ inline std::string VisionServer::BuildRosMessage(
 
 }  // namespace vision_server
 
-#endif  // PROVIDER_VISION_PROVIDER_VISION_H_
+#endif  // PROVIDER_VISION_SERVER_VISION_SERVER_H_

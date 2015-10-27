@@ -1,18 +1,21 @@
 /**
- * \file	FilterchainManager.h
+ * \file	filterchain_manager.h
+ * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
+ * \author	Thibaut Mattio <thibaut.mattio@gmail.com>
  * \author  Frédéric-Simon Mimeault <frederic.simon.mimeault@gmail.com>
  * \author	Thomas Fuhrmann <tomesman@gmail.com>
- * \author  Thibaut Mattio <thibaut.mattio@gmail.com>
  * \date	24/01/2015
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_FILTERCHAIN_MANAGER_H_
-#define PROVIDER_VISION_FILTERCHAIN_MANAGER_H_
+#ifndef PROVIDER_VISION_SERVER_FILTERCHAIN_MANAGER_H_
+#define PROVIDER_VISION_SERVER_FILTERCHAIN_MANAGER_H_
 
 #include <functional>
+#include <vector>
+#include <string>
 #include <lib_atlas/ros/service_server_manager.h>
 #include <lib_vision/filter.h>
 #include "provider_vision/utils/config.h"
@@ -93,8 +96,8 @@ class FilterchainManager {
    * \param filterchainName string
    * \return filterchain Filterchain*
    */
-  Filterchain::Ptr GetRunningFilterchain(const std::string &execution)
-          const noexcept ;
+  Filterchain::Ptr GetRunningFilterchain(const std::string &execution) const
+      noexcept;
 
   /**
    * If the does not filterchain exists, create it.
@@ -135,7 +138,7 @@ class FilterchainManager {
   /**
    * List of current instances of filterchains
    */
-  std::vector<Filterchain::Ptr> _runningFilterchains;
+  std::vector<Filterchain::Ptr> running_filterchains_;
 };
 
 //==============================================================================
@@ -150,4 +153,4 @@ inline std::string FilterchainManager::GetFilterchainPath(
 
 }  // namespace vision_server
 
-#endif  // PROVIDER_VISION_FILTERCHAIN_MANAGER_H_
+#endif  // PROVIDER_VISION_SERVER_FILTERCHAIN_MANAGER_H_

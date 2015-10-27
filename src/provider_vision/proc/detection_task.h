@@ -1,6 +1,8 @@
 /**
  * \file	detection_task.h
+ * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
  * \author	Karl Ritchie <ritchie.karl@gmail.com>
+ * \author	Thibaut Mattio <thibaut.mattio@gmail.com>
  * \date	28/12/2014
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
  * Use of this source code is governed by the MIT license that can be
@@ -26,7 +28,8 @@ namespace vision_server {
  * loop,
  * broadcast it on topic and apply the given filterchain.
  */
-class DetectionTask : private atlas::Runnable, public atlas::Observer<> {
+class DetectionTask : private atlas::Runnable,
+                      public atlas::Observer<const cv::Mat &> {
  public:
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
@@ -38,8 +41,7 @@ class DetectionTask : private atlas::Runnable, public atlas::Observer<> {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  explicit DetectionTask(std::shared_ptr<ros::NodeHandle> node_handle,
-                         MediaStreamer::Ptr acquisition_loop,
+  explicit DetectionTask(MediaStreamer::Ptr acquisition_loop,
                          Filterchain::Ptr filterchain,
                          const std::string &execution_name);
 
@@ -68,7 +70,8 @@ class DetectionTask : private atlas::Runnable, public atlas::Observer<> {
    * HTObserver override
    * Catches the acquisitionLoop's notification that an image is ready.
    */
-  void OnSubjectNotify(atlas::Subject<> &subject) noexcept override;
+  void OnSubjectNotify(atlas::Subject<const cv::Mat &> &subject,
+                       const cv::Mat &image) noexcept override;
 
   /**
    * HTThread override
@@ -107,21 +110,22 @@ class DetectionTask : private atlas::Runnable, public atlas::Observer<> {
    */
   ros::Publisher result_publisher_;
 
-  /**
-   * DetectionTask core.
-   */
   MediaStreamer::Ptr media_streamer_;
 
   Filterchain::Ptr filterchain_;
 
   mutable std::mutex newest_image_mutex_;
 
-  // Two image are needed since we don't want the mutex to block the process
-  // on the image and we have to wait for it to be finish to release it so
-  // the firenotification doesn't wait for a mutex.
-  cv::Mat newest_image_, _image_being_processed;
+  /**
+   * Two image are needed since we don't want the mutex to block the process
+   * on the image and we have to wait for it to be finish to release it so
+   * the firenotification doesn't wait for a mutex.
+   */
+  cv::Mat newest_image_;
 
-  // Prevent to process data twice for fast processing
+  cv::Mat image_being_processed_;
+
+  /** Prevent to process data twice for fast processing */
   bool new_image_ready_;
 
   int close_attemps_;

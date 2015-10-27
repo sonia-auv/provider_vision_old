@@ -1,14 +1,15 @@
 /**
- * \file	VideoFileContext.h
+ * \file	file_context.h
  * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
+ * \author	Thibaut Mattio <thibaut.mattio@gmail.com>
  * \date	10/03/2015
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_CAM_DRIVER_MEDIA_H_
-#define PROVIDER_VISION_CAM_DRIVER_MEDIA_H_
+#ifndef PROVIDER_VISION_MEDIA_CONTEXT_FILE_CONTEXT_H_
+#define PROVIDER_VISION_MEDIA_CONTEXT_FILE_CONTEXT_H_
 
 #include <string>
 #include <vector>
@@ -58,9 +59,13 @@ class FileContext : public BaseContext {
 
   void CloseContext() override;
 
-  void StartCamera(const std::string &name) override;
+  void OpenMedia(const std::string &name) override;
 
-  void StopCamera(const std::string &name) override;
+  void CloseMedia(const std::string &name) override;
+
+  void StartStreamingMedia(const std::string &name) override;
+
+  void StopStreamingMedia(const std::string &name) override;
 
   void SetFeature(BaseCamera::Feature feat, const std::string &name,
                   float val) override;
@@ -84,9 +89,6 @@ class FileContext : public BaseContext {
    */
   virtual MediaType GetMediaType(const std::string &nameMedia) const;
 };
-
-//==============================================================================
-// I N L I N E   F U N C T I O N S   D E F I N I T I O N S
 
 }  // namespace vision_server
 

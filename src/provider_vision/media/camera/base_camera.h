@@ -1,14 +1,15 @@
 /**
- * \file	camera.h
+ * \file	base_camera.h
  * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
+ * \author	Thibaut Mattio <thibaut.mattio@gmail.com>
  * \date	19/05/2015
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_CAMERA_H_
-#define PROVIDER_VISION_CAMERA_H_
+#ifndef PROVIDER_VISION_MEDIA_CAMERA_BASE_CAMERA_H_
+#define PROVIDER_VISION_MEDIA_CAMERA_BASE_CAMERA_H_
 
 #include <memory>
 #include "provider_vision/utils/config.h"
@@ -16,9 +17,6 @@
 #include "provider_vision/media/cam_undistord_matrices.h"
 
 namespace vision_server {
-
-//==============================================================================
-// C L A S S E S
 
 /**
  * Every camera (i.e. not video or image) should inherit this instead of
@@ -58,16 +56,6 @@ class BaseCamera : public BaseMedia {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  /**
-   * For a camera, you can open the camera (i.e create it in the system)
-   * but not make it stream (i.e. the hardware do not capture light)
-   * therefore open and close are there to "make the camera exist in the
-   * system"
-   */
-  virtual void Open() = 0;
-
-  virtual void Close() = 0;
-
   virtual void SetFeature(const Feature &feat, float value) = 0;
 
   virtual float GetFeature(const Feature &feat) const = 0;
@@ -90,4 +78,4 @@ inline bool BaseCamera::HasArtificialFramerate() const { return false; }
 
 }  // namespace vision_server
 
-#endif  // PROVIDER_VISION_CAMERA_H_
+#endif  // PROVIDER_VISION_MEDIA_CAMERA_BASE_CAMERA_H_

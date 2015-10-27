@@ -1,14 +1,15 @@
 /**
- * \file	CamCameraDC1394.h
+ * \file	dc1394_camera.h
  * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
+ * \author	Thibaut Mattio <thibaut.mattio@gmail.com>
  * \date	18/10/2014
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_CAM_CAMERA_DC1394_H_
-#define PROVIDER_VISION_CAM_CAMERA_DC1394_H_
+#ifndef PROVIDER_VISION_MEDIA_CAMERA_DC1394_CAMERA_H_
+#define PROVIDER_VISION_MEDIA_CAMERA_DC1394_CAMERA_H_
 
 #include <mutex>
 #include <memory>
@@ -50,9 +51,9 @@ class DC1394Camera : public BaseCamera {
 
   void Close() override;
 
-  void Start() override;
+  void SetStreamingModeOn() override;
 
-  void Stop() override;
+  void SetStreamingModeOff() override;
 
   void NextImage(cv::Mat &img) override;
 
@@ -130,4 +131,4 @@ inline dc1394camera_t *DC1394Camera::GetCameraPtr() const {
 
 }  // namespace vision_server
 
-#endif  // PROVIDER_VISION_CAM_CAMERA_DC1394_H_
+#endif  // PROVIDER_VISION_MEDIA_CAMERA_DC1394_CAMERA_H_

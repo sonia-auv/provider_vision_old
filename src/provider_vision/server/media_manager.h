@@ -1,15 +1,15 @@
 /**
- * \file	MediaManager.h
- * \author  Thibaut Mattio <thibaut.mattio@gmail.com>
+ * \file	media_manager.h
  * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
+ * \author	Thibaut Mattio <thibaut.mattio@gmail.com>
  * \date	12/10/2015
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_CAMERA_MANAGER_H_
-#define PROVIDER_VISION_CAMERA_MANAGER_H_
+#ifndef PROVIDER_VISION_SERVER_MEDIA_MANAGER_H_
+#define PROVIDER_VISION_SERVER_MEDIA_MANAGER_H_
 
 #include <memory>
 #include <vector>
@@ -38,11 +38,46 @@ class MediaManager {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  MediaStreamer::Ptr StartMedia(const std::string &media_name);
+  void OpenMedia(const std::string &media_name);
 
-  void StopMedia(const std::string &media) noexcept;
+  void CloseMedia(const std::string &media_name);
+
+  /**
+   * Start the acquisition of the images on the given media.
+   *
+   * By default, the media streamer will not be streaming, if the stream flag
+   * is set to true, it will start a thread and notify all observers whenever
+   * there is an image. See MediaStreamer class for more informations.
+   */
+  MediaStreamer::Ptr StartStreamingMedia(const std::string &media_name);
+
+  void StopStreamingMedia(const std::string &media) noexcept;
+
+  void StopStreamingMedia(const MediaStreamer::Ptr &streamer) noexcept;
+
+  void StopStreamingMediaIfNoListener(const std::string &media) noexcept;
+
+  void StopStreamingMediaIfNoListener(
+      const MediaStreamer::Ptr &streamer) noexcept;
+
+  const BaseMedia::Status &GetMediaStatus(const std::string &name);
+
+  MediaStreamer::Ptr GetMediaStreamer(const std::string &name);
+
+  /**
+   * Return true if a media streamer has been created for the given media.
+   *
+   * This will compare the value of the media name with all the media streamer
+   * in the system and this will return true if there is a match, false if not.
+   *
+   * \param name The media name to check.
+   * \return True if the media is streaming.
+   */
+  bool IsMediaStreaming(const std::string &name);
 
   std::vector<std::string> GetAllMediasName() const noexcept;
+
+  size_t GetAllMediasCount() const noexcept;
 
   /**
    * If the media is a camera, set the feature to a specific value.
@@ -75,10 +110,6 @@ class MediaManager {
   // P R I V A T E   M E T H O D S
 
   BaseMedia::Ptr GetMedia(const std::string &name) const noexcept;
-
-  MediaStreamer::Ptr GetMediaStreamer(const std::string &name);
-
-  bool IsMediaStreamerExist(const std::string &name);
 
   BaseContext::Ptr GetContextFromMedia(const std::string &name) const;
 
@@ -130,7 +161,7 @@ inline void MediaManager::RemoveMediaStreamer(const std::string &name) {
 
 //-------------------------------------------------------------------------
 //
-inline bool MediaManager::IsMediaStreamerExist(const std::string &name) {
+inline bool MediaManager::IsMediaStreaming(const std::string &name) {
   for (const auto &elem : media_streamers_) {
     if (name.compare(elem->GetMediaName()) == 0) {
       return true;
@@ -141,4 +172,4 @@ inline bool MediaManager::IsMediaStreamerExist(const std::string &name) {
 
 }  // namespace vision_server
 
-#endif  // PROVIDER_VISION_CAMERA_MANAGER_H_
+#endif  // PROVIDER_VISION_SERVER_MEDIA_MANAGER_H_

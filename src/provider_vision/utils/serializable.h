@@ -7,13 +7,10 @@
  * found in the LICENSE file.
  */
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
 #include <string>
 
-#ifndef PROVIDER_VISION_SERIALIZABLE_H_
-#define PROVIDER_VISION_SERIALIZABLE_H_
+#ifndef PROVIDER_VISION_UTILS_SERIALIZABLE_H_
+#define PROVIDER_VISION_UTILS_SERIALIZABLE_H_
 
 namespace vision_server {
 
@@ -69,4 +66,4 @@ inline void Serializable::set_filepath(const std::string &filepath) {
 
 }  // namespace vision_server
 
-#endif  // PROVIDER_VISION_SERIALIZABLE_H_
+#endif  // PROVIDER_VISION_UTILS_SERIALIZABLE_H_

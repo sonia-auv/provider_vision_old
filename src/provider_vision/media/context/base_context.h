@@ -1,14 +1,15 @@
 /**
- * \file	CAMDriver.h
+ * \file	base_context.h
  * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
+ * \author	Thibaut Mattio <thibaut.mattio@gmail.com>
  * \date	05/11/2015
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_CAM_DRIVER_H_
-#define PROVIDER_VISION_CAM_DRIVER_H_
+#ifndef PROVIDER_VISION_MEDIA_CONTEXT_BASE_CONTEXT_H_
+#define PROVIDER_VISION_MEDIA_CONTEXT_BASE_CONTEXT_H_
 
 #include <mutex>
 #include <memory>
@@ -49,12 +50,13 @@ class BaseContext : public atlas::Runnable {
 
   virtual void CloseContext() = 0;
 
-  /**
-   * Method to handle cameras
-   */
-  virtual void StartCamera(const std::string &name) = 0;
+  virtual void OpenMedia(const std::string &name) = 0;
 
-  virtual void StopCamera(const std::string &name) = 0;
+  virtual void CloseMedia(const std::string &name) = 0;
+
+  virtual void StartStreamingMedia(const std::string &name) = 0;
+
+  virtual void StopStreamingMedia(const std::string &name) = 0;
 
   /**
    * Feature setting/getting handler
@@ -117,7 +119,7 @@ inline BaseMedia::Ptr BaseContext::GetMedia(const std::string &name) const {
 
   for (auto &elem : media_list_) {
     if (elem.get()->GetName().compare(name) == 0) {
-        media = elem;
+      media = elem;
     }
   }
   return media;

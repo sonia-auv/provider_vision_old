@@ -1,16 +1,18 @@
 /**
- * \file	AcquisitionLoop.h
+ * \file	media_streamer.h
  * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
+ * \author	Thibaut Mattio <thibaut.mattio@gmail.com>
  * \date	12/10/2015
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_ACQUISITION_LOOP_H_
-#define PROVIDER_VISION_ACQUISITION_LOOP_H_
+#ifndef PROVIDER_VISION_MEDIA_MEDIA_STREAMER_H_
+#define PROVIDER_VISION_MEDIA_MEDIA_STREAMER_H_
 
 #include <mutex>
+#include <string>
 #include <ros/ros.h>
 #include <opencv2/opencv.hpp>
 #include <lib_atlas/sys/timer.h>
@@ -28,8 +30,17 @@ namespace vision_server {
  * or the drivers.
  * TODO jsprevost: Change the inheritance to use atlas::ImageSequenceCapture
  */
-class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
+class MediaStreamer : public atlas::Subject<const cv::Mat &>,
+                      public atlas::Runnable {
  public:
+  //==========================================================================
+  // C L A S S   F R I E N D S H  I P
+
+  /**
+   * MediaManager needs more control over acquisition loop than normal users.
+   */
+  friend class MediaManager;
+
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
 
@@ -132,11 +143,6 @@ class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
   // P R I V A T E   M E M B E R S
 
   /**
-   * Flag to know if the loop is streaming.
-   */
-  bool is_streaming_;
-
-  /**
    * Protection of concurrency access between getImage and run.
    */
   mutable std::mutex image_access_;
@@ -154,7 +160,10 @@ class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
   int framerate_mili_sec_;
 
   /**
-   * Most updated image.
+   * Keeping a reference to the most recent image.
+   * This is not supposed to be an image owned by the media streamer
+   * as it will call the swallow copy of the media image in order
+   * to store it.
    */
   cv::Mat image_;
 
@@ -176,14 +185,6 @@ class MediaStreamer : public atlas::Subject<>, public atlas::Runnable {
   bool is_recording_;
 
   mutable std::mutex list_access_;
-
-  //==========================================================================
-  // C L A S S   F R I E N D S H  I P
-
-  /**
-   * MediaManager needs more control over acquisition loop than normal users.
-   */
-  friend class MediaManager;
 };
 
 //==============================================================================
@@ -203,8 +204,10 @@ inline bool MediaStreamer::IsRecording() const {
 
 //------------------------------------------------------------------------------
 //
-inline bool MediaStreamer::IsStreaming() const { return is_streaming_; }
+inline bool MediaStreamer::IsStreaming() const {
+  return media_->GetStatus() == BaseMedia::Status::STREAMING;
+}
 
 }  // namespace vision_server
 
-#endif  // PROVIDER_VISION_ACQUISITION_LOOP_H_
+#endif  // PROVIDER_VISION_MEDIA_MEDIA_STREAMER_H_

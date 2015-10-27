@@ -1,14 +1,16 @@
 /**
- * \file	FilterChain.h
+ * \file	filterchain.h
+ * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
  * \author	Karl Ritchie <ritchie.karl@gmail.com>
+ * \author	Thibaut Mattio <thibaut.mattio@gmail.com>
  * \date	28/12/2014
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_FILTERCHAIN_H_
-#define PROVIDER_VISION_FILTERCHAIN_H_
+#ifndef PROVIDER_VISION_PROC_FILTERCHAIN_H_
+#define PROVIDER_VISION_PROC_FILTERCHAIN_H_
 
 #include <opencv2/opencv.hpp>
 #include <lib_vision/filter_factory.h>
@@ -29,7 +31,6 @@ class Filterchain : public Serializable {
   // P U B L I C   C / D T O R S
 
   explicit Filterchain(const std::string &name, const std::string &execution);
-
 
   explicit Filterchain(const Filterchain &filterchain);
 
@@ -216,4 +217,4 @@ inline size_t Filterchain::GetFilterIndexFromUIName(
 
 }  // namespace vision_server
 
-#endif  // PROVIDER_VISION_FILTERCHAIN_H_
+#endif  // PROVIDER_VISION_PROC_FILTERCHAIN_H_

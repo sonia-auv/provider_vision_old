@@ -1,14 +1,15 @@
 /**
- * \file	CamCameraDC1394.cpp
+ * \file	base_media.cpp
  * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
+ * \author	Thibaut Mattio <thibaut.mattio@gmail.com>
  * \date	18/10/2014
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_BaseMedia_H_
-#define PROVIDER_VISION_BaseMedia_H_
+#ifndef PROVIDER_VISION_MEDIA_CAMERA_BASE_MEDIA_H_
+#define PROVIDER_VISION_MEDIA_CAMERA_BASE_MEDIA_H_
 
 #include <memory>
 #include <opencv2/core/core.hpp>
@@ -42,27 +43,41 @@ class BaseMedia {
   // P U B L I C   M E T H O D S
 
   /**
+   * For a camera, you can open the camera (i.e create it in the system)
+   * but not make it stream (i.e. the hardware do not capture light)
+   * therefore open and close are there to "make the camera exist in the
+   * system"
+   */
+  virtual void Open() = 0;
+
+  virtual void Close() = 0;
+
+  /**
    * Starts to get images
    */
-  virtual void Start() = 0;
+  void StartStreaming();
 
   /**
    * Stop getting images
    */
-  virtual void Stop() = 0;
+  void StopStreaming();
 
   /**
    * Gives the most recent image
    */
   virtual void NextImage(cv::Mat &image) = 0;
 
-  //==========================================================================
-  // G E T T E R S   A N D   S E T T E R S
+  /**
+   * Call the next image and make a deep copy of it.
+   * Warning, this method is very costly, use it only if you want the media to
+   * keep the original image.
+   */
+  virtual void NextImageCopy(cv::Mat &image) noexcept;
 
   /**
    * Returns the current camera Status
    */
-  virtual Status GetStatus() const;
+  virtual const Status &GetStatus() const;
 
   /**
    * Makes return true if it does not have a proper framerate
@@ -78,14 +93,30 @@ class BaseMedia {
   const std::string &GetName() const;
 
   bool IsOpened() const;
+
   bool IsClosed() const;
+
   bool IsStreaming() const;
 
  protected:
   //==========================================================================
+  // P R O T E C T E D   M E T H O D S
+
+  /**
+   * Starts to get images
+   */
+  virtual void SetStreamingModeOn() = 0;
+
+  /**
+   * Stop getting images
+   */
+  virtual void SetStreamingModeOff() = 0;
+
+  //==========================================================================
   // P R O T E C T E D   M E M B E R S
 
   CameraConfiguration config_;
+
   Status status_;
 };
 
@@ -94,7 +125,17 @@ class BaseMedia {
 
 //------------------------------------------------------------------------------
 //
-inline BaseMedia::Status BaseMedia::GetStatus() const { return status_; };
+inline void BaseMedia::NextImageCopy(cv::Mat &image) noexcept {
+  cv::Mat tmp_image;
+  NextImage(tmp_image);
+  image = tmp_image.clone();
+}
+
+//------------------------------------------------------------------------------
+//
+inline const BaseMedia::Status &BaseMedia::GetStatus() const {
+  return status_;
+};
 
 //------------------------------------------------------------------------------
 //
@@ -126,5 +167,37 @@ inline bool BaseMedia::IsStreaming() const {
   return Status::STREAMING == status_;
 }
 
+//------------------------------------------------------------------------------
+//
+inline void BaseMedia::StartStreaming() {
+  if (GetStatus() == Status::OPEN) {
+    SetStreamingModeOn();
+  } else if (GetStatus() == Status::CLOSE) {
+    Open();
+    SetStreamingModeOn();
+  } else if (GetStatus() == Status::STREAMING) {
+    throw std::logic_error("The media is already streaming");
+  } else {
+    throw std::runtime_error(
+        "The media is on an unstable status. Cannot stream.");
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+inline void BaseMedia::StopStreaming() {
+  if (GetStatus() == Status::STREAMING) {
+    SetStreamingModeOff();
+  } else if (GetStatus() == Status::CLOSE) {
+    throw std::logic_error("The media is not opened, cannot stop stream.");
+  } else if (GetStatus() == Status::OPEN) {
+    throw std::logic_error("The media is not streaming.");
+  } else {
+    throw std::runtime_error(
+        "The media is on an unstable status. Cannot stream.");
+  }
+}
+
 }  // namespace vision_server
-#endif  // PROVIDER_VISION_BaseMedia_H_
+
+#endif  // PROVIDER_VISION_MEDIA_CAMERA_BASE_MEDIA_H_

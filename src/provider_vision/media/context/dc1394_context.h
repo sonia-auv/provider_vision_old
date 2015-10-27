@@ -1,14 +1,15 @@
 /**
- * \file	DC1394Context.h
+ * \file	dc1394_context.h
  * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
+ * \author	Thibaut Mattio <thibaut.mattio@gmail.com>
  * \date	18/10/2014
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_CAM_DRIVER_DC1394_H_
-#define PROVIDER_VISION_CAM_DRIVER_DC1394_H_
+#ifndef PROVIDER_VISION_MEDIA_CONTEXT_DC1394_CONTEXT_H_
+#define PROVIDER_VISION_MEDIA_CONTEXT_DC1394_CONTEXT_H_
 
 #include <inttypes.h>
 #include <dc1394/dc1394.h>
@@ -52,9 +53,13 @@ class DC1394Context : public BaseContext {
 
   void CloseContext() override;
 
-  void StartCamera(const std::string &name) override;
+  void OpenMedia(const std::string &name) override;
 
-  void StopCamera(const std::string &name) override;
+  void CloseMedia(const std::string &name) override;
+
+  void StartStreamingMedia(const std::string &name) override;
+
+  void StopStreamingMedia(const std::string &name) override;
 
   void SetFeature(BaseCamera::Feature feat, const std::string &name,
                   float val) override;
@@ -69,18 +74,26 @@ class DC1394Context : public BaseContext {
   bool WatchDogFunc() override;
 
  private:
+  //==========================================================================
+  // P R I V A T E   M E T H O D S
+
   DC1394Camera::Ptr GetDC1394Camera(const std::string &name) const;
+
   DC1394Camera::Ptr GetDC1394Camera(BaseMedia::Ptr media) const;
 
   //==========================================================================
   // P R I V A T E   M E M B E R S
-  dc1394_t *_context;
+
+  dc1394_t *driver_;
 };
+
+//==============================================================================
+// I N L I N E   F U N C T I O N S   D E F I N I T I O N S
 
 //-----------------------------------------------------------------------------
 //
 inline bool DC1394Context::ContainsMedia(const std::string &nameMedia) const {
-  for (const auto &cam : this->media_list_) {
+  for (const auto &cam : media_list_) {
     if (nameMedia.compare(cam->GetName()) == 0) {
       return true;
     }

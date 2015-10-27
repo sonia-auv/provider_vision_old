@@ -23,10 +23,8 @@ set( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++1y -O3" )
 
 set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 
-set( CMAKE_MODULE_PATH
-    ${CMAKE_MODULE_PATH}
-    ${PROJECT_SOURCE_DIR}
-)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 
 #===============================================================================
 # C A T K I N   C O N F I G U R A T I O N
@@ -100,13 +98,14 @@ set( vision_server_SRC_DIR "src" )
 # Get all the files of the projects.
 file( GLOB_RECURSE vision_server_FILES
     "${vision_server_SRC_DIR}/provider_vision/media/*.h"
-    "${vision_server_SRC_DIR}/provider_vision/media/*.cpp"
+    "${vision_server_SRC_DIR}/provider_vision/media/*.cc"
     "${vision_server_SRC_DIR}/provider_vision/server/*.h"
-    "${vision_server_SRC_DIR}/provider_vision/server/*.cpp"
+    "${vision_server_SRC_DIR}/provider_vision/server/*.cc"
     "${vision_server_SRC_DIR}/provider_vision/proc/*.h"
-    "${vision_server_SRC_DIR}/provider_vision/proc/*.cpp"
+    "${vision_server_SRC_DIR}/provider_vision/proc/*.cc"
     "${vision_server_SRC_DIR}/provider_vision/utils/*.h"
-    "${vision_server_SRC_DIR}/provider_vision/utils/*.cpp"
+    "${vision_server_SRC_DIR}/provider_vision/utils/*.cc"
+    "${vision_server_SRC_DIR}/provider_vision/utils/*.cpp" # For pugixml
 )
 
 # Include all the directories where source can be found.
@@ -119,8 +118,9 @@ include_directories(
 
 #===============================================================================
 # C R E A T E   E X E C U T A B L E
+
 # Create a CXX file from the given sources
-add_executable( vision_server_node ${vision_server_SRC_DIR}/provider_vision/main.cpp
+add_executable( vision_server_node ${vision_server_SRC_DIR}/provider_vision/main.cc
     ${vision_server_FILES}
 )
 
@@ -134,18 +134,35 @@ target_link_libraries( vision_server_node
 
 #===============================================================================
 # C R E A T I N G    U N I T    T E S T S
-catkin_add_gtest( utest_configuration_handler test/configuration_handler_test.cc ${vision_server_FILES})
-target_link_libraries( utest_configuration_handler
-        dc1394
-        ${catkin_LIBRARIES}
-        ${lib_atlas_LIBRARIES}
-        ${lib_vision_LIBRARIES}
-)
 
-catkin_add_gtest( utest_behavior test/behavior_test.cc ${vision_server_FILES})
-target_link_libraries( utest_behavior
-        dc1394
-        ${catkin_LIBRARIES}
-        ${lib_atlas_LIBRARIES}
-        ${lib_vision_LIBRARIES}
-)
+catkin_add_gtest( configuration_handler_test test/configuration_handler_test.cc ${vision_server_FILES})
+target_link_libraries( configuration_handler_test
+    dc1394
+    ${catkin_LIBRARIES}
+    ${lib_atlas_LIBRARIES}
+    ${lib_vision_LIBRARIES}
+    )
+
+catkin_add_gtest( media_manager_test test/media_manager_test.cc ${vision_server_FILES})
+target_link_libraries( media_manager_test
+    dc1394
+    ${catkin_LIBRARIES}
+    ${lib_atlas_LIBRARIES}
+    ${lib_vision_LIBRARIES}
+    )
+
+catkin_add_gtest( detection_task_manager_test test/detection_task_manager_test.cc ${vision_server_FILES})
+target_link_libraries( detection_task_manager_test
+    dc1394
+    ${catkin_LIBRARIES}
+    ${lib_atlas_LIBRARIES}
+    ${lib_vision_LIBRARIES}
+    )
+
+catkin_add_gtest( filterchain_manager_test test/filterchain_manager_test.cc ${vision_server_FILES})
+target_link_libraries( filterchain_manager_test
+    dc1394
+    ${catkin_LIBRARIES}
+    ${lib_atlas_LIBRARIES}
+    ${lib_vision_LIBRARIES}
+    )

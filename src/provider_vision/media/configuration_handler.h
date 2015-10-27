@@ -1,14 +1,15 @@
 /**
- * \file	CAMConfig.h
+ * \file	configuration_handler.h
  * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
+ * \author	Thibaut Mattio <thibaut.mattio@gmail.com>
  * \date	05/11/2015
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
 
-#ifndef PROVIDER_VISION_CAM_CONFIG_H_
-#define PROVIDER_VISION_CAM_CONFIG_H_
+#ifndef PROVIDER_VISION_MEDIA_CONFIGURATION_HANDLER_H_
+#define PROVIDER_VISION_MEDIA_CONFIGURATION_HANDLER_H_
 
 #include <string>
 #include <sstream>
@@ -44,13 +45,15 @@ class ConfigurationHandler {
   // P U B L I C   M E T H O D S
 
   std::vector<CameraConfiguration> ParseConfiguration();
-  void SaveConfiguration(
-      const std::vector<CameraConfiguration> &system_config);
+  void SaveConfiguration(const std::vector<CameraConfiguration> &system_config);
 
  private:
+  //==========================================================================
+  // P R I V A T E   M E M B E R S
+
   std::string file_;
 };
 
 }  // namespace vision_server
 
-#endif  // PROVIDER_VISION_CAM_CONFIG_H_
+#endif  // PROVIDER_VISION_MEDIA_CONFIGURATION_HANDLER_H_
