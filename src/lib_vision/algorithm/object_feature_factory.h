@@ -122,9 +122,10 @@ inline void ObjectFeatureFactory::ConvexityFeature(
   if ((object.get() != nullptr) && (object->GetConvexity() == -1.0f)) {
     // safety, should not happen
     float convexHull = object->GetConvexHullArea();
-    if (convexHull > 0)
+    float area = object->GetArea();
+    if (convexHull > 0 && area > 0)
       object->SetConvexity(
-          object->GetArea() / object->GetConvexHullArea());
+          1.0f- (area / convexHull));
   }
 }
 
@@ -132,7 +133,7 @@ inline void ObjectFeatureFactory::ConvexityFeature(
 //
 inline void ObjectFeatureFactory::CircularityFeature(
     ObjectFullData::Ptr object) {
-  if ((object.get() != nullptr) && (object->GetConvexity() == -1.0f)) {
+  if ((object.get() != nullptr) && (object->GetCircularity() == -1.0f)) {
     // Here we use pow on radius instead of sqrt on area because
     // pow is less hard computation
     float radiusCircum = pow(object->GetCircumference() / (2 * M_PI), 2);

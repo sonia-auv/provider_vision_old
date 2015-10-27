@@ -25,15 +25,6 @@ Target::~Target() {}
 
 //==============================================================
 //
-void Target::SetTarget(const Features &feat) {
-  target_is_inited_ = true;
-  SetCenter(feat.getOffsetCenter());
-  SetSize(feat.getWidth(), feat.getHeight());
-  SetAngle(feat.getAngle());
-}
-
-//==============================================================
-//
 void Target::SetTarget(ObjectFullData::Ptr obj) {
   target_is_inited_ = true;
   RotRect rrect = obj->GetRotatedRect();

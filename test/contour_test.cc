@@ -27,28 +27,28 @@ TEST(ContourTest, AllTest) {
   // Expect 7 contours
 
   ContourList contour_list_all(img, ContourList::METHOD::ALL);
-  ASSERT_TRUE(contour_list_all._contour_list.size() == 7);
+  ASSERT_TRUE(contour_list_all.size() == 7);
 
   // Expect 7 contours, hierarchy should be filled and same size.
   ContourList contour_list_hier(img, ContourList::METHOD::HIERARCHY);
-  ASSERT_TRUE(contour_list_hier._contour_list.size() == 7);
+  ASSERT_TRUE(contour_list_hier.size() == 7);
   ASSERT_TRUE(contour_list_hier._hierarchy.size() == 7);
 
   // Expect 4
   ContourList contour_list_inner(img, ContourList::METHOD::INNER);
-  ASSERT_TRUE(contour_list_inner._contour_list.size() == 4);
+  ASSERT_TRUE(contour_list_inner.size() == 4);
 
   // Expect 3
   ContourList contour_list_inner_most(img, ContourList::METHOD::INNER_MOST);
-  ASSERT_TRUE(contour_list_inner_most._contour_list.size() == 3);
+  ASSERT_TRUE(contour_list_inner_most.size() == 3);
 
   // Expect 3
   ContourList contour_list_outer(img, ContourList::METHOD::OUTER);
-  ASSERT_TRUE(contour_list_outer._contour_list.size() == 3);
+  ASSERT_TRUE(contour_list_outer.size() == 3);
 
   // Expect 1
   ContourList contour_list_outer_no_child(img, ContourList::METHOD::OUTER_NO_CHILD);
-  ASSERT_TRUE(contour_list_outer_no_child._contour_list.size() == 1);
+  ASSERT_TRUE(contour_list_outer_no_child.size() == 1);
 
   // Since perfect square, should not approximate.
   Contour tmp (contour_list_outer_no_child[0]);

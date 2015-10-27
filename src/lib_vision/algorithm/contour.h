@@ -24,7 +24,7 @@ class Contour {
   void ApproximateBySize();
 
   // Draw contour in the image.
-  void DrawContours(cv::Mat &image, const cv::Scalar &color, int thickness);
+  void DrawContours(cv::Mat &image, cv::Scalar color, int thickness);
 
   // Vector overload
   size_t size();
@@ -52,11 +52,11 @@ inline void Contour::ApproximateBySize() {
 
 //-----------------------------------------------------------------------------
 //
-inline void Contour::DrawContours(cv::Mat &image, const cv::Scalar &color,
+inline void Contour::DrawContours(cv::Mat &image, cv::Scalar color,
                                   int thickness) {
-  std::vector<Contour> ctrs;
+  std::vector<ContourVec> ctrs;
   ctrs.push_back(_contour);
-  cv::polylines(image, ctrs, true, color, thickness);
+  cv::drawContours(image, ctrs, -1, color, thickness);
 }
 
 //-----------------------------------------------------------------------------

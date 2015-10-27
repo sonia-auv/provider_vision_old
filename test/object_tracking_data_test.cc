@@ -11,7 +11,7 @@
 #include <lib_vision/algorithm/object_tracking_data.h>
 
 TEST(TrackingData, AllTest) {
-  OBjectTrackingData tkData;
+  ObjectTrackingData tkData;
   tkData.SetPresenceCount(2);
   ASSERT_TRUE(tkData.GetPresenceCount() == 2);
 }

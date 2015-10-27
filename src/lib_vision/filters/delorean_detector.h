@@ -13,7 +13,6 @@
 //==============================================================================
 // I N C L U D E   F I L E S
 
-#include <lib_vision/algorithm/features.h>
 #include <lib_vision/algorithm/general_function.h>
 #include <lib_vision/algorithm/target.h>
 #include <lib_vision/filter.h>
@@ -96,7 +95,7 @@ class DeloreanDetector : public Filter {
         //                    cv::Scalar(255, 0, 0), 3 /*thickness*/, 6
         //                    /*lineType*/,
         //                    false);
-
+        _feat_factory.RatioFeature(object);
         double ratio_difference_big =
             fabs(object->GetRatio() - _targeted_ratio_big());
         double ratio_difference_small =

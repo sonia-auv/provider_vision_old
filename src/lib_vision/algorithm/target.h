@@ -11,7 +11,6 @@
 
 #include <opencv2/opencv.hpp>
 #include <stdlib.h>
-#include <lib_vision/algorithm/features.h>
 #include <lib_vision/algorithm/object_full_data.h>
 #include <lib_vision/algorithm/general_function.h>
 
@@ -26,7 +25,6 @@ class Target {
                  const std::string &spec_field_2 = "");
 
   // WILL USE OFFSETED CENTER !!!
-  void SetTarget(const Features &feat);
   void SetTarget(ObjectFullData::Ptr obj);
 
   void SetCenter(int x, int y);

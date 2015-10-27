@@ -47,8 +47,33 @@ ObjectFeatureFactory::ObjectFeatureFactory(unsigned int memorySize)
 //-----------------------------------------------------------------------------
 //
 void ObjectFeatureFactory::PercentFilledFeature(ObjectFullData::Ptr object) {
+
   if ((object.get() != nullptr) && (object->GetPercentFilled() == -1.0f)) {
     float percentFilled = 0.0f;
+
+    cv::Mat original_image = object->GetBinaryImage();
+    cv::cvtColor(original_image, original_image, CV_GRAY2BGR);
+
+    cv::Rect rect = object->GetUprightRect();
+    cv::Mat roi_original = original_image(rect);
+    cv::Mat roi_to_draw = roi_original.clone();
+    object->GetContourCopy().DrawContours(roi_to_draw, CV_RGB(255, 255 ,255), CV_FILLED);
+    cv::imshow("test", roi_to_draw);
+    cv::waitKey(-1);
+    std::vector<Contour::ContourVec> ctrs;
+    ctrs.push_back(object->GetContourCopy().Get());
+    cv::drawContours(roi_to_draw, ctrs, -1, CV_RGB(255, 0 ,255), CV_FILLED);
+    cv::imshow("test", roi_to_draw);
+    cv::waitKey(-1);
+
+    cv::cvtColor(roi_to_draw, roi_to_draw, CV_BGR2GRAY);
+    int nb = cv::countNonZero(roi_to_draw);
+    if( nb == 0)
+      return;
+    cv::subtract(roi_to_draw, roi_original, roi_to_draw);
+    int result = cv::countNonZero(roi_to_draw)/nb;
+    std::cout << "CLACULATION " << result << std::endl;
+
     cv::Size imageSize = object->GetImageSize();
     cv::Mat drawImage(imageSize, CV_8UC3, cv::Scalar::all(0));
     contourList_t contours;

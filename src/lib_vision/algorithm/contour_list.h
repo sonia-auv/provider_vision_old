@@ -40,6 +40,7 @@ class ContourList {
   // Vector overload
   size_t size();
   Contour operator[](size_t index);
+
   std::vector<std::vector<cv::Point>> GetAsPoint();
   std::vector<Contour> GetAsContour();
   std::vector<cv::Vec4i> GetHierachy();

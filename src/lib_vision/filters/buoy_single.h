@@ -61,6 +61,7 @@ class BuoySingle: public Filter {
   virtual void execute(cv::Mat &image) {
     if (_enable()) {
       cv::Mat in;
+      // -----------------   Setup the debug image
       // Copy the received image so we can see the objects.
       if (_debug_good_contour()) {
         // Case we receive a color or gray scale image.
@@ -75,6 +76,8 @@ class BuoySingle: public Filter {
       } else {
         image.copyTo(in);
       }
+
+      //-----------------------
       // find contours in the image
       ContourList contours(image, ContourList::OUTER);
 
@@ -171,12 +174,12 @@ class BuoySingle: public Filter {
   // check if ref is higher than compared
   bool IsHigher(ObjectFullData::Ptr ref, ObjectFullData::Ptr compared);
 
-  bool EliminateSameXTarget(ObjectFullData::FullObjectPtrVec &vec);
+  void EliminateSameXTarget(ObjectFullData::FullObjectPtrVec &vec);
 
   void ChooseMostRed(ObjectFullData::FullObjectPtrVec &vec);
 
   cv::Mat _outputImage;
-
+  ObjectFeatureFactory feat_factory_;
   // Params
   BooleanParameter _enable, _debug_good_contour, _eliminate_same_x_targets,
       _detect_red;
@@ -185,7 +188,7 @@ class BuoySingle: public Filter {
       _max_x_difference_for_elimination, _ratio_for_angle_check,
       _admissible_horizontal_angle;
 
-  ObjectFeatureFactory feat_factory_;
+
 };
 //==============================================================================
 //    INLINE FUNCTION
@@ -216,7 +219,7 @@ inline bool BuoySingle::IsHigher(ObjectFullData::Ptr ref,
 
 //------------------------------------------------------------------------------
 //
-inline bool BuoySingle::EliminateSameXTarget(ObjectFullData::FullObjectPtrVec &vec) {
+inline void BuoySingle::EliminateSameXTarget(ObjectFullData::FullObjectPtrVec &vec) {
   std::vector<unsigned int> index_to_eliminate;
   // We should not have much target, so double loop is ok...
   for (unsigned int i = 0, size = vec.size(); i < size; i++) {

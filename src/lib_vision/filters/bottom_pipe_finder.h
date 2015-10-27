@@ -95,6 +95,7 @@ class ObjectFinder : public Filter {
         //
         // RATIO
         //
+        _feature_factory.RatioFeature(object);
         if (fabs(object->GetRatio() - _targeted_ratio()) >
             fabs(_difference_from_target_ratio() - _targeted_ratio())) {
           continue;

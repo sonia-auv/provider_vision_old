@@ -9,62 +9,58 @@
 
 #include <gtest/gtest.h>
 #include <stdlib.h>
-#include "object_feature_factory.h"
+#include <opencv2/opencv.hpp>
+#include "lib_vision/algorithm/contour_list.h"
+#include "lib_vision/algorithm/object_feature_factory.h"
+#include "lib_vision/algorithm/object_full_data.h"
 #include "lib_atlas/config.h"
 
 TEST(FeatureFactory, AllTest) {
 
-  cv::Mat originalImage =
-      cv::imread(atlas::kWorkspaceRoot + "src/lib_vision/test/BasicObjectUnitTest.png");
-  cv::Mat binaryImage = cv::imread(atlas::kWorkspaceRoot + "src/lib_vision/test/BasicObjectUnitTest.png");
-  cv::cvtColor(binaryImage, binaryImage, CV_BGR2GRAY);
-  contourList_t contours;
-  retrieveAllContours(binaryImage, contours);
+  cv::Mat original_image =
+      cv::imread(atlas::kWorkspaceRoot + "src/lib_vision/test/FeatureFactoryTestImage.png", CV_LOAD_IMAGE_COLOR);
+  cv::Mat binary_image;
+  cv::cvtColor(original_image, binary_image, CV_RGB2GRAY);
+  cv::Mat debug = cv::Mat::zeros(original_image.rows, original_image.cols, CV_8UC3);
+  ContourList list(binary_image, ContourList::OUTER);
 
-  ObjectFullData::FullObjectPtrVec objectVector;
-  for (int i = 0; i < contours.size(); i++) {
-    float area = cv::contourArea(contours[i]);
-    if (area < 100) continue;
-    objectVector.push_back(std::make_shared<ObjectFullData>(
-        originalImage, binaryImage, contours[i]));
+  ASSERT_EQ(list.size(), 4);
+
+  ObjectFeatureFactory feat_factory(3);
+  ObjectFullData::FullObjectPtrVec obj_vec;
+  for( auto &contour : list.GetAsPoint())
+  {
+    obj_vec.push_back(std::make_shared<ObjectFullData>(original_image, binary_image, contour));
   }
-  std::vector<FeatureFactory::FEATURE_TYPE> feature;
-  feature.push_back(FeatureFactory::AREA_RANK);
-  feature.push_back(FeatureFactory::LENGTH_RANK);
-  feature.push_back(FeatureFactory::CIRCULARITY);
-  feature.push_back(FeatureFactory::CONVEXITY);
-  feature.push_back(FeatureFactory::RATIO);
-  feature.push_back(FeatureFactory::PRESENCE_CONSISTENCY);
-  feature.push_back(FeatureFactory::PERCENT_FILLED);
-  feature.push_back(FeatureFactory::HUE_MEAN);
-  FeatureFactory featFactory(3);
-  featFactory.SetFeatureToCompute(feature);
-  // fills buffer
-  featFactory.CalculateFeatureVectors(objectVector);
-  featFactory.CalculateFeatureVectors(objectVector);
-  featFactory.CalculateFeatureVectors(objectVector);
-  featFactory.CalculateFeatureVectors(objectVector);
-  // No real testing here, all data has been tested in the individual classes...
-  // only makes sure that we have data...
-  // Generated mat
-  std::vector<cv::Mat> genMat;
-  for (int i = 0; i < objectVector.size(); i++) {
-    genMat.push_back(objectVector[i]->OutputVectorAsMat());
-  }
-  // Create from Mat
-  std::vector<FeatureVec> matToGen(objectVector.size());
-  for (int i = 0; i < genMat.size(); i++) {
-    matToGen[i].CreateFromMat(genMat[i]);
+  feat_factory.ComputeAllFeature(obj_vec);
+
+  // So the order is:
+  //  - Crescent. Should have convexity index very low. percent filled 1.
+  //  - Full circle. Circularity index very High, ratio too. Convexity 0, percente filled 1
+  //  - Small square. Ratio of 1, convexity 0, percent filled 1
+  //  - Big square. Ratio around 8, percented filled near 0, convexity 1,
+
+  for(auto &tmp : obj_vec)
+  {
+    std::cout << "New object" << std::endl;
+    std::cout << "Ratio: " << tmp->GetRatio() << std::endl;
+    std::cout << "Convexity: " << tmp->GetConvexity() << std::endl;
+    std::cout << "Percent filled: " << tmp->GetPercentFilled() << std::endl;
+    std::cout << "Circularity: " << tmp->GetCircularity() << std::endl;
+
+    std::cout << "Hue: " << tmp->GetHueMean() << std::endl;
+    std::cout << "Sat: " << tmp->GetSatMean() << std::endl;
+    std::cout << "Int: " << tmp->GetIntensityMean() << std::endl;
+
+    std::cout << "Blue: " << tmp->GetBlueMean() << std::endl;
+    std::cout << "Red: " << tmp->GetRedMean() << std::endl;
+    std::cout << "Green: " << tmp->GetGreenMean() << std::endl;
+
+    std::cout << "Gray: " << tmp->GetGrayMean() << std::endl;
+
+    std::cout << std::endl;
   }
 
-  for (int i = 0; i < objectVector.size(); i++) {
-    std::vector<float> original = objectVector[i]->GetVec(),
-                       generated = matToGen[i].GetVec();
-    for (int j = 0; j < original.size(); j++) {
-      bool compareResult = ((generated[j] - original[j]) == 0);
-      ASSERT_TRUE(compareResult);
-    }
-  }
 }
 
 int main(int argc, char **argv) {
