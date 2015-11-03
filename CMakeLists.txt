@@ -14,7 +14,7 @@ project( vision_server )
 
 if( NOT CMAKE_BUILD_TYPE )
   set( CMAKE_BUILD_TYPE Debug CACHE STRING
-      "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
+      "Choose the type of build: None Debug Release RelWithDebInfo MinSizeRel."
       FORCE )
 endif( NOT CMAKE_BUILD_TYPE )
 
