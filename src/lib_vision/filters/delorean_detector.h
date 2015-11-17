@@ -19,7 +19,7 @@
 #include <lib_vision/algorithm/object_full_data.h>
 #include <lib_vision/algorithm/object_feature_factory.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -187,6 +187,6 @@ class DeloreanDetector : public Filter {
   ObjectFeatureFactory _feat_factory;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_DELOREAN_DETECTOR_H_

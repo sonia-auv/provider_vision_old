@@ -17,7 +17,7 @@
 #include <lib_vision/algorithm/image_accumulator_buffer.h>
 #include <lib_vision/algorithm/performance_evaluator.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -98,6 +98,6 @@ class ImageAccumulator : public Filter {
   int _last_method, _last_type, _last_nb_image;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_IMAGE_ACCUMULATOR_H_

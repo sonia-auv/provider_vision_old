@@ -20,7 +20,7 @@
 #include <lib_vision/algorithm/performance_evaluator.h>
 #include <lib_vision/algorithm/ai_trainer.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -181,6 +181,6 @@ class TrainDetector : public Filter {
   ObjectFeatureFactory _feat_factory;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_TRAIN_DETECTOR_H_

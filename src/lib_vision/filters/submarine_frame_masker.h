@@ -15,7 +15,7 @@
 
 #include <lib_vision/filter.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -72,6 +72,6 @@ class SubmarineFrameMasker : public Filter {
   int _prev_rot_value;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_SUB_FRAME_MASK_H_

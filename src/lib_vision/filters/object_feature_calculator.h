@@ -21,7 +21,7 @@
 #include <lib_vision/algorithm/performance_evaluator.h>
 #include <lib_vision/algorithm/ai_trainer.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -121,6 +121,6 @@ class ObjectFeatureCalculator : public Filter {
 
 #define VISION_FILTER_PI 3.14159265
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_OBJECT_CALCULATOR_H_

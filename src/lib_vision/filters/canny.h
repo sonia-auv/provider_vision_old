@@ -15,7 +15,7 @@
 
 #include <lib_vision/filter.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -56,6 +56,6 @@ class Canny : public Filter {
   IntegerParameter _thresh_one, _thresh_two, _aperture_size;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_SOBEL_H_

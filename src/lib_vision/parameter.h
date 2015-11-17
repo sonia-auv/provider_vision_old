@@ -19,7 +19,7 @@
 #include <vector>
 #include <sstream>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -74,6 +74,6 @@ class Parameter {
   TYPE type;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_PARAM_H_

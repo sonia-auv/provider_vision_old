@@ -15,7 +15,7 @@
 
 #include <lib_vision/filter.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -79,6 +79,6 @@ class Scharr : public Filter {
   DoubleParameter _delta, _scale, _power_pixel_correction;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_SHCARR_H_

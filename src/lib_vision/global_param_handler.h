@@ -22,7 +22,7 @@
 #include <lib_vision/parameters/matrix_parameter.h>
 #include <sstream>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -114,6 +114,6 @@ class GlobalParamHandler {
   cv::Mat _original_image;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_GLOBAL_PARAMETER_H_

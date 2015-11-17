@@ -15,7 +15,7 @@
 
 #include <lib_vision/filter.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -64,6 +64,6 @@ class Laplacian : public Filter {
   IntegerParameter _size;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_SOBEL_H_

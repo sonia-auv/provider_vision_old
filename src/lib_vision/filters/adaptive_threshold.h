@@ -15,7 +15,7 @@
 
 #include <lib_vision/filter.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -62,6 +62,6 @@ class AdaptiveThreshold : public Filter {
   DoubleParameter _c_param;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_INRANGE_H_

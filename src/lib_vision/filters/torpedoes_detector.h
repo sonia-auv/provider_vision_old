@@ -19,7 +19,7 @@
 #include <lib_vision/algorithm/target.h>
 #include <lib_vision/algorithm/object_full_data.h>
 #include <lib_vision/algorithm/object_ranker.h>
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -345,6 +345,6 @@ class TorpedoesDetector: public Filter {
   cv::Mat _output_image;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_TORPEDOES_DETECTOR_H_

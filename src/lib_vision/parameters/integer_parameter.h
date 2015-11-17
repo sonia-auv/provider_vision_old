@@ -15,7 +15,7 @@
 
 #include <lib_vision/parameter.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -149,6 +149,6 @@ class IntegerParameter : public Parameter {
   int max;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_INTEGER_H_

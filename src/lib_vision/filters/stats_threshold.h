@@ -15,7 +15,7 @@
 
 #include <lib_vision/filter.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -66,6 +66,6 @@ class StatsThreshold : public Filter {
   DoubleParameter _mean_multiplier, _std_dev_multiplier;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_STATS_THRESHOLD_H_

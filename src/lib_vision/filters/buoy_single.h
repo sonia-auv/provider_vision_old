@@ -21,7 +21,7 @@
 #include <lib_vision/algorithm/contour_list.h>
 #include <math.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -269,6 +269,6 @@ inline void BuoySingle::ChooseMostRed(ObjectFullData::FullObjectPtrVec &vec) {
   }
 }
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_BUOY_SINGLE_H_

@@ -16,7 +16,7 @@
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/general_function.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -115,6 +115,6 @@ class ScharrAdding : public Filter {
   BooleanParameter _plane_gray;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_SCHARR_ADDING_H_

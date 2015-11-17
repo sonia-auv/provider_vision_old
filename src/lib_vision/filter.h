@@ -23,7 +23,7 @@
 #include <lib_vision/parameter.h>
 #include <lib_vision/global_param_handler.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -214,6 +214,6 @@ class Filter {
   std::string name_;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_FILTER_H_

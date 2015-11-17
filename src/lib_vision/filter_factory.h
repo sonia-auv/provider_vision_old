@@ -45,13 +45,13 @@
 #include <lib_vision/filters/white_noise_takedown.h>
 #include <lib_vision/filters/bilateral_filter.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
 
 // Class that provides an interface
-// for the vision_filter project.
+// for the lib_vision project.
 // It enables instantiation via a string
 // and holds the list of all the filters.
 class FilterFactory {
@@ -63,6 +63,6 @@ class FilterFactory {
   static std::string GetFilterList();
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_FILTER_FACTORY_H_

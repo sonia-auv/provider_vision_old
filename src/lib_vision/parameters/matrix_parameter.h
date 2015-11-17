@@ -16,7 +16,7 @@
 #include <lib_vision/parameter.h>
 #include <opencv/cv.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -56,6 +56,6 @@ class MatrixParameter : public Parameter {
   cv::Mat value;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_MATRIX_H_

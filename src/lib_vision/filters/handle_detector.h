@@ -19,7 +19,7 @@
 #include <lib_vision/algorithm/object_feature_factory.h>
 #include <lib_vision/algorithm/performance_evaluator.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -167,6 +167,6 @@ class HandleDetector : public Filter {
   ObjectFeatureFactory _feature_factory;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_OBJECT_FINDER_H_

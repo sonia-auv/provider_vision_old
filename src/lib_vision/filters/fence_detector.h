@@ -19,7 +19,7 @@
 #include <lib_vision/algorithm/target.h>
 #include <lib_vision/algorithm/object_feature_factory.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -313,6 +313,6 @@ class FenceDetector : public Filter {
   ObjectFeatureFactory _feat_factory;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_FENCE_DETECTOR_H_

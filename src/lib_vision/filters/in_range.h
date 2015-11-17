@@ -12,7 +12,7 @@
 
 #include <lib_vision/filter.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 /**
  * The filter inRange check if array elements lie between certain value of HSV
@@ -127,6 +127,6 @@ class InRange : public Filter {
   IntegerParameter upper_v_;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // LIB_VISION_FILTERS_IN_RANGE_FILTER_H_

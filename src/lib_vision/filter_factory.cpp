@@ -4,7 +4,7 @@
 // I N C L U D E   F I L E S
 
 #include "lib_vision/filter_factory.h"
-namespace vision_filter {
+namespace lib_vision {
 // KEEPING A REFERENCE TO GlobalParamHandler. VERY IMPORTANT
 Filter *FilterFactory::createInstance(const std::string &name,
                                              const GlobalParamHandler &globalParams) {
@@ -132,4 +132,4 @@ std::string FilterFactory::GetFilterList() {
       "HandleDetector;WhiteNoiseTakedown;BilateralFilter;";
 }
 
-}  // namespace vision_filter
+}  // namespace lib_vision

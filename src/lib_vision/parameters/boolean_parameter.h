@@ -15,7 +15,7 @@
 
 #include <lib_vision/parameter.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -84,6 +84,6 @@ class BooleanParameter : public Parameter {
   bool value;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_BOOLEAN_H_

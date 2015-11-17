@@ -15,7 +15,7 @@
 
 #include <lib_vision/parameter.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -134,6 +134,6 @@ class DoubleParameter : public Parameter {
   double min;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_DOUBLE_H_

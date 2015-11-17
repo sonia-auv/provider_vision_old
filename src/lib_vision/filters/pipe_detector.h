@@ -19,7 +19,7 @@
 #include <lib_vision/algorithm/object_full_data.h>
 #include <lib_vision/algorithm/performance_evaluator.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -124,6 +124,6 @@ class PipeDetector : public Filter {
   DoubleParameter _min_area;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_PIPE_DETECTOR_H_

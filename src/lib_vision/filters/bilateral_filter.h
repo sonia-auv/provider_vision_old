@@ -12,7 +12,7 @@
 
 #include <lib_vision/filter.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 /**
  * The filter bilateral aims to blurr an image without loosing edge sharpness.
@@ -91,6 +91,6 @@ class BilateralFilter : public Filter {
   IntegerParameter sigma_space_;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // LIB_VISION_FILTERS_BILATERAL_FILTER_H_

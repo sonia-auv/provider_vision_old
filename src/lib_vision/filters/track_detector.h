@@ -21,7 +21,7 @@
 #include <lib_vision/algorithm/object_feature_factory.h>
 #include <lib_vision/algorithm/type_and_const.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -171,6 +171,6 @@ class TrackDetector : public Filter {
   ObjectFeatureFactory _feat_factory;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_TRACK_DETECTOR_H_

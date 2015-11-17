@@ -17,7 +17,7 @@
 
 #include <lib_vision/parameter.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 //==============================================================================
 // C L A S S E S
@@ -64,6 +64,6 @@ class StringParameter : public Parameter {
   std::string value;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // VISION_FILTER_STRINGPARAM_H_
