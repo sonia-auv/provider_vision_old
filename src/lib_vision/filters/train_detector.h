@@ -18,7 +18,6 @@
 #include <lib_vision/algorithm/target.h>
 #include <lib_vision/algorithm/object_full_data.h>
 #include <lib_vision/algorithm/performance_evaluator.h>
-#include <lib_vision/algorithm/ai_trainer.h>
 
 namespace lib_vision {
 
