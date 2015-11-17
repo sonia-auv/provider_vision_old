@@ -143,4 +143,3 @@ void ImageAccumulatorBuffer::AverageAccumulateWithResultingWeight(
             resultImage);
   }
 }
-

@@ -23,12 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef VISION_FILTER_FENCE_DETECTOR_H_
 #define VISION_FILTER_FENCE_DETECTOR_H_
-
-//==============================================================================
-// I N C L U D E   F I L E S
 
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/object_full_data.h>
@@ -37,9 +33,6 @@
 #include <lib_vision/algorithm/object_feature_factory.h>
 
 namespace lib_vision {
-
-//==============================================================================
-// C L A S S E S
 
 class FenceDetector : public Filter {
  public:
@@ -128,8 +121,7 @@ class FenceDetector : public Filter {
       }
       _feat_factory.PercentFilledFeature(object);
 
-      if (int(object->GetPercentFilled() * 100.0f) <
-          _min_percent_filled())
+      if (int(object->GetPercentFilled() * 100.0f) < _min_percent_filled())
         continue;
       if (_debug_contour()) {
         cv::drawContours(_output_image, contours, i, CV_RGB(255, 0, 255), 4);
@@ -147,8 +139,7 @@ class FenceDetector : public Filter {
     // Sort the bars with different criteria
     // Here we look for horizontal bar because it's
     std::sort(horizontalBar.begin(), horizontalBar.end(),
-              [](ObjectFullData::Ptr a,
-                 ObjectFullData::Ptr b) -> bool {
+              [](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
                 return a->GetRotatedRect().size.height >
                        b->GetRotatedRect().size.height;
               });
@@ -206,8 +197,7 @@ class FenceDetector : public Filter {
       } else  // Gets the two best vertical bar to compute our y center.
       {
         std::sort(verticalBars.begin(), verticalBars.end(),
-                  [](ObjectFullData::Ptr a,
-                     ObjectFullData::Ptr b) -> bool {
+                  [](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
                     return a->GetRotatedRect().size.height >
                            b->GetRotatedRect().size.height;
                   });
@@ -281,8 +271,8 @@ class FenceDetector : public Filter {
     return bar_y - offset;
   }
 
-  inline void GetBottomBarXExtremum(ObjectFullData::Ptr bottom_bar,
-                                    int &leftX, int &rightX) {
+  inline void GetBottomBarXExtremum(ObjectFullData::Ptr bottom_bar, int &leftX,
+                                    int &rightX) {
     leftX = 20000;
     rightX = -1;
     contour_t contour = bottom_bar->GetContourCopy().Get();
@@ -308,8 +298,7 @@ class FenceDetector : public Filter {
     return left_ok && right_ok;
   }
 
-  inline bool IsSplitBar(ObjectFullData::Ptr ref,
-                         ObjectFullData::Ptr &comp) {
+  inline bool IsSplitBar(ObjectFullData::Ptr ref, ObjectFullData::Ptr &comp) {
     float ratio_diff =
         abs(comp->GetRatio() - ref->GetRatio()) / ref->GetRatio();
     float y_diff =

@@ -23,7 +23,6 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef VISION_FILTER_OBJECT_TRACKING_DATA_H_
 #define VISION_FILTER_OBJECT_TRACKING_DATA_H_
 
@@ -33,9 +32,9 @@
 // in the past frames?
 class ObjectTrackingData {
  public:
-  ObjectTrackingData () : _presence_count(0.0f){};
+  ObjectTrackingData() : _presence_count(0.0f){};
 
-  virtual ~ObjectTrackingData (){};
+  virtual ~ObjectTrackingData(){};
 
   void SetPresenceCount(float presenceCount);
 

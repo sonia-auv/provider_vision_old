@@ -23,12 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef VISION_FILTER_TORPEDOES_DETECTOR_H_
 #define VISION_FILTER_TORPEDOES_DETECTOR_H_
-
-//==============================================================================
-// I N C L U D E   F I L E S
 
 #include <string>
 #include <lib_vision/filter.h>
@@ -38,10 +34,7 @@
 #include <lib_vision/algorithm/object_ranker.h>
 namespace lib_vision {
 
-//==============================================================================
-// C L A S S E S
-
-class TorpedoesDetector: public Filter {
+class TorpedoesDetector : public Filter {
  public:
   //============================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
@@ -59,7 +52,7 @@ class TorpedoesDetector: public Filter {
     setName("TorpedoesDetector");
   }
 
-  virtual ~TorpedoesDetector() { }
+  virtual ~TorpedoesDetector() {}
 
   //============================================================================
   // P U B L I C   M E T H O D S
@@ -209,7 +202,7 @@ class TorpedoesDetector: public Filter {
               cv::circle(_output_image, square_center, 4, CV_RGB(0, 255, 0), 4);
               std::stringstream ss;
               ss << current_square_target.GetSpecField_1() << "-"
-                  << current_square_target.GetSpecField_2();
+                 << current_square_target.GetSpecField_2();
               cv::putText(_output_image, ss.str(), square_center,
                           cv::FONT_HERSHEY_SIMPLEX, 1 /*fontscale*/,
                           cv::Scalar(255, 0, 0), 3 /*thickness*/,
@@ -242,16 +235,14 @@ class TorpedoesDetector: public Filter {
     for (auto &contour : inner_contours.contour_vec_) {
       contour.ApproximateBySize();
       Contour::ContourVec ctr = contour.Get();
-      if (IsSquare(ctr, _min_area(), _angle(), _ratio_min(),
-                   _ratio_max())) {
+      if (IsSquare(ctr, _min_area(), _angle(), _ratio_min(), _ratio_max())) {
         object_data.push_back(
             std::make_shared<ObjectFullData>(original, in, ctr));
       }
     }
 
     std::sort(object_data.begin(), object_data.end(),
-              [](ObjectFullData::Ptr a,
-                 ObjectFullData::Ptr b)
+              [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
                   -> bool { return a->GetArea() > b->GetArea(); });
 
     if (object_data.size() > 4) {
@@ -267,10 +258,9 @@ class TorpedoesDetector: public Filter {
     }  // End if was a square
   }    // End iteration through contours.
 
-//----------------------------------------------------------------------------
-//
-  void GetBigSquare(const cv::Mat &in,
-                    ObjectFullData::Ptr &big_square,
+  //----------------------------------------------------------------------------
+  //
+  void GetBigSquare(const cv::Mat &in, ObjectFullData::Ptr &big_square,
                     const ObjectFullData::FullObjectPtrVec &inside_squares) {
     ContourList contours(in, ContourList::OUTER);
 
@@ -307,8 +297,8 @@ class TorpedoesDetector: public Filter {
     }
   }
 
-//----------------------------------------------------------------------------
-//
+  //----------------------------------------------------------------------------
+  //
   void EliminateDoubleObjects(ObjectFullData::FullObjectPtrVec &object_data) {
     // Check if centers are near each other and delete if so
     // TODO: Might be dangerous to use erase...
@@ -321,8 +311,8 @@ class TorpedoesDetector: public Filter {
     //}
   }
 
-//----------------------------------------------------------------------------
-//
+  //----------------------------------------------------------------------------
+  //
   void EliminateNonFittingObjectsWithSize(
       ObjectFullData::FullObjectPtrVec &object_data) {
     //      // Check if square area is bigger than _median times median of areas
@@ -351,7 +341,7 @@ class TorpedoesDetector: public Filter {
   }
 
  private:
-// Params
+  // Params
   BooleanParameter _enable, _debug_contour;
   DoubleParameter _sensibility;
   DoubleParameter _min_area;

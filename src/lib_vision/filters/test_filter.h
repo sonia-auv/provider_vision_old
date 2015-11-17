@@ -26,15 +26,9 @@
 #ifndef VISION_FILTER_TEST_FILTER_H_
 #define VISION_FILTER_TEST_FILTER_H_
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
 #include <lib_vision/filter.h>
 
 namespace lib_vision {
-
-//==============================================================================
-// C L A S S E S
 
 class TestFilter : public Filter {
  public:

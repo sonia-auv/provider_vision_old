@@ -30,7 +30,6 @@
 
 class Contour {
  public:
-
   typedef std::vector<cv::Point> ContourVec;
 
   Contour(const std::vector<cv::Point> &ctr);
@@ -83,10 +82,7 @@ inline size_t Contour::size() { return _contour.size(); }
 
 //-----------------------------------------------------------------------------
 //
-inline std::vector<cv::Point> Contour::Get()
-{
-  return _contour;
-}
+inline std::vector<cv::Point> Contour::Get() { return _contour; }
 
 //-----------------------------------------------------------------------------
 //

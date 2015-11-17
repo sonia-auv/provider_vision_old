@@ -23,12 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef VISION_FILTER_TRAIN_DETECTOR_H_
 #define VISION_FILTER_TRAIN_DETECTOR_H_
-
-//==============================================================================
-// I N C L U D E   F I L E S
 
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/general_function.h>
@@ -37,9 +33,6 @@
 #include <lib_vision/algorithm/performance_evaluator.h>
 
 namespace lib_vision {
-
-//==============================================================================
-// C L A S S E S
 
 class TrainDetector : public Filter {
  public:
@@ -51,11 +44,10 @@ class TrainDetector : public Filter {
     //==========================================================================
     // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
-    explicit ObjectPair(ObjectFullData::Ptr object1, ObjectFullData::Ptr object2,
+    explicit ObjectPair(ObjectFullData::Ptr object1,
+                        ObjectFullData::Ptr object2,
                         ObjectFeatureFactory &featFactory)
-        : _object1(object1),
-          _object2(object2),
-          _convexity_mean(0) {
+        : _object1(object1), _object2(object2), _convexity_mean(0) {
       assert(object1.get() != nullptr);
       assert(object2.get() != nullptr);
 

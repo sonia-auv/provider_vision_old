@@ -23,12 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef VISION_FILTER_FILTER_FACTORY_H_
 #define VISION_FILTER_FILTER_FACTORY_H_
-
-//==============================================================================
-// I N C L U D E   F I L E S
 
 #include <lib_vision/filter.h>
 #include <string>
@@ -70,9 +66,6 @@
 #include <lib_vision/filters/bilateral_filter.h>
 
 namespace lib_vision {
-
-//==============================================================================
-// C L A S S E S
 
 // Class that provides an interface
 // for the lib_vision project.

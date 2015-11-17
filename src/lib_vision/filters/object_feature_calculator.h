@@ -23,12 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef VISION_FILTER_OBJECT_CALCULATOR_H_
 #define VISION_FILTER_OBJECT_CALCULATOR_H_
-
-//==============================================================================
-// I N C L U D E   F I L E S
 
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/general_function.h>
@@ -38,9 +34,6 @@
 #include <lib_vision/algorithm/performance_evaluator.h>
 
 namespace lib_vision {
-
-//==============================================================================
-// C L A S S E S
 
 class ObjectFeatureCalculator : public Filter {
  public:
@@ -61,7 +54,7 @@ class ObjectFeatureCalculator : public Filter {
         _min_area("Min_area", 200, 0, 10000, parameters_),
         _feature_factory(5) {
     setName("ObjectFeatureCalculator");
-//    _feature_factory.SetAllFeatureToCompute();
+    //    _feature_factory.SetAllFeatureToCompute();
     // Little goodies for cvs
     // area_rank,length_rank,circularity,convexity,ratio,presence,percent_filled,hueMean,
   }
@@ -113,11 +106,12 @@ class ObjectFeatureCalculator : public Filter {
       //			_feature_factory.CalculateFeatureVectors(objVec);
       //			printf("Image parsing took: %f seconds\n",
       // timer.GetExecTime());
-//      if (_toggle_recording()) {
-//        AITrainer::OutputFrameData(_output_folder(), objVec, originalImage,
-//                                   image, _recording_frame_index);
-//        _recording_frame_index++;
-//      }
+      //      if (_toggle_recording()) {
+      //        AITrainer::OutputFrameData(_output_folder(), objVec,
+      //        originalImage,
+      //                                   image, _recording_frame_index);
+      //        _recording_frame_index++;
+      //      }
       if (_debug_contour()) {
         _output_image.copyTo(image);
       }

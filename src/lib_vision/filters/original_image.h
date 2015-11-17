@@ -23,19 +23,12 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef VISION_FILTER_ORIGINAL_IMAGE_H_
 #define VISION_FILTER_ORIGINAL_IMAGE_H_
-
-//==============================================================================
-// I N C L U D E   F I L E S
 
 #include <lib_vision/filter.h>
 
 namespace lib_vision {
-
-//==============================================================================
-// C L A S S E S
 
 class OriginalImage : public Filter {
  public:

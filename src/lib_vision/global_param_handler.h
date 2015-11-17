@@ -23,12 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef VISION_FILTER_GLOBAL_PARAMETER_H_
 #define VISION_FILTER_GLOBAL_PARAMETER_H_
-
-//==============================================================================
-// I N C L U D E   F I L E S
 
 #include <string>
 #include <lib_vision/parameter.h>
@@ -41,16 +37,13 @@
 
 namespace lib_vision {
 
-//==============================================================================
-// C L A S S E S
-
 class GlobalParamHandler {
  public:
   //============================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
   explicit GlobalParamHandler()
-      : _notify_string(std::string()), _params_vec(),_original_image() {}
+      : _notify_string(std::string()), _params_vec(), _original_image() {}
 
   // Since we erase everything, it is easier to delete objet first
   // then calling clear method, since erase invalidate pointer AND

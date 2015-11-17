@@ -23,7 +23,6 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef VISION_FILTER_TYPE_AND_CONST_
 #define VISION_FILTER_TYPE_AND_CONST_
 

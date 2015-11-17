@@ -33,7 +33,6 @@
 
 class ContourList {
  public:
-
   typedef std::vector<Contour::ContourVec> ContourListVector;
 
   // Contour navigation constant
@@ -100,24 +99,17 @@ inline size_t ContourList::size() { return contour_vec_.size(); }
 
 //-----------------------------------------------------------------------------
 //
-inline std::vector<std::vector<cv::Point>> ContourList::GetAsPoint()
-{
+inline std::vector<std::vector<cv::Point>> ContourList::GetAsPoint() {
   return contour_list_point_;
 }
 
 //-----------------------------------------------------------------------------
 //
-inline std::vector<Contour> ContourList::GetAsContour()
-{
-  return contour_vec_;
-}
+inline std::vector<Contour> ContourList::GetAsContour() { return contour_vec_; }
 
 //-----------------------------------------------------------------------------
 //
-inline std::vector<cv::Vec4i> ContourList::GetHierachy()
-{
-  return _hierarchy;
-}
+inline std::vector<cv::Vec4i> ContourList::GetHierachy() { return _hierarchy; }
 
 //-----------------------------------------------------------------------------
 //
@@ -127,15 +119,13 @@ inline Contour ContourList::operator[](size_t index) {
 
 //-----------------------------------------------------------------------------
 //
-inline bool ContourList::HasChild(const cv::Vec4i &hierarchy_def)
-{
-   return hierarchy_def[FIRST_CHILD] != -1;
+inline bool ContourList::HasChild(const cv::Vec4i &hierarchy_def) {
+  return hierarchy_def[FIRST_CHILD] != -1;
 }
 
 //-----------------------------------------------------------------------------
 //
-inline bool ContourList::HasParent(const cv::Vec4i &hierarchy_def)
-{
+inline bool ContourList::HasParent(const cv::Vec4i &hierarchy_def) {
   return hierarchy_def[PARENT] != -1;
 }
 

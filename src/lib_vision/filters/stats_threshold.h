@@ -23,19 +23,12 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef VISION_FILTER_STATS_THRESHOLD_H_
 #define VISION_FILTER_STATS_THRESHOLD_H_
-
-//==============================================================================
-// I N C L U D E   F I L E S
 
 #include <lib_vision/filter.h>
 
 namespace lib_vision {
-
-//==============================================================================
-// C L A S S E S
 
 class StatsThreshold : public Filter {
  public:
@@ -48,8 +41,7 @@ class StatsThreshold : public Filter {
         _min_thresh("Min_thresh", 0, 0, 255, parameters_),
         _mean_multiplier("Mean_multiplier", 1, -10, 10, parameters_),
         _std_dev_multiplier("Standard_deviation_multiplier", 1, -10, 10,
-                            parameters_)
-        {
+                            parameters_) {
     setName("StatsThreshold");
   }
 

@@ -23,14 +23,11 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
 #include "lib_vision/filter_factory.h"
 namespace lib_vision {
 // KEEPING A REFERENCE TO GlobalParamHandler. VERY IMPORTANT
 Filter *FilterFactory::createInstance(const std::string &name,
-                                             const GlobalParamHandler &globalParams) {
+                                      const GlobalParamHandler &globalParams) {
   if (name == "Blurr") {
     return new Blurr(globalParams);
   }
@@ -146,13 +143,13 @@ Filter *FilterFactory::createInstance(const std::string &name,
 
 std::string FilterFactory::GetFilterList() {
   return "Blurr;Dilate;Erode;MissionTestFakeString;TestFilter;"
-      "BuoySingle;Morphology;OriginalImage;Scharr;ScharrAdding;"
-      "StatsThreshold;SubtractAllPlanes;Threshold;BuoySingle;Rotate;"
-      "FenceDetector;ImageAccumulator;ObjectFeatureCalculator;"
-      "TrainDetector;ObjectFinder;PipeDetector;TrackDetector;Sobel;"
-      "DeloreanDetector;SubmarineFrameMasker;InRange;ConvexHull;"
-      "TorpedoesDetector;Laplacian;Canny;HoughLine;AdaptiveThreshold;"
-      "HandleDetector;WhiteNoiseTakedown;BilateralFilter;";
+         "BuoySingle;Morphology;OriginalImage;Scharr;ScharrAdding;"
+         "StatsThreshold;SubtractAllPlanes;Threshold;BuoySingle;Rotate;"
+         "FenceDetector;ImageAccumulator;ObjectFeatureCalculator;"
+         "TrainDetector;ObjectFinder;PipeDetector;TrackDetector;Sobel;"
+         "DeloreanDetector;SubmarineFrameMasker;InRange;ConvexHull;"
+         "TorpedoesDetector;Laplacian;Canny;HoughLine;AdaptiveThreshold;"
+         "HandleDetector;WhiteNoiseTakedown;BilateralFilter;";
 }
 
 }  // namespace lib_vision

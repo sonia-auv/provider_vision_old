@@ -23,12 +23,9 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef VISION_FILTER_TRACK_DETECTOR_H_
 #define VISION_FILTER_TRACK_DETECTOR_H_
 
-//==============================================================================
-// I N C L U D E   F I L E S
 #include <vector>
 #include <memory>
 #include <lib_vision/filter.h>
@@ -39,9 +36,6 @@
 #include <lib_vision/algorithm/type_and_const.h>
 
 namespace lib_vision {
-
-//==============================================================================
-// C L A S S E S
 
 class TrackDetector : public Filter {
  public:
@@ -104,8 +98,7 @@ class TrackDetector : public Filter {
       }
 
       std::sort(objVec.begin(), objVec.end(),
-                [](ObjectFullData::Ptr a,
-                   ObjectFullData::Ptr b)
+                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
                     -> bool { return a->GetArea() > b->GetArea(); });
 
       // Get all the square contours.
@@ -125,28 +118,26 @@ class TrackDetector : public Filter {
       }
 
       // Votes for the contour with the most
-      std::vector<std::pair<ObjectFullData::Ptr, int> >
-          contour_vote;
+      std::vector<std::pair<ObjectFullData::Ptr, int> > contour_vote;
       for (auto &square : squareContour) {
         for (auto &already_voted_for : contour_vote) {
-          if (cv::pointPolygonTest(already_voted_for.first->GetContourCopy().Get(),
-                                   cv::Point2f(square[0].x, square[0].y),
-                                   false) > 0.0f) {
+          if (cv::pointPolygonTest(
+                  already_voted_for.first->GetContourCopy().Get(),
+                  cv::Point2f(square[0].x, square[0].y), false) > 0.0f) {
             already_voted_for.second++;
             continue;
           }
         }
 
         for (auto &to_added_to_the_voted_pool : objVec) {
-          if (cv::pointPolygonTest(to_added_to_the_voted_pool->GetContourCopy().Get(),
-                                   cv::Point2f(square[0].x, square[0].y),
-                                   false) > 0.0f) {
-            contour_vote.push_back(
-                std::pair<ObjectFullData::Ptr, int>(
-                    to_added_to_the_voted_pool, 1));
+          if (cv::pointPolygonTest(
+                  to_added_to_the_voted_pool->GetContourCopy().Get(),
+                  cv::Point2f(square[0].x, square[0].y), false) > 0.0f) {
+            contour_vote.push_back(std::pair<ObjectFullData::Ptr, int>(
+                to_added_to_the_voted_pool, 1));
             cv::polylines(_output_image,
-                          to_added_to_the_voted_pool->GetContourCopy().Get(), true,
-                          CV_RGB(255, 0, 255), 3);
+                          to_added_to_the_voted_pool->GetContourCopy().Get(),
+                          true, CV_RGB(255, 0, 255), 3);
             continue;
           }
         }

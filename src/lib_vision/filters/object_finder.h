@@ -23,12 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef VISION_FILTER_OBJECT_FINDER_H_
 #define VISION_FILTER_OBJECT_FINDER_H_
-
-//==============================================================================
-// I N C L U D E   F I L E S
 
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/general_function.h>
@@ -39,10 +35,7 @@
 
 namespace lib_vision {
 
-//==============================================================================
-// C L A S S E S
-
-class ObjectFinder: public Filter {
+class ObjectFinder : public Filter {
  public:
   //============================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
@@ -58,9 +51,7 @@ class ObjectFinder: public Filter {
         _vote_most_centered("Vote_most_centered", false, parameters_),
         _vote_most_upright("Vote_most_upright", false, parameters_),
         _vote_less_difference_from_targeted_ratio(
-            "Vote_less_diff_from_target_ratio",
-            false,
-            parameters_),
+            "Vote_less_diff_from_target_ratio", false, parameters_),
         _vote_length("Vote_length", false, parameters_),
         _vote_higher("Vote_higher", false, parameters_),
         _id("ID", "buoy", parameters_),
@@ -68,23 +59,13 @@ class ObjectFinder: public Filter {
         _spec_2("spec2", "blue", parameters_),
         _min_area("Min_area", 200, 0, 10000, parameters_),
         _targeted_ratio("Ratio_target", 0.5f, 0.0f, 1.0f, parameters_),
-        _difference_from_target_ratio("Diff_from_ratio_target",
-                                      0.10f,
-                                      0.0f,
-                                      1.0f,
-                                      parameters_),
+        _difference_from_target_ratio("Diff_from_ratio_target", 0.10f, 0.0f,
+                                      1.0f, parameters_),
         _targeted_angle("angle_target", 0.0f, 0.0f, 90.0f, parameters_),
-        _difference_from_target_angle("Diff_from_angle_target",
-                                      30.0f,
-                                      0.0f,
-                                      90.0f,
-                                      parameters_),
+        _difference_from_target_angle("Diff_from_angle_target", 30.0f, 0.0f,
+                                      90.0f, parameters_),
         _min_percent_filled("Min_percent_filled", 50, 0, 100, parameters_),
-        _contour_retreval("Contour_retreval",
-                          0,
-                          0,
-                          4,
-                          parameters_,
+        _contour_retreval("Contour_retreval", 0, 0, 4, parameters_,
                           "0=All, 1=Out, 2=Inner, 3=InnerMost, 4=OutNoChild"),
         _feature_factory(5) {
     setName("ObjectFinder");
@@ -92,7 +73,7 @@ class ObjectFinder: public Filter {
     // area_rank,length_rank,circularity,convexity,ratio,presence,percent_filled,hueMean,
   }
 
-  virtual ~ObjectFinder() { }
+  virtual ~ObjectFinder() {}
 
   //============================================================================
   // P U B L I C   M E T H O D S
@@ -153,7 +134,7 @@ class ObjectFinder: public Filter {
         // RATIO
         //
         if (!_disable_ratio() && (fabs(object->GetRatio() - _targeted_ratio()) >
-            fabs(_difference_from_target_ratio()))) {
+                                  fabs(_difference_from_target_ratio()))) {
           continue;
         }
         if (_debug_contour()) {
@@ -178,7 +159,7 @@ class ObjectFinder: public Filter {
         //
         if (!_disable_angle() &&
             (fabs(object->GetRotatedRect().angle - _targeted_angle()) >
-                fabs(_difference_from_target_angle()))) {
+             fabs(_difference_from_target_angle()))) {
           continue;
         }
 
@@ -199,91 +180,84 @@ class ObjectFinder: public Filter {
       }
 
       if (objVec.size() > 1) {
-
         if (_vote_most_centered()) {
-          std::sort(objVec.begin(), objVec.end(),
-                    [this](ObjectFullData::Ptr a,
-                       ObjectFullData::Ptr b) -> bool {
-                      return GetDistanceFromCenter(a) <
-                          GetDistanceFromCenter(b);
-                    });
+          std::sort(
+              objVec.begin(), objVec.end(),
+              [this](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
+                return GetDistanceFromCenter(a) < GetDistanceFromCenter(b);
+              });
           objVec[0]->IncrementVote();
           cv::circle(_output_image, cv::Point(objVec[0]->GetCenter().x,
                                               objVec[0]->GetCenter().y) -
-                         cv::Point(12, 12),
+                                        cv::Point(12, 12),
                      6, CV_RGB(255, 0, 0), -1);
         }
 
         if (_vote_length()) {
           std::sort(objVec.begin(), objVec.end(),
-                    [](ObjectFullData::Ptr a,
-                       ObjectFullData::Ptr b) -> bool {
+                    [](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
                       return fabs(a->GetLength()) > fabs(b->GetLength());
                     });
           objVec[0]->IncrementVote();
           cv::circle(_output_image, cv::Point(objVec[0]->GetCenter().x,
                                               objVec[0]->GetCenter().y) -
-                         cv::Point(12, 6),
+                                        cv::Point(12, 6),
                      6, CV_RGB(0, 0, 255), -1);
         }
 
         if (_vote_most_upright()) {
           std::sort(objVec.begin(), objVec.end(),
-                    [](ObjectFullData::Ptr a,
-                       ObjectFullData::Ptr b) -> bool {
+                    [](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
                       return fabs(a->GetRotatedRect().angle) <
-                          fabs(b->GetRotatedRect().angle);
+                             fabs(b->GetRotatedRect().angle);
                     });
           objVec[0]->IncrementVote();
           cv::circle(_output_image, cv::Point(objVec[0]->GetCenter().x,
                                               objVec[0]->GetCenter().y) -
-                         cv::Point(12, 0),
+                                        cv::Point(12, 0),
                      6, CV_RGB(255, 0, 255), -1);
         }
 
         if (_vote_less_difference_from_targeted_ratio()) {
-          std::sort(objVec.begin(), objVec.end(),
-                    [this](ObjectFullData::Ptr a,
-                           ObjectFullData::Ptr b) -> bool {
-                      return fabs(a->GetRatio() - this->_targeted_ratio()) <
-                          fabs(b->GetRatio() - this->_targeted_ratio());
-                    });
+          std::sort(
+              objVec.begin(), objVec.end(),
+              [this](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
+                return fabs(a->GetRatio() - this->_targeted_ratio()) <
+                       fabs(b->GetRatio() - this->_targeted_ratio());
+              });
           objVec[0]->IncrementVote();
           cv::circle(_output_image, cv::Point(objVec[0]->GetCenter().x,
                                               objVec[0]->GetCenter().y) -
-                         cv::Point(12, -6),
+                                        cv::Point(12, -6),
                      6, CV_RGB(0, 255, 255), -1);
         }
 
         if (_vote_higher()) {
-          std::sort(objVec.begin(), objVec.end(),
-                    [this](ObjectFullData::Ptr a,
-                           ObjectFullData::Ptr b) -> bool {
-                      return a->GetCenter().y < b->GetCenter().y;
-                    });
+          std::sort(
+              objVec.begin(), objVec.end(),
+              [this](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
+                  -> bool { return a->GetCenter().y < b->GetCenter().y; });
           objVec[0]->IncrementVote();
 
           cv::circle(_output_image, cv::Point(objVec[0]->GetCenter().x,
                                               objVec[0]->GetCenter().y) -
-                         cv::Point(12, -12),
+                                        cv::Point(12, -12),
                      6, CV_RGB(255, 255, 0), -1);
         }
 
         std::sort(objVec.begin(), objVec.end(),
-                  [](ObjectFullData::Ptr a,
-                     ObjectFullData::Ptr b)
+                  [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
                       -> bool { return a->GetArea() > b->GetArea(); });
 
         objVec[0]->IncrementVote();
         cv::circle(_output_image, cv::Point(objVec[0]->GetCenter().x,
                                             objVec[0]->GetCenter().y) -
-                       cv::Point(12, -18),
+                                      cv::Point(12, -18),
                    6, CV_RGB(255, 150, 150), -1);
       }
 
       std::sort(objVec.begin(), objVec.end(),
-                [](ObjectFullData::Ptr a,
-                   ObjectFullData::Ptr b)
+                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
                     -> bool { return a->GetVoteCount() > b->GetVoteCount(); });
 
       if (objVec.size() > 0) {
@@ -309,12 +283,13 @@ class ObjectFinder: public Filter {
     }
   }
   float GetDistanceFromCenter(ObjectFullData::Ptr object) {
-    cv::Point center
-        (object->GetBinaryImage().cols / 2, object->GetBinaryImage().rows / 2);
+    cv::Point center(object->GetBinaryImage().cols / 2,
+                     object->GetBinaryImage().rows / 2);
     float x_diff = object->GetCenter().x - center.x;
     float y_diff = object->GetCenter().y - center.y;
     return x_diff * x_diff + y_diff * y_diff;
   };
+
  private:
   cv::Mat _output_image;
   // Params

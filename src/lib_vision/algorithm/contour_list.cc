@@ -49,8 +49,7 @@ ContourList::ContourList(const cv::Mat &image, const METHOD method) {
       retrieveHiearchyContours(image);
       break;
   }
-  for( const auto &ctr : contour_list_point_)
-  {
+  for (const auto &ctr : contour_list_point_) {
     contour_vec_.push_back(ctr);
   }
 }

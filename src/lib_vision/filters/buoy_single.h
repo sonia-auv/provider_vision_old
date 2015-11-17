@@ -23,12 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef VISION_FILTER_BUOY_SINGLE_H_
 #define VISION_FILTER_BUOY_SINGLE_H_
-
-//==============================================================================
-// I N C L U D E   F I L E S
 
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/object_feature_factory.h>
@@ -40,10 +36,7 @@
 
 namespace lib_vision {
 
-//==============================================================================
-// C L A S S E S
-
-class BuoySingle: public Filter {
+class BuoySingle : public Filter {
  public:
   //============================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
@@ -70,7 +63,7 @@ class BuoySingle: public Filter {
     setName("BuoySingle");
   }
 
-  virtual ~BuoySingle() { }
+  virtual ~BuoySingle() {}
 
   //============================================================================
   // P U B L I C   M E T H O D S
@@ -172,8 +165,7 @@ class BuoySingle: public Filter {
 
         if (_debug_good_contour()) {
           objectVec[0]->GetContourCopy().DrawContours(_outputImage,
-                                                      CV_RGB(0, 255, 0),
-                                                      5);
+                                                      CV_RGB(0, 255, 0), 5);
         }
       }
 
@@ -204,24 +196,23 @@ class BuoySingle: public Filter {
   DoubleParameter _min_area, _max_ratio, _min_filled_percent,
       _max_x_difference_for_elimination, _ratio_for_angle_check,
       _admissible_horizontal_angle;
-
-
 };
 //==============================================================================
 //    INLINE FUNCTION
 //------------------------------------------------------------------------------
 //
-inline float BuoySingle::getRadiusFromRectangle(ObjectFullData::Ptr &rectangle) {
+inline float BuoySingle::getRadiusFromRectangle(
+    ObjectFullData::Ptr &rectangle) {
   return (rectangle->GetRotatedRect().size.width / 2 +
-      rectangle->GetRotatedRect().size.height / 2) / 2;
+          rectangle->GetRotatedRect().size.height / 2) /
+         2;
 }
 
 //------------------------------------------------------------------------------
 //
 inline bool BuoySingle::IsSameX(ObjectFullData::Ptr a, ObjectFullData::Ptr b) {
-  double x_difference =
-      static_cast<double>(a->GetCenter().x)
-          - static_cast<double>(b->GetCenter().x);
+  double x_difference = static_cast<double>(a->GetCenter().x) -
+                        static_cast<double>(b->GetCenter().x);
   double abs_x_difference = fabs(x_difference);
   return abs_x_difference < _max_x_difference_for_elimination();
 }
@@ -236,7 +227,8 @@ inline bool BuoySingle::IsHigher(ObjectFullData::Ptr ref,
 
 //------------------------------------------------------------------------------
 //
-inline void BuoySingle::EliminateSameXTarget(ObjectFullData::FullObjectPtrVec &vec) {
+inline void BuoySingle::EliminateSameXTarget(
+    ObjectFullData::FullObjectPtrVec &vec) {
   std::vector<unsigned int> index_to_eliminate;
   // We should not have much target, so double loop is ok...
   for (unsigned int i = 0, size = vec.size(); i < size; i++) {
@@ -269,13 +261,12 @@ inline void BuoySingle::ChooseMostRed(ObjectFullData::FullObjectPtrVec &vec) {
   cv::copyMakeBorder(hsv, hsv, 21, 21, 21, 21, cv::BORDER_CONSTANT);
   cv::Mat out;
   cv::cvtColor(a->GetBinaryImage(), out, CV_GRAY2BGR);
-  cv::Point center_a = vec[0]->GetCenter(),
-      center_b = vec[1]->GetCenter();
+  cv::Point center_a = vec[0]->GetCenter(), center_b = vec[1]->GetCenter();
 
-  cv::Mat roiA(hsv, cv::Rect(cv::Point(center_a.x - 5, (center_a.y)),
-                             cv::Size(20, 20)));
-  cv::Mat roiB(hsv, cv::Rect(cv::Point(center_b.x - 5, (center_b.y)),
-                             cv::Size(20, 20)));
+  cv::Mat roiA(
+      hsv, cv::Rect(cv::Point(center_a.x - 5, (center_a.y)), cv::Size(20, 20)));
+  cv::Mat roiB(
+      hsv, cv::Rect(cv::Point(center_b.x - 5, (center_b.y)), cv::Size(20, 20)));
 
   cv::Scalar meanA = cv::mean(roiA);
   cv::Scalar meanB = cv::mean(roiB);

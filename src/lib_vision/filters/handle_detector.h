@@ -23,12 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef VISION_FILTER_HANDLE_DETECTOR_H_
 #define VISION_FILTER_HANDLE_DETECTOR_H_
-
-//==============================================================================
-// I N C L U D E   F I L E S
 
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/target.h>
@@ -37,9 +33,6 @@
 #include <lib_vision/algorithm/performance_evaluator.h>
 
 namespace lib_vision {
-
-//==============================================================================
-// C L A S S E S
 
 class HandleDetector : public Filter {
  public:
@@ -144,8 +137,7 @@ class HandleDetector : public Filter {
       }
 
       std::sort(objVec.begin(), objVec.end(),
-                [](ObjectFullData::Ptr a,
-                   ObjectFullData::Ptr b)
+                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
                     -> bool { return a->GetArea() > b->GetArea(); });
 
       // Since we search only one buoy, get the biggest from sort function

@@ -23,7 +23,6 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef VISION_FILTER_FEATURE_FACTORY_H_
 #define VISION_FILTER_FEATURE_FACTORY_H_
 
@@ -37,18 +36,19 @@
 
 class ObjectFeatureFactory {
  public:
-
   ObjectFeatureFactory(unsigned int memorySize);
 
-  ~ObjectFeatureFactory() { };
+  ~ObjectFeatureFactory(){};
 
   void ComputeAllFeature(ObjectFullData::FullObjectPtrVec objects);
   void ComputeAllFeature(ObjectFullData::Ptr object);
 
-  void ComputeSelectedFeature(ObjectFullData::FullObjectPtrVec objects,
-                             const std::vector<ObjectFeatureData::Feature> &feature);
-  void ComputeSelectedFeature(ObjectFullData::Ptr object,
-                             const std::vector<ObjectFeatureData::Feature> &feature);
+  void ComputeSelectedFeature(
+      ObjectFullData::FullObjectPtrVec objects,
+      const std::vector<ObjectFeatureData::Feature> &feature);
+  void ComputeSelectedFeature(
+      ObjectFullData::Ptr object,
+      const std::vector<ObjectFeatureData::Feature> &feature);
 
   // feature funcitions
   void RatioFeature(ObjectFullData::Ptr object);
@@ -64,12 +64,13 @@ class ObjectFeatureFactory {
   void GreenMeanFeature(ObjectFullData::Ptr object);
   void BlueMeanFeature(ObjectFullData::Ptr object);
   void GrayMeanFeature(ObjectFullData::Ptr object);
+
  private:
-  float CalculatePlaneMean
-      (ObjectFullData::Ptr object, int plane);
+  float CalculatePlaneMean(ObjectFullData::Ptr object, int plane);
 
   // define the type "Pointer to method to calculate a feature"
-  //typedef float (ObjectFeatureFactory::*FeatureFunction)(std::shared_ptr<ObjectFullData>);
+  // typedef float
+  // (ObjectFeatureFactory::*FeatureFunction)(std::shared_ptr<ObjectFullData>);
 
   typedef std::function<void(ObjectFullData::Ptr)> FeatureFunction;
 
@@ -84,8 +85,8 @@ class ObjectFeatureFactory {
 //	INLINE
 //-----------------------------------------------------------------------------
 //
-inline void
-ObjectFeatureFactory::ComputeAllFeature(ObjectFullData::FullObjectPtrVec objects) {
+inline void ObjectFeatureFactory::ComputeAllFeature(
+    ObjectFullData::FullObjectPtrVec objects) {
   for (auto &object : objects) {
     ComputeAllFeature(object);
   }
@@ -93,30 +94,29 @@ ObjectFeatureFactory::ComputeAllFeature(ObjectFullData::FullObjectPtrVec objects
 
 //-----------------------------------------------------------------------------
 //
-inline void
-ObjectFeatureFactory::ComputeAllFeature(ObjectFullData::Ptr object) {
+inline void ObjectFeatureFactory::ComputeAllFeature(
+    ObjectFullData::Ptr object) {
   for (auto &fct : feature_fct_map) {
-    fct.second(object);//(this->*(fct.second));
+    fct.second(object);  //(this->*(fct.second));
     //*tmp(object);
   }
 }
 
 //-----------------------------------------------------------------------------
 //
-inline void
-ObjectFeatureFactory::ComputeSelectedFeature(ObjectFullData::FullObjectPtrVec objects,
-                                             const std::vector<ObjectFeatureData::Feature> &feature) {
+inline void ObjectFeatureFactory::ComputeSelectedFeature(
+    ObjectFullData::FullObjectPtrVec objects,
+    const std::vector<ObjectFeatureData::Feature> &feature) {
   for (auto &object : objects) {
     ComputeSelectedFeature(object, feature);
   }
-
 }
 
 //-----------------------------------------------------------------------------
 //
-inline void
-ObjectFeatureFactory::ComputeSelectedFeature(ObjectFullData::Ptr object,
-                                             const std::vector<ObjectFeatureData::Feature> &feature) {
+inline void ObjectFeatureFactory::ComputeSelectedFeature(
+    ObjectFullData::Ptr object,
+    const std::vector<ObjectFeatureData::Feature> &feature) {
   for (const auto &feat : feature) {
     (feature_fct_map[feat])(object);
   }
@@ -124,8 +124,7 @@ ObjectFeatureFactory::ComputeSelectedFeature(ObjectFullData::Ptr object,
 
 //-----------------------------------------------------------------------------
 //
-inline void ObjectFeatureFactory::RatioFeature(
-    ObjectFullData::Ptr object) {
+inline void ObjectFeatureFactory::RatioFeature(ObjectFullData::Ptr object) {
   if ((object.get() != nullptr) && (object->GetRatio() == -1.0f)) {
     RotRect rect = object->GetRotatedRect();
     object->SetRatio(rect.size.width / rect.size.height);
@@ -134,15 +133,13 @@ inline void ObjectFeatureFactory::RatioFeature(
 
 //-----------------------------------------------------------------------------
 //
-inline void ObjectFeatureFactory::ConvexityFeature(
-    ObjectFullData::Ptr object) {
+inline void ObjectFeatureFactory::ConvexityFeature(ObjectFullData::Ptr object) {
   if ((object.get() != nullptr) && (object->GetConvexity() == -1.0f)) {
     // safety, should not happen
     float convexHull = object->GetConvexHullArea();
     float area = object->GetArea();
     if (convexHull > 0 && area > 0)
-      object->SetConvexity(
-          1.0f- (area / convexHull));
+      object->SetConvexity(1.0f - (area / convexHull));
   }
 }
 
@@ -156,9 +153,9 @@ inline void ObjectFeatureFactory::CircularityFeature(
     float radiusCircum = pow(object->GetCircumference() / (2 * M_PI), 2);
     float radiusArea = object->GetArea() / (M_PI);
     if (radiusCircum != 0 && radiusArea != 0) {
-      object->SetCircularity(
-          radiusCircum > radiusArea ? radiusArea / radiusCircum
-                                    : radiusCircum / radiusArea);
+      object->SetCircularity(radiusCircum > radiusArea
+                                 ? radiusArea / radiusCircum
+                                 : radiusCircum / radiusArea);
     }
   }
 }
@@ -167,7 +164,8 @@ inline void ObjectFeatureFactory::CircularityFeature(
 //
 inline void ObjectFeatureFactory::PresenceConsistencyFeature(
     ObjectFullData::Ptr object) {
-  if ((object.get() != nullptr) && (object->GetPresenceConsistency() == -1.0f)) {
+  if ((object.get() != nullptr) &&
+      (object->GetPresenceConsistency() == -1.0f)) {
     float ratio = object->GetRatio();
     if (ratio == -1.0f) {
       RatioFeature(object);
@@ -175,8 +173,8 @@ inline void ObjectFeatureFactory::PresenceConsistencyFeature(
     }
     ObjectFullData::FullObjectPtrVec vec =
         _frame_memory.GetPastObjectsViaCenter(object->GetCenter(), ratio);
-    object->SetPresenceConsistency(
-        float(vec.size()) / float(_frame_memory.GetMemorySize()));
+    object->SetPresenceConsistency(float(vec.size()) /
+                                   float(_frame_memory.GetMemorySize()));
   }
 }
 
@@ -192,17 +190,17 @@ inline void ObjectFeatureFactory::HueMeanFeature(ObjectFullData::Ptr object) {
 //
 inline void ObjectFeatureFactory::SatMeanFeature(ObjectFullData::Ptr object) {
   if ((object.get() != nullptr) && (object->GetSatMean() == -1.0f)) {
-    object->SetSatMean(CalculatePlaneMean(object,
-                                          ObjectBasicData::SATURATION_PLANE));
+    object->SetSatMean(
+        CalculatePlaneMean(object, ObjectBasicData::SATURATION_PLANE));
   }
 }
 //-----------------------------------------------------------------------------
 //
-inline void ObjectFeatureFactory::IntensityMeanFeature(std::shared_ptr<
-    ObjectFullData> object) {
+inline void ObjectFeatureFactory::IntensityMeanFeature(
+    std::shared_ptr<ObjectFullData> object) {
   if ((object.get() != nullptr) && (object->GetIntensityMean() == -1.0f)) {
-    object->SetIntensityMean(CalculatePlaneMean(object,
-                                                 ObjectBasicData::INTENSITY_PLANE));
+    object->SetIntensityMean(
+        CalculatePlaneMean(object, ObjectBasicData::INTENSITY_PLANE));
   }
 }
 //-----------------------------------------------------------------------------
@@ -214,27 +212,27 @@ inline void ObjectFeatureFactory::RedMeanFeature(ObjectFullData::Ptr object) {
 }
 //-----------------------------------------------------------------------------
 //
-inline void ObjectFeatureFactory::GreenMeanFeature(std::shared_ptr<
-    ObjectFullData> object) {
+inline void ObjectFeatureFactory::GreenMeanFeature(
+    std::shared_ptr<ObjectFullData> object) {
   if ((object.get() != nullptr) && (object->GetGreenMean() == -1.0f)) {
-    object->SetGreenMean(CalculatePlaneMean(object,
-                                            ObjectBasicData::GREEN_PLANE));
+    object->SetGreenMean(
+        CalculatePlaneMean(object, ObjectBasicData::GREEN_PLANE));
   }
 }
 //-----------------------------------------------------------------------------
 //
 inline void ObjectFeatureFactory::BlueMeanFeature(ObjectFullData::Ptr object) {
   if ((object.get() != nullptr) && (object->GetBlueMean() == -1.0f)) {
-    object->SetBlueMean(CalculatePlaneMean(object,
-                                           ObjectBasicData::BLUE_PLANE));
+    object->SetBlueMean(
+        CalculatePlaneMean(object, ObjectBasicData::BLUE_PLANE));
   }
 }
 //-----------------------------------------------------------------------------
 //
 inline void ObjectFeatureFactory::GrayMeanFeature(ObjectFullData::Ptr object) {
   if ((object.get() != nullptr) && (object->GetGrayMean() == -1.0f)) {
-    object->SetGrayMean(CalculatePlaneMean(object,
-                                           ObjectBasicData::GRAY_PLANE));
+    object->SetGrayMean(
+        CalculatePlaneMean(object, ObjectBasicData::GRAY_PLANE));
   }
 }
 #endif  //_FEATURE_FACTORY_H_

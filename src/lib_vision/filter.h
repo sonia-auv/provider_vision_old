@@ -23,12 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef VISION_FILTER_FILTER_H_
 #define VISION_FILTER_FILTER_H_
-
-//==============================================================================
-// I N C L U D E   F I L E S
 
 #include <vector>
 #include <string>
@@ -42,9 +38,6 @@
 
 namespace lib_vision {
 
-//==============================================================================
-// C L A S S E S
-
 class Filter {
  public:
   //============================================================================
@@ -53,7 +46,7 @@ class Filter {
   // KEEPING A REFERENCE TO GlobalParamHandler. VERY IMPORTANT
   explicit Filter(const GlobalParamHandler &globalParams)
       : global_params_(const_cast<GlobalParamHandler &>(globalParams)),
-        //enable_("Enable", false, parameters_),
+        // enable_("Enable", false, parameters_),
         // Explicit construction not needed here... Just reminder it exist.
         parameters_() {}
 
@@ -222,7 +215,7 @@ class Filter {
  protected:
   // KEEPING A REFERENCE. VERY IMPORTANT
   GlobalParamHandler &global_params_;
-//  BooleanParameter enable_;
+  //  BooleanParameter enable_;
 
   // vector parameter, so we can list them.
   std::vector<Parameter *> parameters_;

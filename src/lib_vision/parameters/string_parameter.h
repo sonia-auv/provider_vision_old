@@ -23,21 +23,14 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 // We are not respecting our coding style here just to be sure we
 // dont redefine some macro of std::string.
 #ifndef VISION_FILTER_STRINGPARAM_H_
 #define VISION_FILTER_STRINGPARAM_H_
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
 #include <lib_vision/parameter.h>
 
 namespace lib_vision {
-
-//==============================================================================
-// C L A S S E S
 
 class StringParameter : public Parameter {
  public:

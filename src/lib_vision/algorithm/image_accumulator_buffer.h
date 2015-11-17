@@ -23,7 +23,6 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef VISION_FILTER_ACCUMULATOR_H_
 #define VISION_FILTER_ACCUMULATOR_H_
 
@@ -34,7 +33,7 @@
 // Simple circular buffer
 // that returns the weighted sum of all images in his buffer.
 class ImageAccumulatorBuffer {
-public:
+ public:
   enum METHOD { ACC_ALL_SAME_WEIGHT, ACC_50_PERCENT, ACC_ADJUST_WEIGHT };
 
   // Creates a circular buffer of bufferLength,
@@ -83,7 +82,7 @@ public:
 
   void GetImage(size_t index, cv::Mat &image);
 
-private:
+ private:
   // Averaging methods
   // They all keep the image in CV_32FCN
   // All images in the buffer have the same weights
@@ -127,10 +126,8 @@ inline int ImageAccumulatorBuffer::GetBufferLength() { return _buffer_size; }
 
 //-----------------------------------------------------------------------------
 //
-inline void ImageAccumulatorBuffer::GetImage(size_t index,
-                                             cv::Mat &image) {
-  if (index < _buffer_size)
-  {
+inline void ImageAccumulatorBuffer::GetImage(size_t index, cv::Mat &image) {
+  if (index < _buffer_size) {
     _image_vec[index].copyTo(image);
   }
 }
@@ -176,14 +173,14 @@ inline void ImageAccumulatorBuffer::SetAverageMethod(METHOD method) {
   switch (method) {
     case ACC_ALL_SAME_WEIGHT:
       _average_method = &ImageAccumulatorBuffer::AverageAllSameWeight;
-          break;
+      break;
     case ACC_50_PERCENT:
       _average_method = &ImageAccumulatorBuffer::AverageIncrease50Percent;
-          break;
+      break;
     case ACC_ADJUST_WEIGHT:
       _average_method =
-              &ImageAccumulatorBuffer::AverageAccumulateWithResultingWeight;
-          break;
+          &ImageAccumulatorBuffer::AverageAccumulateWithResultingWeight;
+      break;
   }
 }
 

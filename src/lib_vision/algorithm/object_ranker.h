@@ -23,7 +23,6 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef VISION_FILTER_OBJECT_RANKER_H_
 #define VISION_FILTER_OBJECT_RANKER_H_
 
@@ -39,11 +38,9 @@ class ObjectRanker {
   static void RankByLength(ObjectFullData::FullObjectPtrVec objects);
 
   // Function for std::sort function
-  static bool AreaSortFunction(ObjectFullData::Ptr a,
-                               ObjectFullData::Ptr b);
+  static bool AreaSortFunction(ObjectFullData::Ptr a, ObjectFullData::Ptr b);
 
-  static bool LengthSortFunction(ObjectFullData::Ptr a,
-                                 ObjectFullData::Ptr b);
+  static bool LengthSortFunction(ObjectFullData::Ptr a, ObjectFullData::Ptr b);
 };
 
 //-----------------------------------------------------------------------------
@@ -58,8 +55,8 @@ inline bool ObjectRanker::AreaSortFunction(ObjectFullData::Ptr a,
 
 //-----------------------------------------------------------------------------
 //
-inline bool ObjectRanker::LengthSortFunction(
-    ObjectFullData::Ptr a, ObjectFullData::Ptr b) {
+inline bool ObjectRanker::LengthSortFunction(ObjectFullData::Ptr a,
+                                             ObjectFullData::Ptr b) {
   if (a.get() != nullptr && b.get() != nullptr) {
     return a->GetLength() > b->GetLength();
   }

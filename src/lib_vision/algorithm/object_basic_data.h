@@ -23,7 +23,6 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef VISION_FILTER_BASIC_OBJECT_DATA_H_
 #define VISION_FILTER_BASIC_OBJECT_DATA_H_
 
@@ -56,7 +55,7 @@ class ObjectBasicData {
   ObjectBasicData(const cv::Mat &originalImage, const cv::Mat &binaryImage,
                   const Contour &contour);
 
-  virtual ~ObjectBasicData() { }
+  virtual ~ObjectBasicData() {}
 
   void SetPlaneInRange(int &planeID);
 

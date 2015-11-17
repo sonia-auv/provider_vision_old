@@ -23,7 +23,6 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef VISION_FILTER_FULL_OBJECT_DATA_H_
 #define VISION_FILTER_FULL_OBJECT_DATA_H_
 
@@ -56,21 +55,18 @@ class ObjectFullData : public ObjectTrackingData,
                  const Contour &contour);
 
   virtual ~ObjectFullData(){};
-
 };
 //==============================================================================
 // SORTING INLINE FUNCTION
 //------------------------------------------------------------------------------
 //
-inline bool AreaSorts(ObjectFullData::Ptr a, ObjectFullData::Ptr b )
-{
+inline bool AreaSorts(ObjectFullData::Ptr a, ObjectFullData::Ptr b) {
   return a->GetArea() < b->GetArea();
 }
 
 //------------------------------------------------------------------------------
 //
-inline bool RatioSorts(ObjectFullData::Ptr a, ObjectFullData::Ptr b )
-{
+inline bool RatioSorts(ObjectFullData::Ptr a, ObjectFullData::Ptr b) {
   return a->GetRatio() < b->GetRatio();
 }
 

@@ -23,12 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef VISION_FILTER_DELOREAN_DETECTOR_H_
 #define VISION_FILTER_DELOREAN_DETECTOR_H_
-
-//==============================================================================
-// I N C L U D E   F I L E S
 
 #include <lib_vision/algorithm/general_function.h>
 #include <lib_vision/algorithm/target.h>
@@ -37,9 +33,6 @@
 #include <lib_vision/algorithm/object_feature_factory.h>
 
 namespace lib_vision {
-
-//==============================================================================
-// C L A S S E S
 
 class DeloreanDetector : public Filter {
  public:
@@ -148,12 +141,10 @@ class DeloreanDetector : public Filter {
       }
 
       std::sort(objVec_big.begin(), objVec_big.end(),
-                [](ObjectFullData::Ptr a,
-                   ObjectFullData::Ptr b)
+                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
                     -> bool { return a->GetArea() > b->GetArea(); });
       std::sort(objVec_small.begin(), objVec_small.end(),
-                [](ObjectFullData::Ptr a,
-                   ObjectFullData::Ptr b)
+                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
                     -> bool { return a->GetArea() > b->GetArea(); });
 
       if (objVec_big.size() > 0) {

@@ -23,7 +23,6 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef LIB_VISION_FILTERS_IN_RANGE_FILTER_H_
 #define LIB_VISION_FILTERS_IN_RANGE_FILTER_H_
 

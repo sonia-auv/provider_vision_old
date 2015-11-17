@@ -23,20 +23,13 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef VISION_FILTER_SUBTRACT_ALL_PLANES_H_
 #define VISION_FILTER_SUBTRACT_ALL_PLANES_H_
-
-//==============================================================================
-// I N C L U D E   F I L E S
 
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/general_function.h>
 
 namespace lib_vision {
-
-//==============================================================================
-// C L A S S E S
 
 // Filter showing planes of different analysis (gray, _hsi, _bgr)
 // No threshold

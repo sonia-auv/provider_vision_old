@@ -30,32 +30,44 @@
 //-----------------------------------------------------------------------------
 //
 ObjectFeatureFactory::ObjectFeatureFactory(unsigned int memorySize)
-    :_frame_memory(memorySize) {
+    : _frame_memory(memorySize) {
   using namespace std::placeholders;
-  feature_fct_map.emplace(ObjectFeatureData::Feature::RATIO,
-                          std::bind(&ObjectFeatureFactory::RatioFeature, this, _1));
-  feature_fct_map.emplace(ObjectFeatureData::Feature::CONVEXITY,
-                          std::bind(&ObjectFeatureFactory::ConvexityFeature, this, _1));
-  feature_fct_map.emplace(ObjectFeatureData::Feature::PERCENT_FILLED,
-                          std::bind(&ObjectFeatureFactory::PercentFilledFeature, this, _1));
-  feature_fct_map.emplace(ObjectFeatureData::Feature::CIRCULARITY,
-                          std::bind(&ObjectFeatureFactory::CircularityFeature, this, _1));
-  feature_fct_map.emplace(ObjectFeatureData::Feature::PRESENCE_CONSISTENCY,
-                          std::bind(&ObjectFeatureFactory::PresenceConsistencyFeature, this, _1));
-  feature_fct_map.emplace(ObjectFeatureData::Feature::HUE_MEAN,
-                          std::bind(&ObjectFeatureFactory::HueMeanFeature, this, _1));
-  feature_fct_map.emplace(ObjectFeatureData::Feature::SAT_MEAN,
-                          std::bind(&ObjectFeatureFactory::SatMeanFeature, this, _1));
-  feature_fct_map.emplace(ObjectFeatureData::Feature::INTENSITY_MEAN,
-                          std::bind(&ObjectFeatureFactory::IntensityMeanFeature, this, _1));
-  feature_fct_map.emplace(ObjectFeatureData::Feature::RED_MEAN,
-                          std::bind(&ObjectFeatureFactory::RedMeanFeature, this, _1));
-  feature_fct_map.emplace(ObjectFeatureData::Feature::GREEN_MEAN,
-                          std::bind(&ObjectFeatureFactory::GreenMeanFeature, this, _1));
-  feature_fct_map.emplace(ObjectFeatureData::Feature::BLUE_MEAN,
-                          std::bind(&ObjectFeatureFactory::BlueMeanFeature, this, _1));
-  feature_fct_map.emplace(ObjectFeatureData::Feature::GRAY_MEAN,
-                          std::bind(&ObjectFeatureFactory::GrayMeanFeature, this, _1));
+  feature_fct_map.emplace(
+      ObjectFeatureData::Feature::RATIO,
+      std::bind(&ObjectFeatureFactory::RatioFeature, this, _1));
+  feature_fct_map.emplace(
+      ObjectFeatureData::Feature::CONVEXITY,
+      std::bind(&ObjectFeatureFactory::ConvexityFeature, this, _1));
+  feature_fct_map.emplace(
+      ObjectFeatureData::Feature::PERCENT_FILLED,
+      std::bind(&ObjectFeatureFactory::PercentFilledFeature, this, _1));
+  feature_fct_map.emplace(
+      ObjectFeatureData::Feature::CIRCULARITY,
+      std::bind(&ObjectFeatureFactory::CircularityFeature, this, _1));
+  feature_fct_map.emplace(
+      ObjectFeatureData::Feature::PRESENCE_CONSISTENCY,
+      std::bind(&ObjectFeatureFactory::PresenceConsistencyFeature, this, _1));
+  feature_fct_map.emplace(
+      ObjectFeatureData::Feature::HUE_MEAN,
+      std::bind(&ObjectFeatureFactory::HueMeanFeature, this, _1));
+  feature_fct_map.emplace(
+      ObjectFeatureData::Feature::SAT_MEAN,
+      std::bind(&ObjectFeatureFactory::SatMeanFeature, this, _1));
+  feature_fct_map.emplace(
+      ObjectFeatureData::Feature::INTENSITY_MEAN,
+      std::bind(&ObjectFeatureFactory::IntensityMeanFeature, this, _1));
+  feature_fct_map.emplace(
+      ObjectFeatureData::Feature::RED_MEAN,
+      std::bind(&ObjectFeatureFactory::RedMeanFeature, this, _1));
+  feature_fct_map.emplace(
+      ObjectFeatureData::Feature::GREEN_MEAN,
+      std::bind(&ObjectFeatureFactory::GreenMeanFeature, this, _1));
+  feature_fct_map.emplace(
+      ObjectFeatureData::Feature::BLUE_MEAN,
+      std::bind(&ObjectFeatureFactory::BlueMeanFeature, this, _1));
+  feature_fct_map.emplace(
+      ObjectFeatureData::Feature::GRAY_MEAN,
+      std::bind(&ObjectFeatureFactory::GrayMeanFeature, this, _1));
 }
 
 //=============================================================================
@@ -63,7 +75,6 @@ ObjectFeatureFactory::ObjectFeatureFactory(unsigned int memorySize)
 //-----------------------------------------------------------------------------
 //
 void ObjectFeatureFactory::PercentFilledFeature(ObjectFullData::Ptr object) {
-
   if ((object.get() != nullptr) && (object->GetPercentFilled() == -1.0f)) {
     float percentFilled = 0.0f;
 
@@ -108,8 +119,8 @@ float ObjectFeatureFactory::CalculatePlaneMean(ObjectFullData::Ptr object,
     cv::cvtColor(binaryImage, binaryImage, CV_BGR2GRAY);
     cv::Mat colorbinaryImage;
 
-    cv::bitwise_and(object->GetPlanes(plane),
-                    cv::Scalar::all(255), colorbinaryImage, binaryImage);
+    cv::bitwise_and(object->GetPlanes(plane), cv::Scalar::all(255),
+                    colorbinaryImage, binaryImage);
     long unsigned int accumulator = 0, nbPixel = 0;
 
     int rows = colorbinaryImage.rows, cols = colorbinaryImage.cols;

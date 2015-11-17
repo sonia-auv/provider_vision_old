@@ -26,9 +26,6 @@
 #ifndef VISION_FILTER_OBJECT_FINDER_H_
 #define VISION_FILTER_OBJECT_FINDER_H_
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/features.h>
 #include <lib_vision/algorithm/general_function.h>
@@ -38,9 +35,6 @@
 #include <lib_vision/algorithm/performance_evaluator.h>
 
 namespace lib_vision {
-
-//==============================================================================
-// C L A S S E S
 
 class ObjectFinder : public Filter {
  public:
@@ -143,8 +137,7 @@ class ObjectFinder : public Filter {
       }
 
       std::sort(objVec.begin(), objVec.end(),
-                [](ObjectFullData::Ptr a,
-                   ObjectFullData::Ptr b)
+                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
                     -> bool { return a->GetArea() > b->GetArea(); });
 
       // Since we search only one buoy, get the biggest from sort function

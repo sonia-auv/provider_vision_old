@@ -23,7 +23,6 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef VISION_FILTER_FEATUREVEC_H_
 #define VISION_FILTER_FEATUREVEC_H_
 
@@ -55,11 +54,19 @@ class ObjectFeatureData {
   typedef std::vector<ObjectFeatureData::Ptr> ObjectFeatureVector;
 
   ObjectFeatureData()
-      : ratio_(-1.0f), convexity_(-1.0f), percent_filled_(-1.0f),
-        circularity_(-1.0f), presence_consistency_(-1.0f), hue_mean_(-1.0f),
-        sat_mean_(-1.0f), intensity_mean_(-1.0f), red_mean_(-1.0f),
-        green_mean_(-1.0f), blue_mean_(-1.0f), gray_mean_(-1.0f) { };
-  virtual ~ObjectFeatureData() { };
+      : ratio_(-1.0f),
+        convexity_(-1.0f),
+        percent_filled_(-1.0f),
+        circularity_(-1.0f),
+        presence_consistency_(-1.0f),
+        hue_mean_(-1.0f),
+        sat_mean_(-1.0f),
+        intensity_mean_(-1.0f),
+        red_mean_(-1.0f),
+        green_mean_(-1.0f),
+        blue_mean_(-1.0f),
+        gray_mean_(-1.0f){};
+  virtual ~ObjectFeatureData(){};
 
   inline float GetRatio() const { return ratio_; }
   inline float GetConvexity() const { return convexity_; }
