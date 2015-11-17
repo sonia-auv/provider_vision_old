@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_FEATURE_FACTORY_H_
-#define VISION_FILTER_FEATURE_FACTORY_H_
+#ifndef LIB_VISION_ALGORITHM_OBJECT_FEATURE_FACTORY_H_
+#define LIB_VISION_ALGORITHM_OBJECT_FEATURE_FACTORY_H_
 
 #include <vector>
 #include <map>
@@ -235,4 +235,4 @@ inline void ObjectFeatureFactory::GrayMeanFeature(ObjectFullData::Ptr object) {
         CalculatePlaneMean(object, ObjectBasicData::GRAY_PLANE));
   }
 }
-#endif  //_FEATURE_FACTORY_H_
+#endif  // LIB_VISION_ALGORITHM_OBJECT_FEATURE_FACTORY_H_

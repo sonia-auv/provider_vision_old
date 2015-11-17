@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_LINE_H_
-#define VISION_FILTER_LINE_H_
+#ifndef LIB_VISION_ALGORITHM_LINE_H_
+#define LIB_VISION_ALGORITHM_LINE_H_
 
 #include <opencv2/core/core.hpp>
 #include <math.h>
@@ -69,4 +69,4 @@ bool centerXSort(Line a, Line b);
 
 bool centerYSort(Line a, Line b);
 
-#endif /* LINE_H_ */
+#endif // LIB_VISION_ALGORITHM_LINE_H_

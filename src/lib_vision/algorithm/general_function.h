@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_GENERAL_FUNCTION_H_
-#define VISION_FILTER_GENERAL_FUNCTION_H_
+#ifndef LIB_VISION_ALGORITHM_GENERAL_FUNCTION_H_
+#define LIB_VISION_ALGORITHM_GENERAL_FUNCTION_H_
 
 #include <opencv2/opencv.hpp>
 #include <lib_vision/algorithm/type_and_const.h>
@@ -131,4 +131,4 @@ void drawSquares(cv::Mat &image,
                  const std::vector<std::vector<cv::Point> > &squares);
 bool compareYX(const cv::Point &p1, const cv::Point &p2);
 
-#endif
+#endif // LIB_VISION_ALGORITHM_GENERAL_FUNCTION_H_

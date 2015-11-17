@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_SUB_FRAME_MASK_H_
-#define VISION_FILTER_SUB_FRAME_MASK_H_
+#ifndef LIB_VISION_FILTERS_SUBMARINE_FRAME_MASKER_H_
+#define LIB_VISION_FILTERS_SUBMARINE_FRAME_MASKER_H_
 
 #include <lib_vision/filter.h>
 
@@ -84,4 +84,4 @@ class SubmarineFrameMasker : public Filter {
 
 }  // namespace lib_vision
 
-#endif  // VISION_FILTER_SUB_FRAME_MASK_H_
+#endif  // LIB_VISION_FILTERS_SUBMARINE_FRAME_MASKER_H_

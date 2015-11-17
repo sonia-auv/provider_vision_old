@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_TORPEDOES_DETECTOR_H_
-#define VISION_FILTER_TORPEDOES_DETECTOR_H_
+#ifndef LIB_VISION_FILTERS_TORPEDOES_DETECTOR_H_
+#define LIB_VISION_FILTERS_TORPEDOES_DETECTOR_H_
 
 #include <string>
 #include <lib_vision/filter.h>
@@ -354,4 +354,4 @@ class TorpedoesDetector : public Filter {
 
 }  // namespace lib_vision
 
-#endif  // VISION_FILTER_TORPEDOES_DETECTOR_H_
+#endif  // LIB_VISION_FILTERS_TORPEDOES_DETECTOR_H_

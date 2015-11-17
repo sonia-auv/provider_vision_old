@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CONTOUR_H_
-#define CONTOUR_H_
+#ifndef LIB_VISION_ALGORITHM_CONTOUR_H_
+#define LIB_VISION_ALGORITHM_CONTOUR_H_
 
 #include <opencv2/opencv.hpp>
 
@@ -90,4 +90,4 @@ inline cv::Point Contour::operator[](unsigned int index) {
   return _contour[index];
 }
 
-#endif /* LIB_VISION_SRC_LIB_VISION_ALGORITHM_CONTOUR_FINDER_H_ */
+#endif // LIB_VISION_ALGORITHM_CONTOUR_H_

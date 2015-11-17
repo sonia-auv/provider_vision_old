@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_OBJECT_FINDER_H_
-#define VISION_FILTER_OBJECT_FINDER_H_
+#ifndef LIB_VISION_FILTERS_OBJECT_FINDER_H_
+#define LIB_VISION_FILTERS_OBJECT_FINDER_H_
 
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/general_function.h>
@@ -307,4 +307,4 @@ class ObjectFinder : public Filter {
 
 }  // namespace lib_vision
 
-#endif  // VISION_FILTER_OBJECT_FINDER_H_
+#endif  // LIB_VISION_FILTERS_OBJECT_FINDER_H_

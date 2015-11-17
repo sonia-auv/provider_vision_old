@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_MAJOR_EDGE_EXTRACTOR_H_
-#define VISION_FILTER_MAJOR_EDGE_EXTRACTOR_H_
+#ifndef LIB_VISION_ALGORITHM_MAJOR_EDGE_EXTRACTOR_H_
+#define LIB_VISION_ALGORITHM_MAJOR_EDGE_EXTRACTOR_H_
 
 #include <opencv2/opencv.hpp>
 
@@ -225,4 +225,4 @@ inline void MajorEdgeExtractor::SetValInReferenceVec(RefPointPtr ptr,
   SetValInReferenceVec(ptr->_reference_max_index, value);
 }
 
-#endif  //_MAJOR_EDGE_EXTRACTOR_H_
+#endif  // LIB_VISION_ALGORITHM_MAJOR_EDGE_EXTRACTOR_H_

@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_BASIC_OBJECT_DATA_H_
-#define VISION_FILTER_BASIC_OBJECT_DATA_H_
+#ifndef LIB_VISION_ALGORITHM_OBJECT_BASIC_DATA_H_
+#define LIB_VISION_ALGORITHM_OBJECT_BASIC_DATA_H_
 
 #include <lib_vision/algorithm/rot_rect.h>
 #include <lib_vision/algorithm/type_and_const.h>
@@ -243,4 +243,4 @@ inline const cv::Mat &ObjectBasicData::GetOriginalImage() {
   return _binary_image;
 }
 
-#endif
+#endif // LIB_VISION_ALGORITHM_OBJECT_BASIC_DATA_H_

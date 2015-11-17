@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_PERFORMANCE_EVALUATOR_H_
-#define VISION_FILTER_PERFORMANCE_EVALUATOR_H_
+#ifndef LIB_VISION_ALGORITHM_PERFORMANCE_EVALUATOR_H_
+#define LIB_VISION_ALGORITHM_PERFORMANCE_EVALUATOR_H_
 
 #include "opencv2/opencv.hpp"
 
@@ -70,4 +70,4 @@ inline void PerformanceEvaluator::UpdateStartTime() {
   _start_tick_count = cv::getTickCount();
 }
 
-#endif
+#endif // LIB_VISION_ALGORITHM_PERFORMANCE_EVALUATOR_H_

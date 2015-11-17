@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_MATRIX_H_
-#define VISION_FILTER_MATRIX_H_
+#ifndef LIB_VISION_PARAMETERS_MATRIX_PARAMETER_H_
+#define LIB_VISION_PARAMETERS_MATRIX_PARAMETER_H_
 
 #include <lib_vision/parameter.h>
 #include <opencv/cv.h>
@@ -68,4 +68,4 @@ class MatrixParameter : public Parameter {
 
 }  // namespace lib_vision
 
-#endif  // VISION_FILTER_MATRIX_H_
+#endif  // LIB_VISION_PARAMETERS_MATRIX_PARAMETER_H_

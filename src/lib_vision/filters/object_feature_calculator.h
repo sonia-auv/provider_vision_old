@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_OBJECT_CALCULATOR_H_
-#define VISION_FILTER_OBJECT_CALCULATOR_H_
+#ifndef LIB_VISION_FILTERS_OBJECT_CALCULATOR_H_
+#define LIB_VISION_FILTERS_OBJECT_CALCULATOR_H_
 
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/general_function.h>
@@ -129,8 +129,8 @@ class ObjectFeatureCalculator : public Filter {
   ObjectFeatureFactory _feature_factory;
 };
 
-#define VISION_FILTER_PI 3.14159265
+#define LIB_VISION_FILTERS_PI 3.14159265
 
 }  // namespace lib_vision
 
-#endif  // VISION_FILTER_OBJECT_CALCULATOR_H_
+#endif  // LIB_VISION_FILTERS_OBJECT_CALCULATOR_H_

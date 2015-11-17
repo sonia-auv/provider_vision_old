@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_FEATUREVEC_H_
-#define VISION_FILTER_FEATUREVEC_H_
+#ifndef LIB_VISION_ALGORITHM_OBJECT_FEATURE_H_
+#define LIB_VISION_ALGORITHM_OBJECT_FEATURE_H_
 
 #include <vector>
 #include <memory>
@@ -107,4 +107,4 @@ class ObjectFeatureData {
 //-----------------------------------------------------------------------------
 //
 
-#endif
+#endif // LIB_VISION_ALGORITHM_OBJECT_FEATURE_H_

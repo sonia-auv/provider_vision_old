@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LIB_VISION_SRC_LIB_VISION_ALGORITHM_CONTOUR_LIST_H_
-#define LIB_VISION_SRC_LIB_VISION_ALGORITHM_CONTOUR_LIST_H_
+#ifndef LIB_VISION_ALGORITHM_CONTOUR_LIST_H_
+#define LIB_VISION_ALGORITHM_CONTOUR_LIST_H_
 
 #include <opencv2/opencv.hpp>
 
@@ -136,4 +136,4 @@ inline void ContourList::DrawContours(cv::Mat &img, const cv::Scalar &color,
   cv::drawContours(img, contour_list_point_, -1, color, thickness);
 }
 
-#endif /* LIB_VISION_SRC_LIB_VISION_ALGORITHM_CONTOUR_FINDER_H_ */
+#endif // LIB_VISION_ALGORITHM_CONTOUR_LIST_H_

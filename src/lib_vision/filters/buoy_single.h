@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_BUOY_SINGLE_H_
-#define VISION_FILTER_BUOY_SINGLE_H_
+#ifndef LIB_VISION_FILTERS_BUOY_SINGLE_H_
+#define LIB_VISION_FILTERS_BUOY_SINGLE_H_
 
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/object_feature_factory.h>
@@ -279,4 +279,4 @@ inline void BuoySingle::ChooseMostRed(ObjectFullData::FullObjectPtrVec &vec) {
 
 }  // namespace lib_vision
 
-#endif  // VISION_FILTER_BUOY_SINGLE_H_
+#endif  // LIB_VISION_FILTERS_BUOY_SINGLE_H_

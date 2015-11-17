@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_PARAM_H_
-#define VISION_FILTER_PARAM_H_
+#ifndef LIB_VISION_FILTER_PARAMETER_H_
+#define LIB_VISION_FILTER_PARAMETER_H_
 
 #include <string>
 #include <cstdlib>
@@ -86,4 +86,4 @@ class Parameter {
 
 }  // namespace lib_vision
 
-#endif  // VISION_FILTER_PARAM_H_
+#endif  // LIB_VISION_FILTER_PARAMETER_H_

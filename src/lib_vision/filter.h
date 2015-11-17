@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_FILTER_H_
-#define VISION_FILTER_FILTER_H_
+#ifndef LIB_VISION_FILTER_H_
+#define LIB_VISION_FILTER_H_
 
 #include <vector>
 #include <string>
@@ -226,4 +226,4 @@ class Filter {
 
 }  // namespace lib_vision
 
-#endif  // VISION_FILTER_FILTER_H_
+#endif  // LIB_VISION_FILTER_H_

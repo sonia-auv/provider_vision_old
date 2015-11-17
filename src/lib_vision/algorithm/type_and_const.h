@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_TYPE_AND_CONST_
-#define VISION_FILTER_TYPE_AND_CONST_
+#ifndef LIB_VISION_ALGORITHM_TYPE_AND_CONST_H_
+#define LIB_VISION_ALGORITHM_TYPE_AND_CONST_H_
 
 #include <opencv2/opencv.hpp>
 // Definition of different type, different values used in our filters.
@@ -44,4 +44,4 @@ typedef std::vector<cv::Vec4i> defectuosity_t;
 enum rotationType { R_NONE = 0, R_90, R_180, R_270 };
 enum symmetryType { S_NONE = 0, S_X_AXIS, S_Y_AXIS, S_BOTH };
 
-#endif
+#endif // LIB_VISION_ALGORITHM_TYPE_AND_CONST_H_

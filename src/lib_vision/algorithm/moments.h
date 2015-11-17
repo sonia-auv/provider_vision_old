@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_MOMENTS_H_
-#define VISION_FILTER_MOMENTS_H_
+#ifndef LIB_VISION_ALGORITHM_MOMENTS_H_
+#define LIB_VISION_ALGORITHM_MOMENTS_H_
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
@@ -50,4 +50,4 @@ class Moments {
   cv::Moments cvMoments;
 };
 
-#endif
+#endif // LIB_VISION_ALGORITHM_MOMENTS_H_

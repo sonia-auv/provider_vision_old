@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_FULL_OBJECT_DATA_H_
-#define VISION_FILTER_FULL_OBJECT_DATA_H_
+#ifndef LIB_VISION_ALGORITHM_OBJECT_FULL_DATA_H_
+#define LIB_VISION_ALGORITHM_OBJECT_FULL_DATA_H_
 
 #include <vector>
 #include <memory>
@@ -70,4 +70,4 @@ inline bool RatioSorts(ObjectFullData::Ptr a, ObjectFullData::Ptr b) {
   return a->GetRatio() < b->GetRatio();
 }
 
-#endif
+#endif // LIB_VISION_ALGORITHM_OBJECT_FULL_DATA_H_

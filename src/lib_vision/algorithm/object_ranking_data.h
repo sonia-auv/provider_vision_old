@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_RANKING_DATA_H_
-#define VISION_FILTER_RANKING_DATA_H_
+#ifndef LIB_VISION_ALGORITHM_OBJECT_RANKING_DATA_H_
+#define LIB_VISION_ALGORITHM_OBJECT_RANKING_DATA_H_
 
 // Basic container class. It holds information about the ranking
 // of certain caracteristic of an object compare to the other.
@@ -70,4 +70,4 @@ inline float ObjectRankingData::GetAreaRank() { return _area_rank; }
 //
 inline float ObjectRankingData::GetLengthRank() { return _length_rank; }
 
-#endif  // RANKING_DATA_H_
+#endif  // LIB_VISION_ALGORITHM_OBJECT_RANKING_DATA_H_

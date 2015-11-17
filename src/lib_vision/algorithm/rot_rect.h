@@ -23,13 +23,13 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_ROTRECT_H_
-#define VISION_FILTER_ROTRECT_H_
+#ifndef LIB_VISION_ALGORITHM_ROT_RECT_H_
+#define LIB_VISION_ALGORITHM_ROT_RECT_H_
 
-#define VISION_FILTER_TOP_LEFT 0
-#define VISION_FILTER_TOP_RIGHT 4
-#define VISION_FILTER_BOTTOM_LEFT 1
-#define VISION_FILTER_BOTTOM_RIGHT 2
+#define LIB_VISION_TOP_LEFT 0
+#define LIB_VISION_TOP_RIGHT 4
+#define LIB_VISION_BOTTOM_LEFT 1
+#define LIB_VISION_BOTTOM_RIGHT 2
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
@@ -71,4 +71,4 @@ class RotRect : public cv::RotatedRect {
   cv::Point2f pts[4];
 };
 
-#endif
+#endif // LIB_VISION_ALGORITHM_ROT_RECT_H_

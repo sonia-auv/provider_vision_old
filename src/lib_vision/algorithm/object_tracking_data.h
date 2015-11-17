@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_OBJECT_TRACKING_DATA_H_
-#define VISION_FILTER_OBJECT_TRACKING_DATA_H_
+#ifndef LIB_VISION_ALGORITHM_OBJECT_TRACKING_DATA_H_
+#define LIB_VISION_ALGORITHM_OBJECT_TRACKING_DATA_H_
 
 // OBjectTrackingData is a basic container class that holds information
 // about an object's past state in time. EX. In the past X frames, how
@@ -59,4 +59,4 @@ inline void ObjectTrackingData::SetPresenceCount(float presenceCount) {
 //
 inline float ObjectTrackingData::GetPresenceCount() { return _presence_count; }
 
-#endif
+#endif // LIB_VISION_ALGORITHM_OBJECT_TRACKING_DATA_H_

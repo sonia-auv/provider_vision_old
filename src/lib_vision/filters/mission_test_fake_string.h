@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_MISSION_STRING_H_
-#define VISION_FILTER_MISSION_STRING_H_
+#ifndef LIB_VISION_FILTERS_MISSION_TEST_FAKE_STRING_H_
+#define LIB_VISION_FILTERS_MISSION_TEST_FAKE_STRING_H_
 
 #include <lib_vision/filter.h>
 
@@ -61,4 +61,4 @@ class MissionTestFakeString : public Filter {
 
 }  // namespace lib_vision
 
-#endif  // VISION_FILTER_MISSION_STRING_H_
+#endif  // LIB_VISION_FILTERS_MISSION_TEST_FAKE_STRING_H_

@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_TARGET_H_
-#define VISION_FILTER_TARGET_H_
+#ifndef LIB_VISION_ALGORITHM_TARGET_H_
+#define LIB_VISION_ALGORITHM_TARGET_H_
 
 #include <opencv2/opencv.hpp>
 #include <stdlib.h>
@@ -127,4 +127,4 @@ inline cv::Point Target::GetTarget() { return center_; }
 inline std::string Target::GetSpecField_1() { return special_field_1_; };
 inline std::string Target::GetSpecField_2() { return special_field_2_; };
 
-#endif
+#endif // LIB_VISION_ALGORITHM_TARGET_H_

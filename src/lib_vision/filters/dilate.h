@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_DILATE_H_
-#define VISION_FILTER_DILATE_H_
+#ifndef LIB_VISION_FILTERS_DILATE_H_
+#define LIB_VISION_FILTERS_DILATE_H_
 
 #include <lib_vision/filter.h>
 
@@ -88,4 +88,4 @@ class Dilate : public Filter {
 
 }  // namespace lib_vision
 
-#endif  // VISION_FILTER_DILATE_H_
+#endif  // LIB_VISION_FILTERS_DILATE_H_

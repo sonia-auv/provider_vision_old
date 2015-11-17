@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_GLOBAL_PARAMETER_H_
-#define VISION_FILTER_GLOBAL_PARAMETER_H_
+#ifndef LIB_VISION_FILTER_GLOBAL_PARAM_HANDLER_H_
+#define LIB_VISION_FILTER_GLOBAL_PARAM_HANDLER_H_
 
 #include <string>
 #include <lib_vision/parameter.h>
@@ -126,4 +126,4 @@ class GlobalParamHandler {
 
 }  // namespace lib_vision
 
-#endif  // VISION_FILTER_GLOBAL_PARAMETER_H_
+#endif  // LIB_VISION_FILTER_GLOBAL_PARAM_HANDLER_H_

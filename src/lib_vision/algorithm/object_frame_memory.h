@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_OBJECT_FRAME_MEMORY_
-#define VISION_FILTER_OBJECT_FRAME_MEMORY_
+#ifndef LIB_VISION_ALGORITHM_OBJECT_FRAME_MEMORY_H_
+#define LIB_VISION_ALGORITHM_OBJECT_FRAME_MEMORY_H_
 
 #include <lib_vision/algorithm/object_full_data.h>
 #include <lib_vision/algorithm/general_function.h>
@@ -58,4 +58,4 @@ class ObjectFrameMemory {
 
 inline unsigned int ObjectFrameMemory::GetMemorySize() { return _memory_size; }
 
-#endif
+#endif // LIB_VISION_ALGORITHM_OBJECT_FRAME_MEMORY_H_

@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_ACCUMULATOR_H_
-#define VISION_FILTER_ACCUMULATOR_H_
+#ifndef LIB_VISION_ALGORITHM_IMAGE_ACCUMULATOR_BUFFER_H_
+#define LIB_VISION_ALGORITHM_IMAGE_ACCUMULATOR_BUFFER_H_
 
 #include <opencv2/opencv.hpp>
 #include <stdlib.h>
@@ -286,4 +286,5 @@ inline void ImageAccumulatorBuffer::SetAverageMethod(METHOD method) {
 //    //Return 128
 //    std::cout << "Adjust Weight" << mean << std::endl;
 //}
-#endif
+
+#endif // LIB_VISION_ALGORITHM_IMAGE_ACCUMULATOR_BUFFER_H_

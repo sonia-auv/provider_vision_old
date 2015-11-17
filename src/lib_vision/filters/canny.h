@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_CANNY_H_
-#define VISION_FILTER_CANNY_H_
+#ifndef LIB_VISION_FILTERS_CANNY_H_
+#define LIB_VISION_FILTERS_CANNY_H_
 
 #include <lib_vision/filter.h>
 
@@ -68,4 +68,4 @@ class Canny : public Filter {
 
 }  // namespace lib_vision
 
-#endif  // VISION_FILTER_SOBEL_H_
+#endif  // LIB_VISION_FILTERS_SOBEL_H_

@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_DELOREAN_DETECTOR_H_
-#define VISION_FILTER_DELOREAN_DETECTOR_H_
+#ifndef LIB_VISION_FILTERS_DELOREAN_DETECTOR_H_
+#define LIB_VISION_FILTERS_DELOREAN_DETECTOR_H_
 
 #include <lib_vision/algorithm/general_function.h>
 #include <lib_vision/algorithm/target.h>
@@ -197,4 +197,4 @@ class DeloreanDetector : public Filter {
 
 }  // namespace lib_vision
 
-#endif  // VISION_FILTER_DELOREAN_DETECTOR_H_
+#endif  // LIB_VISION_FILTERS_DELOREAN_DETECTOR_H_

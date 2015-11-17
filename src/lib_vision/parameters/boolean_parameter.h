@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_BOOLEAN_H_
-#define VISION_FILTER_BOOLEAN_H_
+#ifndef LIB_VISION_PARAMETERS_BOOLEAN_PARAMETER_H_
+#define LIB_VISION_PARAMETERS_BOOLEAN_PARAMETER_H_
 
 #include <lib_vision/parameter.h>
 
@@ -96,4 +96,4 @@ class BooleanParameter : public Parameter {
 
 }  // namespace lib_vision
 
-#endif  // VISION_FILTER_BOOLEAN_H_
+#endif  // LIB_VISION_PARAMETERS_BOOLEAN_PARAMETER_H_

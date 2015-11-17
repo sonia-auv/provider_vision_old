@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_IMAGE_ACCUMULATOR_H_
-#define VISION_FILTER_IMAGE_ACCUMULATOR_H_
+#ifndef LIB_VISION_FILTERS_IMAGE_ACCUMULATOR_H_
+#define LIB_VISION_FILTERS_IMAGE_ACCUMULATOR_H_
 
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/image_accumulator_buffer.h>
@@ -110,4 +110,4 @@ class ImageAccumulator : public Filter {
 
 }  // namespace lib_vision
 
-#endif  // VISION_FILTER_IMAGE_ACCUMULATOR_H_
+#endif  // LIB_VISION_FILTERS_IMAGE_ACCUMULATOR_H_
