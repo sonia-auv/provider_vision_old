@@ -18,8 +18,8 @@ if ( NOT CMAKE_BUILD_TYPE )
       FORCE )
 endif ( NOT CMAKE_BUILD_TYPE )
 
-set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++1y " )
-set( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++1y -O3" )
+set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++11 " )
+set( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++11 -O3" )
 
 #===============================================================================
 # C A T K I N   C O N F I G U R A T I O N
@@ -66,7 +66,7 @@ SET( LIBS_TO_LINK
   ${OpenCV_LIBRARIES}
 )
 
-add_library( ${TARGET_NAME} ${lib_vision_SRC_FILES} )
+add_library( ${TARGET_NAME} ${lib_vision_SRC_FILES} ${lib_vision_HDR_FILES} )
 target_link_libraries( ${TARGET_NAME} ${LIBS_TO_LINK})
 
 set_target_properties( ${TARGET_NAME}
