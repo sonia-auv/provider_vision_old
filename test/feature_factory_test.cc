@@ -18,7 +18,7 @@
 TEST(FeatureFactory, AllTest) {
 
   cv::Mat original_image =
-      cv::imread(atlas::kWorkspaceRoot + "src/lib_vision/test/FeatureFactoryTestImage.png", CV_LOAD_IMAGE_COLOR);
+      cv::imread(atlas::kWorkspaceRoot + "src/lib_vision/test/img/FeatureFactoryTestImage.png", CV_LOAD_IMAGE_COLOR);
   cv::Mat binary_image;
   cv::cvtColor(original_image, binary_image, CV_RGB2GRAY);
   cv::Mat debug = cv::Mat::zeros(original_image.rows, original_image.cols, CV_8UC3);

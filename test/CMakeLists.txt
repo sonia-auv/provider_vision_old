@@ -1,0 +1,26 @@
+catkin_add_gtest( object_ranking_data_test object_ranking_data_test.cc )
+target_link_libraries(object_ranking_data_test sonia_vision)
+
+catkin_add_gtest( object_tracking_data_test object_tracking_data_test.cc )
+target_link_libraries(object_tracking_data_test sonia_vision)
+
+catkin_add_gtest( object_ranker_test object_ranker_test.cc )
+target_link_libraries(object_ranker_test sonia_vision)
+
+catkin_add_gtest( object_full_data_test object_full_data_test.cc )
+target_link_libraries(object_full_data_test sonia_vision)
+
+catkin_add_gtest( object_frame_memory_test object_frame_memory_test.cc )
+target_link_libraries(object_frame_memory_test sonia_vision)
+
+catkin_add_gtest( object_basic_data_test object_basic_data_test.cc )
+target_link_libraries(object_basic_data_test sonia_vision)
+
+catkin_add_gtest( feature_factory_test feature_factory_test.cc )
+target_link_libraries(feature_factory_test sonia_vision)
+
+catkin_add_gtest( performace_evaluator_test performace_evaluator_test.cc )
+target_link_libraries(performace_evaluator_test sonia_vision)
+
+catkin_add_gtest( contour_test contour_test.cc )
+target_link_libraries(contour_test sonia_vision)

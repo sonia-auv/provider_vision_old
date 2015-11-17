@@ -13,7 +13,7 @@
 
 TEST(ContourTest, AllTest) {
   std::string path = atlas::kWorkspaceRoot +
-      std::string("src/lib_vision/test/contour_test_img.png");
+      std::string("src/lib_vision/test/img/contour_test_img.png");
 
   cv::Mat img_tmp, img;
 

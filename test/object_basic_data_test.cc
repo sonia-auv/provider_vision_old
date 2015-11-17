@@ -21,7 +21,7 @@ bool CompareMoments(cv::Moments moment1, cv::Moments moment2) {
 
 TEST(BasicData, AllTest) {
   cv::Mat unitTestImage, binaryImage;
-  std::string pathToFile = atlas::kWorkspaceRoot + "src/lib_vision/test/BasicObjectUnitTest.png";
+  std::string pathToFile = atlas::kWorkspaceRoot + "src/lib_vision/test/img/BasicObjectUnitTest.png";
   unitTestImage = cv::imread(pathToFile);
   ASSERT_TRUE(!unitTestImage.empty());
 
