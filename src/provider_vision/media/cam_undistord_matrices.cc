@@ -11,7 +11,7 @@
 #include <provider_vision/media/configuration_handler.h>
 #include "provider_vision/media/cam_undistord_matrices.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 //==============================================================================
 // C / D T O R S   S E C T I O N
@@ -51,4 +51,4 @@ void CameraUndistordMatrices::InitMatrices(const std::string &fullPath) {
   }
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision

@@ -21,7 +21,7 @@
 #include "provider_vision/media/camera/base_media.h"
 #include "provider_vision/media/media_streamer.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 /**
  * DetectionTask class is responsible of taking the image from an acquisition
@@ -158,6 +158,6 @@ inline const std::string &DetectionTask::GetMediaName() const noexcept {
   return media_streamer_.get()->GetMediaName();
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision
 
 #endif  // PROVIDER_VISION_PROC_DETECTION_TASK_H_

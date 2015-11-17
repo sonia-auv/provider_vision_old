@@ -18,7 +18,7 @@
 #include <lib_vision/filter.h>
 #include "provider_vision/utils/serializable.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 class Filterchain : public Serializable {
  public:
@@ -67,7 +67,7 @@ class Filterchain : public Serializable {
    * \param filter_name The name of the filter to get.
    * \return A pointer to the filter if it exists, nullptr if not.
    */
-  vision_filter::Filter *const GetFilter(const std::string &filter_name) const;
+  lib_vision::Filter *const GetFilter(const std::string &filter_name) const;
 
   /**
    * Check if there is a filter with the same name than the given parameter.
@@ -118,7 +118,7 @@ class Filterchain : public Serializable {
   /**
    * GlobalParams
    */
-  vision_filter::GlobalParamHandler *getParamHandler();
+  lib_vision::GlobalParamHandler *getParamHandler();
 
  private:
   //==========================================================================
@@ -126,9 +126,9 @@ class Filterchain : public Serializable {
 
   std::string name_;
 
-  vision_filter::GlobalParamHandler _global_params;
+  lib_vision::GlobalParamHandler _global_params;
 
-  std::vector<vision_filter::Filter *> filters_;
+  std::vector<lib_vision::Filter *> filters_;
 
   int observer_index_;
 };
@@ -158,7 +158,7 @@ inline void Filterchain::CloseFilters() {
 
 //------------------------------------------------------------------------------
 //
-inline vision_filter::Filter *const Filterchain::GetFilter(
+inline lib_vision::Filter *const Filterchain::GetFilter(
     const std::string &filter_name) const {
   for (const auto &filter : filters_) {
     if (filter->getName() == filter_name) {
@@ -187,7 +187,7 @@ inline void Filterchain::SetObserver(const std::string &filterName) {
 
 //------------------------------------------------------------------------------
 //
-inline vision_filter::GlobalParamHandler *Filterchain::getParamHandler() {
+inline lib_vision::GlobalParamHandler *Filterchain::getParamHandler() {
   return &_global_params;
 }
 
@@ -215,6 +215,6 @@ inline size_t Filterchain::GetFilterIndexFromUIName(
   return size_t(atoi(position.c_str()));
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision
 
 #endif  // PROVIDER_VISION_PROC_FILTERCHAIN_H_

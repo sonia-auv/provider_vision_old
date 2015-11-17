@@ -12,7 +12,7 @@
 #ifndef PROVIDER_VISION_UTILS_SERIALIZABLE_H_
 #define PROVIDER_VISION_UTILS_SERIALIZABLE_H_
 
-namespace vision_server {
+namespace provider_vision {
 
 /**
  * This class provide an interface for all serializer.
@@ -64,6 +64,6 @@ inline void Serializable::set_filepath(const std::string &filepath) {
   filepath_ = filepath;
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision
 
 #endif  // PROVIDER_VISION_UTILS_SERIALIZABLE_H_

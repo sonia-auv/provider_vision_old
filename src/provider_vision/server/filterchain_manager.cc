@@ -14,7 +14,7 @@
 #include <provider_vision/utils/pugixml.h>
 #include "provider_vision/server/filterchain_manager.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 const std::string FilterchainManager::FILTERCHAIN_MANAGER_TAG =
     "FILTERCHAIN_MANAGER";
@@ -133,4 +133,4 @@ Filterchain::Ptr FilterchainManager::GetRunningFilterchain(
   return nullptr;
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision

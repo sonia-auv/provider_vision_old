@@ -19,7 +19,7 @@
 #include "provider_vision/media/context/base_context.h"
 #include "provider_vision/media/media_streamer.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 class MediaManager {
  public:
@@ -170,6 +170,6 @@ inline bool MediaManager::IsMediaStreaming(const std::string &name) {
   return false;
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision
 
 #endif  // PROVIDER_VISION_SERVER_MEDIA_MANAGER_H_

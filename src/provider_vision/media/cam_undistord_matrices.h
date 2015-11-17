@@ -16,7 +16,7 @@
 #include <opencv2/opencv.hpp>
 #include "lib_atlas/macros.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 /**
  * CameraID is a little class to handle the link between GUID and name.
@@ -86,6 +86,6 @@ inline void CameraUndistordMatrices::CorrectInmage(const cv::Mat &in,
   }
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision
 
 #endif  // PROVIDER_VISION_MEDIA_UNDISTORD_MATRICES_H_

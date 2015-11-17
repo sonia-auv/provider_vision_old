@@ -10,7 +10,7 @@
 
 #include "provider_vision/media/camera/webcam_camera.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 //==============================================================================
 // C / D T O R S   S E C T I O N
@@ -90,4 +90,4 @@ void WebcamCamera::SetFeature(const Feature &feat, float value) {
 //
 float WebcamCamera::GetFeature(const Feature &feat) const { return 0.0f; }
 
-}  // namespace vision_server
+}  // namespace provider_vision

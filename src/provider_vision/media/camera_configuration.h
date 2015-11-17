@@ -14,7 +14,7 @@
 #include <map>
 #include <memory>
 
-namespace vision_server {
+namespace provider_vision {
 
 class CameraConfiguration {
  public:
@@ -163,6 +163,6 @@ inline std::string CameraConfiguration::GetString(
   return GetParam(config_name);
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision
 
 #endif  // PROVIDER_VISION_MEDIA_CAMERA_CONFIGURATION_H_

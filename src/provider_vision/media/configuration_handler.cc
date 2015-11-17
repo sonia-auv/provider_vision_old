@@ -10,7 +10,7 @@
 
 #include "provider_vision/media/configuration_handler.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 //==============================================================================
 // C O N S T A N T S   S E C T I O N
@@ -154,4 +154,4 @@ void ConfigurationHandler::SaveConfiguration(
   std::rename(file_.c_str(), orignal_file.c_str());
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision

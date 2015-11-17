@@ -14,7 +14,7 @@
 #include "provider_vision/utils/config.h"
 #include <ros/ros.h>
 
-namespace vision_server {
+namespace provider_vision {
 
 //==============================================================================
 // C / D T O R S   S E C T I O N
@@ -255,8 +255,8 @@ std::string Filterchain::GetFilterAllParam(const std::string &filter_name) {
 //
 void Filterchain::AddFilter(const std::string &filter_name) {
   auto filter =
-      vision_filter::FilterFactory::createInstance(filter_name, _global_params);
+      lib_vision::FilterFactory::createInstance(filter_name, _global_params);
   filters_.push_back(filter);
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision

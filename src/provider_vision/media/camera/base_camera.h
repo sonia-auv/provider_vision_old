@@ -16,7 +16,7 @@
 #include "provider_vision/media/camera/base_media.h"
 #include "provider_vision/media/cam_undistord_matrices.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 /**
  * Every camera (i.e. not video or image) should inherit this instead of
@@ -76,6 +76,6 @@ class BaseCamera : public BaseMedia {
 //
 inline bool BaseCamera::HasArtificialFramerate() const { return false; }
 
-}  // namespace vision_server
+}  // namespace provider_vision
 
 #endif  // PROVIDER_VISION_MEDIA_CAMERA_BASE_CAMERA_H_

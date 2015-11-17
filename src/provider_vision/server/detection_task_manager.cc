@@ -12,7 +12,7 @@
 
 #include "provider_vision/server/detection_task_manager.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 //==============================================================================
 // C / D T O R S   S E C T I O N
@@ -79,4 +79,4 @@ DetectionTask::Ptr DetectionTaskManager::GetDetectionTask(
   return nullptr;
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision

@@ -1,5 +1,5 @@
 /**
- * \file	vision_server.cpp
+ * \file	provider_vision.cpp
  * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
  * \author	Thibaut Mattio <thibaut.mattio@gmail.com>
  * \author	Karl Ritchie <ritchie.karl@gmail.com>
@@ -12,7 +12,7 @@
 #include <string>
 #include "provider_vision/server/vision_server.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 //==============================================================================
 // C / D T O R S   S E C T I O N
@@ -26,68 +26,68 @@ VisionServer::VisionServer()
       filterchain_mgr_() {
   auto base_node_name = std::string{kRosNodeName};
 
-  RegisterService<vision_server_execute_cmd>(
-      base_node_name + "vision_server_execute_cmd",
+  RegisterService<execute_cmd>(
+      base_node_name + "execute_cmd",
       &VisionServer::CallbackExecutionCMD, *this);
 
-  RegisterService<vision_server_get_information_list>(
-      base_node_name + "vision_server_get_information_list",
+  RegisterService<get_information_list>(
+      base_node_name + "get_information_list",
       &VisionServer::CallbackInfoListCMD, *this);
 
-  RegisterService<vision_server_get_media_param>(
-      base_node_name + "vision_server_get_media_param_list",
+  RegisterService<get_media_param>(
+      base_node_name + "get_media_param_list",
       &VisionServer::CallbackGetCMD, *this);
 
-  RegisterService<vision_server_set_media_param>(
-      base_node_name + "vision_server_set_media_param_list",
+  RegisterService<set_media_param>(
+      base_node_name + "set_media_param_list",
       &VisionServer::CallbackSetCMD, *this);
 
-  RegisterService<vision_server_copy_filterchain>(
-      base_node_name + "vision_server_copy_filterchain",
+  RegisterService<copy_filterchain>(
+      base_node_name + "copy_filterchain",
       &VisionServer::CallbackCopyFc, *this);
 
-  RegisterService<vision_server_get_filterchain_filter_all_param>(
-      base_node_name + "vision_server_get_filterchain_filter_all_param",
+  RegisterService<get_filterchain_filter_all_param>(
+      base_node_name + "get_filterchain_filter_all_param",
       &VisionServer::CallbackGetFilterAllParam, *this);
 
-  RegisterService<vision_server_get_filterchain_filter_param>(
-      base_node_name + "vision_server_get_filterchain_filter_param",
+  RegisterService<get_filterchain_filter_param>(
+      base_node_name + "get_filterchain_filter_param",
       &VisionServer::CallbackGetFilterParam, *this);
 
-  RegisterService<vision_server_set_filterchain_filter_param>(
-      base_node_name + "vision_server_set_filterchain_filter_param",
+  RegisterService<set_filterchain_filter_param>(
+      base_node_name + "set_filterchain_filter_param",
       &VisionServer::CallbackSetFilterParam, *this);
 
-  RegisterService<vision_server_get_filterchain_filter>(
-      base_node_name + "vision_server_get_filterchain_filter",
+  RegisterService<get_filterchain_filter>(
+      base_node_name + "get_filterchain_filter",
       &VisionServer::CallbackGetFilter, *this);
 
-  RegisterService<vision_server_manage_filterchain_filter>(
-      base_node_name + "vision_server_manage_filterchain_filter",
+  RegisterService<manage_filterchain_filter>(
+      base_node_name + "manage_filterchain_filter",
       &VisionServer::CallbackManageFilter, *this);
 
-  RegisterService<vision_server_manage_filterchain>(
-      base_node_name + "vision_server_manage_filterchain",
+  RegisterService<manage_filterchain>(
+      base_node_name + "manage_filterchain",
       &VisionServer::CallbackManageFc, *this);
 
-  RegisterService<vision_server_save_filterchain>(
-      base_node_name + "vision_server_save_filterchain",
+  RegisterService<save_filterchain>(
+      base_node_name + "save_filterchain",
       &VisionServer::CallbackSaveFc, *this);
 
-  RegisterService<vision_server_set_filterchain_filter_order>(
-      base_node_name + "vision_server_set_filterchain_filter_order",
+  RegisterService<set_filterchain_filter_order>(
+      base_node_name + "set_filterchain_filter_order",
       &VisionServer::CallbackSetFcOrder, *this);
 
-  RegisterService<vision_server_get_filterchain_from_execution>(
-      base_node_name + "vision_server_get_filterchain_from_execution",
+  RegisterService<get_filterchain_from_execution>(
+      base_node_name + "get_filterchain_from_execution",
       &VisionServer::CallbackGetFcFromExec, *this);
 
-  RegisterService<vision_server_get_media_from_execution>(
-      base_node_name + "vision_server_get_media_from_execution",
+  RegisterService<get_media_from_execution>(
+      base_node_name + "get_media_from_execution",
       &VisionServer::CallbackGetMediaFromExec, *this);
 
-  RegisterService<vision_server_set_filterchain_filter_observer>(
-      base_node_name + "vision_server_set_filterchain_filter_observer",
+  RegisterService<set_filterchain_filter_observer>(
+      base_node_name + "set_filterchain_filter_observer",
       &VisionServer::CallbackSetObserver, *this);
 }
 
@@ -101,8 +101,8 @@ VisionServer::~VisionServer() {}
 //------------------------------------------------------------------------------
 //
 bool VisionServer::CallbackExecutionCMD(
-    vision_server_execute_cmd::Request &rqst,
-    vision_server_execute_cmd::Response &rep) {
+    execute_cmd::Request &rqst,
+    execute_cmd::Response &rep) {
   if (rqst.cmd == rqst.START) {
     try {
       MediaStreamer::Ptr media =
@@ -132,15 +132,15 @@ bool VisionServer::CallbackExecutionCMD(
 
 //------------------------------------------------------------------------------
 //
-bool vision_server::VisionServer::CallbackInfoListCMD(
-    vision_server_get_information_list::Request &rqst,
-    vision_server_get_information_list::Response &rep) {
+bool provider_vision::VisionServer::CallbackInfoListCMD(
+    get_information_list::Request &rqst,
+    get_information_list::Response &rep) {
   if (rqst.cmd == rqst.EXEC) {
     rep.list = BuildRosMessage(detection_task_mgr_.GetAllDetectionTasksName());
   } else if (rqst.cmd == rqst.FILTERCHAIN) {
     rep.list = BuildRosMessage(filterchain_mgr_.GetAllFilterchainName());
   } else if (rqst.cmd == rqst.FILTERS) {
-    rep.list = vision_filter::FilterFactory::GetFilterList();
+    rep.list = lib_vision::FilterFactory::GetFilterList();
   } else if (rqst.cmd == rqst.MEDIA) {
     rep.list = BuildRosMessage(media_mgr_.GetAllMediasName());
   }
@@ -151,8 +151,8 @@ bool vision_server::VisionServer::CallbackInfoListCMD(
 //------------------------------------------------------------------------------
 //
 bool VisionServer::CallbackGetCMD(
-    vision_server_get_media_param::Request &rqst,
-    vision_server_get_media_param::Response &rep) {
+    get_media_param::Request &rqst,
+    get_media_param::Response &rep) {
   try {
     rep.value = media_mgr_.GetCameraFeature(rqst.media_name, rqst.param_name);
     return true;
@@ -165,8 +165,8 @@ bool VisionServer::CallbackGetCMD(
 //------------------------------------------------------------------------------
 //
 bool VisionServer::CallbackSetCMD(
-    vision_server_set_media_param::Request &rqst,
-    vision_server_set_media_param::Response &rep) {
+    set_media_param::Request &rqst,
+    set_media_param::Response &rep) {
   try {
     media_mgr_.SetCameraFeature(rqst.media_name, rqst.param_name, rqst.value);
     rep.success = rep.SUCCESS;
@@ -181,8 +181,8 @@ bool VisionServer::CallbackSetCMD(
 //------------------------------------------------------------------------------
 //
 bool VisionServer::CallbackCopyFc(
-    vision_server_copy_filterchain::Request &rqst,
-    vision_server_copy_filterchain::Response &rep) {
+    copy_filterchain::Request &rqst,
+    copy_filterchain::Response &rep) {
   std::ifstream src(
       filterchain_mgr_.GetFilterchainPath(rqst.filterchain_to_copy).c_str(),
       std::ios::binary);
@@ -198,8 +198,8 @@ bool VisionServer::CallbackCopyFc(
 //------------------------------------------------------------------------------
 //
 bool VisionServer::CallbackGetFilterParam(
-    vision_server_get_filterchain_filter_param::Request &rqst,
-    vision_server_get_filterchain_filter_param::Response &rep) {
+    get_filterchain_filter_param::Request &rqst,
+    get_filterchain_filter_param::Response &rep) {
   rep.list = "";
 
   std::string execution_name(rqst.exec_name),
@@ -221,8 +221,8 @@ bool VisionServer::CallbackGetFilterParam(
 //------------------------------------------------------------------------------
 //
 bool VisionServer::CallbackGetFilterAllParam(
-    vision_server_get_filterchain_filter_all_param::Request &rqst,
-    vision_server_get_filterchain_filter_all_param::Response &rep) {
+    get_filterchain_filter_all_param::Request &rqst,
+    get_filterchain_filter_all_param::Response &rep) {
   rep.list = "";
 
   std::string execution_name(rqst.exec_name),
@@ -244,8 +244,8 @@ bool VisionServer::CallbackGetFilterAllParam(
 //------------------------------------------------------------------------------
 //
 bool VisionServer::CallbackSetFilterParam(
-    vision_server_set_filterchain_filter_param::Request &rqst,
-    vision_server_set_filterchain_filter_param::Response &rep) {
+    set_filterchain_filter_param::Request &rqst,
+    set_filterchain_filter_param::Response &rep) {
   rep.success = rep.FAIL;
 
   std::string execution_name(rqst.exec_name),
@@ -268,8 +268,8 @@ bool VisionServer::CallbackSetFilterParam(
 //------------------------------------------------------------------------------
 //
 bool VisionServer::CallbackGetFilter(
-    vision_server_get_filterchain_filter::Request &rqst,
-    vision_server_get_filterchain_filter::Response &rep) {
+    get_filterchain_filter::Request &rqst,
+    get_filterchain_filter::Response &rep) {
   rep.list = "";
 
   std::string execution_name(rqst.exec_name),
@@ -295,8 +295,8 @@ bool VisionServer::CallbackGetFilter(
 //------------------------------------------------------------------------------
 //
 bool VisionServer::CallbackSetObserver(
-    vision_server_set_filterchain_filter_observer::Request &rqst,
-    vision_server_set_filterchain_filter_observer::Response &rep) {
+    set_filterchain_filter_observer::Request &rqst,
+    set_filterchain_filter_observer::Response &rep) {
   // For now ignoring filterchain name, but when we will have multiple,
   // we will have to check the name and find the good filterchain
   Filterchain::Ptr filterchain =
@@ -319,8 +319,8 @@ bool VisionServer::CallbackSetObserver(
 //------------------------------------------------------------------------------
 //
 bool VisionServer::CallbackManageFilter(
-    vision_server_manage_filterchain_filter::Request &rqst,
-    vision_server_manage_filterchain_filter::Response &rep) {
+    manage_filterchain_filter::Request &rqst,
+    manage_filterchain_filter::Response &rep) {
   const auto &filterchain =
       filterchain_mgr_.GetRunningFilterchain(rqst.exec_name);
   rep.success = 1;
@@ -341,8 +341,8 @@ bool VisionServer::CallbackManageFilter(
 //------------------------------------------------------------------------------
 //
 bool VisionServer::CallbackManageFc(
-    vision_server_manage_filterchain::Request &rqst,
-    vision_server_manage_filterchain::Response &rep) {
+    manage_filterchain::Request &rqst,
+    manage_filterchain::Response &rep) {
   std::string filterchain_name(rqst.filterchain);
   bool response = true;
   if (rqst.cmd == rqst.ADD) {
@@ -357,8 +357,8 @@ bool VisionServer::CallbackManageFc(
 //------------------------------------------------------------------------------
 //
 bool VisionServer::CallbackSaveFc(
-    vision_server_save_filterchain::Request &rqst,
-    vision_server_save_filterchain::Response &rep) {
+    save_filterchain::Request &rqst,
+    save_filterchain::Response &rep) {
   std::string execution_name(rqst.exec_name);
   std::string filterchain_name(rqst.filterchain);
   if (rqst.cmd == rqst.SAVE) {
@@ -371,9 +371,9 @@ bool VisionServer::CallbackSaveFc(
 //------------------------------------------------------------------------------
 //
 bool VisionServer::CallbackSetFcOrder(
-    vision_server_set_filterchain_filter_order::Request &rqst,
-    vision_server_set_filterchain_filter_order::Response &rep) {
-  ROS_INFO("Call to vision_server_set_filterchain_filter_order.");
+    set_filterchain_filter_order::Request &rqst,
+    set_filterchain_filter_order::Response &rep) {
+  ROS_INFO("Call to set_filterchain_filter_order.");
 
   rep.success = rep.SUCCESS;
   auto filterchain = filterchain_mgr_.GetRunningFilterchain(rqst.exec_name);
@@ -392,9 +392,9 @@ bool VisionServer::CallbackSetFcOrder(
 //------------------------------------------------------------------------------
 //
 bool VisionServer::CallbackGetFcFromExec(
-    vision_server_get_filterchain_from_execution::Request &rqst,
-    vision_server_get_filterchain_from_execution::Response &rep) {
-  ROS_INFO("Call to vision_server_get_filterchain_from_execution.");
+    get_filterchain_from_execution::Request &rqst,
+    get_filterchain_from_execution::Response &rep) {
+  ROS_INFO("Call to get_filterchain_from_execution.");
   std::string execution_name(rqst.exec_name);
   Filterchain::Ptr filterchain =
       filterchain_mgr_.GetRunningFilterchain(execution_name);
@@ -413,12 +413,12 @@ bool VisionServer::CallbackGetFcFromExec(
 //------------------------------------------------------------------------------
 //
 bool VisionServer::CallbackGetMediaFromExec(
-    vision_server_get_media_from_execution::Request &rqst,
-    vision_server_get_media_from_execution::Response &rep) {
-  ROS_INFO("Call to vision_server_get_media_from_execution.");
+    get_media_from_execution::Request &rqst,
+    get_media_from_execution::Response &rep) {
+  ROS_INFO("Call to get_media_from_execution.");
   auto response = "media_" + rqst.exec_name;
   rep.list = response;
   return true;
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision

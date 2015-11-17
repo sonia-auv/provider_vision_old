@@ -22,7 +22,7 @@
 #include "provider_vision/media/context/base_context.h"
 #include "provider_vision/media/camera/base_camera.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 class DC1394Camera : public BaseCamera {
  public:
@@ -129,6 +129,6 @@ inline dc1394camera_t *DC1394Camera::GetCameraPtr() const {
   return dc1394_camera_;
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision
 
 #endif  // PROVIDER_VISION_MEDIA_CAMERA_DC1394_CAMERA_H_

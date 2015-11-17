@@ -12,7 +12,7 @@
 #include <vector>
 #include "provider_vision/media/camera/video_file.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 //==============================================================================
 // C / D T O R S   S E C T I O N
@@ -124,4 +124,4 @@ void VideoFile::NextImage(cv::Mat &image) {
   }
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision

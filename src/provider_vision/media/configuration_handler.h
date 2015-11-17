@@ -20,7 +20,7 @@
 #include "provider_vision/media/camera_configuration.h"
 #include "provider_vision/utils/config.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 /**
  * Class to read and save ALL the cameras parameter of the system. It will
@@ -54,6 +54,6 @@ class ConfigurationHandler {
   std::string file_;
 };
 
-}  // namespace vision_server
+}  // namespace provider_vision
 
 #endif  // PROVIDER_VISION_MEDIA_CONFIGURATION_HANDLER_H_

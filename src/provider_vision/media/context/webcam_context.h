@@ -16,7 +16,7 @@
 #include "provider_vision/media/camera/webcam_camera.h"
 #include "provider_vision/utils/config.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 /**
  * CamDriverDC1394 is a driver to access all cameras that can be used by the
@@ -88,6 +88,6 @@ inline bool WebcamContext::IsMyCamera(std::string &nameMedia) const {
   return WEBCAM_NAME.compare(nameMedia) == 0;
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision
 
 #endif  // PROVIDER_VISION_CAM_DRIVER_WEBCAM_H_

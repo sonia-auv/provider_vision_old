@@ -12,7 +12,7 @@
 #include <vector>
 #include "provider_vision/media/context/webcam_context.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 const std::string WebcamContext::WEBCAM_NAME("Webcam");
 
@@ -115,4 +115,4 @@ void WebcamContext::Run() {}
 //
 bool WebcamContext::WatchDogFunc() { return true; }
 
-}  // namespace vision_server
+}  // namespace provider_vision

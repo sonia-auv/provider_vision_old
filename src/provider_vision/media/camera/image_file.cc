@@ -12,7 +12,7 @@
 #include <vector>
 #include "provider_vision/media/camera/image_file.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 //==============================================================================
 // C / D T O R S   S E C T I O N
@@ -71,4 +71,4 @@ void ImageFile::NextImage(cv::Mat &image) {
 //
 void ImageFile::NextImageCopy(cv::Mat &image) noexcept { NextImage(image); }
 
-}  // namespace vision_server
+}  // namespace provider_vision

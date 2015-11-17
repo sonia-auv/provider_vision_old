@@ -14,9 +14,9 @@
 #include <lib_atlas/config.h>
 #include <string>
 
-namespace vision_server {
+namespace provider_vision {
 
-const std::string kRosNodeName = "/vision_server/";
+const std::string kRosNodeName = "/provider_vision/";
 
 const std::string kProjectPath =
     atlas::kWorkspaceRoot + "/src/provider_vision/";
@@ -29,6 +29,6 @@ const std::string kCameraConfigPath = kConfigPath + "/camera/";
 
 const std::string kFilterchainExt = ".xml";
 
-};  // namespace vision_server
+};  // namespace provider_vision
 
 #endif  // PROVIDER_VISION_UTILS_CONFIG_H_

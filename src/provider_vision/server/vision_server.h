@@ -1,5 +1,5 @@
 /**
- * \file	vision_server.cpp
+ * \file	provider_vision.cpp
  * \author	Jérémie St-Jules <jeremie.st.jules.prevost@gmail.com>
  * \author	Thibaut Mattio <thibaut.mattio@gmail.com>
  * \author	Karl Ritchie <ritchie.karl@gmail.com>
@@ -17,22 +17,22 @@
 #include <string>
 
 #include <lib_atlas/ros/service_server_manager.h>
-#include <vision_server/vision_server_execute_cmd.h>
-#include <vision_server/vision_server_get_information_list.h>
-#include <vision_server/vision_server_get_media_param.h>
-#include <vision_server/vision_server_set_media_param.h>
-#include <vision_server/vision_server_copy_filterchain.h>
-#include <vision_server/vision_server_manage_filterchain.h>
-#include <vision_server/vision_server_get_filterchain_filter_param.h>
-#include <vision_server/vision_server_set_filterchain_filter_param.h>
-#include <vision_server/vision_server_get_filterchain_filter_all_param.h>
-#include <vision_server/vision_server_get_filterchain_filter.h>
-#include <vision_server/vision_server_manage_filterchain_filter.h>
-#include <vision_server/vision_server_save_filterchain.h>
-#include <vision_server/vision_server_set_filterchain_filter_order.h>
-#include <vision_server/vision_server_get_filterchain_from_execution.h>
-#include <vision_server/vision_server_get_media_from_execution.h>
-#include <vision_server/vision_server_set_filterchain_filter_observer.h>
+#include <provider_vision/execute_cmd.h>
+#include <provider_vision/get_information_list.h>
+#include <provider_vision/get_media_param.h>
+#include <provider_vision/set_media_param.h>
+#include <provider_vision/copy_filterchain.h>
+#include <provider_vision/manage_filterchain.h>
+#include <provider_vision/get_filterchain_filter_param.h>
+#include <provider_vision/set_filterchain_filter_param.h>
+#include <provider_vision/get_filterchain_filter_all_param.h>
+#include <provider_vision/get_filterchain_filter.h>
+#include <provider_vision/manage_filterchain_filter.h>
+#include <provider_vision/save_filterchain.h>
+#include <provider_vision/set_filterchain_filter_order.h>
+#include <provider_vision/get_filterchain_from_execution.h>
+#include <provider_vision/get_media_from_execution.h>
+#include <provider_vision/set_filterchain_filter_observer.h>
 #include "provider_vision/utils/config.h"
 #include "provider_vision/media/camera/base_media.h"
 #include "provider_vision/proc/detection_task.h"
@@ -40,7 +40,7 @@
 #include "provider_vision/server/filterchain_manager.h"
 #include "provider_vision/server/detection_task_manager.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 /**
  * Vision server is the main class of the system
@@ -82,7 +82,7 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
   /**
    * \brief Copies a filterchain which is not used by a running execution.
    *
-   * Manages the ROS service vision_server_copy_filterchain.
+   * Manages the ROS service copy_filterchain.
    *
    * Here are the parameters of the service:
    *  * filter_chain_name_to_copy	The name of the filterchain to copy.
@@ -94,13 +94,13 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    *            It set values such as success for the service return state.
    * \return True if the callback has succesfully processed the service call.
    */
-  bool CallbackCopyFc(vision_server_copy_filterchain::Request &rqst,
-                      vision_server_copy_filterchain::Response &rep);
+  bool CallbackCopyFc(copy_filterchain::Request &rqst,
+                      copy_filterchain::Response &rep);
 
   /**
    * \brief Gets the parameters for a filter.
    *
-   * Manages the ROS service vision_server_get_filterchain_filter_param.
+   * Manages the ROS service get_filterchain_filter_param.
    *
    * Here are the parameters of the service:
    *  * filter_name Name of the filter contained in the filterchain.
@@ -114,8 +114,8 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    * \return True if the callback has succesfully processed the service call.
    */
   bool CallbackGetFilterParam(
-      vision_server_get_filterchain_filter_param::Request &rqst,
-      vision_server_get_filterchain_filter_param::Response &rep);
+      get_filterchain_filter_param::Request &rqst,
+      get_filterchain_filter_param::Response &rep);
 
   /**
    * TODO Thibaut Mattio: Check this method, this is exacly the same
@@ -123,7 +123,7 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    *
    * \brief Gets the parameters for a filter.
    *
-   * Manages the ROS service vision_server_get_filterchain_filter_param.
+   * Manages the ROS service get_filterchain_filter_param.
    *
    * Here are the parameters of the service:
    *  * filter_name Name of the filter contained in the filterchain.
@@ -137,14 +137,14 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    * \return True if the callback has succesfully processed the service call.
    */
   bool CallbackGetFilterAllParam(
-      vision_server_get_filterchain_filter_all_param::Request &rqst,
-      vision_server_get_filterchain_filter_all_param::Response &rep);
+      get_filterchain_filter_all_param::Request &rqst,
+      get_filterchain_filter_all_param::Response &rep);
 
   /**
    * \brief Set the value of a parameter of a filter contained in a filterchain
    * used by a running execution.
    *
-   * Manages the ROS service vision_server_set_filterchain_filter_param.
+   * Manages the ROS service set_filterchain_filter_param.
    *
    * Here are the parameters of the service:
    *  * filter_chain_name Name of the filterchain which contain the filter.
@@ -160,13 +160,13 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    * \return True if the callback has succesfully processed the service call.
    */
   bool CallbackSetFilterParam(
-      vision_server_set_filterchain_filter_param::Request &rqst,
-      vision_server_set_filterchain_filter_param::Response &rep);
+      set_filterchain_filter_param::Request &rqst,
+      set_filterchain_filter_param::Response &rep);
 
   /**
    * \brief Gets the filters contained in a filterchain.
    *
-   * Manages the ROS service vision_server_get_filterchain_filter_param.
+   * Manages the ROS service get_filterchain_filter_param.
    *
    * Here are the parameters of the service:
    *  *	filter_chain_name Name of the filterchain.
@@ -179,13 +179,13 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    *            It set values such as success for the service return state.
    * \return True if the callback has succesfully processed the service call.
    */
-  bool CallbackGetFilter(vision_server_get_filterchain_filter::Request &rqst,
-                         vision_server_get_filterchain_filter::Response &rep);
+  bool CallbackGetFilter(get_filterchain_filter::Request &rqst,
+                         get_filterchain_filter::Response &rep);
 
   /**
    * \brief Adds/Deletes a filter in a filterchain used by a running execution.
    *
-   * Manages the ROS service vision_server_manage_filterchain_filter.
+   * Manages the ROS service manage_filterchain_filter.
    *
    * Here are the parameters of the service:
    *  * filter_chain_name	Name of the filterchain.
@@ -200,13 +200,13 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    * \return True if the callback has succesfully processed the service call.
    */
   bool CallbackManageFilter(
-      vision_server_manage_filterchain_filter::Request &rqst,
-      vision_server_manage_filterchain_filter::Response &rep);
+      manage_filterchain_filter::Request &rqst,
+      manage_filterchain_filter::Response &rep);
 
   /**
    * \brief Creates/Deletes a filterchain (the .fc fils in config directory).
    *
-   * Manages the ROS service vision_server_manage_filterchain.
+   * Manages the ROS service manage_filterchain.
    *
    * Here are the parameters of the service:
    *  * filter_chain_name	Name of the filterchain.
@@ -218,8 +218,8 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    *            It set values such as success for the service return state.
    * \return True if the callback has succesfully processed the service call.
    */
-  bool CallbackManageFc(vision_server_manage_filterchain::Request &rqst,
-                        vision_server_manage_filterchain::Response &rep);
+  bool CallbackManageFc(manage_filterchain::Request &rqst,
+                        manage_filterchain::Response &rep);
 
   /**
    * \brief Saves a filterchain.
@@ -234,7 +234,7 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    * If the filterchain is not used by a running execution, this call will
    * fail.
    *
-   * Manages the ROS service vision_server_save_filterchain.
+   * Manages the ROS service save_filterchain.
    *
    * Here are the parameters of the service:
    *  * filter_chain_name Name of the filterchain to save.
@@ -247,13 +247,13 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    *            It set values such as success for the service return state.
    * \return True if the callback has succesfully processed the service call.
    */
-  bool CallbackSaveFc(vision_server_save_filterchain::Request &rqst,
-                      vision_server_save_filterchain::Response &rep);
+  bool CallbackSaveFc(save_filterchain::Request &rqst,
+                      save_filterchain::Response &rep);
 
   /**
    * \brief Change the order of a filter in a filterchain.
    *
-   * Manages the ROS service vision_server_set_filterchain_filter_order.
+   * Manages the ROS service set_filterchain_filter_order.
    *
    * Here are the parameters of the service:
    *  * execution_name Name of the execution which use the filterchain.
@@ -269,14 +269,14 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    * \return True if the callback has succesfully processed the service call.
    */
   bool CallbackSetFcOrder(
-      vision_server_set_filterchain_filter_order::Request &rqst,
-      vision_server_set_filterchain_filter_order::Response &rep);
+      set_filterchain_filter_order::Request &rqst,
+      set_filterchain_filter_order::Response &rep);
 
   /**
    * \brief Get the filterchain used by the running execution given as
    *parameter.
    *
-   * Manages the ROS service vision_server_get_filterchain_from_execution.
+   * Manages the ROS service get_filterchain_from_execution.
    *
    * Here are the parameters of the service:
    *  * execution_name Name of the running execution.
@@ -288,13 +288,13 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    * \return True if the callback has succesfully processed the service call.
    */
   bool CallbackGetFcFromExec(
-      vision_server_get_filterchain_from_execution::Request &rqst,
-      vision_server_get_filterchain_from_execution::Response &rep);
+      get_filterchain_from_execution::Request &rqst,
+      get_filterchain_from_execution::Response &rep);
 
   /**
    * \brief Get the media used by the running execution given as parameter.
    *
-   * Manages the ROS service vision_server_get_media_from_execution.
+   * Manages the ROS service get_media_from_execution.
    *
    * Here are the parameters of the service:
    *  * execution_name Name of the running execution.
@@ -306,8 +306,8 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    * \return True if the callback has succesfully processed the service call.
    */
   bool CallbackGetMediaFromExec(
-      vision_server_get_media_from_execution::Request &rqst,
-      vision_server_get_media_from_execution::Response &rep);
+      get_media_from_execution::Request &rqst,
+      get_media_from_execution::Response &rep);
 
   /**
    * \brief Sets the observer to the filter given as parameter.
@@ -317,7 +317,7 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    * This method set this "cursor".
    * The filter has to be used by a filterchain used by a running execution.
    *
-   * Manages the ROS service vision_server_get_filterchain_filter_param.
+   * Manages the ROS service get_filterchain_filter_param.
    *
    * Here are the parameters of the service:
    *  * execution_name Name of the running execution.
@@ -331,28 +331,28 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    * \return True if the callback has succesfully processed the service call.
    */
   bool CallbackSetObserver(
-      vision_server_set_filterchain_filter_observer::Request &rqst,
-      vision_server_set_filterchain_filter_observer::Response &rep);
+      set_filterchain_filter_observer::Request &rqst,
+      set_filterchain_filter_observer::Response &rep);
 
   bool CallbackExecutionCMD(
-      vision_server::vision_server_execute_cmd::Request &rqst,
-      vision_server::vision_server_execute_cmd::Response &rep);
+      provider_vision::execute_cmd::Request &rqst,
+      provider_vision::execute_cmd::Response &rep);
 
   bool CallbackInfoListCMD(
-      vision_server::vision_server_get_information_list::Request &rqst,
-      vision_server::vision_server_get_information_list::Response &rep);
+      provider_vision::get_information_list::Request &rqst,
+      provider_vision::get_information_list::Response &rep);
 
   /**
    * Answer to the service get media params
    */
-  bool CallbackGetCMD(vision_server_get_media_param::Request &rqst,
-                      vision_server_get_media_param::Response &rep);
+  bool CallbackGetCMD(get_media_param::Request &rqst,
+                      get_media_param::Response &rep);
 
   /**
    * Answer to the service asking to set a parameter of a media.
    */
-  bool CallbackSetCMD(vision_server_set_media_param::Request &rqst,
-                      vision_server_set_media_param::Response &rep);
+  bool CallbackSetCMD(set_media_param::Request &rqst,
+                      set_media_param::Response &rep);
 
   //==========================================================================
   // P R I V A T E   M E M B E R S
@@ -386,6 +386,6 @@ inline std::string VisionServer::BuildRosMessage(
   return msg;
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision
 
 #endif  // PROVIDER_VISION_SERVER_VISION_SERVER_H_

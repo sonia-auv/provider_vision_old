@@ -18,7 +18,7 @@
 #include "provider_vision/media/camera/base_media.h"
 #include "provider_vision/media/camera/base_camera.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 /**
  * Base class for any media driver. It also provide a Camera interface
@@ -136,6 +136,6 @@ inline void BaseContext::EraseMedia(const std::string &name_media) {
   }
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision
 
 #endif  // PROVIDER_VISION_CAM_DRIVER_H_

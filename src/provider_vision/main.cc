@@ -15,11 +15,11 @@
 //------------------------------------------------------------------------------
 //
 int main(int argc, char **argv) {
-  ros::init(argc, argv, "vision_server");
+  ros::init(argc, argv, "provider_vision");
   ros::NodeHandle nh;
   ros::Rate loop_rate(15);
 
-  vision_server::VisionServer vision_server{};
+  provider_vision::VisionServer provider_vision{};
 
   while (ros::ok()) {
     ros::spinOnce();

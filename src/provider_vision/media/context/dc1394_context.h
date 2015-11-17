@@ -18,7 +18,7 @@
 #include "provider_vision/media/context/base_context.h"
 #include "provider_vision/media/camera/dc1394_camera.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 /**
  * DC1394Context is a driver to access all cameras that can
@@ -124,5 +124,5 @@ inline DC1394Camera::Ptr DC1394Context::GetDC1394Camera(
   return tmp;
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision
 #endif  // PROVIDER_VISION_CAM_DRIVER_DC1394_H_

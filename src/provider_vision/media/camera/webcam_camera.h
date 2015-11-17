@@ -16,7 +16,7 @@
 #include "provider_vision/utils/config.h"
 #include "provider_vision/media/camera/base_camera.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 /**
  * WebcamCamera is the object for handling webcams.
@@ -83,6 +83,6 @@ class WebcamCamera : public BaseCamera, private cv::VideoCapture {
   float GetFeature(const Feature &feat) const override;
 };
 
-}  // namespace vision_server
+}  // namespace provider_vision
 
 #endif  // PROVIDER_VISION_MEDIA_CAMERA_WEBCAM_CAMERA_H_

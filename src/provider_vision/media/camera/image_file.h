@@ -18,7 +18,7 @@
 #include "provider_vision/utils/config.h"
 #include "provider_vision/media/camera/base_media.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 /**
  * Handles image from files (png, jpeg) and is use s a camera
@@ -78,6 +78,6 @@ class ImageFile : public BaseMedia {
   cv::Mat image_;
 };
 
-}  // namespace vision_server
+}  // namespace provider_vision
 
 #endif  // PROVIDER_VISION_MEDIA_CAMERA_IMAGE_FILE_H_

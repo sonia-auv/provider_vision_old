@@ -13,7 +13,7 @@
 #include <ros/ros.h>
 #include "provider_vision/media/context/dc1394_context.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 //==============================================================================
 // C / D T O R S   S E C T I O N
@@ -161,4 +161,4 @@ void DC1394Context::GetFeature(BaseCamera::Feature feat,
   val = cam->GetFeature(feat);
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision

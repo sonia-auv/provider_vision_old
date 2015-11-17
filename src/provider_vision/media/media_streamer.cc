@@ -10,7 +10,7 @@
 
 #include "provider_vision/media/media_streamer.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 const std::string MediaStreamer::LOOP_TAG = "[MediaStreamer]";
 
@@ -179,4 +179,4 @@ BaseMedia::Status MediaStreamer::GetMediaStatus() const {
   return media_->GetStatus();
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision

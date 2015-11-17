@@ -16,7 +16,7 @@
 #include <provider_vision/media/camera_configuration.h>
 #include "provider_vision/utils/config.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 /**
  * Base class for anything that can provide an image to the system
@@ -198,6 +198,6 @@ inline void BaseMedia::StopStreaming() {
   }
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision
 
 #endif  // PROVIDER_VISION_MEDIA_CAMERA_BASE_MEDIA_H_

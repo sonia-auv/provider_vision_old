@@ -17,7 +17,7 @@
 #include "provider_vision/media/context/webcam_context.h"
 #include "provider_vision/media/context/file_context.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 //==============================================================================
 // C / D T O R S   S E C T I O N
@@ -244,4 +244,4 @@ BaseCamera::Feature MediaManager::GetFeatureFromName(
   }
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision

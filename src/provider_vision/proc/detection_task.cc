@@ -13,7 +13,7 @@
 #include <std_msgs/String.h>
 #include "provider_vision/proc/detection_task.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 //==============================================================================
 // C O N S T A N T S   S E C T I O N
@@ -128,4 +128,4 @@ void DetectionTask::Run() {
   }
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision

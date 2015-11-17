@@ -12,7 +12,7 @@
 #include <ros/ros.h>
 #include "provider_vision/media/camera/dc1394_camera.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 const std::string DC1394Camera::CAM_TAG = "[DC1394 Camera]";
 
@@ -460,4 +460,4 @@ void DC1394Camera::SetCameraParams() {
   }
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision

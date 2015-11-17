@@ -21,7 +21,7 @@
 #include "provider_vision/utils/config.h"
 #include "provider_vision/proc/filterchain.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 /**
  * This class is the core module that stores and manages every FilterChains
@@ -151,6 +151,6 @@ inline std::string FilterchainManager::GetFilterchainPath(
   return kConfigPath + filterchain + kFilterchainExt;
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision
 
 #endif  // PROVIDER_VISION_SERVER_FILTERCHAIN_MANAGER_H_

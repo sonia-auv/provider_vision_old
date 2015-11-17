@@ -20,7 +20,7 @@
 #include "provider_vision/proc/detection_task.h"
 #include "provider_vision/proc/filterchain.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 class DetectionTaskManager {
  public:
@@ -59,6 +59,6 @@ class DetectionTaskManager {
   std::vector<DetectionTask::Ptr> detection_tasks_;
 };
 
-}  // namespace vision_server
+}  // namespace provider_vision
 
 #endif  // PROVIDER_VISION_SERVER_DETECTION_TASK_MANAGER_H_

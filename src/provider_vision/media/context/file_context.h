@@ -19,7 +19,7 @@
 #include "provider_vision/media/context/base_context.h"
 #include "provider_vision/utils/config.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 /**
  * Class managing medias from a hard drive.
@@ -90,6 +90,6 @@ class FileContext : public BaseContext {
   virtual MediaType GetMediaType(const std::string &nameMedia) const;
 };
 
-}  // namespace vision_server
+}  // namespace provider_vision
 
 #endif  // PROVIDER_VISION_CAM_DRIVER_MEDIA_H_

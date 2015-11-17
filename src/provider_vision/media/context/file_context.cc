@@ -10,7 +10,7 @@
 
 #include <provider_vision/media/context/file_context.h>
 
-namespace vision_server {
+namespace provider_vision {
 
 //==============================================================================
 // C / D T O R S   S E C T I O N
@@ -133,4 +133,4 @@ FileContext::MediaType FileContext::GetMediaType(
   return MediaType::NONE;
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision

@@ -10,7 +10,7 @@
 
 #include "provider_vision/media/camera/base_camera.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 //==============================================================================
 // C / D T O R S   S E C T I O N
@@ -26,4 +26,4 @@ BaseCamera::BaseCamera(const CameraConfiguration &configuration)
 //
 BaseCamera::~BaseCamera() {}
 
-}  // namespace vision_server
+}  // namespace provider_vision

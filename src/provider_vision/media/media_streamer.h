@@ -21,7 +21,7 @@
 #include <lib_atlas/pattern/runnable.h>
 #include "provider_vision/media/camera/base_media.h"
 
-namespace vision_server {
+namespace provider_vision {
 
 /**
  * Class responsible of acquiring an image from a device, asynchronously from
@@ -208,6 +208,6 @@ inline bool MediaStreamer::IsStreaming() const {
   return media_->GetStatus() == BaseMedia::Status::STREAMING;
 }
 
-}  // namespace vision_server
+}  // namespace provider_vision
 
 #endif  // PROVIDER_VISION_MEDIA_MEDIA_STREAMER_H_

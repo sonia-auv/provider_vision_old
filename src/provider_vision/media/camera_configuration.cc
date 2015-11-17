@@ -12,7 +12,7 @@
 #include <provider_vision/media/camera_configuration.h>
 #include "provider_vision/utils/pugixml.h"
 
-namespace vision_server {
+namespace provider_vision {
 CameraConfiguration::CameraConfiguration(const std::string &name)
     : guid_(0), name_(name) {}
 
