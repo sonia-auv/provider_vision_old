@@ -37,17 +37,18 @@ FilterchainManager::~FilterchainManager() {}
 std::vector<std::string> FilterchainManager::GetAllFilterchainName() const
     noexcept {
   auto availableFilterchains = std::vector<std::string>{};
-
-  if (auto dir = opendir(kConfigPath.c_str())) {
+  std::stringstream ss;
+  ss << kConfigPath << "filterchain/";
+  if (auto dir = opendir(ss.str().c_str())) {
     struct dirent *ent;
     while ((ent = readdir(dir)) != nullptr) {
       auto filename = std::string{ent->d_name};
-      if (filename.length() > 3 &&
-          filename.substr(filename.length() - 3) == kFilterchainExt) {
-        filename.replace(filename.end() - 3, filename.end(), "");
+      if (filename.length() > kFilterchainExt.length() &&
+          filename.substr(filename.length() - kFilterchainExt.length()) == kFilterchainExt) {
+        filename.replace(filename.end() - kFilterchainExt.length(), filename.end(), "");
         availableFilterchains.push_back(filename);
       }
-    };
+    }
     closedir(dir);
   }
   return availableFilterchains;
@@ -91,10 +92,7 @@ Filterchain::Ptr FilterchainManager::StartFilterchain(
     running_filterchains_.push_back(filterchain);
     return filterchain;
   }
-  ROS_ERROR_NAMED(FILTERCHAIN_MANAGER_TAG.c_str(),
-                  "Could not find the filterchain: %s",
-                  filterchainName.c_str());
-  return nullptr;
+  throw std::invalid_argument("Could not find the given filterchain");
 }
 
 //------------------------------------------------------------------------------

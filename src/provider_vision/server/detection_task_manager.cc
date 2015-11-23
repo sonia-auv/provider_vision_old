@@ -37,6 +37,7 @@ void DetectionTaskManager::StartDetectionTask(
   if (task == nullptr) {
     task = std::make_shared<DetectionTask>(media_streamer, filterchain,
                                            execution_name);
+    task->StartDetectionTask();
     detection_tasks_.push_back(task);
   } else {
     throw std::logic_error("This execution already exist !");

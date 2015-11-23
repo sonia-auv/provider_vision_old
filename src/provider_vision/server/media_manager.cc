@@ -26,7 +26,7 @@ namespace provider_vision {
 //
 MediaManager::MediaManager() noexcept : contexts_() {
   std::stringstream ss;
-  ss << kConfigPath << "/camera_config.xml";
+  ss << kConfigPath << "camera/camera_config.xml";
   ConfigurationHandler configHandler(ss.str());
   std::vector<CameraConfiguration> list = configHandler.ParseConfiguration();
   // Each time you have a new driver (Gige, usb, etc.) add it to
