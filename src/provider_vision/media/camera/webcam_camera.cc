@@ -90,4 +90,12 @@ void WebcamCamera::SetFeature(const Feature &feat, float value) {
 //
 float WebcamCamera::GetFeature(const Feature &feat) const { return 0.0f; }
 
+float WebcamCamera::GetGainValue() const {return 0.0f;}
+
+float WebcamCamera::GetGammaValue() const {return 0.0f;}
+
+float WebcamCamera::GetExposureValue() const {return 0.0f;}
+
+float WebcamCamera::GetSaturationValue() const {return 0.0f;}
+
 }  // namespace provider_vision

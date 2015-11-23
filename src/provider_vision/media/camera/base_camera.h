@@ -43,7 +43,10 @@ class BaseCamera : public BaseMedia {
     WHITE_BALANCE_AUTO,
     WHITE_BALANCE_RED,
     WHITE_BALANCE_BLUE,
-    FRAMERATE
+    FRAMERATE,
+    GAMMA,
+    EXPOSURE,
+    SATURATION
   };
 
   //==========================================================================
@@ -63,6 +66,14 @@ class BaseCamera : public BaseMedia {
   bool HasArtificialFramerate() const override;
 
  protected:
+  virtual float GetGainValue() const = 0;
+
+  virtual float GetGammaValue() const = 0;
+
+  virtual float GetExposureValue() const = 0;
+
+  virtual float GetSaturationValue() const = 0;
+
   //==========================================================================
   // P R O T E C T E D   M E M B E R S
 

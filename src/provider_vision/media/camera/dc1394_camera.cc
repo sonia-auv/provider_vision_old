@@ -251,6 +251,58 @@ void DC1394Camera::SetFeature(const Feature &feat, float value) {
   }
 }
 
+float DC1394Camera::GetGainValue() const {
+  dc1394error_t error;
+  uint32_t value;
+  error = dc1394_feature_get_value(dc1394_camera_, DC1394_FEATURE_GAIN,
+                                   &value);
+
+  if (error != DC1394_SUCCESS) {
+    return -1.0f;
+  }
+
+  return static_cast<float>(value);
+}
+
+float DC1394Camera::GetGammaValue() const {
+  dc1394error_t error;
+  uint32_t value;
+  error = dc1394_feature_get_value(dc1394_camera_, DC1394_FEATURE_GAMMA,
+                                   &value);
+
+  if (error != DC1394_SUCCESS) {
+    return -1.0f;
+  }
+
+  return static_cast<float>(value);
+}
+
+float DC1394Camera::GetExposureValue() const {
+  dc1394error_t error;
+  uint32_t value;
+  error = dc1394_feature_get_value(dc1394_camera_, DC1394_FEATURE_EXPOSURE,
+                                   &value);
+
+  if (error != DC1394_SUCCESS) {
+    return -1.0f;
+  }
+
+  return static_cast<float>(value);
+}
+
+float DC1394Camera::GetSaturationValue() const {
+  dc1394error_t error;
+  uint32_t value;
+  error = dc1394_feature_get_value(dc1394_camera_, DC1394_FEATURE_SATURATION,
+                                   &value);
+
+  if (error != DC1394_SUCCESS) {
+    return -1.0f;
+  }
+
+  return static_cast<float>(value);
+}
+
 //------------------------------------------------------------------------------
 //
 float DC1394Camera::GetFeature(const Feature &feat) const {
@@ -299,6 +351,15 @@ float DC1394Camera::GetFeature(const Feature &feat) const {
       value = red;
       break;
     case Feature::ERROR_FEATURE:
+      break;
+    case Feature::GAIN:
+      return GetGainValue();
+    case Feature::GAMMA:
+      return GetGammaValue();
+    case Feature::EXPOSURE :
+      return GetExposureValue();
+    case Feature::SATURATION :
+      return GetSaturationValue();
     default:
       break;
   }
