@@ -13,7 +13,7 @@
 #include "provider_vision/media/camera_configuration.h"
 #include "provider_vision/utils/config.h"
 
-using namespace vision_server;
+using namespace provider_vision;
 
 TEST(ConfigurationHandler, loading) {
   std::string file_path(kProjectPath + "test/camera_xml_config.xml");

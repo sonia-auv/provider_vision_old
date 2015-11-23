@@ -15,4 +15,9 @@
 		<conf1 value="True" />
 		<conf2 value="1.0" />
 	</Camera>
+	<Camera name="Front" guid="ff">
+		<UndistortionMatrice />
+		<conf1 value="True" />
+		<conf2 value="1.0" />
+	</Camera>
 </CameraList>
