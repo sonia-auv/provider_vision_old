@@ -81,6 +81,17 @@ class WebcamCamera : public BaseCamera, private cv::VideoCapture {
    * Method override from Media
    */
   float GetFeature(const Feature &feat) const override;
+
+ protected:
+
+  float GetGainValue() const override ;
+
+  float GetGammaValue() const override;
+
+  float GetExposureValue() const override;
+
+  float GetSaturationValue() const override;
+
 };
 
 }  // namespace provider_vision

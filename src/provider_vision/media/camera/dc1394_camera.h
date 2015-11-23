@@ -78,6 +78,16 @@ class DC1394Camera : public BaseCamera {
   // SHOULD BE USE ONLY BY DRIVER WITH CAUTION
   dc1394camera_t *GetCameraPtr() const;
 
+ protected:
+
+  float GetGainValue() const override ;
+
+  float GetGammaValue() const override;
+
+  float GetExposureValue() const override;
+
+  float GetSaturationValue() const override;
+
  private:
   //==========================================================================
   // P R I V A T E   M E T H O D S
