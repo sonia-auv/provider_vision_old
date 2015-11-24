@@ -177,10 +177,7 @@ std::vector<std::string> MediaManager::GetAllMediasName() const noexcept {
 size_t MediaManager::GetAllMediasCount() const noexcept {
   size_t size = 0;
   for (auto &context : contexts_) {
-    auto context_media_list = context->GetMediaList();
-    for (const auto &media : context_media_list) {
-      ++size;
-    }
+    size += context->GetMediaList().size();
   }
   return size;
 }

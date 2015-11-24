@@ -75,8 +75,23 @@ class MediaManager {
    */
   bool IsMediaStreaming(const std::string &name);
 
+  /**
+   * Get the name of all existing medias in the system.
+   *
+   * If there is cameras pluged in the system, they will appear in this list.
+   * If there is images or video files streaming, they will appear here as well.
+   *
+   * \return The name of all medias in the system.
+   */
   std::vector<std::string> GetAllMediasName() const noexcept;
 
+  /**
+   * Get the number of all medias in the system.
+   *
+   * This will iterate through all media list in order to have the total count.
+   *
+   * \return The total count of all medias.
+   */
   size_t GetAllMediasCount() const noexcept;
 
   /**

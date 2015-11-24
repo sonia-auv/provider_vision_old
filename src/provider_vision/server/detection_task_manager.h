@@ -45,7 +45,25 @@ class DetectionTaskManager {
 
   void StopDetectionTask(const std::string &execution_name) noexcept;
 
+  /**
+   * Get the name of all existing detection tasks in the system.
+   *
+   * An existing detection tasks has been explicitly created by the user.
+   * It can be paused so all the detection tasks here may not be running.
+   *
+   * \return The name of all detection tasks in the system.
+   */
   std::vector<std::string> GetAllDetectionTasksName() const noexcept;
+
+  /**
+   * Get the number of all detection tasks in the system.
+   *
+   * This will iterate through all detection tasks list in order to have the
+   * total count.
+   *
+   * \return The total count of all detection tasks.
+   */
+  size_t GetAllDetectionTasksCount() const noexcept;
 
  private:
   //==========================================================================

@@ -70,6 +70,12 @@ std::vector<std::string> DetectionTaskManager::GetAllDetectionTasksName() const
 
 //------------------------------------------------------------------------------
 //
+size_t DetectionTaskManager::GetAllDetectionTasksCount() const noexcept {
+  return detection_tasks_.size();
+}
+
+//------------------------------------------------------------------------------
+//
 DetectionTask::Ptr DetectionTaskManager::GetDetectionTask(
     const std::string &execution_name) const {
   for (const auto &task : detection_tasks_) {
