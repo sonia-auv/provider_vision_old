@@ -67,7 +67,7 @@ void FilterchainManager::CreateFilterchain(const std::string &filterchain) {
 
 //------------------------------------------------------------------------------
 //
-void FilterchainManager::DeleteFilterchain(const std::string &filterchain) {
+void FilterchainManager::EraseFilterchain(const std::string &filterchain) {
   remove(GetFilterchainPath(filterchain).c_str());
 }
 
@@ -84,11 +84,11 @@ bool FilterchainManager::FilterchainExists(const std::string &filterchain) {
 
 //------------------------------------------------------------------------------
 //
-Filterchain::Ptr FilterchainManager::StartFilterchain(
-    const std::string &executionName, const std::string &filterchainName) {
+Filterchain::Ptr FilterchainManager::InstanciateFilterchain(
+    const std::string &filterchainName) {
   if (FilterchainExists(filterchainName)) {
     Filterchain::Ptr filterchain =
-        std::make_shared<Filterchain>(filterchainName, executionName);
+        std::make_shared<Filterchain>(filterchainName);
     running_filterchains_.push_back(filterchain);
     return filterchain;
   }
@@ -97,38 +97,9 @@ Filterchain::Ptr FilterchainManager::StartFilterchain(
 
 //------------------------------------------------------------------------------
 //
-void FilterchainManager::StopFilterchain(const std::string &executionName,
-                                         const std::string &filterchainName) {
-  auto filterchain = running_filterchains_.begin();
-  const auto &last_filterchain = running_filterchains_.end();
-  for (; filterchain != last_filterchain; ++filterchain) {
-    if ((*filterchain)->GetName().compare(filterchainName) == 0) {
-      running_filterchains_.erase(filterchain);
-    }
-  }
-}
-
-//------------------------------------------------------------------------------
-//
-void FilterchainManager::SaveFilterchain(
-    const std::string &executionName,
-    const std::string &filterchainName) const {
-  auto filterchain = GetRunningFilterchain(executionName);
-  if (filterchain) {
-    filterchain->Serialize();
-  }
-}
-
-//------------------------------------------------------------------------------
-//
-Filterchain::Ptr FilterchainManager::GetRunningFilterchain(
-    const std::string &execution) const noexcept {
-  for (const auto &filterchain : running_filterchains_) {
-    if (filterchain->GetName() == execution) {
-      return filterchain;
-    }
-  }
-  return nullptr;
+void FilterchainManager::StopFilterchain(const Filterchain::Ptr &filterchain) {
+  auto instance = std::find(running_filterchains_.begin(), running_filterchains_.end(), filterchain);
+  running_filterchains_.erase(instance);
 }
 
 }  // namespace provider_vision

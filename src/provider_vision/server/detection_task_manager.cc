@@ -76,6 +76,18 @@ size_t DetectionTaskManager::GetAllDetectionTasksCount() const noexcept {
 
 //------------------------------------------------------------------------------
 //
+MediaStreamer::Ptr DetectionTaskManager::GetMediaStreamerFromDetectionTask(const std::string &name) const noexcept {
+  return GetDetectionTask(name)->GetMediaStreamer();
+}
+
+//------------------------------------------------------------------------------
+//
+Filterchain::Ptr DetectionTaskManager::GetFilterchainFromDetectionTask(const std::string &name) const noexcept {
+  return GetDetectionTask(name)->GetFilterchain();
+}
+
+//------------------------------------------------------------------------------
+//
 DetectionTask::Ptr DetectionTaskManager::GetDetectionTask(
     const std::string &execution_name) const {
   for (const auto &task : detection_tasks_) {

@@ -62,12 +62,10 @@ class FilterchainManager {
    * If the filterchain exists, this method will create
    * an ins
    *
-   * \param executionName std::string
    * \param filterchainName std::string
    * \return Filterchain*
    */
-  Filterchain::Ptr StartFilterchain(const std::string &executionName,
-                                    const std::string &filterchainName);
+  Filterchain::Ptr InstanciateFilterchain(const std::string &filterchainName);
 
   /**
    * Get all available filterchains on the system.
@@ -76,31 +74,11 @@ class FilterchainManager {
    * \param filterchainName std::string
    * \return Filterchain*
    */
-  void StopFilterchain(const std::string &executionName,
-                       const std::string &filterchainName);
-
-  /**
-   * Get all available filterchains on the system
-   *
-   * \param executionName std::string
-   * \param filterchainName std::string
-   * \return Filterchain*
-   */
-  void SaveFilterchain(const std::string &executionName,
-                       const std::string &filterchainName) const;
-
-  /**
-   * Find an existing filterchain
-   *
-   * \param execution_name string
-   * \param filterchainName string
-   * \return filterchain Filterchain*
-   */
-  Filterchain::Ptr GetRunningFilterchain(const std::string &execution) const
-      noexcept;
+  void StopFilterchain(const Filterchain::Ptr &filterchain);
 
   /**
    * If the does not filterchain exists, create it.
+   *
    * \param filterchain The name of the filterchain to create.
    * \return Either if the filterchain was added or not.
    */
@@ -112,7 +90,7 @@ class FilterchainManager {
    * \param filterchain The name of the filterchain to delete.
    * \return Either if the filterchain was delete or not.
    */
-  void DeleteFilterchain(const std::string &filterchain);
+  void EraseFilterchain(const std::string &filterchain);
 
   /**
    * Check if a filterchain exist or not.

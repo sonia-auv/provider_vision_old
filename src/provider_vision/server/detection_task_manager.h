@@ -5,6 +5,7 @@
  * \author	Thibaut Mattio <thibaut.mattio@gmail.com>
  * \author	Thomas Fuhrmann <tomesman@gmail.com>
  * \date	24/01/2015
+ *
  * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
@@ -64,6 +65,16 @@ class DetectionTaskManager {
    * \return The total count of all detection tasks.
    */
   size_t GetAllDetectionTasksCount() const noexcept;
+
+  /**
+   * Get the media streamer object from the detection task.
+   */
+  MediaStreamer::Ptr GetMediaStreamerFromDetectionTask(const std::string &name) const noexcept;
+
+  /**
+   * Get the filter chain object from the detection task.
+   */
+  Filterchain::Ptr GetFilterchainFromDetectionTask(const std::string &name) const noexcept;
 
  private:
   //==========================================================================

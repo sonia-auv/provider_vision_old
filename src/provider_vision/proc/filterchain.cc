@@ -21,7 +21,7 @@ namespace provider_vision {
 
 //------------------------------------------------------------------------------
 //
-Filterchain::Filterchain(const std::string &name, const std::string &execution)
+Filterchain::Filterchain(const std::string &name)
     : Serializable(kConfigPath + "filterchain/" + name + kFilterchainExt),
       name_(name),
       _global_params(),

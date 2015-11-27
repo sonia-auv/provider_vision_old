@@ -108,8 +108,7 @@ bool VisionServer::CallbackExecutionCMD(
       MediaStreamer::Ptr media =
           media_mgr_.StartStreamingMedia(rqst.media_name);
 
-      Filterchain::Ptr filterchain = filterchain_mgr_.StartFilterchain(
-          rqst.node_name, rqst.filterchain_name);
+      Filterchain::Ptr filterchain = filterchain_mgr_.InstanciateFilterchain(rqst.filterchain_name);
 
       detection_task_mgr_.StartDetectionTask(media, filterchain,
                                              rqst.node_name);
@@ -122,8 +121,9 @@ bool VisionServer::CallbackExecutionCMD(
     }
   } else if (rqst.cmd == rqst.STOP) {
     try {
+      auto fc = detection_task_mgr_.GetFilterchainFromDetectionTask(rqst.node_name);
       detection_task_mgr_.StopDetectionTask(rqst.node_name);
-      filterchain_mgr_.StopFilterchain(rqst.node_name, rqst.filterchain_name);
+      filterchain_mgr_.StopFilterchain(fc);
       // TODO jsprevost : Assert that there is no execution with this media
       // currently running
       media_mgr_.StopStreamingMedia(rqst.media_name);
@@ -209,7 +209,7 @@ bool VisionServer::CallbackGetFilterParam(
   std::string execution_name(rqst.exec_name),
       filterchain_name(rqst.filterchain);
   Filterchain::Ptr filterchain =
-      filterchain_mgr_.GetRunningFilterchain(execution_name);
+      detection_task_mgr_.GetFilterchainFromDetectionTask(execution_name);
 
   if (filterchain != nullptr) {
     rep.list = filterchain->GetFilterParam(rqst.filter, rqst.parameter);
@@ -232,7 +232,7 @@ bool VisionServer::CallbackGetFilterAllParam(
   std::string execution_name(rqst.exec_name),
       filterchain_name(rqst.filterchain);
   Filterchain::Ptr filterchain =
-      filterchain_mgr_.GetRunningFilterchain(execution_name);
+      detection_task_mgr_.GetFilterchainFromDetectionTask(execution_name);
 
   if (filterchain != nullptr) {
     rep.list = filterchain->GetFilterAllParam(rqst.filter);
@@ -255,7 +255,7 @@ bool VisionServer::CallbackSetFilterParam(
   std::string execution_name(rqst.exec_name),
       filterchain_name(rqst.filterchain);
   Filterchain::Ptr filterchain =
-      filterchain_mgr_.GetRunningFilterchain(execution_name);
+      detection_task_mgr_.GetFilterchainFromDetectionTask(execution_name);
 
   if (filterchain != nullptr) {
     filterchain->SetFilterParam(rqst.filter, rqst.parameter, rqst.value);
@@ -279,7 +279,7 @@ bool VisionServer::CallbackGetFilter(
   std::string execution_name(rqst.exec_name),
       filterchain_name(rqst.filterchain);
   Filterchain::Ptr filterchain =
-      filterchain_mgr_.GetRunningFilterchain(execution_name);
+      detection_task_mgr_.GetFilterchainFromDetectionTask(execution_name);
 
   if (filterchain != nullptr) {
     rep.list = filterchain->GetFilterList();
@@ -304,7 +304,7 @@ bool VisionServer::CallbackSetObserver(
   // For now ignoring filterchain name, but when we will have multiple,
   // we will have to check the name and find the good filterchain
   Filterchain::Ptr filterchain =
-      filterchain_mgr_.GetRunningFilterchain(rqst.execution);
+      detection_task_mgr_.GetFilterchainFromDetectionTask(rqst.execution);
 
   if (filterchain != nullptr) {
     rep.result = rep.SUCCESS;
@@ -326,7 +326,7 @@ bool VisionServer::CallbackManageFilter(
     manage_filterchain_filter::Request &rqst,
     manage_filterchain_filter::Response &rep) {
   const auto &filterchain =
-      filterchain_mgr_.GetRunningFilterchain(rqst.exec_name);
+      detection_task_mgr_.GetFilterchainFromDetectionTask(rqst.exec_name);
   rep.success = 1;
   if (filterchain != nullptr) {
     if (rqst.cmd == rqst.ADD) {
@@ -353,7 +353,7 @@ bool VisionServer::CallbackManageFc(
     filterchain_mgr_.CreateFilterchain(filterchain_name);
     rep.success = rep.SUCCESS;
   } else if (rqst.cmd == rqst.DELETE) {
-    filterchain_mgr_.DeleteFilterchain(filterchain_name);
+    filterchain_mgr_.EraseFilterchain(filterchain_name);
   }
   return response;
 }
@@ -366,7 +366,7 @@ bool VisionServer::CallbackSaveFc(
   std::string execution_name(rqst.exec_name);
   std::string filterchain_name(rqst.filterchain);
   if (rqst.cmd == rqst.SAVE) {
-    filterchain_mgr_.SaveFilterchain(execution_name, filterchain_name);
+    detection_task_mgr_.GetFilterchainFromDetectionTask(rqst.exec_name)->Serialize();
     rep.success = rep.SUCCESS;
   }
   return true;
@@ -380,7 +380,7 @@ bool VisionServer::CallbackSetFcOrder(
   ROS_INFO("Call to set_filterchain_filter_order.");
 
   rep.success = rep.SUCCESS;
-  auto filterchain = filterchain_mgr_.GetRunningFilterchain(rqst.exec_name);
+  auto filterchain = detection_task_mgr_.GetFilterchainFromDetectionTask(rqst.exec_name);
   if (rqst.cmd == rqst.UP) {
     filterchain->MoveFilterUp(rqst.filter_index);
   } else if (rqst.cmd == rqst.DOWN) {
@@ -401,7 +401,7 @@ bool VisionServer::CallbackGetFcFromExec(
   ROS_INFO("Call to get_filterchain_from_execution.");
   std::string execution_name(rqst.exec_name);
   Filterchain::Ptr filterchain =
-      filterchain_mgr_.GetRunningFilterchain(execution_name);
+      detection_task_mgr_.GetFilterchainFromDetectionTask(execution_name);
 
   if (filterchain != nullptr) {
     rep.list = filterchain->GetName();

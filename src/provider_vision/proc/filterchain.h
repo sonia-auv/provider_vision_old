@@ -30,7 +30,7 @@ class Filterchain : public Serializable {
   //============================================================================
   // P U B L I C   C / D T O R S
 
-  explicit Filterchain(const std::string &name, const std::string &execution);
+  explicit Filterchain(const std::string &name);
 
   explicit Filterchain(const Filterchain &filterchain);
 
@@ -102,11 +102,6 @@ class Filterchain : public Serializable {
   void SetFilterParam(const std::string &filter_name,
                       const std::string &param_name,
                       const std::string &param_value);
-
-  //==========================================================================
-  // G E T T E R S   A N D   S E T T E R S
-
-  void SetExecutionName(const std::string &executionName);
 
   // Communication from the UI goes on the form
   size_t GetFilterIndexFromUIName(const std::string &name) const;
