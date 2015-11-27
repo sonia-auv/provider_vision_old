@@ -28,7 +28,7 @@ const std::string DetectionTask::EXEC_TAG = "[EXECUTION]";
 DetectionTask::DetectionTask(MediaStreamer::Ptr acquisition_loop,
                              Filterchain::Ptr filterchain,
                              const std::string &execution_name)
-    : name_(kRosNodeName + execution_name),
+    : name_(execution_name),
       image_publisher_(kRosNodeName + execution_name + "_image"),
       result_publisher_(),
       media_streamer_(acquisition_loop),
@@ -38,7 +38,7 @@ DetectionTask::DetectionTask(MediaStreamer::Ptr acquisition_loop,
   assert(filterchain);
   assert(acquisition_loop);
   result_publisher_ =
-      ros::NodeHandle().advertise<std_msgs::String>(name_ + "_result", 50);
+      ros::NodeHandle().advertise<std_msgs::String>(kRosNodeName + name_ + "_result", 50);
 }
 
 //------------------------------------------------------------------------------
