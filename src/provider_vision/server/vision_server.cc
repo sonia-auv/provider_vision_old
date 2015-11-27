@@ -113,7 +113,7 @@ bool VisionServer::CallbackExecutionCMD(
       detection_task_mgr_.StartDetectionTask(media, filterchain,
                                              rqst.node_name);
     } catch (const std::invalid_argument &e) {
-      ROS_ERROR(e.what());
+      ROS_ERROR("%s", e.what());
       return false;
     } catch (const std::exception &e) {
       ROS_ERROR("Starting execution error: %s", e.what());
