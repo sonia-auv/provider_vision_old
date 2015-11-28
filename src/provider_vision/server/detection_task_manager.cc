@@ -73,6 +73,24 @@ std::vector<std::string> DetectionTaskManager::GetAllDetectionTasksName() const
 
 //------------------------------------------------------------------------------
 //
+void DetectionTaskManager::ChangeReturnImageToFilter(const std::string &name, const size_t &index) {
+  GetDetectionTask(name)->ChangeReturnImageToFilter(index);
+}
+
+//------------------------------------------------------------------------------
+//
+void DetectionTaskManager::ChangeReturnImageToFilterchain(const std::string &name) {
+  GetDetectionTask(name)->ChangeReturnImageToFilterchain();
+}
+
+//------------------------------------------------------------------------------
+//
+void DetectionTaskManager::ChangeReturnImageToOrigin(const std::string &name) {
+  GetDetectionTask(name)->ChangeReturnImageToOrigin();
+}
+
+//------------------------------------------------------------------------------
+//
 size_t DetectionTaskManager::GetAllDetectionTasksCount() const noexcept {
   return detection_tasks_.size();
 }

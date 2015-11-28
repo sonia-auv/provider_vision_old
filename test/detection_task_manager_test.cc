@@ -162,12 +162,31 @@ TEST(DetectionTaskManager, change_observer) {
   dmgr.StartDetectionTask(streamer, fc, "test");
 
   TopicListener listener(provider_vision::kRosNodeName + "test" + "_image");
+
   std::thread thread(&TopicListener::Run, &listener);
   std::this_thread::sleep_for(std::chrono::milliseconds(150));
+
   cv::Mat first_image;
   listener.GetImage().copyTo(first_image);
 
-  ASSERT_FALSE(first_image.empty());
+  dmgr.ChangeReturnImageToOrigin("test");
+  std::this_thread::sleep_for(std::chrono::milliseconds(150));
+
+  cv::Mat second_image;
+  listener.GetImage().copyTo(second_image);
+
+  // Check that the observer has changed.
+  ASSERT_FALSE(std::equal(first_image.begin<uchar>(), first_image.end<uchar>(), second_image.begin<uchar>()));
+
+  dmgr.ChangeReturnImageToFilterchain("test");
+  std::this_thread::sleep_for(std::chrono::milliseconds(150));
+
+  cv::Mat third_image;
+  listener.GetImage().copyTo(third_image);
+
+  // Check that the observer has changed to the filterchain output
+  ASSERT_TRUE(std::equal(first_image.begin<uchar>(), first_image.end<uchar>(), third_image.begin<uchar>()));
+
   listener.Stop();
   thread.join();
 }
