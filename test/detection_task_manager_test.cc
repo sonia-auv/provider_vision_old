@@ -32,7 +32,8 @@ class TopicListener {
    * the name of the topic to subscribe to.
    */
   explicit TopicListener(const std::string &topic_name)
-      : image_transport(*nh) {
+      : image_transport(*nh),
+        continue_(true) {
     subscriber = image_transport.subscribe(
         topic_name, 1, &TopicListener::MessageCallBack, this);
   }
@@ -50,7 +51,7 @@ class TopicListener {
    * Run while ROS is running
    */
   void Run() {
-    while(ros::ok()) {
+    while(ros::ok() && continue_) {
       ros::spinOnce();
     }
   }
@@ -62,10 +63,18 @@ class TopicListener {
     return image;
   }
 
+  /**
+   * Stop the execution of the Run method.
+   */
+  void Stop() noexcept {
+    continue_ = false;
+  }
+
  private:
   cv::Mat image;
   image_transport::ImageTransport image_transport;
   image_transport::Subscriber subscriber;
+  std::atomic_bool continue_;
 };
 
 TEST(DetectionTaskManager, start_detection) {
@@ -109,7 +118,7 @@ TEST(DetectionTaskManager, start_detection) {
   // Check if the image send on ROS is the same that the original one.
   // Allow some difference due to the compression.
   ASSERT_EQ(cv::mean(listener.GetImage())[0], cv::mean(origin)[0]);
-  ros::shutdown();
+  listener.Stop();
   thread.join();
 }
 
@@ -159,6 +168,8 @@ TEST(DetectionTaskManager, change_observer) {
   listener.GetImage().copyTo(first_image);
 
   ASSERT_FALSE(first_image.empty());
+  listener.Stop();
+  thread.join();
 }
 
 int main(int argc, char **argv) {
