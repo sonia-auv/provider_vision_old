@@ -39,6 +39,20 @@ class Filterchain : public Serializable {
   //============================================================================
   // P U B L I C   M E T H O D S
 
+  /**
+   * Get the name of the filterchain.
+   *
+   * \return The name of the filterchain.
+   */
+  const std::string &GetName() const;
+
+  /**
+   * Set the name of the filterchain.
+   *
+   * \param name The new name of the filterchain.
+   */
+  void SetName(const std::string &name);
+
   bool Serialize() override;
 
   bool Deserialize() override;
@@ -55,19 +69,12 @@ class Filterchain : public Serializable {
    */
   void CloseFilters();
 
-  /**
-   * Given a name of a filter, this will return the first filter with the same
-   * name in the filterchain.
-   * CAUTION: It is possible that there is several filters with the same name
-   * inside the filterchain. In that case it would be more appropriate to return
-   * a collection of filters.
-   * TODO Thibaut Mattio: Change this method to return a vector instead of
-   * the first item in the list.
-   *
-   * \param filter_name The name of the filter to get.
-   * \return A pointer to the filter if it exists, nullptr if not.
-   */
-  lib_vision::Filter *const GetFilter(const std::string &filter_name) const;
+  lib_vision::Filter::Ptr GetFilter(const size_t &index) const;
+
+  std::vector<lib_vision::Filter::Ptr> GetFiltersWithName(
+      const std::string &filter_name) const;
+
+  std::vector<lib_vision::Filter::Ptr> GetAllFilters() const;
 
   /**
    * Check if there is a filter with the same name than the given parameter.
@@ -75,45 +82,31 @@ class Filterchain : public Serializable {
    * \param filter_name The name of the filter to check.
    * \return Either if a filter with the same name exists or not.
    */
-  bool HasFilter(const std::string &filter_name) const;
+  bool ContainsFilter(const std::string &filter_name) const;
 
   std::string ExecuteFilterChain(cv::Mat &image);
 
-  void SetObserver(const std::string &filterName);
+  void SetObserver(const size_t &index);
 
   void AddFilter(const std::string &filter_name);
 
-  void RemoveFilter(const size_t index);
+  void RemoveFilter(const size_t &index);
 
-  void MoveFilterDown(const size_t filterIndex);
+  void MoveFilterDown(const size_t &filterIndex);
 
-  void MoveFilterUp(const size_t filterIndex);
+  void MoveFilterUp(const size_t &filterIndex);
 
-  // Getter for the filter list in string (for the client)
-  std::string GetFilterList();
+  std::string GetFilterParameterValue(const size_t &index,
+                                      const std::string &param_name);
 
-  // Return all the parameter of a filter.
-  std::string GetFilterAllParam(const std::string &filter_name);
+  void SetFilterParameterValue(const size_t &index,
+                               const std::string &param_name,
+                               const std::string &param_value);
 
-  // Getter/setter for individual param (for the client)
-  std::string GetFilterParam(const std::string &filter_name,
-                             const std::string &param_name);
+  std::vector<lib_vision::Parameter::Ptr> GetFilterAllParameters(
+      const size_t &index);
 
-  void SetFilterParam(const std::string &filter_name,
-                      const std::string &param_name,
-                      const std::string &param_value);
-
-  // Communication from the UI goes on the form
-  size_t GetFilterIndexFromUIName(const std::string &name) const;
-
-  std::string GetName() const;
-
-  void SetName(const std::string &name);
-
-  /**
-   * GlobalParams
-   */
-  lib_vision::GlobalParamHandler *getParamHandler();
+  lib_vision::GlobalParamHandler::Ptr GetParameterHandler();
 
  private:
   //==========================================================================
@@ -121,11 +114,11 @@ class Filterchain : public Serializable {
 
   std::string name_;
 
-  lib_vision::GlobalParamHandler _global_params;
+  lib_vision::GlobalParamHandler param_handler_;
 
-  std::vector<lib_vision::Filter *> filters_;
+  std::vector<lib_vision::Filter::Ptr> filters_;
 
-  int observer_index_;
+  size_t observer_index_;
 };
 
 //==============================================================================
@@ -153,19 +146,33 @@ inline void Filterchain::CloseFilters() {
 
 //------------------------------------------------------------------------------
 //
-inline lib_vision::Filter *const Filterchain::GetFilter(
-    const std::string &filter_name) const {
-  for (const auto &filter : filters_) {
-    if (filter->getName() == filter_name) {
-      return filter;
-    }
-  }
-  return nullptr;
+inline lib_vision::Filter::Ptr Filterchain::GetFilter(
+    const size_t &index) const {
+  return filters_.at(index);
 }
 
 //------------------------------------------------------------------------------
 //
-inline bool Filterchain::HasFilter(const std::string &filter_name) const {
+inline std::vector<lib_vision::Filter::Ptr> Filterchain::GetFiltersWithName(
+    const std::string &filter_name) const {
+  std::vector<lib_vision::Filter::Ptr> filters;
+  for (const auto &filter : filters_) {
+    if (filter->getName() == filter_name) {
+      filters.push_back(filter);
+    }
+  }
+  return filters;
+}
+
+//------------------------------------------------------------------------------
+//
+inline std::vector<lib_vision::Filter::Ptr> Filterchain::GetAllFilters() const {
+  return filters_;
+}
+
+//------------------------------------------------------------------------------
+//
+inline bool Filterchain::ContainsFilter(const std::string &filter_name) const {
   for (const auto &filter : filters_) {
     if (filter->getName() == filter_name) {
       return true;
@@ -176,39 +183,23 @@ inline bool Filterchain::HasFilter(const std::string &filter_name) const {
 
 //------------------------------------------------------------------------------
 //
-inline void Filterchain::SetObserver(const std::string &filterName) {
-  observer_index_ = GetFilterIndexFromUIName(filterName);
+inline void Filterchain::SetObserver(const size_t &index) {
+  observer_index_ = index;
 }
 
 //------------------------------------------------------------------------------
 //
-inline lib_vision::GlobalParamHandler *Filterchain::getParamHandler() {
-  return &_global_params;
+inline lib_vision::GlobalParamHandler::Ptr Filterchain::GetParameterHandler() {
+  return lib_vision::GlobalParamHandler::Ptr(&param_handler_);
 }
 
 //------------------------------------------------------------------------------
 //
-inline std::string Filterchain::GetName() const { return name_; }
+inline const std::string &Filterchain::GetName() const { return name_; }
 
 //------------------------------------------------------------------------------
 //
 inline void Filterchain::SetName(const std::string &name) { name_ = name; }
-
-//------------------------------------------------------------------------------
-//
-inline size_t Filterchain::GetFilterIndexFromUIName(
-    const std::string &name) const {
-  // So a filer name goes like this: #_filterName,
-  // where the # is the position in the list, 0 based.
-  // So we need to strip the number and get the coressponding filter.
-  size_t pos = name.find("_");
-  // Did not find the filter index.
-  if (pos == std::string::npos) {
-    return std::string::npos;
-  }
-  std::string position = name.substr(pos + 1, name.size() - 1);
-  return size_t(atoi(position.c_str()));
-}
 
 }  // namespace provider_vision
 

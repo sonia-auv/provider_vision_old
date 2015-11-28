@@ -66,6 +66,9 @@ class BaseCamera : public BaseMedia {
   bool HasArtificialFramerate() const override;
 
  protected:
+  //==========================================================================
+  // P R O T E C T E D   M E T H O D S
+
   virtual float GetGainValue() const = 0;
 
   virtual float GetGammaValue() const = 0;

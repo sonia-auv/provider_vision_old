@@ -44,8 +44,10 @@ std::vector<std::string> FilterchainManager::GetAllFilterchainName() const
     while ((ent = readdir(dir)) != nullptr) {
       auto filename = std::string{ent->d_name};
       if (filename.length() > kFilterchainExt.length() &&
-          filename.substr(filename.length() - kFilterchainExt.length()) == kFilterchainExt) {
-        filename.replace(filename.end() - kFilterchainExt.length(), filename.end(), "");
+          filename.substr(filename.length() - kFilterchainExt.length()) ==
+              kFilterchainExt) {
+        filename.replace(filename.end() - kFilterchainExt.length(),
+                         filename.end(), "");
         availableFilterchains.push_back(filename);
       }
     }
@@ -98,7 +100,8 @@ Filterchain::Ptr FilterchainManager::InstanciateFilterchain(
 //------------------------------------------------------------------------------
 //
 void FilterchainManager::StopFilterchain(const Filterchain::Ptr &filterchain) {
-  auto instance = std::find(running_filterchains_.begin(), running_filterchains_.end(), filterchain);
+  auto instance = std::find(running_filterchains_.begin(),
+                            running_filterchains_.end(), filterchain);
   running_filterchains_.erase(instance);
 }
 

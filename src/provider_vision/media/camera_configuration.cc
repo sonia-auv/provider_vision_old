@@ -8,7 +8,6 @@
  * found in the LICENSE file.
  */
 
-
 #include <provider_vision/media/camera_configuration.h>
 #include "provider_vision/utils/pugixml.h"
 

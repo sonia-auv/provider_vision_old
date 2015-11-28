@@ -10,6 +10,7 @@
  */
 
 #include <string>
+#include <ros/ros.h>
 #include "provider_vision/server/vision_server.h"
 
 //------------------------------------------------------------------------------

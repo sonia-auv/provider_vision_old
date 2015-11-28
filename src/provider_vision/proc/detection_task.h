@@ -54,6 +54,30 @@ class DetectionTask : private atlas::Runnable,
 
   void StopDetectionTask();
 
+  /**
+   * Change the image returned by the detection task to the result of a
+   * specific filter.
+   * This behavior is being handled by the filterchain so this method is
+   * a wrapper around the filterchain method that set the observed filter.
+   */
+  void ChangeReturnImageToFilter(const size_t &index);
+
+  /**
+   * Change the image returned by the detection task to the filterchain returned
+   * image.
+   * This is the default behavior, the image returned is the result of the
+   * whole pipeline of filters.
+   */
+  void ChangeReturnImageToFilterchain();
+
+  /**
+   * Change the image returned by the detection task to the original image.
+   * If this parameters is enables, the image is not being processed and
+   * the image that is being sent on the network is the original image
+   * from the media.
+   */
+  void ChangeReturnImageToOrigin();
+
   MediaStreamer::Ptr GetMediaStreamer() const noexcept;
 
   Filterchain::Ptr GetFilterchain() const noexcept;
@@ -127,6 +151,8 @@ class DetectionTask : private atlas::Runnable,
 
   /** Prevent to process data twice for fast processing */
   bool new_image_ready_;
+
+  bool returning_orinal_image;
 
   int close_attemps_;
 };

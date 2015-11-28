@@ -42,9 +42,9 @@ class DetectionTaskManager {
 
   void StartDetectionTask(MediaStreamer::Ptr media_streamer,
                           Filterchain::Ptr filterchain,
-                          const std::string &execution_name) noexcept;
+                          const std::string &execution_name);
 
-  void StopDetectionTask(const std::string &execution_name) noexcept;
+  void StopDetectionTask(const std::string &execution_name);
 
   /**
    * Get the name of all existing detection tasks in the system.
@@ -69,12 +69,14 @@ class DetectionTaskManager {
   /**
    * Get the media streamer object from the detection task.
    */
-  MediaStreamer::Ptr GetMediaStreamerFromDetectionTask(const std::string &name) const noexcept;
+  MediaStreamer::Ptr GetMediaStreamerFromDetectionTask(
+      const std::string &name) const noexcept;
 
   /**
    * Get the filter chain object from the detection task.
    */
-  Filterchain::Ptr GetFilterchainFromDetectionTask(const std::string &name) const noexcept;
+  Filterchain::Ptr GetFilterchainFromDetectionTask(
+      const std::string &name) const noexcept;
 
  private:
   //==========================================================================

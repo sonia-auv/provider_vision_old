@@ -33,9 +33,8 @@ class TopicListener {
    */
   explicit TopicListener(const std::string &topic_name)
       : image_transport(*nh) {
-    image_transport::TransportHints hints("compressed", ros::TransportHints());
     subscriber = image_transport.subscribe(
-        topic_name, 1, &TopicListener::MessageCallBack, this, hints);
+        topic_name, 1, &TopicListener::MessageCallBack, this);
   }
 
   /**
@@ -43,10 +42,8 @@ class TopicListener {
    */
   void MessageCallBack(const sensor_msgs::ImageConstPtr &msg) {
     cv_bridge::CvImageConstPtr ptr =
-        cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::RGB8);
+        cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
     image = ptr->image;
-    cv::imshow("test", image);
-    cv::waitKey(0);
   }
 
   /**
@@ -73,7 +70,7 @@ class TopicListener {
 
 TEST(DetectionTaskManager, start_detection) {
   provider_vision::FilterchainManager fmgr;
-  auto fc = fmgr.InstanciateFilterchain("camera_feed");
+  auto fc = fmgr.InstanciateFilterchain("image_feed");
 
   std::stringstream filepath;
   filepath << provider_vision::kProjectPath << "test/test_image.png";
@@ -89,6 +86,12 @@ TEST(DetectionTaskManager, start_detection) {
   ASSERT_EQ(dmgr.GetAllDetectionTasksName().size(), 1);
   ASSERT_EQ(*(dmgr.GetAllDetectionTasksName().begin()), "test");
 
+  // Check that starting exiting detection task throws.
+  ASSERT_THROW(dmgr.StartDetectionTask(nullptr, nullptr, "test"), std::logic_error);
+
+  // Check that starting exiting detection task throws.
+  ASSERT_THROW(dmgr.StartDetectionTask(streamer, fc, ""), std::invalid_argument);
+
   std::vector<std::string> nodes;
   ros::this_node::getAdvertisedTopics(nodes);
   std::stringstream topic_name;
@@ -99,12 +102,63 @@ TEST(DetectionTaskManager, start_detection) {
   ASSERT_NE(std::find(nodes.begin(), nodes.end(), provider_vision::kRosNodeName + "test" + "_image"), nodes.end());
 
   TopicListener listener(provider_vision::kRosNodeName + "test" + "_image");
-  std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+  std::thread thread(&TopicListener::Run, &listener);
+  std::this_thread::sleep_for(std::chrono::milliseconds(150));
   auto origin = cv::imread(filepath.str(), CV_LOAD_IMAGE_ANYDEPTH | CV_LOAD_IMAGE_ANYCOLOR);
 
   // Check if the image send on ROS is the same that the original one.
   // Allow some difference due to the compression.
-  EXPECT_NEAR(cv::mean(listener.GetImage())[0], cv::mean(origin)[0], 0.1);
+  ASSERT_EQ(cv::mean(listener.GetImage())[0], cv::mean(origin)[0]);
+  ros::shutdown();
+  thread.join();
+}
+
+TEST(DetectionTaskManager, stop_detection) {
+  provider_vision::FilterchainManager fmgr;
+  auto fc = fmgr.InstanciateFilterchain("image_feed");
+
+  std::stringstream filepath;
+  filepath << provider_vision::kProjectPath << "test/test_image.png";
+
+  provider_vision::MediaManager mmgr;
+  mmgr.OpenMedia(filepath.str());
+  auto streamer = mmgr.StartStreamingMedia(filepath.str());
+
+  provider_vision::DetectionTaskManager dmgr;
+  dmgr.StartDetectionTask(streamer, fc, "test");
+  dmgr.StopDetectionTask("test");
+
+  // Checking that the detection has been created in the system.
+  ASSERT_EQ(dmgr.GetAllDetectionTasksName().size(), 0);
+
+  // Check that detection task didn't change behavior of streamer.
+  ASSERT_TRUE(streamer->IsStreaming());
+
+  // Check that stoping non existing detection task throws.
+  ASSERT_THROW(dmgr.StopDetectionTask("test"), std::invalid_argument);
+}
+
+TEST(DetectionTaskManager, change_observer) {
+  provider_vision::FilterchainManager fmgr;
+  auto fc = fmgr.InstanciateFilterchain("camera_feed");
+
+  std::stringstream filepath;
+  filepath << provider_vision::kProjectPath << "test/test_image.png";
+
+  provider_vision::MediaManager mmgr;
+  mmgr.OpenMedia(filepath.str());
+  auto streamer = mmgr.StartStreamingMedia(filepath.str());
+
+  provider_vision::DetectionTaskManager dmgr;
+  dmgr.StartDetectionTask(streamer, fc, "test");
+
+  TopicListener listener(provider_vision::kRosNodeName + "test" + "_image");
+  std::thread thread(&TopicListener::Run, &listener);
+  std::this_thread::sleep_for(std::chrono::milliseconds(150));
+  cv::Mat first_image;
+  listener.GetImage().copyTo(first_image);
+
+  ASSERT_FALSE(first_image.empty());
 }
 
 int main(int argc, char **argv) {

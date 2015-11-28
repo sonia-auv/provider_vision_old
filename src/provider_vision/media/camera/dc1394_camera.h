@@ -79,8 +79,7 @@ class DC1394Camera : public BaseCamera {
   dc1394camera_t *GetCameraPtr() const;
 
  protected:
-
-  float GetGainValue() const override ;
+  float GetGainValue() const override;
 
   float GetGammaValue() const override;
 

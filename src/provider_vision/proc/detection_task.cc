@@ -34,11 +34,12 @@ DetectionTask::DetectionTask(MediaStreamer::Ptr acquisition_loop,
       media_streamer_(acquisition_loop),
       filterchain_(filterchain),
       new_image_ready_(false),
+      returning_orinal_image(false),
       close_attemps_(3) {
   assert(filterchain);
   assert(acquisition_loop);
-  result_publisher_ =
-      ros::NodeHandle().advertise<std_msgs::String>(kRosNodeName + name_ + "_result", 50);
+  result_publisher_ = ros::NodeHandle().advertise<std_msgs::String>(
+      kRosNodeName + name_ + "_result", 50);
 }
 
 //------------------------------------------------------------------------------
@@ -82,6 +83,27 @@ void DetectionTask::StopDetectionTask() {
 
 //------------------------------------------------------------------------------
 //
+void DetectionTask::ChangeReturnImageToFilter(const size_t &index) {
+  returning_orinal_image = false;
+  filterchain_->SetObserver(index);
+}
+
+//------------------------------------------------------------------------------
+//
+void DetectionTask::ChangeReturnImageToFilterchain() {
+  returning_orinal_image = false;
+  auto last_index = filterchain_->GetAllFilters().size() - 1;
+  ChangeReturnImageToFilter(last_index);
+}
+
+//------------------------------------------------------------------------------
+//
+void DetectionTask::ChangeReturnImageToOrigin() {
+  returning_orinal_image = true;
+}
+
+//------------------------------------------------------------------------------
+//
 void DetectionTask::OnSubjectNotify(atlas::Subject<const cv::Mat &> &subject,
                                     const cv::Mat &image) noexcept {
   std::lock_guard<std::mutex> guard(newest_image_mutex_);
@@ -103,27 +125,31 @@ void DetectionTask::Run() {
     new_image_ready_ = false;
     newest_image_mutex_.unlock();
 
-    std::string return_string;
+    if (!returning_orinal_image) {
+      std::string return_string;
 
-    return_string = filterchain_->ExecuteFilterChain(image_being_processed_);
+      return_string = filterchain_->ExecuteFilterChain(image_being_processed_);
 
-    // We don't want to send stuff for nothing.
-    if (!image_being_processed_.empty()) {
-      if (image_being_processed_.depth() != CV_8U) {
-        image_being_processed_.convertTo(image_being_processed_, CV_8U);
+      // We don't want to send stuff for nothing.
+      if (!image_being_processed_.empty()) {
+        if (image_being_processed_.depth() != CV_8U) {
+          image_being_processed_.convertTo(image_being_processed_, CV_8U);
+        }
+
+        if (image_being_processed_.channels() == 1) {
+          cv::cvtColor(image_being_processed_, image_being_processed_,
+                       CV_GRAY2BGR);
+        }
+
+        image_publisher_.Write(image_being_processed_);
       }
-
-      if (image_being_processed_.channels() == 1) {
-        cv::cvtColor(image_being_processed_, image_being_processed_,
-                     CV_GRAY2BGR);
+      if (return_string != "") {
+        std_msgs::String msg;
+        msg.data = return_string.c_str();
+        result_publisher_.publish(msg);
       }
-
+    } else {
       image_publisher_.Write(image_being_processed_);
-    }
-    if (return_string != "") {
-      std_msgs::String msg;
-      msg.data = return_string.c_str();
-      result_publisher_.publish(msg);
     }
   }
 }

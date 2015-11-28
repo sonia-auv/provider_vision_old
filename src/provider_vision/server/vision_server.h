@@ -80,6 +80,20 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
       noexcept;
 
   /**
+   * When the vision client returns a filter name, it contains the index
+   * of the filter in the filterchain. This methods aims to extract
+   * the index of the filter given it's full name.
+   */
+  size_t ExtractFilterIndexFromUIName(const std::string &name) const;
+
+  /**
+   * Given a filter, this will return the name of the filter that the vision client
+   * is expecting (the name of the filter with its index of the filter in the
+   * filterchain).
+   */
+  std::string ConstructFilterUIName(const std::string &name, const size_t &index) const noexcept;
+
+  /**
    * \brief Copies a filterchain which is not used by a running execution.
    *
    * Manages the ROS service copy_filterchain.
@@ -113,9 +127,8 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    *            It set values such as success for the service return state.
    * \return True if the callback has succesfully processed the service call.
    */
-  bool CallbackGetFilterParam(
-      get_filterchain_filter_param::Request &rqst,
-      get_filterchain_filter_param::Response &rep);
+  bool CallbackGetFilterParam(get_filterchain_filter_param::Request &rqst,
+                              get_filterchain_filter_param::Response &rep);
 
   /**
    * TODO Thibaut Mattio: Check this method, this is exacly the same
@@ -159,9 +172,8 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    *            It set values such as success for the service return state.
    * \return True if the callback has succesfully processed the service call.
    */
-  bool CallbackSetFilterParam(
-      set_filterchain_filter_param::Request &rqst,
-      set_filterchain_filter_param::Response &rep);
+  bool CallbackSetFilterParam(set_filterchain_filter_param::Request &rqst,
+                              set_filterchain_filter_param::Response &rep);
 
   /**
    * \brief Gets the filters contained in a filterchain.
@@ -199,9 +211,8 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    *            It set values such as success for the service return state.
    * \return True if the callback has succesfully processed the service call.
    */
-  bool CallbackManageFilter(
-      manage_filterchain_filter::Request &rqst,
-      manage_filterchain_filter::Response &rep);
+  bool CallbackManageFilter(manage_filterchain_filter::Request &rqst,
+                            manage_filterchain_filter::Response &rep);
 
   /**
    * \brief Creates/Deletes a filterchain (the .fc fils in config directory).
@@ -268,9 +279,8 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    *            It set values such as success for the service return state.
    * \return True if the callback has succesfully processed the service call.
    */
-  bool CallbackSetFcOrder(
-      set_filterchain_filter_order::Request &rqst,
-      set_filterchain_filter_order::Response &rep);
+  bool CallbackSetFcOrder(set_filterchain_filter_order::Request &rqst,
+                          set_filterchain_filter_order::Response &rep);
 
   /**
    * \brief Get the filterchain used by the running execution given as
@@ -287,9 +297,8 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    *            It set values such as success for the service return state.
    * \return True if the callback has succesfully processed the service call.
    */
-  bool CallbackGetFcFromExec(
-      get_filterchain_from_execution::Request &rqst,
-      get_filterchain_from_execution::Response &rep);
+  bool CallbackGetFcFromExec(get_filterchain_from_execution::Request &rqst,
+                             get_filterchain_from_execution::Response &rep);
 
   /**
    * \brief Get the media used by the running execution given as parameter.
@@ -305,9 +314,8 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    *            It set values such as success for the service return state.
    * \return True if the callback has succesfully processed the service call.
    */
-  bool CallbackGetMediaFromExec(
-      get_media_from_execution::Request &rqst,
-      get_media_from_execution::Response &rep);
+  bool CallbackGetMediaFromExec(get_media_from_execution::Request &rqst,
+                                get_media_from_execution::Response &rep);
 
   /**
    * \brief Sets the observer to the filter given as parameter.
@@ -330,13 +338,11 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    *            It set values such as success for the service return state.
    * \return True if the callback has succesfully processed the service call.
    */
-  bool CallbackSetObserver(
-      set_filterchain_filter_observer::Request &rqst,
-      set_filterchain_filter_observer::Response &rep);
+  bool CallbackSetObserver(set_filterchain_filter_observer::Request &rqst,
+                           set_filterchain_filter_observer::Response &rep);
 
-  bool CallbackExecutionCMD(
-      provider_vision::execute_cmd::Request &rqst,
-      provider_vision::execute_cmd::Response &rep);
+  bool CallbackExecutionCMD(provider_vision::execute_cmd::Request &rqst,
+                            provider_vision::execute_cmd::Response &rep);
 
   bool CallbackInfoListCMD(
       provider_vision::get_information_list::Request &rqst,
@@ -384,6 +390,24 @@ inline std::string VisionServer::BuildRosMessage(
     msg += name + ";";
   }
   return msg;
+}
+
+//------------------------------------------------------------------------------
+//
+inline size_t VisionServer::ExtractFilterIndexFromUIName(const std::string &name) const {
+  size_t pos = name.find("_");
+  if (pos == std::string::npos) {
+    throw std::invalid_argument("The name of the filter could not be parsed");
+  }
+  std::string position = name.substr(pos + 1, name.size() - 1);
+  return size_t(atoi(position.c_str()));
+
+}
+
+//------------------------------------------------------------------------------
+//
+inline std::string VisionServer::ConstructFilterUIName(const std::string &name, const size_t &index) const noexcept {
+  return name + "_" + std::to_string(index);
 }
 
 }  // namespace provider_vision
