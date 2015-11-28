@@ -85,14 +85,14 @@ class Filter {
     return ss.str();
   }
 
-  const std::vector<Parameter *> &GetParameters() const { return parameters_; }
+  const std::vector<Parameter::Ptr> &GetParameters() const { return parameters_; }
 
   std::string getParamValue(const std::string &name) {
     std::string returnString("");
     for (int i = 0; i < int(parameters_.size()); i++) {
       // Here we give it a local value to limit the
       // access to the vector (optimisation)
-      Parameter *param = parameters_[i];
+      Parameter::Ptr param = parameters_[i];
 
       // NULL element should never append since the vector's object
       // are added by the said object (which cannot be null if
@@ -113,7 +113,7 @@ class Filter {
     for (int i = 0; i < int(parameters_.size()); i++) {
       // Here we give it a local value to limit the
       // access to the vector (optimisation)
-      Parameter *param = parameters_[i];
+      Parameter::Ptr param = parameters_[i];
 
       // NULL element should never append since the vector's object
       // are added by the said object (which cannot be null if
@@ -130,13 +130,13 @@ class Filter {
           // see:
           // http://stackoverflow.com/questions/11578936/getting-a-bunch-of-crosses-initialization-error
           // for more info.
-          BooleanParameter *p_bool = NULL;
-          IntegerParameter *p_int = NULL;
-          DoubleParameter *p_double = NULL;
-          StringParameter *p_str = NULL;
+          BooleanParameter::Ptr p_bool = NULL;
+          IntegerParameter::Ptr p_int = NULL;
+          DoubleParameter::Ptr p_double = NULL;
+          StringParameter::Ptr p_str = NULL;
           switch (param->getType()) {
             case Parameter::BOOL:
-              p_bool = dynamic_cast<BooleanParameter *>(param);
+              p_bool = dynamic_cast<BooleanParameter::Ptr >(param);
               // Just in case the cast didn't work.
               if (p_bool == NULL) {
                 break;
@@ -144,7 +144,7 @@ class Filter {
               p_bool->setValue(BooleanParameter::FromStringToBool(value));
               break;
             case Parameter::INTEGER:
-              p_int = dynamic_cast<IntegerParameter *>(param);
+              p_int = dynamic_cast<IntegerParameter::Ptr >(param);
               // Just in case the cast didn't work.
               if (p_int == NULL) {
                 break;
@@ -152,7 +152,7 @@ class Filter {
               p_int->setValue(atoi(value.c_str()));
               break;
             case Parameter::DOUBLE:
-              p_double = dynamic_cast<DoubleParameter *>(param);
+              p_double = dynamic_cast<DoubleParameter::Ptr >(param);
               // Just in case the cast didn't work.
               if (p_double == NULL) {
                 break;
@@ -160,7 +160,7 @@ class Filter {
               p_double->setValue(atof(value.c_str()));
               break;
             case Parameter::STRING:
-              p_str = dynamic_cast<StringParameter *>(param);
+              p_str = dynamic_cast<StringParameter::Ptr >(param);
               // Just in case the cast didn't work.
               if (p_str == NULL) {
                 break;
@@ -223,7 +223,7 @@ class Filter {
   //  BooleanParameter enable_;
 
   // vector parameter, so we can list them.
-  std::vector<Parameter *> parameters_;
+  std::vector<Parameter::Ptr> parameters_;
 
   // Useful to identify the filter.
   std::string name_;

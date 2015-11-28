@@ -44,7 +44,7 @@ class MatrixParameter : public Parameter {
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
   explicit MatrixParameter(const std::string &name, cv::Mat &mat,
-                           std::vector<Parameter *> &param_vector)
+                           std::vector<Parameter::Ptr > &param_vector)
       : Parameter(name, MATRIX, ""), value(mat) {}
 
   ~MatrixParameter() {}
