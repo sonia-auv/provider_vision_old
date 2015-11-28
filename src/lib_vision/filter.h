@@ -85,7 +85,9 @@ class Filter {
     return ss.str();
   }
 
-  const std::vector<Parameter::Ptr> &GetParameters() const { return parameters_; }
+  const std::vector<Parameter::Ptr> &GetParameters() const {
+    return parameters_;
+  }
 
   std::string getParamValue(const std::string &name) {
     std::string returnString("");
@@ -136,7 +138,7 @@ class Filter {
           StringParameter::Ptr p_str = NULL;
           switch (param->getType()) {
             case Parameter::BOOL:
-              p_bool = dynamic_cast<BooleanParameter::Ptr >(param);
+              p_bool = dynamic_cast<BooleanParameter::Ptr>(param);
               // Just in case the cast didn't work.
               if (p_bool == NULL) {
                 break;
@@ -144,7 +146,7 @@ class Filter {
               p_bool->setValue(BooleanParameter::FromStringToBool(value));
               break;
             case Parameter::INTEGER:
-              p_int = dynamic_cast<IntegerParameter::Ptr >(param);
+              p_int = dynamic_cast<IntegerParameter::Ptr>(param);
               // Just in case the cast didn't work.
               if (p_int == NULL) {
                 break;
@@ -152,7 +154,7 @@ class Filter {
               p_int->setValue(atoi(value.c_str()));
               break;
             case Parameter::DOUBLE:
-              p_double = dynamic_cast<DoubleParameter::Ptr >(param);
+              p_double = dynamic_cast<DoubleParameter::Ptr>(param);
               // Just in case the cast didn't work.
               if (p_double == NULL) {
                 break;
@@ -160,7 +162,7 @@ class Filter {
               p_double->setValue(atof(value.c_str()));
               break;
             case Parameter::STRING:
-              p_str = dynamic_cast<StringParameter::Ptr >(param);
+              p_str = dynamic_cast<StringParameter::Ptr>(param);
               // Just in case the cast didn't work.
               if (p_str == NULL) {
                 break;

@@ -97,8 +97,8 @@ class GlobalParamHandler {
 
   void removeParam(const std::string &name) {
     // Using iterator as it is simpler to erase.
-    std::vector<Parameter::Ptr >::iterator index = _params_vec.begin();
-    std::vector<Parameter::Ptr >::const_iterator end = _params_vec.end();
+    std::vector<Parameter::Ptr>::iterator index = _params_vec.begin();
+    std::vector<Parameter::Ptr>::const_iterator end = _params_vec.end();
     bool deleted = false;
     for (; index != end && !deleted; index++) {
       if ((*index)->getName() == name) {
@@ -125,7 +125,7 @@ class GlobalParamHandler {
   std::string _notify_string;
   // Using pointer here to preserve the object if
   // the vector is moved in memory.
-  std::vector<Parameter::Ptr > _params_vec;
+  std::vector<Parameter::Ptr> _params_vec;
   cv::Mat _original_image;
 };
 

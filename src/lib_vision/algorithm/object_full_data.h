@@ -74,4 +74,4 @@ inline bool RatioSorts(ObjectFullData::Ptr a, ObjectFullData::Ptr b) {
   return a->GetRatio() < b->GetRatio();
 }
 
-#endif // LIB_VISION_ALGORITHM_OBJECT_FULL_DATA_H_
+#endif  // LIB_VISION_ALGORITHM_OBJECT_FULL_DATA_H_

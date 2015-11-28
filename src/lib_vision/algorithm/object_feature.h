@@ -112,4 +112,4 @@ class ObjectFeatureData {
 //-----------------------------------------------------------------------------
 //
 
-#endif // LIB_VISION_ALGORITHM_OBJECT_FEATURE_H_
+#endif  // LIB_VISION_ALGORITHM_OBJECT_FEATURE_H_

@@ -55,4 +55,4 @@ class Moments {
   cv::Moments cvMoments;
 };
 
-#endif // LIB_VISION_ALGORITHM_MOMENTS_H_
+#endif  // LIB_VISION_ALGORITHM_MOMENTS_H_

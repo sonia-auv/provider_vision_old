@@ -68,19 +68,19 @@ class TestFilter : public Filter {
     if (_enable()) {
       cv::Mat imageOriginal = global_params_.getOriginalImage();
       imageOriginal = cv::Mat::zeros(1, 1, CV_8UC1);
-      IntegerParameter::Ptr int_test = dynamic_cast<IntegerParameter::Ptr >(
+      IntegerParameter::Ptr int_test = dynamic_cast<IntegerParameter::Ptr>(
           this->global_params_.getParam("test_int"));
       if (int_test != NULL) notify_str("IntegerParameter OK");
 
-      BooleanParameter::Ptr bool_test = dynamic_cast<BooleanParameter::Ptr >(
+      BooleanParameter::Ptr bool_test = dynamic_cast<BooleanParameter::Ptr>(
           this->global_params_.getParam("test_bool"));
       if (bool_test != NULL) notify_str("Bool OK");
 
-      DoubleParameter::Ptr double_test = dynamic_cast<DoubleParameter::Ptr >(
+      DoubleParameter::Ptr double_test = dynamic_cast<DoubleParameter::Ptr>(
           this->global_params_.getParam("test double"));
       if (double_test != NULL) notify_str("DoubleParameter OK");
 
-      StringParameter::Ptr string_test = dynamic_cast<StringParameter::Ptr >(
+      StringParameter::Ptr string_test = dynamic_cast<StringParameter::Ptr>(
           this->global_params_.getParam("test_string"));
       if (string_test != NULL) notify_str("String OK");
       image = global_params_.getOriginalImage();

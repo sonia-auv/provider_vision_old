@@ -131,4 +131,4 @@ void drawSquares(cv::Mat &image,
                  const std::vector<std::vector<cv::Point> > &squares);
 bool compareYX(const cv::Point &p1, const cv::Point &p2);
 
-#endif // LIB_VISION_ALGORITHM_GENERAL_FUNCTION_H_
+#endif  // LIB_VISION_ALGORITHM_GENERAL_FUNCTION_H_

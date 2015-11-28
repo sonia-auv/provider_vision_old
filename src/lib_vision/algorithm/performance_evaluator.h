@@ -75,4 +75,4 @@ inline void PerformanceEvaluator::UpdateStartTime() {
   _start_tick_count = cv::getTickCount();
 }
 
-#endif // LIB_VISION_ALGORITHM_PERFORMANCE_EVALUATOR_H_
+#endif  // LIB_VISION_ALGORITHM_PERFORMANCE_EVALUATOR_H_

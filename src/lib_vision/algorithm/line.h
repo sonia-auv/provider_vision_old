@@ -74,4 +74,4 @@ bool centerXSort(Line a, Line b);
 
 bool centerYSort(Line a, Line b);
 
-#endif // LIB_VISION_ALGORITHM_LINE_H_
+#endif  // LIB_VISION_ALGORITHM_LINE_H_

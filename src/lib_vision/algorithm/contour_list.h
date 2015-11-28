@@ -141,4 +141,4 @@ inline void ContourList::DrawContours(cv::Mat &img, const cv::Scalar &color,
   cv::drawContours(img, contour_list_point_, -1, color, thickness);
 }
 
-#endif // LIB_VISION_ALGORITHM_CONTOUR_LIST_H_
+#endif  // LIB_VISION_ALGORITHM_CONTOUR_LIST_H_

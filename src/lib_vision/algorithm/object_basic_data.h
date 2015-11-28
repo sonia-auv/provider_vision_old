@@ -248,4 +248,4 @@ inline const cv::Mat &ObjectBasicData::GetOriginalImage() {
   return _binary_image;
 }
 
-#endif // LIB_VISION_ALGORITHM_OBJECT_BASIC_DATA_H_
+#endif  // LIB_VISION_ALGORITHM_OBJECT_BASIC_DATA_H_

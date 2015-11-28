@@ -292,4 +292,4 @@ inline void ImageAccumulatorBuffer::SetAverageMethod(METHOD method) {
 //    std::cout << "Adjust Weight" << mean << std::endl;
 //}
 
-#endif // LIB_VISION_ALGORITHM_IMAGE_ACCUMULATOR_BUFFER_H_
+#endif  // LIB_VISION_ALGORITHM_IMAGE_ACCUMULATOR_BUFFER_H_

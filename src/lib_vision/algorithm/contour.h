@@ -95,4 +95,4 @@ inline cv::Point Contour::operator[](unsigned int index) {
   return _contour[index];
 }
 
-#endif // LIB_VISION_ALGORITHM_CONTOUR_H_
+#endif  // LIB_VISION_ALGORITHM_CONTOUR_H_

@@ -63,4 +63,4 @@ inline bool ObjectRanker::LengthSortFunction(ObjectFullData::Ptr a,
   return false;
 }
 
-#endif // LIB_VISION_ALGORITHM_OBJECT_RANKER_H_
+#endif  // LIB_VISION_ALGORITHM_OBJECT_RANKER_H_

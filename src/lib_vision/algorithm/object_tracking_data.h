@@ -64,4 +64,4 @@ inline void ObjectTrackingData::SetPresenceCount(float presenceCount) {
 //
 inline float ObjectTrackingData::GetPresenceCount() { return _presence_count; }
 
-#endif // LIB_VISION_ALGORITHM_OBJECT_TRACKING_DATA_H_
+#endif  // LIB_VISION_ALGORITHM_OBJECT_TRACKING_DATA_H_

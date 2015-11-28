@@ -63,4 +63,4 @@ class ObjectFrameMemory {
 
 inline unsigned int ObjectFrameMemory::GetMemorySize() { return _memory_size; }
 
-#endif // LIB_VISION_ALGORITHM_OBJECT_FRAME_MEMORY_H_
+#endif  // LIB_VISION_ALGORITHM_OBJECT_FRAME_MEMORY_H_

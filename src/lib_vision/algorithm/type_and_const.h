@@ -44,4 +44,4 @@ typedef std::vector<cv::Vec4i> defectuosity_t;
 enum rotationType { R_NONE = 0, R_90, R_180, R_270 };
 enum symmetryType { S_NONE = 0, S_X_AXIS, S_Y_AXIS, S_BOTH };
 
-#endif // LIB_VISION_ALGORITHM_TYPE_AND_CONST_H_
+#endif  // LIB_VISION_ALGORITHM_TYPE_AND_CONST_H_

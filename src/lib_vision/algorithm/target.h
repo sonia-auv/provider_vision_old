@@ -132,4 +132,4 @@ inline cv::Point Target::GetTarget() { return center_; }
 inline std::string Target::GetSpecField_1() { return special_field_1_; };
 inline std::string Target::GetSpecField_2() { return special_field_2_; };
 
-#endif // LIB_VISION_ALGORITHM_TARGET_H_
+#endif  // LIB_VISION_ALGORITHM_TARGET_H_
