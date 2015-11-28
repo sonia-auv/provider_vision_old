@@ -26,8 +26,9 @@
 #ifndef LIB_VISION_ALGORITHM_TARGET_H_
 #define LIB_VISION_ALGORITHM_TARGET_H_
 
-#include <opencv2/opencv.hpp>
+#include <memory>
 #include <stdlib.h>
+#include <opencv2/opencv.hpp>
 #include <lib_vision/algorithm/object_full_data.h>
 #include <lib_vision/algorithm/general_function.h>
 

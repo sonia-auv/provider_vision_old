@@ -26,6 +26,7 @@
 #ifndef LIB_VISION_FILTERS_DILATE_H_
 #define LIB_VISION_FILTERS_DILATE_H_
 
+#include <memory>
 #include <lib_vision/filter.h>
 
 namespace lib_vision {

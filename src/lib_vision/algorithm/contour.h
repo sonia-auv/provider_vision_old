@@ -26,6 +26,7 @@
 #ifndef LIB_VISION_ALGORITHM_CONTOUR_H_
 #define LIB_VISION_ALGORITHM_CONTOUR_H_
 
+#include <memory>
 #include <opencv2/opencv.hpp>
 
 class Contour {

@@ -26,6 +26,7 @@
 #ifndef LIB_VISION_FILTERS_SCHARR_ADDING_H_
 #define LIB_VISION_FILTERS_SCHARR_ADDING_H_
 
+#include <memory>
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/general_function.h>
 

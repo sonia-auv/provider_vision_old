@@ -26,10 +26,9 @@
 #ifndef LIB_VISION_FILTER_FACTORY_H_
 #define LIB_VISION_FILTER_FACTORY_H_
 
-#include <lib_vision/filter.h>
 #include <string>
-
-// All filter files are included here
+#include <memory>
+#include <lib_vision/filter.h>
 #include <lib_vision/filters/blurr.h>
 #include <lib_vision/filters/dilate.h>
 #include <lib_vision/filters/erode.h>

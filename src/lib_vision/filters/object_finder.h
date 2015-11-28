@@ -26,6 +26,7 @@
 #ifndef LIB_VISION_FILTERS_OBJECT_FINDER_H_
 #define LIB_VISION_FILTERS_OBJECT_FINDER_H_
 
+#include <memory>
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/general_function.h>
 #include <lib_vision/algorithm/target.h>
@@ -227,8 +228,8 @@ class ObjectFinder : public Filter {
           std::sort(
               objVec.begin(), objVec.end(),
               [this](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
-                return fabs(a->GetRatio() - this->_targeted_ratio()) <
-                       fabs(b->GetRatio() - this->_targeted_ratio());
+                return fabs(a->GetRatio() - _targeted_ratio()) <
+                       fabs(b->GetRatio() - _targeted_ratio());
               });
           objVec[0]->IncrementVote();
           cv::circle(_output_image, cv::Point(objVec[0]->GetCenter().x,

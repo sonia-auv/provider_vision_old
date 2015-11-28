@@ -26,10 +26,9 @@
 #ifndef LIB_VISION_ALGORITHM_CONTOUR_LIST_H_
 #define LIB_VISION_ALGORITHM_CONTOUR_LIST_H_
 
+#include <memory>
 #include <opencv2/opencv.hpp>
-
 #include "lib_vision/algorithm/contour.h"
-// Contour finding
 
 class ContourList {
  public:

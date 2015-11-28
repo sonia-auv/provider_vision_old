@@ -26,16 +26,14 @@
 #ifndef LIB_VISION_ALGORITHM_LINE_H_
 #define LIB_VISION_ALGORITHM_LINE_H_
 
-#include <opencv2/core/core.hpp>
+#include <memory>
 #include <math.h>
 #include <stdlib.h>
+#include <opencv2/core/core.hpp>
 
-/*
- *
+/**
  * Basic definitnion of a line
- *
  */
-
 class Line {
  public:
   //==========================================================================
@@ -62,10 +60,10 @@ class Line {
 
  private:
   // start point is leftmosst point, end id farrigth point
-  cv::Point center, start, end;
+  cv::Point center_, start_, end_;
   // Degree
-  float angle;
-  float length;
+  float angle_;
+  float length_;
 };
 
 bool lengthSort(Line a, Line b);

@@ -26,6 +26,7 @@
 #ifndef LIB_VISION_PARAMETERS_DOUBLE_PARAMETER_H_
 #define LIB_VISION_PARAMETERS_DOUBLE_PARAMETER_H_
 
+#include <memory>
 #include <lib_vision/parameter.h>
 
 namespace lib_vision {
@@ -48,7 +49,7 @@ class DoubleParameter : public Parameter {
         value(_value),
         max(_max),
         min(_min) {
-    param_vector.push_back(this);
+    param_vector.push_back(Parameter::Ptr(dynamic_cast<Parameter *>(this)));
   }
 
   ~DoubleParameter() {}
@@ -128,7 +129,7 @@ class DoubleParameter : public Parameter {
   // is going to be called more often.
   double operator()() const { return value; }
 
-  inline double getValue() const { return this->operator()(); }
+  inline double getValue() const { return operator()(); }
 
   virtual inline std::string GetStringValue() const override {
     return std::to_string(value);

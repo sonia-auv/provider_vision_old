@@ -26,12 +26,14 @@
 #ifndef LIB_VISION_FILTERS_TORPEDOES_DETECTOR_H_
 #define LIB_VISION_FILTERS_TORPEDOES_DETECTOR_H_
 
+#include <memory>
 #include <string>
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/general_function.h>
 #include <lib_vision/algorithm/target.h>
 #include <lib_vision/algorithm/object_full_data.h>
 #include <lib_vision/algorithm/object_ranker.h>
+
 namespace lib_vision {
 
 class TorpedoesDetector : public Filter {

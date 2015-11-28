@@ -26,6 +26,7 @@
 #ifndef LIB_VISION_ALGORITHM_GENERAL_FUNCTION_H_
 #define LIB_VISION_ALGORITHM_GENERAL_FUNCTION_H_
 
+#include <memory>
 #include <opencv2/opencv.hpp>
 #include <lib_vision/algorithm/type_and_const.h>
 #include <lib_vision/algorithm/rot_rect.h>

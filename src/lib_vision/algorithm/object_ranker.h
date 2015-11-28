@@ -26,6 +26,7 @@
 #ifndef LIB_VISION_ALGORITHM_OBJECT_RANKER_H_
 #define LIB_VISION_ALGORITHM_OBJECT_RANKER_H_
 
+#include <memory>
 #include <lib_vision/algorithm/object_full_data.h>
 
 // Class that simply rank the object

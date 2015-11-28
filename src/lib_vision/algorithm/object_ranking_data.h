@@ -26,6 +26,8 @@
 #ifndef LIB_VISION_ALGORITHM_OBJECT_RANKING_DATA_H_
 #define LIB_VISION_ALGORITHM_OBJECT_RANKING_DATA_H_
 
+#include <memory>
+
 // Basic container class. It holds information about the ranking
 // of certain caracteristic of an object compare to the other.
 // In other word, it contains the position resulting of the sorting

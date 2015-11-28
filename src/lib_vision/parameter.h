@@ -26,6 +26,7 @@
 #ifndef LIB_VISION_FILTER_PARAMETER_H_
 #define LIB_VISION_FILTER_PARAMETER_H_
 
+#include <memory>
 #include <string>
 #include <cstdlib>
 #include <string>

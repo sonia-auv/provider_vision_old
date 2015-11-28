@@ -26,14 +26,15 @@
 #ifndef LIB_VISION_FILTER_GLOBAL_PARAM_HANDLER_H_
 #define LIB_VISION_FILTER_GLOBAL_PARAM_HANDLER_H_
 
+#include <memory>
 #include <string>
+#include <sstream>
 #include <lib_vision/parameter.h>
 #include <lib_vision/parameters/integer_parameter.h>
 #include <lib_vision/parameters/double_parameter.h>
 #include <lib_vision/parameters/string_parameter.h>
 #include <lib_vision/parameters/boolean_parameter.h>
 #include <lib_vision/parameters/matrix_parameter.h>
-#include <sstream>
 
 namespace lib_vision {
 
@@ -56,15 +57,7 @@ class GlobalParamHandler {
   // that they are consecutive in memory... on long vector it
   // is "very" long to do. To prevent that, we can use reverse
   // iterator, but erase does not take it...
-  ~GlobalParamHandler() {
-    // Using index base for performance.
-    auto size = _params_vec.size();
-    for (size_t i = 0; i < size; i++) {
-      // Delete the object
-      delete (_params_vec[i]);
-    }
-    _params_vec.clear();
-  }
+  ~GlobalParamHandler() { _params_vec.clear(); }
 
   //============================================================================
   // P U B L I C   M E T H O D S

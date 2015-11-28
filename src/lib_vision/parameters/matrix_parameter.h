@@ -26,8 +26,9 @@
 #ifndef LIB_VISION_PARAMETERS_MATRIX_PARAMETER_H_
 #define LIB_VISION_PARAMETERS_MATRIX_PARAMETER_H_
 
-#include <lib_vision/parameter.h>
+#include <memory>
 #include <opencv/cv.h>
+#include <lib_vision/parameter.h>
 
 namespace lib_vision {
 

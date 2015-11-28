@@ -29,7 +29,6 @@
 #include <vector>
 #include <map>
 #include <memory>
-
 #include "lib_vision/algorithm/object_full_data.h"
 #include "lib_vision/algorithm/object_frame_memory.h"
 #include "lib_vision/algorithm/object_feature.h"
@@ -102,7 +101,7 @@ inline void ObjectFeatureFactory::ComputeAllFeature(
 inline void ObjectFeatureFactory::ComputeAllFeature(
     ObjectFullData::Ptr object) {
   for (auto &fct : feature_fct_map) {
-    fct.second(object);  //(this->*(fct.second));
+    fct.second(object);  //(*(fct.second));
     //*tmp(object);
   }
 }

@@ -26,6 +26,8 @@
 #ifndef LIB_VISION_ALGORITHM_OBJECT_TRACKING_DATA_H_
 #define LIB_VISION_ALGORITHM_OBJECT_TRACKING_DATA_H_
 
+#include <memory>
+
 // OBjectTrackingData is a basic container class that holds information
 // about an object's past state in time. EX. In the past X frames, how
 // many time was the object present? Of How much the area or ratio changed

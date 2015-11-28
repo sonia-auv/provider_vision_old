@@ -26,6 +26,7 @@
 #ifndef LIB_VISION_PARAMETERS_INTEGER_PARAMETER_H_
 #define LIB_VISION_PARAMETERS_INTEGER_PARAMETER_H_
 
+#include <memory>
 #include <lib_vision/parameter.h>
 
 namespace lib_vision {
@@ -48,7 +49,7 @@ class IntegerParameter : public Parameter {
         value(_value),
         min(_min),
         max(_max) {
-    param_vector.push_back(this);
+    param_vector.push_back(Parameter::Ptr(dynamic_cast<Parameter *>(this)));
   }
 
   virtual ~IntegerParameter() {}

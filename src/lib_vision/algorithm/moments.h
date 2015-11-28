@@ -26,9 +26,10 @@
 #ifndef LIB_VISION_ALGORITHM_MOMENTS_H_
 #define LIB_VISION_ALGORITHM_MOMENTS_H_
 
+#include <memory>
+#include <math.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
-#include <math.h>
 
 class Moments {
  public:

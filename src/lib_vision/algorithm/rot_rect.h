@@ -26,14 +26,15 @@
 #ifndef LIB_VISION_ALGORITHM_ROT_RECT_H_
 #define LIB_VISION_ALGORITHM_ROT_RECT_H_
 
+#include <memory>
+#include <math.h>
+#include <opencv2/opencv.hpp>
+#include <opencv2/core/core.hpp>
+
 #define LIB_VISION_TOP_LEFT 0
 #define LIB_VISION_TOP_RIGHT 4
 #define LIB_VISION_BOTTOM_LEFT 1
 #define LIB_VISION_BOTTOM_RIGHT 2
-
-#include <opencv2/opencv.hpp>
-#include <opencv2/core/core.hpp>
-#include <math.h>
 
 // Rotated rect ensure that the height member is the longest one
 // and the angle is in the direction of the height

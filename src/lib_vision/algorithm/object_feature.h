@@ -55,7 +55,6 @@ class ObjectFeatureData {
     GRAY_MEAN
   };
 
-  typedef std::shared_ptr<ObjectFeatureData> Ptr;
   typedef std::vector<ObjectFeatureData::Ptr> ObjectFeatureVector;
 
   ObjectFeatureData()

@@ -26,13 +26,14 @@
 #ifndef LIB_VISION_FILTERS_BUOY_SINGLE_H_
 #define LIB_VISION_FILTERS_BUOY_SINGLE_H_
 
+#include <memory>
+#include <math.h>
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/object_feature_factory.h>
 #include <lib_vision/algorithm/object_full_data.h>
 #include <lib_vision/algorithm/general_function.h>
 #include <lib_vision/algorithm/target.h>
 #include <lib_vision/algorithm/contour_list.h>
-#include <math.h>
 
 namespace lib_vision {
 

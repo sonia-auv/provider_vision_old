@@ -26,6 +26,7 @@
 #ifndef LIB_VISION_FILTERS_SUBTRACT_PLANES_ADDER_H_
 #define LIB_VISION_FILTERS_SUBTRACT_PLANES_ADDER_H_
 
+#include <memory>
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/general_function.h>
 

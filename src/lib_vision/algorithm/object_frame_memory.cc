@@ -58,7 +58,7 @@ ObjectFullData::FullObjectPtrVec ObjectFrameMemory::GetPastObjectsViaCenter(
   // For i frame
   for (int i = 0, buffSize = _previous_frames.size(); i < buffSize; i++) {
     float shortestDistance = 100000.0f;
-    ObjectFullData::Ptr nearestObject = NULL;
+    ObjectFullData::Ptr nearestObject = nullptr;
     ObjectFullData::FullObjectPtrVec currentFrameData = _previous_frames.at(i);
 
     // for all the object in the frame

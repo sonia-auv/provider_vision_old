@@ -26,9 +26,10 @@
 #ifndef LIB_VISION_ALGORITHM_IMAGE_ACCUMULATOR_BUFFER_H_
 #define LIB_VISION_ALGORITHM_IMAGE_ACCUMULATOR_BUFFER_H_
 
-#include <opencv2/opencv.hpp>
+#include <memory>
 #include <stdlib.h>
 #include <stdio.h>
+#include <opencv2/opencv.hpp>
 
 // Simple circular buffer
 // that returns the weighted sum of all images in his buffer.

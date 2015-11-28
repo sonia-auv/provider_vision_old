@@ -26,6 +26,7 @@
 #ifndef LIB_VISION_ALGORITHM_PERFORMANCE_EVALUATOR_H_
 #define LIB_VISION_ALGORITHM_PERFORMANCE_EVALUATOR_H_
 
+#include <memory>
 #include "opencv2/opencv.hpp"
 
 /*

@@ -26,10 +26,11 @@
 #ifndef LIB_VISION_ALGORITHM_OBJECT_BASIC_DATA_H_
 #define LIB_VISION_ALGORITHM_OBJECT_BASIC_DATA_H_
 
+#include <memory>
+#include <assert.h>
 #include <lib_vision/algorithm/rot_rect.h>
 #include <lib_vision/algorithm/type_and_const.h>
 #include "lib_vision/algorithm/contour.h"
-#include <assert.h>
 
 class ObjectBasicData {
  public:

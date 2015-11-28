@@ -26,6 +26,7 @@
 #ifndef LIB_VISION_FILTERS_HANDLE_DETECTOR_H_
 #define LIB_VISION_FILTERS_HANDLE_DETECTOR_H_
 
+#include <memory>
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/target.h>
 #include <lib_vision/algorithm/object_full_data.h>

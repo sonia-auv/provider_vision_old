@@ -28,6 +28,7 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 #include <opencv2/opencv.hpp>
 #include <lib_vision/parameters/integer_parameter.h>
 #include <lib_vision/parameters/boolean_parameter.h>
@@ -78,7 +79,7 @@ class Filter {
       // Should never append since the vector's object
       // are added by the said object which are member of
       // the filter class...
-      if (parameters_[i] != NULL) {
+      if (parameters_[i] != nullptr) {
         ss << parameters_[i]->toString();
       }
     }
@@ -96,12 +97,12 @@ class Filter {
       // access to the vector (optimisation)
       Parameter::Ptr param = parameters_[i];
 
-      // NULL element should never append since the vector's object
+      // nullptr element should never append since the vector's object
       // are added by the said object (which cannot be null if
       // it gets to the constructor) and which are member of
       // the filter class (which mean they are alive as long as the
       // filter is alive)...
-      if (param != NULL) {
+      if (param != nullptr) {
         // Is it the param we are searching
         if (param->getName() == name) {
           returnString = param->toString();
@@ -117,12 +118,12 @@ class Filter {
       // access to the vector (optimisation)
       Parameter::Ptr param = parameters_[i];
 
-      // NULL element should never append since the vector's object
+      // nullptr element should never append since the vector's object
       // are added by the said object (which cannot be null if
       // it gets to the constructor) and which are member of
       // the filter class (which mean they are alive as long as the
       // filter is alive)...
-      if (param != NULL) {
+      if (param != nullptr) {
         // Is it the param we are searching
         if (param->getName() == name) {
           // Need to dynamic cast in order to have
@@ -132,39 +133,43 @@ class Filter {
           // see:
           // http://stackoverflow.com/questions/11578936/getting-a-bunch-of-crosses-initialization-error
           // for more info.
-          BooleanParameter::Ptr p_bool = NULL;
-          IntegerParameter::Ptr p_int = NULL;
-          DoubleParameter::Ptr p_double = NULL;
-          StringParameter::Ptr p_str = NULL;
+          BooleanParameter::Ptr p_bool = nullptr;
+          IntegerParameter::Ptr p_int = nullptr;
+          DoubleParameter::Ptr p_double = nullptr;
+          StringParameter::Ptr p_str = nullptr;
           switch (param->getType()) {
             case Parameter::BOOL:
-              p_bool = dynamic_cast<BooleanParameter::Ptr>(param);
+              p_bool = BooleanParameter::Ptr(
+                  static_cast<BooleanParameter *>(param.get()));
               // Just in case the cast didn't work.
-              if (p_bool == NULL) {
+              if (p_bool == nullptr) {
                 break;
               }
               p_bool->setValue(BooleanParameter::FromStringToBool(value));
               break;
             case Parameter::INTEGER:
-              p_int = dynamic_cast<IntegerParameter::Ptr>(param);
+              p_int = IntegerParameter::Ptr(
+                  static_cast<IntegerParameter *>(param.get()));
               // Just in case the cast didn't work.
-              if (p_int == NULL) {
+              if (p_int == nullptr) {
                 break;
               }
               p_int->setValue(atoi(value.c_str()));
               break;
             case Parameter::DOUBLE:
-              p_double = dynamic_cast<DoubleParameter::Ptr>(param);
+              p_double = DoubleParameter::Ptr(
+                  static_cast<DoubleParameter *>(param.get()));
               // Just in case the cast didn't work.
-              if (p_double == NULL) {
+              if (p_double == nullptr) {
                 break;
               }
               p_double->setValue(atof(value.c_str()));
               break;
             case Parameter::STRING:
-              p_str = dynamic_cast<StringParameter::Ptr>(param);
+              p_str = StringParameter::Ptr(
+                  static_cast<StringParameter *>(param.get()));
               // Just in case the cast didn't work.
-              if (p_str == NULL) {
+              if (p_str == nullptr) {
                 break;
               }
               p_str->setValue(value);
@@ -198,25 +203,28 @@ class Filter {
   void global_param_int(const std::string &name, const int value, const int min,
                         const int max) {
     global_params_.addParam(
-        new IntegerParameter(name, value, max, min, parameters_));
+        std::make_shared<IntegerParameter>(name, value, max, min, parameters_));
   }
 
   void global_param_double(const std::string &name, const double value,
                            const double min, const double max) {
     global_params_.addParam(
-        new DoubleParameter(name, value, max, min, parameters_));
+        std::make_shared<DoubleParameter>(name, value, max, min, parameters_));
   }
 
   void global_param_bool(const std::string &name, const bool value) {
-    global_params_.addParam(new BooleanParameter(name, value, parameters_));
+    global_params_.addParam(
+        std::make_shared<BooleanParameter>(name, value, parameters_));
   }
 
   void global_param_string(const std::string &name, const std::string &value) {
-    global_params_.addParam(new StringParameter(name, value, parameters_));
+    global_params_.addParam(
+        std::make_shared<StringParameter>(name, value, parameters_));
   }
 
   void global_param_mat(const std::string &name, cv::Mat &mat) {
-    global_params_.addParam(new MatrixParameter(name, mat, parameters_));
+    global_params_.addParam(
+        std::make_shared<MatrixParameter>(name, mat, parameters_));
   }
 
  protected:

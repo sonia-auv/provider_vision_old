@@ -28,56 +28,56 @@
 //=============================================================================
 //
 Line::Line(const cv::Point &start, const cv::Point &end)
-    : start(start), end(end), angle(0) {
-  if (this->start.x > this->end.x) std::swap(this->start, this->end);
+    : start_(start), end_(end), angle_(0) {
+  if (start_.x > end_.x) std::swap(start_, end_);
 
-  int yDiff = abs(start.y - end.y);
-  int xDiff = abs(start.x - end.x);
+  int yDiff = abs(start_.y - end_.y);
+  int xDiff = abs(start_.x - end_.x);
 
-  if (start.y > end.y)
-    this->center.y = end.y + yDiff / 2;
+  if (start_.y > end_.y)
+    center_.y = end_.y + yDiff / 2;
   else
-    this->center.y = start.y + yDiff / 2;
+    center_.y = start_.y + yDiff / 2;
 
-  if (start.x > end.x)
-    this->center.x = end.x + xDiff / 2;
+  if (start_.x > end_.x)
+    center_.x = end_.x + xDiff / 2;
   else
-    this->center.x = start.x + xDiff / 2;
+    center_.x = start_.x + xDiff / 2;
 
-  // inversion in the start end for x y is because y is positive
+  // inversion in the start_ end_ for x y is because y is positive
   // downward.
-  float at = atan2(static_cast<double>(start.y - end.y),
-                   static_cast<double>(end.x - start.x));
-  this->angle = at / (2 * M_PI) * 360;
+  float at = atan2(static_cast<double>(start_.y - end_.y),
+                   static_cast<double>(end_.x - start_.x));
+  angle_ = at / (2 * M_PI) * 360;
 
-  this->length = sqrt(pow((start.y - end.y), 2) + pow((start.y - end.y), 2));
+  length_ = sqrt(pow((start_.y - end_.y), 2) + pow((start_.y - end_.y), 2));
 }
 
 //=============================================================================
 //
 void Line::draw(cv::Mat &img, cv::Scalar color) {
-  cv::line(img, this->start, this->end, color, 4, 8);
+  cv::line(img, start_, end_, color, 4, 8);
 }
 
 //=============================================================================
 //
-cv::Point Line::getCenter() { return this->center; }
+cv::Point Line::getCenter() { return center_; }
 
 //=============================================================================
 //
-cv::Point Line::getStart() { return this->start; }
+cv::Point Line::getStart() { return start_; }
 
 //=============================================================================
 //
-cv::Point Line::getEnd() { return this->end; }
+cv::Point Line::getEnd() { return end_; }
 
 //=============================================================================
 //
-float Line::getAngle() { return this->angle; }
+float Line::getAngle() { return angle_; }
 
 //=============================================================================
 //
-float Line::getLength() { return this->length; }
+float Line::getLength() { return length_; }
 
 //=============================================================================
 //

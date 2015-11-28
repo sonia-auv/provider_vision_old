@@ -393,7 +393,7 @@ cv::Mat rotateImage(cv::Mat in, rotationType rotation, symmetryType symmetry) {
 //=============================================================================
 //
 void drawRectangle(cv::Point2f *pts, cv::Mat &image, cv::Scalar color) {
-  if (sizeof(pts) != 8 || image.data == NULL) return;
+  if (sizeof(pts) != 8 || image.data == nullptr) return;
 
   cv::line(image, pts[0], pts[1], color, 3);
   cv::line(image, pts[1], pts[2], color, 3);

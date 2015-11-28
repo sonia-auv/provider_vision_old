@@ -26,9 +26,10 @@
 #ifndef LIB_VISION_ALGORITHM_OBJECT_FRAME_MEMORY_H_
 #define LIB_VISION_ALGORITHM_OBJECT_FRAME_MEMORY_H_
 
+#include <memory>
+#include <vector>
 #include <lib_vision/algorithm/object_full_data.h>
 #include <lib_vision/algorithm/general_function.h>
-#include <vector>
 
 class ObjectFrameMemory {
  public:

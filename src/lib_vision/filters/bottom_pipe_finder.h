@@ -26,8 +26,9 @@
 #ifndef LIB_VISION_FILTERS_BOTTOM_PIPE_FINDER_H_
 #define LIB_VISION_FILTERS_BOTTOM_PIPE_FINDER_H_
 
+#include <memory>
 #include <lib_vision/filter.h>
-#include <lib_vision/algorithm/features.h>
+#include <lib_vision/algorithm/object_feature.h>
 #include <lib_vision/algorithm/general_function.h>
 #include <lib_vision/algorithm/target.h>
 #include <lib_vision/algorithm/object_full_data.h>

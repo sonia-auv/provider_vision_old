@@ -26,6 +26,7 @@
 #ifndef LIB_VISION_PARAMETERS_STRING_PARAMETER_H_
 #define LIB_VISION_PARAMETERS_STRING_PARAMETER_H_
 
+#include <memory>
 #include <lib_vision/parameter.h>
 
 namespace lib_vision {
@@ -44,7 +45,7 @@ class StringParameter : public Parameter {
                            std::vector<Parameter::Ptr> &param_vector,
                            const std::string &description = "")
       : Parameter(_name, STRING, description), value(_value) {
-    param_vector.push_back(this);
+    param_vector.push_back(Parameter::Ptr(dynamic_cast<Parameter *>(this)));
   }
 
   virtual ~StringParameter() {}

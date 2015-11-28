@@ -26,10 +26,9 @@
 #ifndef LIB_VISION_ALGORITHM_MAJOR_EDGE_EXTRACTOR_H_
 #define LIB_VISION_ALGORITHM_MAJOR_EDGE_EXTRACTOR_H_
 
+#include <memory>
 #include <opencv2/opencv.hpp>
 
-//-----------------------------------------------------------------------------
-//
 class ReferencePoint {
  public:
   //==========================================================================

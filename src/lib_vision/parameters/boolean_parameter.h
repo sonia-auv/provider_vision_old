@@ -26,6 +26,7 @@
 #ifndef LIB_VISION_PARAMETERS_BOOLEAN_PARAMETER_H_
 #define LIB_VISION_PARAMETERS_BOOLEAN_PARAMETER_H_
 
+#include <memory>
 #include <lib_vision/parameter.h>
 
 namespace lib_vision {
@@ -44,7 +45,7 @@ class BooleanParameter : public Parameter {
                             std::vector<Parameter::Ptr> &param_vector,
                             const std::string &description = "")
       : Parameter(_name, BOOL, description), value(_value) {
-    param_vector.push_back(this);
+    param_vector.push_back(Parameter::Ptr(dynamic_cast<Parameter *>(this)));
   }
 
   ~BooleanParameter() {}
@@ -80,7 +81,7 @@ class BooleanParameter : public Parameter {
   // is going to be called more often.
   bool operator()() const { return value; }
 
-  inline bool getValue() const { return this->operator()(); }
+  inline bool getValue() const { return operator()(); }
 
   virtual inline std::string GetStringValue() const override {
     return std::to_string(value);

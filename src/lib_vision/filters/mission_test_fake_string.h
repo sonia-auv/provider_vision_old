@@ -26,6 +26,7 @@
 #ifndef LIB_VISION_FILTERS_MISSION_TEST_FAKE_STRING_H_
 #define LIB_VISION_FILTERS_MISSION_TEST_FAKE_STRING_H_
 
+#include <memory>
 #include <lib_vision/filter.h>
 
 namespace lib_vision {

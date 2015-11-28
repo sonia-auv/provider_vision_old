@@ -37,7 +37,7 @@ ImageAccumulatorBuffer::ImageAccumulatorBuffer(int bufferLength,
       _image_vec(0),
       _image_type(type),
       _image_size(imgSize),
-      _average_method(NULL) {
+      _average_method(nullptr) {
   // Start with a buffer filled with blank matrices.
   FillWithBlank();
   _individual_weight = 1.0 / static_cast<float>(bufferLength);

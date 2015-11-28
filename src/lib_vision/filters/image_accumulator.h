@@ -26,6 +26,7 @@
 #ifndef LIB_VISION_FILTERS_IMAGE_ACCUMULATOR_H_
 #define LIB_VISION_FILTERS_IMAGE_ACCUMULATOR_H_
 
+#include <memory>
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/image_accumulator_buffer.h>
 #include <lib_vision/algorithm/performance_evaluator.h>
