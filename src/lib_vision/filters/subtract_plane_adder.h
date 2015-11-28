@@ -47,23 +47,23 @@ class SubtractPlaneAdder : public Filter {
 
   explicit SubtractPlaneAdder(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("enable", false, parameters_),
-        _show_adding_result("show_adding_result", false, parameters_),
-        _plane_one("Plane_1", 1, 0, 7, parameters_,
+        _enable("enable", false, &parameters_),
+        _show_adding_result("show_adding_result", false, &parameters_),
+        _plane_one("Plane_1", 1, 0, 7, &parameters_,
                    "0=None, 1=Blue, 2=Green, 3=Red, 4=Hue, 5=Saturation, "
                    "6=Intensity, 7=Gray"),
-        _plane_two("Plane_2", 1, 0, 7, parameters_,
+        _plane_two("Plane_2", 1, 0, 7, &parameters_,
                    "0=None, 1=Blue, 2=Green, 3=Red, 4=Hue, 5=Saturation, "
                    "6=Intensity, 7=Gray"),
-        _plane_three("Plane_3", 1, 0, 7, parameters_,
+        _plane_three("Plane_3", 1, 0, 7, &parameters_,
                      "0=None, 1=Blue, 2=Green, 3=Red, 4=Hue, 5=Saturation, "
                      "6=Intensity, 7=Gray"),
-        _invert_one("Invert_plane_1", false, parameters_),
-        _invert_two("Invert_plane_2", false, parameters_),
-        _invert_three("Invert_plane_3", false, parameters_),
-        _weight_one("Weight_Plane_1", 1.0, -10.0, 10.0, parameters_),
-        _weight_two("Weight_Plane_2", 1.0, -10.0, 10.0, parameters_),
-        _weight_three("Weight_Plane_3", 1.0, -10.0, 10.0, parameters_),
+        _invert_one("Invert_plane_1", false, &parameters_),
+        _invert_two("Invert_plane_2", false, &parameters_),
+        _invert_three("Invert_plane_3", false, &parameters_),
+        _weight_one("Weight_Plane_1", 1.0, -10.0, 10.0, &parameters_),
+        _weight_two("Weight_Plane_2", 1.0, -10.0, 10.0, &parameters_),
+        _weight_three("Weight_Plane_3", 1.0, -10.0, 10.0, &parameters_),
         _rows(0),
         _cols(0) {
     setName("SubtractPlaneAdder");

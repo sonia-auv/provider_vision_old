@@ -42,10 +42,9 @@ class StringParameter : public Parameter {
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
   explicit StringParameter(std::string _name, std::string _value,
-                           std::vector<Parameter::Ptr> &param_vector,
+                           std::vector<Parameter::Ptr> *param_vector,
                            const std::string &description = "")
-      : Parameter(_name, STRING, description), value(_value) {
-    param_vector.push_back(Parameter::Ptr(dynamic_cast<Parameter *>(this)));
+      : Parameter(_name, STRING, description, param_vector), value(_value) {
   }
 
   virtual ~StringParameter() {}

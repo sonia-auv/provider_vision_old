@@ -42,7 +42,7 @@ class OriginalImage : public Filter {
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
   explicit OriginalImage(const GlobalParamHandler &globalParams)
-      : Filter(globalParams), _enable("Enable", false, parameters_) {
+      : Filter(globalParams), _enable("Enable", false, &parameters_) {
     setName("OriginalImage");
   }
 

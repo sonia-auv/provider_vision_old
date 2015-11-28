@@ -43,13 +43,13 @@ class Morphology : public Filter {
 
   explicit Morphology(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _morph_type("Morphology_type", 0, 0, 4, parameters_,
+        _enable("Enable", false, &parameters_),
+        _morph_type("Morphology_type", 0, 0, 4, &parameters_,
                     "0=Gradient, 1=TopHat, 2=BlackHat, 3=Opening, 4=Closing"),
-        _kernel_type("Kernel_type", 0, 0, 2, parameters_,
+        _kernel_type("Kernel_type", 0, 0, 2, &parameters_,
                      "0=Rect, 1=Elipse, 2=Cross"),
-        _iteration("Iteration", 1, 1, 20, parameters_),
-        _kernel_size("Kernel_size", 1, 1, 40, parameters_),
+        _iteration("Iteration", 1, 1, 20, &parameters_),
+        _kernel_size("Kernel_size", 1, 1, 40, &parameters_),
         _anchor(-1, -1) {
     setName("Morphology");
   }

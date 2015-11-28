@@ -43,15 +43,15 @@ class Sobel : public Filter {
 
   explicit Sobel(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _convert_to_uchar("Convert_to_uchar", true, parameters_),
+        _enable("Enable", false, &parameters_),
+        _convert_to_uchar("Convert_to_uchar", true, &parameters_),
         _use_pixel_intensity_correction("use_pixel_intensity_correction", false,
-                                        parameters_),
-        _delta("Delta", 0, 0, 255, parameters_),
-        _scale("Scale", 1, 0, 255, parameters_),
+                                        &parameters_),
+        _delta("Delta", 0, 0, 255, &parameters_),
+        _scale("Scale", 1, 0, 255, &parameters_),
         _power_pixel_correction("pixel_correction_power", 1, -10, 10,
-                                parameters_),
-        _size("Size", 2, 1, 20, parameters_) {
+                                &parameters_),
+        _size("Size", 2, 1, 20, &parameters_) {
     setName("Sobel");
   }
 

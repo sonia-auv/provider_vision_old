@@ -43,13 +43,12 @@ class IntegerParameter : public Parameter {
 
   explicit IntegerParameter(const std::string &_name, const int _value,
                             const int _min, const int _max,
-                            std::vector<Parameter::Ptr> &param_vector,
+                            std::vector<Parameter::Ptr> *param_vector,
                             const std::string &description = "")
-      : Parameter(_name, INTEGER, description),
+      : Parameter(_name, INTEGER, description, param_vector),
         value(_value),
         min(_min),
         max(_max) {
-    param_vector.push_back(Parameter::Ptr(dynamic_cast<Parameter *>(this)));
   }
 
   virtual ~IntegerParameter() {}

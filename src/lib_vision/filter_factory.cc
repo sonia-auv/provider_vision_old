@@ -24,121 +24,84 @@
  */
 
 #include "lib_vision/filter_factory.h"
+
 namespace lib_vision {
-// KEEPING A REFERENCE TO GlobalParamHandler. VERY IMPORTANT
+
 Filter *FilterFactory::createInstance(const std::string &name,
                                       const GlobalParamHandler &globalParams) {
   if (name == "Blurr") {
     return new Blurr(globalParams);
-  }
-  if (name == "Dilate") {
+  } else if (name == "Dilate") {
     return new Dilate(globalParams);
-  }
-  if (name == "Erode") {
+  } else if (name == "Erode") {
     return new Erode(globalParams);
-  }
-  if (name == "MissionTestFakeString") {
+  } else if (name == "MissionTestFakeString") {
     return new MissionTestFakeString(globalParams);
-  }
-  if (name == "TestFilter") {
+  } else if (name == "TestFilter") {
     return new TestFilter(globalParams);
-  }
-  if (name == "BuoySingle") {
+  } else if (name == "BuoySingle") {
     return new BuoySingle(globalParams);
-  }
-  if (name == "Morphology") {
+  } else if (name == "Morphology") {
     return new Morphology(globalParams);
-  }
-  if (name == "OriginalImage") {
+  } else if (name == "OriginalImage") {
     return new OriginalImage(globalParams);
-  }
-  if (name == "Scharr") {
+  } else if (name == "Scharr") {
     return new Scharr(globalParams);
-  }
-  if (name == "ScharrAdding") {
+  } else if (name == "ScharrAdding") {
     return new ScharrAdding(globalParams);
-  }
-  if (name == "StatsThreshold") {
+  } else if (name == "StatsThreshold") {
     return new StatsThreshold(globalParams);
-  }
-  if (name == "SubtractAllPlanes") {
+  } else if (name == "SubtractAllPlanes") {
     return new SubtractAllPlanes(globalParams);
-  }
-  if (name == "Threshold") {
+  } else if (name == "Threshold") {
     return new Threshold(globalParams);
-  }
-  if (name == "BuoySingle") {
+  } else if (name == "BuoySingle") {
     return new BuoySingle(globalParams);
-  }
-  if (name == "Rotate") {
+  } else if (name == "Rotate") {
     return new Rotate(globalParams);
-  }
-  if (name == "FenceDetector") {
+  } else if (name == "FenceDetector") {
     return new FenceDetector(globalParams);
-  }
-  if (name == "ImageAccumulator") {
+  } else if (name == "ImageAccumulator") {
     return new ImageAccumulator(globalParams);
-  }
-  if (name == "ObjectFeatureCalculator") {
+  } else if (name == "ObjectFeatureCalculator") {
     return new ObjectFeatureCalculator(globalParams);
-  }
-  if (name == "TrainDetector") {
+  } else if (name == "TrainDetector") {
     return new TrainDetector(globalParams);
-  }
-  // if (name == "LSDFiltering") {
-  //  return new LSDFiltering(globalParams);
-  //}
-  if (name == "ObjectFinder") {
+  } else if (name == "ObjectFinder") {
     return new ObjectFinder(globalParams);
-  }
-  if (name == "PipeDetector") {
+  } else if (name == "PipeDetector") {
     return new PipeDetector(globalParams);
-  }
-  if (name == "TrackDetector") {
+  } else if (name == "TrackDetector") {
     return new TrackDetector(globalParams);
-  }
-  if (name == "Sobel") {
+  } else if (name == "Sobel") {
     return new Sobel(globalParams);
-  }
-  if (name == "DeloreanDetector") {
+  } else if (name == "DeloreanDetector") {
     return new DeloreanDetector(globalParams);
-  }
-  if (name == "SubmarineFrameMasker") {
+  } else if (name == "SubmarineFrameMasker") {
     return new SubmarineFrameMasker(globalParams);
-  }
-  if (name == "InRange") {
+  } else if (name == "InRange") {
     return new InRange(globalParams);
-  }
-  if (name == "ConvexHull") {
+  } else if (name == "ConvexHull") {
     return new ConvexHull(globalParams);
-  }
-  if (name == "TorpedoesDetector") {
+  } else if (name == "TorpedoesDetector") {
     return new TorpedoesDetector(globalParams);
-  }
-  if (name == "Laplacian") {
+  } else if (name == "Laplacian") {
     return new Laplacian(globalParams);
-  }
-
-  if (name == "Canny") {
+  } else if (name == "Canny") {
     return new Canny(globalParams);
-  }
-  if (name == "HoughLine") {
+  } else if (name == "HoughLine") {
     return new HoughLine(globalParams);
-  }
-  if (name == "AdaptiveThreshold") {
+  } else if (name == "AdaptiveThreshold") {
     return new AdaptiveThreshold(globalParams);
-  }
-  if (name == "HandleDetector") {
+  } else if (name == "HandleDetector") {
     return new HandleDetector(globalParams);
-  }
-  if (name == "WhiteNoiseTakedown") {
+  } else if (name == "WhiteNoiseTakedown") {
     return new WhiteNoiseTakedown(globalParams);
-  }
-  if (name == "BilateralFilter") {
+  } else if (name == "BilateralFilter") {
     return new BilateralFilter(globalParams);
+  } else {
+    return nullptr;
   }
-  // Case were not found.
-  return nullptr;
 }
 
 std::string FilterFactory::GetFilterList() {

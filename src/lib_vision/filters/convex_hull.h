@@ -43,11 +43,11 @@ class ConvexHull : public Filter {
 
   explicit ConvexHull(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _mode("Mode", 0, 0, 3, parameters_,
+        _enable("Enable", false, &parameters_),
+        _mode("Mode", 0, 0, 3, &parameters_,
               "0=CV_RETR_EXTERNAL,1=CV_RETR_LIST, 2=CV_RETR_CCOMP, "
               "3=CV_RETR_TREE"),
-        _method("Method", 0, 0, 3, parameters_,
+        _method("Method", 0, 0, 3, &parameters_,
                 "0=CV_CHAIN_APPROX_NONE, 1=CV_CHAIN_APPROX_SIMPLE, "
                 "2=CV_CHAIN_APPROX_TC89_L1, "
                 "3=CV_CHAIN_APPROX_TC89_KCOS") {

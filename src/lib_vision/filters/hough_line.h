@@ -43,12 +43,12 @@ class HoughLine : public Filter {
 
   explicit HoughLine(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _rho("Rho", 1.0f, 0.0f, 1000.0f, parameters_),
-        _theta("Theta", 1.0f, 0.0f, 1000.0f, parameters_),
-        _min_length("Min_length", 1, 0, 1000, parameters_),
-        _max_gap("Max_gap", 1, 0, 1000, parameters_),
-        _threshold("Threshold", 1, 0, 1000, parameters_) {
+        _enable("Enable", false, &parameters_),
+        _rho("Rho", 1.0f, 0.0f, 1000.0f, &parameters_),
+        _theta("Theta", 1.0f, 0.0f, 1000.0f, &parameters_),
+        _min_length("Min_length", 1, 0, 1000, &parameters_),
+        _max_gap("Max_gap", 1, 0, 1000, &parameters_),
+        _threshold("Threshold", 1, 0, 1000, &parameters_) {
     setName("HoughLine");
   }
 

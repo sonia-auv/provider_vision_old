@@ -43,14 +43,14 @@ class WhiteNoiseTakedown : public Filter {
 
   explicit WhiteNoiseTakedown(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _lowB("LowB", 0, 0, 255, parameters_),
-        _highB("HighB", 0, 0, 255, parameters_),
-        _lowG("LowG", 0, 0, 255, parameters_),
-        _highG("HighG", 0, 0, 255, parameters_),
-        _lowR("LowR", 0, 0, 255, parameters_),
-        _highR("HighR", 0, 0, 255, parameters_),
-        _view_channel("Channel_view", 0, 0, 3, parameters_,
+        _enable("Enable", false, &parameters_),
+        _lowB("LowB", 0, 0, 255, &parameters_),
+        _highB("HighB", 0, 0, 255, &parameters_),
+        _lowG("LowG", 0, 0, 255, &parameters_),
+        _highG("HighG", 0, 0, 255, &parameters_),
+        _lowR("LowR", 0, 0, 255, &parameters_),
+        _highR("HighR", 0, 0, 255, &parameters_),
+        _view_channel("Channel_view", 0, 0, 3, &parameters_,
                       "0=ALL, 1=Blue, 2=Green, 3=Red") {
     setName("WhiteNoiseTakedown");
   }

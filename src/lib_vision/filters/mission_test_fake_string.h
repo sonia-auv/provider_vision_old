@@ -43,8 +43,8 @@ class MissionTestFakeString : public Filter {
 
   explicit MissionTestFakeString(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _string("String_to_return", "test", parameters_) {
+        _enable("Enable", false, &parameters_),
+        _string("String_to_return", "test", &parameters_) {
     setName("MissionTestFakeString");
   }
 

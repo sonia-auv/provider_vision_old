@@ -52,7 +52,7 @@ class Filter {
   // KEEPING A REFERENCE TO GlobalParamHandler. VERY IMPORTANT
   explicit Filter(const GlobalParamHandler &globalParams)
       : global_params_(const_cast<GlobalParamHandler &>(globalParams)),
-        // enable_("Enable", false, parameters_),
+        // enable_("Enable", false, &parameters_),
         // Explicit construction not needed here... Just reminder it exist.
         parameters_() {}
 
@@ -203,28 +203,28 @@ class Filter {
   void global_param_int(const std::string &name, const int value, const int min,
                         const int max) {
     global_params_.addParam(
-        std::make_shared<IntegerParameter>(name, value, max, min, parameters_));
+        std::make_shared<IntegerParameter>(name, value, max, min, &parameters_));
   }
 
   void global_param_double(const std::string &name, const double value,
                            const double min, const double max) {
     global_params_.addParam(
-        std::make_shared<DoubleParameter>(name, value, max, min, parameters_));
+        std::make_shared<DoubleParameter>(name, value, max, min, &parameters_));
   }
 
   void global_param_bool(const std::string &name, const bool value) {
     global_params_.addParam(
-        std::make_shared<BooleanParameter>(name, value, parameters_));
+        std::make_shared<BooleanParameter>(name, value, &parameters_));
   }
 
   void global_param_string(const std::string &name, const std::string &value) {
     global_params_.addParam(
-        std::make_shared<StringParameter>(name, value, parameters_));
+        std::make_shared<StringParameter>(name, value, &parameters_));
   }
 
   void global_param_mat(const std::string &name, cv::Mat &mat) {
     global_params_.addParam(
-        std::make_shared<MatrixParameter>(name, mat, parameters_));
+        std::make_shared<MatrixParameter>(name, mat, &parameters_));
   }
 
  protected:

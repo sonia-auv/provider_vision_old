@@ -43,8 +43,8 @@ class SubmarineFrameMasker : public Filter {
 
   explicit SubmarineFrameMasker(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _rotate_type("Rotation_type", 0, 0, 3, parameters_,
+        _enable("Enable", false, &parameters_),
+        _rotate_type("Rotation_type", 0, 0, 3, &parameters_,
                      "Rotate type: 0=NONE, 1=x axis, 2=y axis, 3=all axis"),
         _prev_rot_value(0) {
     setName("SubmarineFrameMasker");

@@ -43,11 +43,11 @@ class TestFilter : public Filter {
 
   explicit TestFilter(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_, "Enable the filter"),
-        _int("Test_int", 2, 1, 3, parameters_, "Test int"),
-        _bool("test_bool", false, parameters_),
-        _str("Test_string", "teststring", parameters_),
-        _double("test_double", 2.0f, 1, 3, parameters_) {
+        _enable("Enable", false, &parameters_, "Enable the filter"),
+        _int("Test_int", 2, 1, 3, &parameters_, "Test int"),
+        _bool("test_bool", false, &parameters_),
+        _str("Test_string", "teststring", &parameters_),
+        _double("test_double", 2.0f, 1, 3, &parameters_) {
     setName("TestFilter");
   }
 

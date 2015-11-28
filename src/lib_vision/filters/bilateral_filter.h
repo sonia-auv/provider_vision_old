@@ -47,10 +47,10 @@ class BilateralFilter : public Filter {
 
   explicit BilateralFilter(const GlobalParamHandler &globalParams) noexcept
       : Filter(globalParams),
-        enable_("Enable", false, parameters_),
-        diameter_("Diameter", -100, 0, 100, parameters_),
-        sigma_color_("Sigm_color", 0, 0, 300, parameters_),
-        sigma_space_("Sigma_space", 0, 0, 300, parameters_) {
+        enable_("Enable", false, &parameters_),
+        diameter_("Diameter", -100, 0, 100, &parameters_),
+        sigma_color_("Sigm_color", 0, 0, 300, &parameters_),
+        sigma_space_("Sigma_space", 0, 0, 300, &parameters_) {
     setName("BilateralFilter");
   }
 

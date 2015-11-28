@@ -49,15 +49,15 @@ class ObjectFeatureCalculator : public Filter {
   explicit ObjectFeatureCalculator(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
         _recording_frame_index(0),
-        _enable("Enable", false, parameters_),
-        _debug_contour("Debug_contour", false, parameters_),
-        _toggle_recording("toggle_recording", false, parameters_),
-        _id("ID", "buoy", parameters_),
-        _spec_1("spec1", "red", parameters_),
-        _spec_2("spec2", "blue", parameters_),
+        _enable("Enable", false, &parameters_),
+        _debug_contour("Debug_contour", false, &parameters_),
+        _toggle_recording("toggle_recording", false, &parameters_),
+        _id("ID", "buoy", &parameters_),
+        _spec_1("spec1", "red", &parameters_),
+        _spec_2("spec2", "blue", &parameters_),
         _output_folder("output_folder", "/home/jeremie/aidata/rec1/",
-                       parameters_),
-        _min_area("Min_area", 200, 0, 10000, parameters_),
+                       &parameters_),
+        _min_area("Min_area", 200, 0, 10000, &parameters_),
         _feature_factory(5) {
     setName("ObjectFeatureCalculator");
     //    _feature_factory.SetAllFeatureToCompute();

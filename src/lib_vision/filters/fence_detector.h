@@ -47,21 +47,21 @@ class FenceDetector : public Filter {
 
   explicit FenceDetector(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _debug_contour("Debug_contour", false, parameters_),
-        _search_only_bottom("Search_only_bottom", false, parameters_,
+        _enable("Enable", false, &parameters_),
+        _debug_contour("Debug_contour", false, &parameters_),
+        _search_only_bottom("Search_only_bottom", false, &parameters_,
                             "Enables searching only for bottom bar"),
-        _min_length("Minimum_length", 50, 0, 2000, parameters_),
+        _min_length("Minimum_length", 50, 0, 2000, &parameters_),
         _max_distance_from_bottom_bar_extremum("Max_dist_from_extremum", 50, 0,
-                                               2000, parameters_),
-        _min_area("Minimum_area", 300, 0, 10000, parameters_),
+                                               2000, &parameters_),
+        _min_area("Minimum_area", 300, 0, 10000, &parameters_),
         _max_diff_from_90_tbca_horizontal(
-            "Max_diff_horizontal", 20, 0, 90, parameters_,
+            "Max_diff_horizontal", 20, 0, 90, &parameters_,
             "Maximum difference from 90 to be consider as horizontal"),
         _max_diff_from_0_tbca_vertical(
-            "Max_diff_vertical", 20, 0, 90, parameters_,
+            "Max_diff_vertical", 20, 0, 90, &parameters_,
             "Maximum difference from 0 to be consider as vertical"),
-        _min_percent_filled("Minimum_percent_filled", 70, 0, 1000, parameters_),
+        _min_percent_filled("Minimum_percent_filled", 70, 0, 1000, &parameters_),
         _feat_factory(3) {
     setName("FenceDetector");
   }

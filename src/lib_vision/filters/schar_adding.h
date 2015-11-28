@@ -44,20 +44,20 @@ class ScharrAdding : public Filter {
 
   explicit ScharrAdding(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _run_small_image("Run_small_image", true, parameters_,
+        _enable("Enable", false, &parameters_),
+        _run_small_image("Run_small_image", true, &parameters_,
                          "Resize image to run on smaller image"),
-        _convert_to_uchar("Convert_to_uchar", false, parameters_),
-        _delta("Delta", 0, 0, 255, parameters_),
-        _scale("Scale", 1, 0, 255, parameters_),
-        _mean_multiplier("Mean_multiplier", 1.0f, 0.0f, 10.0f, parameters_),
-        _plane_blue("Blue", false, parameters_),
-        _plane_green("Green", false, parameters_),
-        _plane_red("Red", false, parameters_),
-        _plane_hue("Hue", false, parameters_),
-        _plane_saturation("Saturation", false, parameters_),
-        _plane_intensity("Intensity", false, parameters_),
-        _plane_gray("Gray", false, parameters_) {
+        _convert_to_uchar("Convert_to_uchar", false, &parameters_),
+        _delta("Delta", 0, 0, 255, &parameters_),
+        _scale("Scale", 1, 0, 255, &parameters_),
+        _mean_multiplier("Mean_multiplier", 1.0f, 0.0f, 10.0f, &parameters_),
+        _plane_blue("Blue", false, &parameters_),
+        _plane_green("Green", false, &parameters_),
+        _plane_red("Red", false, &parameters_),
+        _plane_hue("Hue", false, &parameters_),
+        _plane_saturation("Saturation", false, &parameters_),
+        _plane_intensity("Intensity", false, &parameters_),
+        _plane_gray("Gray", false, &parameters_) {
     setName("ScharrAdding");
   }
 

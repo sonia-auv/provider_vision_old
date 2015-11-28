@@ -43,11 +43,11 @@ class Canny : public Filter {
 
   explicit Canny(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _l2_gradiant("l2_gradient", false, parameters_),
-        _thresh_one("thres_one", 100, 0, 255, parameters_),
-        _thresh_two("thres_two", 200, 0, 255, parameters_),
-        _aperture_size("Aperture_size", 3, 0, 20, parameters_) {
+        _enable("Enable", false, &parameters_),
+        _l2_gradiant("l2_gradient", false, &parameters_),
+        _thresh_one("thres_one", 100, 0, 255, &parameters_),
+        _thresh_two("thres_two", 200, 0, 255, &parameters_),
+        _aperture_size("Aperture_size", 3, 0, 20, &parameters_) {
     setName("Canny");
   }
 

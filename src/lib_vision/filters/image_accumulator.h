@@ -46,9 +46,9 @@ class ImageAccumulator : public Filter {
   explicit ImageAccumulator(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
         _accumulator(3, cv::Size(0, 0), CV_8UC1),
-        _enable("Enable", false, parameters_),
-        _nb_image("NB_of_images", 3, 1, 20, parameters_),
-        _method("Method_to_use", 1, 0, 2, parameters_,
+        _enable("Enable", false, &parameters_),
+        _nb_image("NB_of_images", 3, 1, 20, &parameters_),
+        _method("Method_to_use", 1, 0, 2, &parameters_,
                 "Method: 1=SameWeight, 2=Adding50Percent, 3=Adjusted"),
         _last_size(0, 0),
         _last_method(CV_8UC1),

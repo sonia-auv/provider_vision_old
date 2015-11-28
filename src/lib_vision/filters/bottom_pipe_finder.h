@@ -49,19 +49,19 @@ class ObjectFinder : public Filter {
 
   explicit ObjectFinder(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _debug_contour("Debug_contour", false, parameters_),
-        _look_for_rectangle("Look_for_Rectangle", false, parameters_),
-        _id("ID", "buoy", parameters_),
-        _spec_1("spec1", "red", parameters_),
-        _spec_2("spec2", "blue", parameters_),
-        _min_area("Min_area", 200, 0, 10000, parameters_),
-        _targeted_ratio("Ratio_target", 0.5f, 0.0f, 1.0f, parameters_),
+        _enable("Enable", false, &parameters_),
+        _debug_contour("Debug_contour", false, &parameters_),
+        _look_for_rectangle("Look_for_Rectangle", false, &parameters_),
+        _id("ID", "buoy", &parameters_),
+        _spec_1("spec1", "red", &parameters_),
+        _spec_2("spec2", "blue", &parameters_),
+        _min_area("Min_area", 200, 0, 10000, &parameters_),
+        _targeted_ratio("Ratio_target", 0.5f, 0.0f, 1.0f, &parameters_),
         _difference_from_target_ratio("Diff_from_ratio_target", 0.10f, 0.0f,
-                                      1.0f, parameters_),
-        _targeted_angle("angle_target", 0.0f, 0.0f, 90.0f, parameters_),
+                                      1.0f, &parameters_),
+        _targeted_angle("angle_target", 0.0f, 0.0f, 90.0f, &parameters_),
         _difference_from_target_angle("Diff_from_angle_target", 30.0f, 0.0f,
-                                      90.0f, parameters_),
+                                      90.0f, &parameters_),
         _feature_factory(5) {
     setName("ObjectFinder");
     _feature_factory.SetAllFeatureToCompute();

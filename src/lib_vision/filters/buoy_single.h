@@ -50,21 +50,21 @@ class BuoySingle : public Filter {
   explicit BuoySingle(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
         feat_factory_(1),
-        _enable("Enable", false, parameters_),
-        _debug_good_contour("Debug_contour", false, parameters_),
-        _eliminate_same_x_targets("Eliminate_same_x", false, parameters_),
-        _detect_red("Detect_red", false, parameters_),
-        _color("Buoy", "red", parameters_),
-        _min_area("Min_area", 200, 0, 10000, parameters_),
-        _max_ratio("Max_ratio", 50, 0, 100, parameters_),
-        _min_filled_percent("Min_percent", 50, 0, 100, parameters_),
+        _enable("Enable", false, &parameters_),
+        _debug_good_contour("Debug_contour", false, &parameters_),
+        _eliminate_same_x_targets("Eliminate_same_x", false, &parameters_),
+        _detect_red("Detect_red", false, &parameters_),
+        _color("Buoy", "red", &parameters_),
+        _min_area("Min_area", 200, 0, 10000, &parameters_),
+        _max_ratio("Max_ratio", 50, 0, 100, &parameters_),
+        _min_filled_percent("Min_percent", 50, 0, 100, &parameters_),
         _max_x_difference_for_elimination("Min_x_difference", 50.0f, 0.0f,
-                                          1000.0f, parameters_),
+                                          1000.0f, &parameters_),
         _ratio_for_angle_check(
-            "Ratio_for_angle_check", 50, 0, 100, parameters_,
+            "Ratio_for_angle_check", 50, 0, 100, &parameters_,
             "When ratio smaller, will discard if vertical contour"),
         _admissible_horizontal_angle(
-            "horizontal_max_angle", 50, 0, 90, parameters_,
+            "horizontal_max_angle", 50, 0, 90, &parameters_,
             "When angle smaller, is consider vertical") {
     setName("BuoySingle");
   }

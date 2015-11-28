@@ -47,10 +47,10 @@ class PipeDetector : public Filter {
 
   explicit PipeDetector(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _debug_contour("Debug_contour", false, parameters_),
-        _look_for_rectangle("Look_for_Rectangle", false, parameters_),
-        _min_area("Min_area", 200, 0, 10000, parameters_) {
+        _enable("Enable", false, &parameters_),
+        _debug_contour("Debug_contour", false, &parameters_),
+        _look_for_rectangle("Look_for_Rectangle", false, &parameters_),
+        _min_area("Min_area", 200, 0, 10000, &parameters_) {
     setName("PipeDetector");
   }
 

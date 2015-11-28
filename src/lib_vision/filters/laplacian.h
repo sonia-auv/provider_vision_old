@@ -43,11 +43,11 @@ class Laplacian : public Filter {
 
   explicit Laplacian(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _convert_to_uchar("Convert_to_uchar", true, parameters_),
-        _delta("Delta", 0, 0, 255, parameters_),
-        _scale("Scale", 1, 0, 255, parameters_),
-        _size("Size", 2, 1, 20, parameters_) {
+        _enable("Enable", false, &parameters_),
+        _convert_to_uchar("Convert_to_uchar", true, &parameters_),
+        _delta("Delta", 0, 0, 255, &parameters_),
+        _scale("Scale", 1, 0, 255, &parameters_),
+        _size("Size", 2, 1, 20, &parameters_) {
     setName("Laplacian");
   }
 

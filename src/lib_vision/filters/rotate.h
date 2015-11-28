@@ -43,8 +43,8 @@ class Rotate : public Filter {
 
   explicit Rotate(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("enable", false, parameters_),
-        _rotate_type("Rotation_type", 0, 0, 3, parameters_,
+        _enable("enable", false, &parameters_),
+        _rotate_type("Rotation_type", 0, 0, 3, &parameters_,
                      "Rotate type: 0=NONE, 1=x axis, 2=y axis, 3=all axis") {
     setName("Rotate");
   }

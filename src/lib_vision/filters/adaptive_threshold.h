@@ -43,12 +43,12 @@ class AdaptiveThreshold : public Filter {
 
   explicit AdaptiveThreshold(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _method("Method", 0, 0, 1, parameters_, "0=Gaussian 1=Mean"),
-        _threshold_type("Threshold_type", 0, 0, 1, parameters_,
+        _enable("Enable", false, &parameters_),
+        _method("Method", 0, 0, 1, &parameters_, "0=Gaussian 1=Mean"),
+        _threshold_type("Threshold_type", 0, 0, 1, &parameters_,
                         "0=BIN, 1=BIN_INV"),
-        _block_size("Size", 1, 1, 40, parameters_),
-        _c_param("C_param", 0.0f, -255.0f, 255.0f, parameters_) {
+        _block_size("Size", 1, 1, 40, &parameters_),
+        _c_param("C_param", 0.0f, -255.0f, 255.0f, &parameters_) {
     setName("AdaptiveThreshold");
   }
 

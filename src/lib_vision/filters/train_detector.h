@@ -79,11 +79,11 @@ class TrainDetector : public Filter {
 
   explicit TrainDetector(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _debug_contour("Debug_contour", false, parameters_),
+        _enable("Enable", false, &parameters_),
+        _debug_contour("Debug_contour", false, &parameters_),
         _pair_distance_maximum("Pair_distance_maximum", 200, 0, 10000,
-                               parameters_),
-        _min_area("Min_area", 200, 0, 10000, parameters_),
+                               &parameters_),
+        _min_area("Min_area", 200, 0, 10000, &parameters_),
 
         _feat_factory(3) {
     setName("TrainDetector");

@@ -48,14 +48,14 @@ class TorpedoesDetector : public Filter {
 
   explicit TorpedoesDetector(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _debug_contour("Debug_contour", false, parameters_),
-        _sensibility("Sensibility", 0.05, 0.0, 1.0, parameters_),
-        _min_area("Minimum Area", 150, 0, 10000, parameters_),
-        _angle("Angle", 0.75, 0.0, 3.14, parameters_),
-        _median("Median multp.", 2.0, 1.0, 100, parameters_),
-        _ratio_max("PCA Ratio max", 2.5, 1.0, 100, parameters_),
-        _ratio_min("PCA Ratio min", 1, 1.0, 100, parameters_) {
+        _enable("Enable", false, &parameters_),
+        _debug_contour("Debug_contour", false, &parameters_),
+        _sensibility("Sensibility", 0.05, 0.0, 1.0, &parameters_),
+        _min_area("Minimum Area", 150, 0, 10000, &parameters_),
+        _angle("Angle", 0.75, 0.0, 3.14, &parameters_),
+        _median("Median multp.", 2.0, 1.0, 100, &parameters_),
+        _ratio_max("PCA Ratio max", 2.5, 1.0, 100, &parameters_),
+        _ratio_min("PCA Ratio min", 1, 1.0, 100, &parameters_) {
     setName("TorpedoesDetector");
   }
 

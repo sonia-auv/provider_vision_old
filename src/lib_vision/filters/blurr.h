@@ -49,10 +49,10 @@ class Blurr : public Filter {
 
   explicit Blurr(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _type("Type", 2, 0, 3, parameters_,
+        _enable("Enable", false, &parameters_),
+        _type("Type", 2, 0, 3, &parameters_,
               "1=Blur, 2=GaussianBlur, 3=MedianBlur"),
-        _kernel_size("Kernel_size", 1, 0, 35, parameters_),
+        _kernel_size("Kernel_size", 1, 0, 35, &parameters_),
         _anchor(-1, -1) {
     setName("Blurr");
   }

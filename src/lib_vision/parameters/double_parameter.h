@@ -43,16 +43,15 @@ class DoubleParameter : public Parameter {
 
   explicit DoubleParameter(const std::string &_name, const double _value,
                            const double _min, const double _max,
-                           std::vector<Parameter::Ptr> &param_vector,
+                           std::vector<Parameter::Ptr> *param_vector,
                            const std::string &description = "")
-      : Parameter(_name, DOUBLE, description),
+      : Parameter(_name, DOUBLE, description, param_vector),
         value(_value),
         max(_max),
         min(_min) {
-    param_vector.push_back(Parameter::Ptr(dynamic_cast<Parameter *>(this)));
   }
 
-  ~DoubleParameter() {}
+  virtual ~DoubleParameter() {}
 
   //============================================================================
   // P U B L I C   M E T H O D S

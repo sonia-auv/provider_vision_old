@@ -43,12 +43,12 @@ class Erode : public Filter {
 
   explicit Erode(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _use_square_kernel("Square_kernel", true, parameters_),
-        _kernel_type("Kernel_type", 0, 0, 2, parameters_),
-        _kernel_size_x("Width", 1, 0, 20, parameters_),
-        _kernel_size_y("Height", 1, 0, 20, parameters_),
-        _iteration("Iteration", 1, 0, 20, parameters_),
+        _enable("Enable", false, &parameters_),
+        _use_square_kernel("Square_kernel", true, &parameters_),
+        _kernel_type("Kernel_type", 0, 0, 2, &parameters_),
+        _kernel_size_x("Width", 1, 0, 20, &parameters_),
+        _kernel_size_y("Height", 1, 0, 20, &parameters_),
+        _iteration("Iteration", 1, 0, 20, &parameters_),
         _anchor(-1, -1) {
     setName("Erode");
   }
