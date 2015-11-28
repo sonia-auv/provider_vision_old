@@ -48,7 +48,11 @@ class ObjectFullData : public ObjectTrackingData,
                        public ObjectRankingData,
                        public ObjectFeatureData {
  public:
-  typedef std::shared_ptr<ObjectFullData> Ptr;
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<ObjectFullData>;
+
   typedef std::vector<ObjectFullData::Ptr> FullObjectPtrVec;
 
   ObjectFullData(const cv::Mat &originalImage, const cv::Mat &binaryImage,

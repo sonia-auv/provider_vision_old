@@ -34,6 +34,11 @@
 // that returns the weighted sum of all images in his buffer.
 class ImageAccumulatorBuffer {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<ImageAccumulatorBuffer>;
+
   enum METHOD { ACC_ALL_SAME_WEIGHT, ACC_50_PERCENT, ACC_ADJUST_WEIGHT };
 
   // Creates a circular buffer of bufferLength,

@@ -36,13 +36,12 @@ namespace lib_vision {
 
 class Parameter {
  public:
-  //============================================================================
-  // C O N S T A N T S   M E M B E R S
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<Parameter>;
 
   static const char SEPARATOR = '|';
-
-  //============================================================================
-  // T Y P E D E F   A N D   E N U M
 
   enum TYPE { BOOL, INTEGER, DOUBLE, STRING, MATRIX, NONE };
 

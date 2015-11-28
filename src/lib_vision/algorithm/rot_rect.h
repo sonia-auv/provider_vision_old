@@ -40,6 +40,11 @@
 // it also contains usefull method to play with rotated rectangle
 class RotRect : public cv::RotatedRect {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<RotRect>;
+
   // Constructor/destructor
   RotRect(const std::vector<cv::Point> &edges);
 

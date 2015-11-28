@@ -32,6 +32,11 @@
 // by ObjectRanker.
 class ObjectRankingData {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<ObjectRankingData>;
+
   ObjectRankingData() : _area_rank(0.0f), _length_rank(0.0f){};
 
   virtual ~ObjectRankingData(){};

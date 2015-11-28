@@ -37,6 +37,11 @@ namespace lib_vision {
 class TrainDetector : public Filter {
  public:
   //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<TrainDetector>;
+
+  //==========================================================================
   // N E S T E D   C L A S S   D E F I N I T I O N
 
   class ObjectPair {

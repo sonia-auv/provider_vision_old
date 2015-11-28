@@ -32,6 +32,11 @@
 // in the past frames?
 class ObjectTrackingData {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<ObjectTrackingData>;
+
   ObjectTrackingData() : _presence_count(0.0f){};
 
   virtual ~ObjectTrackingData(){};

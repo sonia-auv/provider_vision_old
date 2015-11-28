@@ -28,12 +28,15 @@
 
 #include <opencv2/opencv.hpp>
 
-//=============================================================================
-//		CONTAINER CLASS
 //-----------------------------------------------------------------------------
 //
 class ReferencePoint {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<ReferencePoint>;
+
   ReferencePoint(float pix_val, int max_val_index);
 
   float _pix_value;
@@ -47,6 +50,11 @@ typedef cv::Mat_<RefPointPtr> RefImage;
 //
 class RefKernel {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<RefKernel>;
+
   RefKernel(const RefPointPtr &north, const RefPointPtr &west,
             const RefPointPtr &center);
 
@@ -62,6 +70,11 @@ class RefKernel {
 //
 class MajorEdgeExtractor {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<MajorEdgeExtractor>;
+
   cv::Mat ExtractEdge(const cv::Mat &image, int extreme_minimum);
 
  private:

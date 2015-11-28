@@ -38,6 +38,11 @@ namespace lib_vision {
 // settings are for the differents type of filters, and does not apply to all
 class Blurr : public Filter {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<Blurr>;
+
   //============================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 

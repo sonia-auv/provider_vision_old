@@ -35,6 +35,11 @@ namespace lib_vision {
 // description nor param vector
 class MatrixParameter : public Parameter {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<MatrixParameter>;
+
   //============================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 

@@ -38,6 +38,11 @@
 
 class Line {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<Line>;
+
   // CSTR/DSTR
   Line(const cv::Point &start, const cv::Point &end);
 

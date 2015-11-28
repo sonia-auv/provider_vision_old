@@ -73,6 +73,11 @@ namespace lib_vision {
 // and holds the list of all the filters.
 class FilterFactory {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<FilterFactory>;
+
   // KEEPING A REFERENCE TO GlobalParamHandler. VERY IMPORTANT
   static Filter *createInstance(const std::string &name,
                                 const GlobalParamHandler &globalParams);

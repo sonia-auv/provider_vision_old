@@ -32,6 +32,11 @@ namespace lib_vision {
 
 class BooleanParameter : public Parameter {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<BooleanParameter>;
+
   //============================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 

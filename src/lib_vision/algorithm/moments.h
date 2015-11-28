@@ -32,6 +32,11 @@
 
 class Moments {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<Moments>;
+
   Moments(cv::Mat image, bool binary);
 
   Moments();
