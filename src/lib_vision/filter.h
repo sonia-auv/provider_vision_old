@@ -133,14 +133,13 @@ class Filter {
           // see:
           // http://stackoverflow.com/questions/11578936/getting-a-bunch-of-crosses-initialization-error
           // for more info.
-          BooleanParameter::Ptr p_bool = nullptr;
-          IntegerParameter::Ptr p_int = nullptr;
-          DoubleParameter::Ptr p_double = nullptr;
-          StringParameter::Ptr p_str = nullptr;
+          BooleanParameter *p_bool = nullptr;
+          IntegerParameter *p_int = nullptr;
+          DoubleParameter *p_double = nullptr;
+          StringParameter *p_str = nullptr;
           switch (param->getType()) {
             case Parameter::BOOL:
-              p_bool = BooleanParameter::Ptr(
-                  static_cast<BooleanParameter *>(param.get()));
+              p_bool = dynamic_cast<BooleanParameter *>(param.get());
               // Just in case the cast didn't work.
               if (p_bool == nullptr) {
                 break;
@@ -148,8 +147,7 @@ class Filter {
               p_bool->setValue(BooleanParameter::FromStringToBool(value));
               break;
             case Parameter::INTEGER:
-              p_int = IntegerParameter::Ptr(
-                  static_cast<IntegerParameter *>(param.get()));
+              p_int = dynamic_cast<IntegerParameter *>(param.get());
               // Just in case the cast didn't work.
               if (p_int == nullptr) {
                 break;
@@ -157,8 +155,7 @@ class Filter {
               p_int->setValue(atoi(value.c_str()));
               break;
             case Parameter::DOUBLE:
-              p_double = DoubleParameter::Ptr(
-                  static_cast<DoubleParameter *>(param.get()));
+              p_double = dynamic_cast<DoubleParameter *>(param.get());
               // Just in case the cast didn't work.
               if (p_double == nullptr) {
                 break;
@@ -166,8 +163,7 @@ class Filter {
               p_double->setValue(atof(value.c_str()));
               break;
             case Parameter::STRING:
-              p_str = StringParameter::Ptr(
-                  static_cast<StringParameter *>(param.get()));
+              p_str = dynamic_cast<StringParameter *>(param.get());
               // Just in case the cast didn't work.
               if (p_str == nullptr) {
                 break;
