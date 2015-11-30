@@ -194,7 +194,7 @@ void Filterchain::SetFilterParameterValue(const size_t &index,
 
 //------------------------------------------------------------------------------
 //
-std::vector<lib_vision::Parameter::Ptr> Filterchain::GetFilterAllParameters(
+std::vector<lib_vision::Parameter *> Filterchain::GetFilterAllParameters(
     const size_t &index) {
   return GetFilter(index)->GetParameters();
 }

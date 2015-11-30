@@ -34,7 +34,7 @@ DetectionTask::DetectionTask(MediaStreamer::Ptr acquisition_loop,
       media_streamer_(acquisition_loop),
       filterchain_(filterchain),
       new_image_ready_(false),
-      returning_orinal_image(false),
+      returning_orinal_image_(false),
       close_attemps_(3) {
   assert(filterchain);
   assert(acquisition_loop);
@@ -84,14 +84,14 @@ void DetectionTask::StopDetectionTask() {
 //------------------------------------------------------------------------------
 //
 void DetectionTask::ChangeReturnImageToFilter(const size_t &index) {
-  returning_orinal_image = false;
+  returning_orinal_image_ = false;
   filterchain_->SetObserver(index);
 }
 
 //------------------------------------------------------------------------------
 //
 void DetectionTask::ChangeReturnImageToFilterchain() {
-  returning_orinal_image = false;
+  returning_orinal_image_ = false;
   auto last_index = filterchain_->GetAllFilters().size() - 1;
   ChangeReturnImageToFilter(last_index);
 }
@@ -99,7 +99,7 @@ void DetectionTask::ChangeReturnImageToFilterchain() {
 //------------------------------------------------------------------------------
 //
 void DetectionTask::ChangeReturnImageToOrigin() {
-  returning_orinal_image = true;
+  returning_orinal_image_ = true;
 }
 
 //------------------------------------------------------------------------------
@@ -125,7 +125,7 @@ void DetectionTask::Run() {
     new_image_ready_ = false;
     newest_image_mutex_.unlock();
 
-    if (!returning_orinal_image) {
+    if (!returning_orinal_image_) {
       std::string return_string;
 
       return_string = filterchain_->ExecuteFilterChain(image_being_processed_);

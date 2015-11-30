@@ -152,7 +152,7 @@ class DetectionTask : private atlas::Runnable,
   /** Prevent to process data twice for fast processing */
   bool new_image_ready_;
 
-  bool returning_orinal_image;
+  bool returning_orinal_image_;
 
   int close_attemps_;
 };

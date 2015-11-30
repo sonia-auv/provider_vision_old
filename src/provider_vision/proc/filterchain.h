@@ -103,7 +103,7 @@ class Filterchain : public Serializable {
                                const std::string &param_name,
                                const std::string &param_value);
 
-  std::vector<lib_vision::Parameter::Ptr> GetFilterAllParameters(
+  std::vector<lib_vision::Parameter *> GetFilterAllParameters(
       const size_t &index);
 
   lib_vision::GlobalParamHandler::Ptr GetParameterHandler();
