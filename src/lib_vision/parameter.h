@@ -50,10 +50,10 @@ class Parameter {
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
   explicit Parameter(const std::string &name, const TYPE type,
-                     const std::string &description, std::vector<Parameter::Ptr> *vector = nullptr)
+                     const std::string &description, std::vector<Parameter *> *vector = nullptr)
       : name(name), description(description), type(type) {
     if (vector != nullptr) {
-      vector->push_back(Parameter::Ptr(this));
+      vector->push_back(this);
     }
   }
 

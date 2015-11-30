@@ -69,26 +69,26 @@ class TestFilter : public Filter {
     if (_enable()) {
       cv::Mat imageOriginal = global_params_.getOriginalImage();
       imageOriginal = cv::Mat::zeros(1, 1, CV_8UC1);
-      IntegerParameter::Ptr int_test(dynamic_cast<IntegerParameter *>(
-          global_params_.getParam("test_int").get()));
+      IntegerParameter * int_test(dynamic_cast<IntegerParameter *>(
+          global_params_.getParam("test_int")));
       if (int_test != nullptr) {
         notify_str("IntegerParameter OK");
       }
 
-      BooleanParameter::Ptr bool_test(dynamic_cast<BooleanParameter *>(
-          global_params_.getParam("test_bool").get()));
+      BooleanParameter * bool_test(dynamic_cast<BooleanParameter *>(
+          global_params_.getParam("test_bool")));
       if (bool_test != nullptr) {
         notify_str("Bool OK");
       }
 
-      DoubleParameter::Ptr double_test(dynamic_cast<DoubleParameter *>(
-          global_params_.getParam("test double").get()));
+      DoubleParameter * double_test(dynamic_cast<DoubleParameter *>(
+          global_params_.getParam("test double")));
       if (double_test != nullptr) {
         notify_str("DoubleParameter OK");
       }
 
-      StringParameter::Ptr string_test(dynamic_cast<StringParameter *>(
-          global_params_.getParam("test_string").get()));
+      StringParameter * string_test(dynamic_cast<StringParameter *>(
+          global_params_.getParam("test_string")));
       if (string_test != nullptr) {
         notify_str("String OK");
       }

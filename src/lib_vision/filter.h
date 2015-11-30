@@ -86,7 +86,7 @@ class Filter {
     return ss.str();
   }
 
-  const std::vector<Parameter::Ptr> &GetParameters() const {
+  const std::vector<Parameter *> &GetParameters() const {
     return parameters_;
   }
 
@@ -95,7 +95,7 @@ class Filter {
     for (int i = 0; i < int(parameters_.size()); i++) {
       // Here we give it a local value to limit the
       // access to the vector (optimisation)
-      Parameter::Ptr param = parameters_[i];
+      Parameter * param = parameters_[i];
 
       // nullptr element should never append since the vector's object
       // are added by the said object (which cannot be null if
@@ -116,7 +116,7 @@ class Filter {
     for (int i = 0; i < int(parameters_.size()); i++) {
       // Here we give it a local value to limit the
       // access to the vector (optimisation)
-      Parameter::Ptr param = parameters_[i];
+      Parameter * param = parameters_[i];
 
       // nullptr element should never append since the vector's object
       // are added by the said object (which cannot be null if
@@ -139,7 +139,7 @@ class Filter {
           StringParameter *p_str = nullptr;
           switch (param->getType()) {
             case Parameter::BOOL:
-              p_bool = dynamic_cast<BooleanParameter *>(param.get());
+              p_bool = dynamic_cast<BooleanParameter *>(param);
               // Just in case the cast didn't work.
               if (p_bool == nullptr) {
                 break;
@@ -147,7 +147,7 @@ class Filter {
               p_bool->setValue(BooleanParameter::FromStringToBool(value));
               break;
             case Parameter::INTEGER:
-              p_int = dynamic_cast<IntegerParameter *>(param.get());
+              p_int = dynamic_cast<IntegerParameter *>(param);
               // Just in case the cast didn't work.
               if (p_int == nullptr) {
                 break;
@@ -155,7 +155,7 @@ class Filter {
               p_int->setValue(atoi(value.c_str()));
               break;
             case Parameter::DOUBLE:
-              p_double = dynamic_cast<DoubleParameter *>(param.get());
+              p_double = dynamic_cast<DoubleParameter *>(param);
               // Just in case the cast didn't work.
               if (p_double == nullptr) {
                 break;
@@ -163,7 +163,7 @@ class Filter {
               p_double->setValue(atof(value.c_str()));
               break;
             case Parameter::STRING:
-              p_str = dynamic_cast<StringParameter *>(param.get());
+              p_str = dynamic_cast<StringParameter *>(param);
               // Just in case the cast didn't work.
               if (p_str == nullptr) {
                 break;
@@ -198,29 +198,24 @@ class Filter {
   // Creator.
   void global_param_int(const std::string &name, const int value, const int min,
                         const int max) {
-    global_params_.addParam(
-        std::make_shared<IntegerParameter>(name, value, max, min, &parameters_));
+    global_params_.addParam(new IntegerParameter(name, value, max, min, &parameters_));
   }
 
   void global_param_double(const std::string &name, const double value,
                            const double min, const double max) {
-    global_params_.addParam(
-        std::make_shared<DoubleParameter>(name, value, max, min, &parameters_));
+    global_params_.addParam(new DoubleParameter(name, value, max, min, &parameters_));
   }
 
   void global_param_bool(const std::string &name, const bool value) {
-    global_params_.addParam(
-        std::make_shared<BooleanParameter>(name, value, &parameters_));
+    global_params_.addParam(new BooleanParameter(name, value, &parameters_));
   }
 
   void global_param_string(const std::string &name, const std::string &value) {
-    global_params_.addParam(
-        std::make_shared<StringParameter>(name, value, &parameters_));
+    global_params_.addParam(new StringParameter(name, value, &parameters_));
   }
 
   void global_param_mat(const std::string &name, cv::Mat &mat) {
-    global_params_.addParam(
-        std::make_shared<MatrixParameter>(name, mat, &parameters_));
+    global_params_.addParam(new MatrixParameter(name, mat, &parameters_));
   }
 
  protected:
@@ -229,7 +224,7 @@ class Filter {
   //  BooleanParameter enable_;
 
   // vector parameter, so we can list them.
-  std::vector<Parameter::Ptr> parameters_;
+  std::vector<Parameter *> parameters_;
 
   // Useful to identify the filter.
   std::string name_;

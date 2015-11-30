@@ -42,7 +42,7 @@ class BooleanParameter : public Parameter {
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
   explicit BooleanParameter(const std::string &_name, const bool _value,
-                            std::vector<Parameter::Ptr> *param_vector,
+                            std::vector<Parameter *> *param_vector,
                             const std::string &description = "")
       : Parameter(_name, BOOL, description, param_vector), value(_value) {
   }

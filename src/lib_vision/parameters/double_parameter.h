@@ -43,7 +43,7 @@ class DoubleParameter : public Parameter {
 
   explicit DoubleParameter(const std::string &_name, const double _value,
                            const double _min, const double _max,
-                           std::vector<Parameter::Ptr> *param_vector,
+                           std::vector<Parameter *> *param_vector,
                            const std::string &description = "")
       : Parameter(_name, DOUBLE, description, param_vector),
         value(_value),
