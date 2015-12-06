@@ -30,6 +30,8 @@
 #include <opencv2/opencv.hpp>
 #include "lib_vision/algorithm/contour.h"
 
+namespace lib_vision {
+
 class ContourList {
  public:
   //==========================================================================
@@ -160,5 +162,7 @@ inline void ContourList::DrawContours(cv::Mat &img, const cv::Scalar &color,
                                       int thickness) {
   cv::drawContours(img, contour_list_point_, -1, color, thickness);
 }
+
+}  // namespace lib_vision
 
 #endif  // LIB_VISION_ALGORITHM_CONTOUR_LIST_H_

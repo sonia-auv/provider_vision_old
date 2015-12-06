@@ -44,10 +44,10 @@ class TestFilter : public Filter {
   explicit TestFilter(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
         enable_("Enable", false, &parameters_, "Enable the filter"),
-        _int("Test_int", 2, 1, 3, &parameters_, "Test int"),
-        _bool("test_bool", false, &parameters_),
-        _str("Test_string", "teststring", &parameters_),
-        _double("test_double", 2.0f, 1, 3, &parameters_) {
+        int_("Test_int", 2, 1, 3, &parameters_, "Test int"),
+        bool_("test_bool", false, &parameters_),
+        str_("Test_string", "teststring", &parameters_),
+        double_("test_double", 2.0f, 1, 3, &parameters_) {
     SetName("TestFilter");
   }
 
@@ -81,14 +81,16 @@ class TestFilter : public Filter {
         NotifyString("Bool OK");
       }
 
-      RangedParameter<double> *double_test(dynamic_cast<RangedParameter<double> *>(
-          global_params_.getParam("test double")));
+      RangedParameter<double> *double_test(
+          dynamic_cast<RangedParameter<double> *>(
+              global_params_.getParam("test double")));
       if (double_test != nullptr) {
         NotifyString("RangedParameter<double> OK");
       }
 
-      Parameter<std::string> *string_test(dynamic_cast<Parameter<std::string> *>(
-          global_params_.getParam("test_string")));
+      Parameter<std::string> *string_test(
+          dynamic_cast<Parameter<std::string> *>(
+              global_params_.getParam("test_string")));
       if (string_test != nullptr) {
         NotifyString("String OK");
       }
@@ -101,10 +103,10 @@ class TestFilter : public Filter {
   // P R I V A T E   M E M B E R S
 
   Parameter<bool> enable_;
-  RangedParameter<int> _int;
-  Parameter<bool> _bool;
-  Parameter<std::string> _str;
-  RangedParameter<double> _double;
+  RangedParameter<int> int_;
+  Parameter<bool> bool_;
+  Parameter<std::string> str_;
+  RangedParameter<double> double_;
 };
 
 }  // namespace lib_vision

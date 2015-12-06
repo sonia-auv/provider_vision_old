@@ -25,6 +25,8 @@
 
 #include <lib_vision/algorithm/object_frame_memory.h>
 
+namespace lib_vision {
+
 // 20 pix offset center should cover small noise error and small displacement.
 const float ObjectFrameMemory::DISTANCE_MAX_DIFFERENCE = 20;
 
@@ -84,3 +86,5 @@ ObjectFullData::FullObjectPtrVec ObjectFrameMemory::GetPastObjectsViaCenter(
   }
   return objVec;
 }
+
+}  // namespace lib_vision

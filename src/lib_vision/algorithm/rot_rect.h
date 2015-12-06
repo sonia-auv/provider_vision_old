@@ -31,6 +31,8 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
 
+namespace lib_vision {
+
 #define LIB_VISION_TOP_LEFT 0
 #define LIB_VISION_TOP_RIGHT 4
 #define LIB_VISION_BOTTOM_LEFT 1
@@ -91,5 +93,7 @@ class RotRect : public cv::RotatedRect {
 
   cv::Point2f pts_[4];
 };
+
+}  // namespace lib_vision
 
 #endif  // LIB_VISION_ALGORITHM_ROT_RECT_H_

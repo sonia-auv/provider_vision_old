@@ -50,12 +50,12 @@ class TorpedoesDetector : public Filter {
       : Filter(globalParams),
         enable_("Enable", false, &parameters_),
         debug_contour_("Debug_contour", false, &parameters_),
-        _sensibility("Sensibility", 0.05, 0.0, 1.0, &parameters_),
+        sensibility_("Sensibility", 0.05, 0.0, 1.0, &parameters_),
         min_area_("Minimum Area", 150, 0, 10000, &parameters_),
-        _angle("Angle", 0.75, 0.0, 3.14, &parameters_),
-        _median("Median multp.", 2.0, 1.0, 100, &parameters_),
-        _ratio_max("PCA Ratio max", 2.5, 1.0, 100, &parameters_),
-        _ratio_min("PCA Ratio min", 1, 1.0, 100, &parameters_) {
+        angle_("Angle", 0.75, 0.0, 3.14, &parameters_),
+        median_("Median multp.", 2.0, 1.0, 100, &parameters_),
+        ratio_max_("PCA Ratio max", 2.5, 1.0, 100, &parameters_),
+        ratio_min_("PCA Ratio min", 1, 1.0, 100, &parameters_) {
     SetName("TorpedoesDetector");
   }
 
@@ -242,7 +242,7 @@ class TorpedoesDetector : public Filter {
     for (auto &contour : inner_contours.contour_vec_) {
       contour.ApproximateBySize();
       Contour::ContourVec ctr = contour.GetContour();
-      if (IsSquare(ctr, min_area_(), _angle(), _ratio_min(), _ratio_max())) {
+      if (IsSquare(ctr, min_area_(), angle_(), ratio_min_(), ratio_max_())) {
         object_data.push_back(
             std::make_shared<ObjectFullData>(original, in, ctr));
       }
@@ -258,8 +258,8 @@ class TorpedoesDetector : public Filter {
 
     if (debug_contour_()) {
       for (auto &object : object_data) {
-        cv::polylines(output_image_, object->GetContourCopy().GetContour(), true,
-                      CV_RGB(255, 0, 0), 3);
+        cv::polylines(output_image_, object->GetContourCopy().GetContour(),
+                      true, CV_RGB(255, 0, 0), 3);
       }
 
     }  // End if was a square
@@ -283,8 +283,9 @@ class TorpedoesDetector : public Filter {
     // for each contours found, count how many inner square there is inside.
     for (auto &outer_square : contour_vote) {
       for (auto inner_square : inside_squares) {
-        if (cv::pointPolygonTest(outer_square.first->GetContourCopy().GetContour(),
-                                 inner_square->GetCenter(), false) > 0.0f) {
+        if (cv::pointPolygonTest(
+                outer_square.first->GetContourCopy().GetContour(),
+                inner_square->GetCenter(), false) > 0.0f) {
           outer_square.second += 1;
         }
       }
@@ -298,8 +299,8 @@ class TorpedoesDetector : public Filter {
     if (contour_vote.size() != 0) {
       big_square = contour_vote[0].first;
       if (debug_contour_()) {
-        cv::polylines(output_image_, big_square->GetContourCopy().GetContour(), true,
-                      CV_RGB(255, 0, 255), 3);
+        cv::polylines(output_image_, big_square->GetContourCopy().GetContour(),
+                      true, CV_RGB(255, 0, 255), 3);
       }
     }
   }
@@ -352,12 +353,12 @@ class TorpedoesDetector : public Filter {
   // P R I V A T E   M E M B E R S
 
   Parameter<bool> enable_, debug_contour_;
-  RangedParameter<double> _sensibility;
+  RangedParameter<double> sensibility_;
   RangedParameter<double> min_area_;
-  RangedParameter<double> _angle;
-  RangedParameter<double> _median;
-  RangedParameter<double> _ratio_max;
-  RangedParameter<double> _ratio_min;
+  RangedParameter<double> angle_;
+  RangedParameter<double> median_;
+  RangedParameter<double> ratio_max_;
+  RangedParameter<double> ratio_min_;
   cv::Mat output_image_;
 };
 

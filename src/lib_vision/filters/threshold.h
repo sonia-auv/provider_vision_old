@@ -46,7 +46,7 @@ class Threshold : public Filter {
         enable_("Enable", false, &parameters_),
         type_("Threshold_type", 1, 0, 5, &parameters_,
               "0=BIN, 1=BIN_INV, 2=TRUNC, 3=TOZERO, 4=TOZERO_INV 5=OTSU"),
-        _max("Max_value", 100, 0, 255, &parameters_) {
+        max_("Max_value", 100, 0, 255, &parameters_) {
     SetName("Threshold");
   }
 
@@ -88,7 +88,7 @@ class Threshold : public Filter {
           threshold_type = CV_THRESH_BINARY;
           break;
       }
-      cv::threshold(image, image, _max(), 255, threshold_type);
+      cv::threshold(image, image, max_(), 255, threshold_type);
     }
   }
 
@@ -97,7 +97,7 @@ class Threshold : public Filter {
   // P R I V A T E   M E M B E R S
 
   Parameter<bool> enable_;
-  RangedParameter<int> type_, _max;
+  RangedParameter<int> type_, max_;
 };
 
 }  // namespace lib_vision

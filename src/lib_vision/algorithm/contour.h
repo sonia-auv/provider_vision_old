@@ -29,6 +29,8 @@
 #include <memory>
 #include <opencv2/opencv.hpp>
 
+namespace lib_vision {
+
 class Contour {
  public:
   //==========================================================================
@@ -117,5 +119,7 @@ inline std::vector<cv::Point> Contour::GetContour() { return contour_; }
 inline cv::Point Contour::operator[](unsigned int index) {
   return contour_[index];
 }
+
+}  // namespace lib_vision
 
 #endif  // LIB_VISION_ALGORITHM_CONTOUR_H_

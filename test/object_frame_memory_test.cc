@@ -27,6 +27,8 @@
 #include "lib_vision/algorithm/object_frame_memory.h"
 #include "lib_vision/algorithm/contour_list.h"
 
+using namespace lib_vision;
+
 void CreateImage(cv::Mat &original, cv::Mat &binary)
 {
   std::vector< std::vector<cv::Point> > contours;

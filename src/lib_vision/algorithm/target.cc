@@ -25,6 +25,8 @@
 
 #include <lib_vision/algorithm/target.h>
 
+namespace lib_vision {
+
 //==============================================================================
 // C / D T O R   S E C T I O N
 
@@ -81,3 +83,5 @@ std::string Target::OutputString() {
   stringOutput << ';';
   return stringOutput.str();
 }
+
+}  // namespace lib_vision

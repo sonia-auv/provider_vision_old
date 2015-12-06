@@ -28,6 +28,8 @@
 #include <lib_vision/algorithm/general_function.h>
 #include "lib_atlas/config.h"
 
+using namespace lib_vision;
+
 bool CompareMoments(cv::Moments moment1, cv::Moments moment2) {
   return moment1.m00 == moment2.m00 && moment1.m01 == moment2.m01 &&
          moment1.m02 == moment2.m02 && moment1.m03 == moment2.m03 &&

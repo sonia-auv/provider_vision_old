@@ -26,6 +26,8 @@
 #include <gtest/gtest.h>
 #include <lib_vision/algorithm/object_tracking_data.h>
 
+using namespace lib_vision;
+
 TEST(TrackingData, AllTest) {
   ObjectTrackingData tkData;
   tkData.SetPresenceCount(2);

@@ -32,6 +32,8 @@
 #include <lib_vision/algorithm/object_full_data.h>
 #include <lib_vision/algorithm/general_function.h>
 
+namespace lib_vision {
+
 class Target {
  public:
   //==========================================================================
@@ -160,5 +162,7 @@ inline std::string Target::GetSpecField_1() { return special_field_1_; }
 //------------------------------------------------------------------------------
 //
 inline std::string Target::GetSpecField_2() { return special_field_2_; }
+
+}  // namespace lib_vision
 
 #endif  // LIB_VISION_ALGORITHM_TARGET_H_

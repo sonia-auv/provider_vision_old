@@ -55,7 +55,7 @@ class TrackDetector : public Filter {
         targeted_ratio_("Ratio_target", 0.5f, 0.0f, 1.0f, &parameters_),
         difference_from_target_ratio_("Diff_from_ratio_target", 0.10f, 0.0f,
                                       1.0f, &parameters_),
-        _feat_factory(3) {
+        feat_factory_(3) {
     SetName("TrackDetector");
   }
 
@@ -127,7 +127,7 @@ class TrackDetector : public Filter {
       for (auto &square : squareContour) {
         for (auto &already_voted_for : contour_vote) {
           if (cv::pointPolygonTest(
-              already_voted_for.first->GetContourCopy().GetContour(),
+                  already_voted_for.first->GetContourCopy().GetContour(),
                   cv::Point2f(square[0].x, square[0].y), false) > 0.0f) {
             already_voted_for.second++;
             continue;
@@ -136,13 +136,14 @@ class TrackDetector : public Filter {
 
         for (auto &to_added_to_the_voted_pool : objVec) {
           if (cv::pointPolygonTest(
-              to_added_to_the_voted_pool->GetContourCopy().GetContour(),
+                  to_added_to_the_voted_pool->GetContourCopy().GetContour(),
                   cv::Point2f(square[0].x, square[0].y), false) > 0.0f) {
             contour_vote.push_back(std::pair<ObjectFullData::Ptr, int>(
                 to_added_to_the_voted_pool, 1));
-            cv::polylines(output_image_,
-                          to_added_to_the_voted_pool->GetContourCopy().GetContour(),
-                          true, CV_RGB(255, 0, 255), 3);
+            cv::polylines(
+                output_image_,
+                to_added_to_the_voted_pool->GetContourCopy().GetContour(), true,
+                CV_RGB(255, 0, 255), 3);
             continue;
           }
         }
@@ -182,9 +183,10 @@ class TrackDetector : public Filter {
   cv::Mat output_image_;
   // Params
   Parameter<bool> enable_, debug_contour_;
-  RangedParameter<double> min_area_, targeted_ratio_, difference_from_target_ratio_;
+  RangedParameter<double> min_area_, targeted_ratio_,
+      difference_from_target_ratio_;
 
-  ObjectFeatureFactory _feat_factory;
+  ObjectFeatureFactory feat_factory_;
 };
 
 }  // namespace lib_vision

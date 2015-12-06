@@ -25,6 +25,8 @@
 
 #include <lib_vision/algorithm/major_edge_extractor.h>
 
+namespace lib_vision {
+
 const float MajorEdgeExtractor::PERCENT_OF_VAL_FOR_VALUE_CONNECTION = 0.8;
 
 //==============================================================================
@@ -156,3 +158,5 @@ cv::Mat MajorEdgeExtractor::ExtractEdge(const cv::Mat &image,
 
   return final_image;
 }
+
+}  // namespace lib_vision

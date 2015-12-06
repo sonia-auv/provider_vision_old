@@ -33,6 +33,8 @@
 
 #include "lib_vision/algorithm/type_and_const.h"
 
+namespace lib_vision {
+
 class ObjectFeatureData {
  public:
   //==========================================================================
@@ -115,5 +117,7 @@ class ObjectFeatureData {
       presence_consistency_, hue_mean_, sat_mean_, intensity_mean_, red_mean_,
       green_mean_, blue_mean_, gray_mean_;
 };
+
+}  // namespace lib_vision
 
 #endif  // LIB_VISION_ALGORITHM_OBJECT_FEATURE_H_

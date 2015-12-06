@@ -29,6 +29,8 @@
 #include <memory>
 #include <lib_vision/algorithm/object_full_data.h>
 
+namespace lib_vision {
+
 // Class that simply rank the object
 // with different value.
 class ObjectRanker {
@@ -66,5 +68,7 @@ inline bool ObjectRanker::LengthSortFunction(ObjectFullData::Ptr a,
   }
   return false;
 }
+
+}  // namespace lib_vision
 
 #endif  // LIB_VISION_ALGORITHM_OBJECT_RANKER_H_

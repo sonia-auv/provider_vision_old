@@ -31,6 +31,8 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
 
+namespace lib_vision {
+
 class Moments {
  public:
   //==========================================================================
@@ -67,5 +69,7 @@ class Moments {
 
   cv::Moments cv_moments_;
 };
+
+}  // namespace lib_vision
 
 #endif  // LIB_VISION_ALGORITHM_MOMENTS_H_

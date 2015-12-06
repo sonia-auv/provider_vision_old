@@ -32,6 +32,8 @@
 #include <lib_vision/algorithm/type_and_const.h>
 #include "lib_vision/algorithm/contour.h"
 
+namespace lib_vision {
+
 class ObjectBasicData {
  public:
   //==========================================================================
@@ -262,5 +264,7 @@ inline const cv::Mat &ObjectBasicData::GetBinaryImage() {
 inline const cv::Mat &ObjectBasicData::GetOriginalImage() {
   return binary_image_;
 }
+
+}  // namespace lib_vision
 
 #endif  // LIB_VISION_ALGORITHM_OBJECT_BASIC_DATA_H_

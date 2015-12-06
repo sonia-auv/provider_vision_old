@@ -26,6 +26,8 @@
 #include <tuple>
 #include <lib_vision/algorithm/general_function.h>
 
+namespace lib_vision {
+
 //==============================================================================
 // M E T H O D S   S E C T I O N
 
@@ -499,7 +501,7 @@ bool IsSquare(std::vector<cv::Point> &approx, double min_area, double angle,
       maxCosine = MAX(maxCosine, cosine);
     }
 
-    // Check if angleBetweenThreePoints inside are un _angle and check if
+    // Check if angleBetweenThreePoints inside are un angle_ and check if
     // between ratios of PCA Eigen values
     if (maxCosine < angle && ratio < ratio_max && ratio > ratio_min) {
       return true;
@@ -605,3 +607,5 @@ void DrawSquares(cv::Mat &image,
 bool CompareYX(const cv::Point &p1, const cv::Point &p2) {
   return std::tie(p1.x, p1.y) < std::tie(p2.x, p2.y);
 }
+
+}  // namespace lib_vision

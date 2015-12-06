@@ -25,6 +25,8 @@
 
 #include "contour_list.h"
 
+namespace lib_vision {
+
 //==============================================================================
 // C / D T O R   S E C T I O N
 
@@ -142,3 +144,5 @@ void ContourList::RetrieveOutNoChildContours(const cv::Mat &image) {
 
   std::swap(contour_list_point_, new_contour_list);
 }
+
+}  // namespace lib_vision

@@ -26,6 +26,8 @@
 #include <gtest/gtest.h>
 #include <lib_vision/algorithm/object_full_data.h>
 
+using namespace lib_vision;
+
 TEST(FullData, AllTest) {
   contourList_t contours;
   cv::Mat binaryImage(1000, 1000, CV_8UC1, cv::Scalar::all(0));

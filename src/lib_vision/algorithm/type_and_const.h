@@ -29,6 +29,8 @@
 #include <memory>
 #include <opencv2/opencv.hpp>
 
+namespace lib_vision {
+
 typedef std::vector<cv::Point> contour_t;
 typedef std::vector<contour_t> contourList_t;
 typedef std::vector<cv::Vec4i> hierachy_t;
@@ -44,5 +46,7 @@ typedef std::vector<cv::Vec4i> defectuosity_t;
 enum rotationType { R_NONE = 0, R_90, R_180, R_270 };
 
 enum symmetryType { S_NONE = 0, S_X_AXIS, S_Y_AXIS, S_BOTH };
+
+}  // namespace lib_vision
 
 #endif  // LIB_VISION_ALGORITHM_TYPE_AND_CONST_H_

@@ -25,6 +25,8 @@
 
 #include <lib_vision/algorithm/object_basic_data.h>
 
+namespace lib_vision {
+
 //==============================================================================
 // C / D T O R   S E C T I O N
 
@@ -98,3 +100,5 @@ const cv::Moments &ObjectBasicData::GetMoments(bool useBinary) {
   }
   return cv_moments_;
 }
+
+}  // namespace lib_vision

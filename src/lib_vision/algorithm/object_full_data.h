@@ -34,6 +34,8 @@
 #include <lib_vision/algorithm/object_ranking_data.h>
 #include "lib_vision/algorithm/object_feature.h"
 
+namespace lib_vision {
+
 // Simple container class that is created with the contour.
 // It inherits from the different caracteristic of an object
 // (in the time domain, as a contour and compared to others)
@@ -78,5 +80,7 @@ inline bool AreaSorts(ObjectFullData::Ptr a, ObjectFullData::Ptr b) {
 inline bool RatioSorts(ObjectFullData::Ptr a, ObjectFullData::Ptr b) {
   return a->GetRatio() < b->GetRatio();
 }
+
+}  // namespace lib_vision
 
 #endif  // LIB_VISION_ALGORITHM_OBJECT_FULL_DATA_H_

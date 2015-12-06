@@ -23,10 +23,11 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include <gtest/gtest.h>
 #include <lib_atlas/config.h>
 #include <lib_vision/algorithm/contour_list.h>
+
+using namespace lib_vision;
 
 TEST(ContourTest, AllTest) {
   std::string path = atlas::kWorkspaceRoot +

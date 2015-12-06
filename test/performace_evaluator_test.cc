@@ -26,6 +26,8 @@
 #include <gtest/gtest.h>
 #include <lib_vision/algorithm/performance_evaluator.h>
 
+using namespace lib_vision;
+
 TEST(PerformanceEvaluator, AllTest) {
    PerformanceEvaluator pe;
 

@@ -28,6 +28,8 @@
 
 #include <memory>
 
+namespace lib_vision {
+
 // Basic container class. It holds information about the ranking
 // of certain caracteristic of an object compare to the other.
 // In other word, it contains the position resulting of the sorting
@@ -86,5 +88,7 @@ inline float ObjectRankingData::GetAreaRank() { return area_rank_; }
 //------------------------------------------------------------------------------
 //
 inline float ObjectRankingData::GetLengthRank() { return length_rank_; }
+
+}  // namespace lib_vision
 
 #endif  // LIB_VISION_ALGORITHM_OBJECT_RANKING_DATA_H_

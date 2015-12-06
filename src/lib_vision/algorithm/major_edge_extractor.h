@@ -29,6 +29,8 @@
 #include <memory>
 #include <opencv2/opencv.hpp>
 
+namespace lib_vision {
+
 class ReferencePoint {
  public:
   //==========================================================================
@@ -251,5 +253,7 @@ inline void MajorEdgeExtractor::SetValInReferenceVec(RefPointPtr ptr,
                                                      float value) {
   SetValInReferenceVec(ptr->_reference_max_index, value);
 }
+
+}  // namespace lib_vision
 
 #endif  // LIB_VISION_ALGORITHM_MAJOR_EDGE_EXTRACTOR_H_

@@ -25,6 +25,8 @@
 
 #include <lib_vision/algorithm/performance_evaluator.h>
 
+namespace lib_vision {
+
 //==============================================================================
 // C / D T O R   S E C T I O N
 
@@ -38,3 +40,5 @@ PerformanceEvaluator::PerformanceEvaluator()
     tick_frequency_ = 1;
   }
 }
+
+}  // namespace lib_vision

@@ -25,6 +25,8 @@
 
 #include "contour.h"
 
+namespace lib_vision {
+
 //==============================================================================
 // C / D T O R   S E C T I O N
 
@@ -42,3 +44,5 @@ Contour::Contour(const cv::RotatedRect &rect) {
     contour_.push_back(pts[j]);
   }
 }
+
+}  // namespace lib_vision

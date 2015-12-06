@@ -25,6 +25,8 @@
 
 #include <lib_vision/algorithm/line.h>
 
+namespace lib_vision {
+
 //==============================================================================
 // C / D T O R   S E C T I O N
 
@@ -96,3 +98,5 @@ bool centerXSort(Line a, Line b) { return a.GetCenter().x > b.GetCenter().x; }
 //------------------------------------------------------------------------------
 //
 bool centerYSort(Line a, Line b) { return a.GetCenter().y > b.GetCenter().y; }
+
+}  // namespace lib_vision

@@ -25,6 +25,8 @@
 
 #include "lib_vision/algorithm/object_feature_factory.h"
 
+namespace lib_vision {
+
 //==============================================================================
 // C / D T O R   S E C T I O N
 
@@ -141,3 +143,5 @@ float ObjectFeatureFactory::CalculatePlaneMean(ObjectFullData::Ptr object,
   }
   return mean;
 }
+
+}  // namespace lib_vision

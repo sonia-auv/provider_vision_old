@@ -31,6 +31,8 @@
 #include <lib_vision/algorithm/type_and_const.h>
 #include <lib_vision/algorithm/rot_rect.h>
 
+namespace lib_vision {
+
 #define ACCURACY_TABLE_SIZE 21
 // Degree accuracy are the values corresponding to norm(A X B)/(norm(A) *
 // norm(B))
@@ -145,5 +147,7 @@ inline float EucledianPointDistance(const cv::Point2f &pt1,
                                     const cv::Point2f &pt2) {
   return sqrt(pow((pt1.x - pt2.x), 2) + pow((pt1.y - pt2.y), 2));
 }
+
+}  // namespace lib_vision
 
 #endif  // LIB_VISION_ALGORITHM_GENERAL_FUNCTION_H_

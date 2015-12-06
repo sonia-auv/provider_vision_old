@@ -26,6 +26,8 @@
 #include <gtest/gtest.h>
 #include <lib_vision/algorithm/object_ranking_data.h>
 
+using namespace lib_vision;
+
 TEST(RankingData, AllTest) {
   ObjectRankingData obj;
   obj.SetAreaRank(1);

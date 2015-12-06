@@ -31,6 +31,8 @@
 #include <lib_vision/algorithm/object_full_data.h>
 #include <lib_vision/algorithm/general_function.h>
 
+namespace lib_vision {
+
 class ObjectFrameMemory {
  public:
   //==========================================================================
@@ -77,5 +79,7 @@ class ObjectFrameMemory {
 //------------------------------------------------------------------------------
 //
 inline unsigned int ObjectFrameMemory::GetMemorySize() { return memory_size_; }
+
+}  // namespace lib_vision
 
 #endif  // LIB_VISION_ALGORITHM_OBJECT_FRAME_MEMORY_H_

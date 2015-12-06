@@ -179,8 +179,9 @@ class HandleDetector : public Filter {
   Parameter<bool> enable_, debug_contour_, look_for_rectangle_, disable_ratio_,
       disable_angle_;
   Parameter<std::string> id_, spec_1_, spec_2_;
-  RangedParameter<double> min_area_, targeted_ratio_, difference_from_target_ratio_,
-      targeted_angle_, difference_from_target_angle_;
+  RangedParameter<double> min_area_, targeted_ratio_,
+      difference_from_target_ratio_, targeted_angle_,
+      difference_from_target_angle_;
 
   ObjectFeatureFactory feature_factory_;
 };

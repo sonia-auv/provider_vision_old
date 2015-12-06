@@ -25,6 +25,8 @@
 
 #include <lib_vision/algorithm/rot_rect.h>
 
+namespace lib_vision {
+
 //==============================================================================
 // C / D T O R   S E C T I O N
 
@@ -131,3 +133,5 @@ bool RotRect::operator==(const RotRect &rotRect) {
 //------------------------------------------------------------------------------
 //
 cv::Point2f *RotRect::getCorners() { return pts_; }
+
+}  // namespace lib_vision

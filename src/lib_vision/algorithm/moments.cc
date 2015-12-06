@@ -25,6 +25,8 @@
 
 #include <lib_vision/algorithm/moments.h>
 
+namespace lib_vision {
+
 //==============================================================================
 // C / D T O R   S E C T I O N
 
@@ -40,8 +42,8 @@ Moments::Moments(cv::Mat image, bool binary) {
   // Gets the moment by opencv moment function
   cv_moments_ = cv::moments(image, binary);
 
-  mass_center_ =
-      cv::Point2f(cv_moments_.m10 / cv_moments_.m00, cv_moments_.m01 / cv_moments_.m00);
+  mass_center_ = cv::Point2f(cv_moments_.m10 / cv_moments_.m00,
+                             cv_moments_.m01 / cv_moments_.m00);
 
   // Here, remember that the mome are calculated on an image. If the image
   // was extract from a rotatedRect, it means the coordinate are in the angle
@@ -78,3 +80,5 @@ void Moments::operator=(Moments moments) {
   x_distance_from_center_ = moments.x_distance_from_center_;
   y_distance_from_center_ = moments.y_distance_from_center_;
 }
+
+}  // namespace lib_vision

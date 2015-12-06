@@ -25,6 +25,8 @@
 
 #include <lib_vision/algorithm/image_accumulator_buffer.h>
 
+namespace lib_vision {
+
 //==============================================================================
 // C / D T O R   S E C T I O N
 
@@ -148,3 +150,5 @@ void ImageAccumulatorBuffer::AverageAccumulateWithResultingWeight(
             resultImage);
   }
 }
+
+}  // namespace lib_vision

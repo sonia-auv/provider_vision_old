@@ -25,6 +25,8 @@
 
 #include <lib_vision/algorithm/object_ranker.h>
 
+namespace lib_vision {
+
 //==============================================================================
 // M E T H O D S   S E C T I O N
 
@@ -49,3 +51,5 @@ void ObjectRanker::RankByLength(ObjectFullData::FullObjectPtrVec objects) {
     }
   }
 }
+
+}  // namespace lib_vision

@@ -118,7 +118,7 @@ class DeloreanDetector : public Filter {
             fabs(object->GetRatio() - targeted_ratio_small_());
         //				std::cout << object->GetRatio() << " "
         //<<
-        //targeted_ratio_() << " " << ratio << std::endl;
+        // targeted_ratio_() << " " << ratio << std::endl;
 
         // Could change for check for wich is nearest the target ratio, i.e. is
         // the ratio nearrer big object or

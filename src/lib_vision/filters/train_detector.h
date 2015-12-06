@@ -81,11 +81,11 @@ class TrainDetector : public Filter {
       : Filter(globalParams),
         enable_("Enable", false, &parameters_),
         debug_contour_("Debug_contour", false, &parameters_),
-        _pair_distance_maximum("Pair_distance_maximum", 200, 0, 10000,
+        pair_distance_maximum_("Pair_distance_maximum", 200, 0, 10000,
                                &parameters_),
         min_area_("Min_area", 200, 0, 10000, &parameters_),
 
-        _feat_factory(3) {
+        feat_factory_(3) {
     SetName("TrainDetector");
   }
 
@@ -141,8 +141,8 @@ class TrainDetector : public Filter {
           // If they are near enough, add it to the pair.
           float distance = EucledianPointDistance(objVec[j]->GetCenter(),
                                                   currentObj->GetCenter());
-          if (distance <= _pair_distance_maximum()) {
-            pairs.push_back(ObjectPair(currentObj, objVec[j], _feat_factory));
+          if (distance <= pair_distance_maximum_()) {
+            pairs.push_back(ObjectPair(currentObj, objVec[j], feat_factory_));
           }
         }
       }
@@ -193,9 +193,9 @@ class TrainDetector : public Filter {
   cv::Mat output_image_;
   // Params
   Parameter<bool> enable_, debug_contour_;
-  RangedParameter<int> _pair_distance_maximum, min_area_;
+  RangedParameter<int> pair_distance_maximum_, min_area_;
 
-  ObjectFeatureFactory _feat_factory;
+  ObjectFeatureFactory feat_factory_;
 };
 
 }  // namespace lib_vision

@@ -29,6 +29,8 @@
 #include <memory>
 #include "opencv2/opencv.hpp"
 
+namespace lib_vision {
+
 /*
  * Class to easily calculate process time
  * At construction, it takes the current tick count
@@ -84,5 +86,7 @@ inline double PerformanceEvaluator::GetExecTimeSec() {
 inline void PerformanceEvaluator::UpdateStartTime() {
   start_tick_count_ = cv::getTickCount();
 }
+
+}  // namespace lib_vision
 
 #endif  // LIB_VISION_ALGORITHM_PERFORMANCE_EVALUATOR_H_

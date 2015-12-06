@@ -31,6 +31,8 @@
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
 
+namespace lib_vision {
+
 /**
  * Simple circular buffer that returns the weighted sum of all images in his
  * buffer.
@@ -231,5 +233,7 @@ inline void ImageAccumulatorBuffer::SetAverageMethod(METHOD method) {
       break;
   }
 }
+
+}  // namespace lib_vision
 
 #endif  // LIB_VISION_ALGORITHM_IMAGE_ACCUMULATOR_BUFFER_H_

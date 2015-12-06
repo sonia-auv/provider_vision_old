@@ -31,6 +31,8 @@
 #include <stdlib.h>
 #include <opencv2/core/core.hpp>
 
+namespace lib_vision {
+
 /**
  * Basic definitnion of a line
  */
@@ -85,5 +87,7 @@ bool lengthSort(Line a, Line b);
 bool centerXSort(Line a, Line b);
 
 bool centerYSort(Line a, Line b);
+
+}  // namespace lib_vision
 
 #endif  // LIB_VISION_ALGORITHM_LINE_H_

@@ -33,6 +33,8 @@
 #include "lib_vision/algorithm/object_frame_memory.h"
 #include "lib_vision/algorithm/object_feature.h"
 
+namespace lib_vision {
+
 class ObjectFeatureFactory {
  public:
   //==========================================================================
@@ -258,5 +260,7 @@ inline void ObjectFeatureFactory::GrayMeanFeature(ObjectFullData::Ptr object) {
         CalculatePlaneMean(object, ObjectBasicData::GRAY_PLANE));
   }
 }
+
+}  // namespace lib_vision
 
 #endif  // LIB_VISION_ALGORITHM_OBJECT_FEATURE_FACTORY_H_

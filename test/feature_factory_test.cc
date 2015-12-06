@@ -31,6 +31,8 @@
 #include "lib_vision/algorithm/object_full_data.h"
 #include "lib_atlas/config.h"
 
+using namespace lib_vision;
+
 TEST(FeatureFactory, AllTest) {
 
   cv::Mat original_image =
