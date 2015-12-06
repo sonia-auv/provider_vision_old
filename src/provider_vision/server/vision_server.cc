@@ -230,7 +230,7 @@ bool VisionServer::CallbackGetFilterAllParam(
     auto parameters = filterchain->GetFilterAllParameters(ExtractFilterIndexFromUIName(rqst.filter));
     std::vector<std::string> parameter_names;
     for (const auto &parameter : parameters) {
-      parameter_names.push_back(parameter->getName());
+      parameter_names.push_back(parameter->toString());
     }
     rep.list = BuildRosMessage(parameter_names);
     return true;
