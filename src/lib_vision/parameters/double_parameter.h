@@ -39,7 +39,7 @@ class DoubleParameter : public Parameter {
   using Ptr = std::shared_ptr<DoubleParameter>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit DoubleParameter(const std::string &_name, const double _value,
                            const double _min, const double _max,
@@ -48,8 +48,7 @@ class DoubleParameter : public Parameter {
       : Parameter(_name, DOUBLE, description, param_vector),
         value(_value),
         max(_max),
-        min(_min) {
-  }
+        min(_min) {}
 
   virtual ~DoubleParameter() {}
 
@@ -134,10 +133,10 @@ class DoubleParameter : public Parameter {
     return std::to_string(value);
   }
 
-  virtual std::string toString() const {
+  virtual std::string ToString() const {
     std::stringstream ss;
-    ss << getName() << SEPARATOR << "Double" << SEPARATOR << value << SEPARATOR
-       << min << SEPARATOR << max << SEPARATOR << getDescription() << ";";
+    ss << GetName() << SEPARATOR << "Double" << SEPARATOR << value << SEPARATOR
+       << min << SEPARATOR << max << SEPARATOR << GetDescription() << ";";
     return ss.str();
   }
 

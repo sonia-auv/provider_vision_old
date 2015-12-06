@@ -48,7 +48,7 @@ class TrainDetector : public Filter {
   class ObjectPair {
    public:
     //==========================================================================
-    // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+    // P U B L I C   C / D T O R S
 
     explicit ObjectPair(ObjectFullData::Ptr object1,
                         ObjectFullData::Ptr object2,
@@ -75,7 +75,7 @@ class TrainDetector : public Filter {
   };
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit TrainDetector(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -86,7 +86,7 @@ class TrainDetector : public Filter {
         _min_area("Min_area", 200, 0, 10000, &parameters_),
 
         _feat_factory(3) {
-    setName("TrainDetector");
+    SetName("TrainDetector");
   }
 
   virtual ~TrainDetector() {}
@@ -94,7 +94,7 @@ class TrainDetector : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       if (_debug_contour()) {
         image.copyTo(_output_image);
@@ -170,7 +170,7 @@ class TrainDetector : public Filter {
                          abs(object->GetRotatedRect().angle - 90));
         std::stringstream ss;
         ss << "train:" << target.OutputString();
-        notify_str(ss.str().c_str());
+        NotifyString(ss.str().c_str());
         if (_debug_contour()) {
           contourList_t tmp;
           tmp.push_back(obj1);

@@ -39,14 +39,14 @@ class Rotate : public Filter {
   using Ptr = std::shared_ptr<Rotate>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit Rotate(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
         _enable("enable", false, &parameters_),
         _rotate_type("Rotation_type", 0, 0, 3, &parameters_,
                      "Rotate type: 0=NONE, 1=x axis, 2=y axis, 3=all axis") {
-    setName("Rotate");
+    SetName("Rotate");
   }
 
   virtual ~Rotate() {}
@@ -54,7 +54,7 @@ class Rotate : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       switch (_rotate_type()) {
         case 0:

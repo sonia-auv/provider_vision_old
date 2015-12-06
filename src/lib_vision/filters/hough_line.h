@@ -39,7 +39,7 @@ class HoughLine : public Filter {
   using Ptr = std::shared_ptr<HoughLine>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit HoughLine(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -49,7 +49,7 @@ class HoughLine : public Filter {
         _min_length("Min_length", 1, 0, 1000, &parameters_),
         _max_gap("Max_gap", 1, 0, 1000, &parameters_),
         _threshold("Threshold", 1, 0, 1000, &parameters_) {
-    setName("HoughLine");
+    SetName("HoughLine");
   }
 
   virtual ~HoughLine() {}
@@ -57,7 +57,7 @@ class HoughLine : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       if (image.channels() > 1) {
         cv::cvtColor(image, image, CV_BGR2GRAY);

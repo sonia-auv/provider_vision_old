@@ -39,7 +39,7 @@ class Canny : public Filter {
   using Ptr = std::shared_ptr<Canny>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit Canny(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -48,7 +48,7 @@ class Canny : public Filter {
         _thresh_one("thres_one", 100, 0, 255, &parameters_),
         _thresh_two("thres_two", 200, 0, 255, &parameters_),
         _aperture_size("Aperture_size", 3, 0, 20, &parameters_) {
-    setName("Canny");
+    SetName("Canny");
   }
 
   virtual ~Canny() {}
@@ -56,7 +56,7 @@ class Canny : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       if (image.channels() > 1) {
         cv::cvtColor(image, image, CV_BGR2GRAY);

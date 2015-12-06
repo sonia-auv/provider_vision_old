@@ -45,7 +45,7 @@ class ObjectFinder : public Filter {
   using Ptr = std::shared_ptr<ObjectFinder>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit ObjectFinder(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -63,7 +63,7 @@ class ObjectFinder : public Filter {
         _difference_from_target_angle("Diff_from_angle_target", 30.0f, 0.0f,
                                       90.0f, &parameters_),
         _feature_factory(5) {
-    setName("ObjectFinder");
+    SetName("ObjectFinder");
     _feature_factory.SetAllFeatureToCompute();
     // Little goodies for cvs
     // area_rank,length_rank,circularity,convexity,ratio,presence,percent_filled,hueMean,
@@ -74,7 +74,7 @@ class ObjectFinder : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       if (_debug_contour()) {
         image.copyTo(_output_image);
@@ -157,7 +157,7 @@ class ObjectFinder : public Filter {
                          abs(object->GetRotatedRect().angle - 90));
         std::stringstream ss;
         ss << "train:" << target.OutputString();
-        notify_str(ss.str().c_str());
+        NotifyString(ss.str().c_str());
         if (_debug_contour()) {
           cv::circle(_output_image, objVec[0]->GetCenter(), 3,
                      CV_RGB(0, 255, 0), 3);

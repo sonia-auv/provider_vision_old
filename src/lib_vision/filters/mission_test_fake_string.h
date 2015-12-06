@@ -39,13 +39,13 @@ class MissionTestFakeString : public Filter {
   using Ptr = std::shared_ptr<MissionTestFakeString>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit MissionTestFakeString(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
         _enable("Enable", false, &parameters_),
         _string("String_to_return", "test", &parameters_) {
-    setName("MissionTestFakeString");
+    SetName("MissionTestFakeString");
   }
 
   virtual ~MissionTestFakeString() {}
@@ -53,9 +53,9 @@ class MissionTestFakeString : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
-      notify_str(_string());
+      NotifyString(_string());
     }
   }
 

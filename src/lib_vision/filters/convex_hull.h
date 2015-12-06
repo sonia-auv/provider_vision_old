@@ -39,7 +39,7 @@ class ConvexHull : public Filter {
   using Ptr = std::shared_ptr<ConvexHull>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit ConvexHull(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -51,7 +51,7 @@ class ConvexHull : public Filter {
                 "0=CV_CHAIN_APPROX_NONE, 1=CV_CHAIN_APPROX_SIMPLE, "
                 "2=CV_CHAIN_APPROX_TC89_L1, "
                 "3=CV_CHAIN_APPROX_TC89_KCOS") {
-    setName("ConvexHull");
+    SetName("ConvexHull");
   }
 
   virtual ~ConvexHull() {}
@@ -59,7 +59,7 @@ class ConvexHull : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       int mode, method;
       switch (_mode()) {

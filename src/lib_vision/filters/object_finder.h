@@ -44,7 +44,7 @@ class ObjectFinder : public Filter {
   using Ptr = std::shared_ptr<ObjectFinder>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit ObjectFinder(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -74,7 +74,7 @@ class ObjectFinder : public Filter {
         _contour_retreval("Contour_retreval", 0, 0, 4, &parameters_,
                           "0=All, 1=Out, 2=Inner, 3=InnerMost, 4=OutNoChild"),
         _feature_factory(5) {
-    setName("ObjectFinder");
+    SetName("ObjectFinder");
     // Little goodies for cvs
     // area_rank,length_rank,circularity,convexity,ratio,presence,percent_filled,hueMean,
   }
@@ -84,7 +84,7 @@ class ObjectFinder : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       if (_debug_contour()) {
         image.copyTo(_output_image);
@@ -277,7 +277,7 @@ class ObjectFinder : public Filter {
         target.SetSpecField_2(_spec_2());
         std::stringstream ss;
         ss << _id() << target.OutputString();
-        notify_str(ss.str().c_str());
+        NotifyString(ss.str().c_str());
         if (_debug_contour()) {
           cv::circle(_output_image, objVec[0]->GetCenter(), 3,
                      CV_RGB(0, 255, 0), 3);

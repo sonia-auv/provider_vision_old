@@ -47,183 +47,52 @@ class Filter {
   using Ptr = std::shared_ptr<Filter>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
-  // KEEPING A REFERENCE TO GlobalParamHandler. VERY IMPORTANT
-  explicit Filter(const GlobalParamHandler &globalParams)
-      : global_params_(const_cast<GlobalParamHandler &>(globalParams)),
-        // enable_("Enable", false, &parameters_),
-        // Explicit construction not needed here... Just reminder it exist.
-        parameters_() {}
+  explicit Filter(const GlobalParamHandler &globalParams);
 
-  virtual ~Filter() {}
+  virtual ~Filter() = default;
 
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  // Filter MAIN PROCESS
-  virtual void execute(cv::Mat &image) = 0;
-
-  // Filter API
-  // Normally no process, but could want to load a file etc.
-  virtual void destroy() {}
-
-  virtual void init() {}
-
-  // Filter param getter/setter
-  // Cannot return reference as they are constructed
-  // at each call.
-  std::string getParamList() {
-    std::stringstream ss;
-    for (int i = 0; i < int(parameters_.size()); i++) {
-      // Should never append since the vector's object
-      // are added by the said object which are member of
-      // the filter class...
-      if (parameters_[i] != nullptr) {
-        ss << parameters_[i]->toString();
-      }
-    }
-    return ss.str();
-  }
-
-  const std::vector<Parameter *> &GetParameters() const {
-    return parameters_;
-  }
-
-  std::string getParamValue(const std::string &name) {
-    std::string returnString("");
-    for (int i = 0; i < int(parameters_.size()); i++) {
-      // Here we give it a local value to limit the
-      // access to the vector (optimisation)
-      Parameter * param = parameters_[i];
-
-      // nullptr element should never append since the vector's object
-      // are added by the said object (which cannot be null if
-      // it gets to the constructor) and which are member of
-      // the filter class (which mean they are alive as long as the
-      // filter is alive)...
-      if (param != nullptr) {
-        // Is it the param we are searching
-        if (param->getName() == name) {
-          returnString = param->toString();
-        }
-      }
-    }
-    return returnString;
-  }
-
-  void setParamValue(const std::string &name, std::string value) {
-    for (int i = 0; i < int(parameters_.size()); i++) {
-      // Here we give it a local value to limit the
-      // access to the vector (optimisation)
-      Parameter * param = parameters_[i];
-
-      // nullptr element should never append since the vector's object
-      // are added by the said object (which cannot be null if
-      // it gets to the constructor) and which are member of
-      // the filter class (which mean they are alive as long as the
-      // filter is alive)...
-      if (param != nullptr) {
-        // Is it the param we are searching
-        if (param->getName() == name) {
-          // Need to dynamic cast in order to have
-          // access to the function of the specific params type.
-          // Necessary to instanciate them here, because of
-          // error:   crosses initialization of
-          // see:
-          // http://stackoverflow.com/questions/11578936/getting-a-bunch-of-crosses-initialization-error
-          // for more info.
-          BooleanParameter *p_bool = nullptr;
-          IntegerParameter *p_int = nullptr;
-          DoubleParameter *p_double = nullptr;
-          StringParameter *p_str = nullptr;
-          switch (param->getType()) {
-            case Parameter::BOOL:
-              p_bool = dynamic_cast<BooleanParameter *>(param);
-              // Just in case the cast didn't work.
-              if (p_bool == nullptr) {
-                break;
-              }
-              p_bool->setValue(BooleanParameter::FromStringToBool(value));
-              break;
-            case Parameter::INTEGER:
-              p_int = dynamic_cast<IntegerParameter *>(param);
-              // Just in case the cast didn't work.
-              if (p_int == nullptr) {
-                break;
-              }
-              p_int->setValue(atoi(value.c_str()));
-              break;
-            case Parameter::DOUBLE:
-              p_double = dynamic_cast<DoubleParameter *>(param);
-              // Just in case the cast didn't work.
-              if (p_double == nullptr) {
-                break;
-              }
-              p_double->setValue(atof(value.c_str()));
-              break;
-            case Parameter::STRING:
-              p_str = dynamic_cast<StringParameter *>(param);
-              // Just in case the cast didn't work.
-              if (p_str == nullptr) {
-                break;
-              }
-              p_str->setValue(value);
-              break;
-            // Nothing to default.
-            default:
-              break;
-          }
-        }
-      }
-    }
-  }
+  virtual void Execute(cv::Mat &image) = 0;
 
   // Name of the filter handlers
-  inline const std::string getName() { return name_; }
+  inline const std::string GetName();
 
-  inline void setName(const std::string &name) { name_ = name; }
+  inline void SetName(const std::string &name);
+
+  const std::vector<Parameter *> &GetParameters() const;
+
+  std::string GetParameterValue(const std::string &name);
+
+  void SetParameterValue(const std::string &name, std::string value);
 
   // Wrapper for a call to _globalParms
   // NotifyString, to be put on the result topic
-  inline void notify_str(const std::string &_notifyString) {
-    global_params_.setNotifyString(_notifyString);
-  }
+  inline void NotifyString(const std::string &_notifyString);
 
-  inline const std::string get_notify_str() {
-    return global_params_.getNotifyString();
-  }
+  inline const std::string GetNotifyString();
 
-  // Global parameters SeaGoatAPI
-  // Creator.
-  void global_param_int(const std::string &name, const int value, const int min,
-                        const int max) {
-    global_params_.addParam(new IntegerParameter(name, value, max, min, &parameters_));
-  }
+  void GlobalParamInteger(const std::string &name, const int value,
+                          const int min, const int max);
 
-  void global_param_double(const std::string &name, const double value,
-                           const double min, const double max) {
-    global_params_.addParam(new DoubleParameter(name, value, max, min, &parameters_));
-  }
+  void GlobalParamDouble(const std::string &name, const double value,
+                         const double min, const double max);
 
-  void global_param_bool(const std::string &name, const bool value) {
-    global_params_.addParam(new BooleanParameter(name, value, &parameters_));
-  }
+  void GlobalParamBoolean(const std::string &name, const bool value);
 
-  void global_param_string(const std::string &name, const std::string &value) {
-    global_params_.addParam(new StringParameter(name, value, &parameters_));
-  }
+  void GlobalParamString(const std::string &name, const std::string &value);
 
-  void global_param_mat(const std::string &name, cv::Mat &mat) {
-    global_params_.addParam(new MatrixParameter(name, mat, &parameters_));
-  }
+  void GlobalParamMatrix(const std::string &name, cv::Mat &mat);
 
  protected:
-  // KEEPING A REFERENCE. VERY IMPORTANT
-  GlobalParamHandler &global_params_;
-  //  BooleanParameter enable_;
+  //============================================================================
+  // P R O T E C T E D   M E M B E R S
 
-  // vector parameter, so we can list them.
+  GlobalParamHandler &global_params_;
+
   std::vector<Parameter *> parameters_;
 
   // Useful to identify the filter.
@@ -231,5 +100,7 @@ class Filter {
 };
 
 }  // namespace lib_vision
+
+#include <lib_vision/filter_inl.h>
 
 #endif  // LIB_VISION_FILTER_H_

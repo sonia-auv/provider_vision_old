@@ -43,7 +43,7 @@ class SubtractPlaneAdder : public Filter {
   using Ptr = std::shared_ptr<SubtractPlaneAdder>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit SubtractPlaneAdder(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -66,7 +66,7 @@ class SubtractPlaneAdder : public Filter {
         _weight_three("Weight_Plane_3", 1.0, -10.0, 10.0, &parameters_),
         _rows(0),
         _cols(0) {
-    setName("SubtractPlaneAdder");
+    SetName("SubtractPlaneAdder");
   }
 
   virtual ~SubtractPlaneAdder() {}

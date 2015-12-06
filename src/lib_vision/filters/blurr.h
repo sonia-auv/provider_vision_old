@@ -45,7 +45,7 @@ class Blurr : public Filter {
   using Ptr = std::shared_ptr<Blurr>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit Blurr(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -54,7 +54,7 @@ class Blurr : public Filter {
               "1=Blur, 2=GaussianBlur, 3=MedianBlur"),
         _kernel_size("Kernel_size", 1, 0, 35, &parameters_),
         _anchor(-1, -1) {
-    setName("Blurr");
+    SetName("Blurr");
   }
 
   virtual ~Blurr() {}
@@ -62,7 +62,7 @@ class Blurr : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       cv::Size2i kernelSize((int)_kernel_size() * 2 + 1,
                             (int)(_kernel_size() * 2 + 1));

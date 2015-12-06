@@ -39,13 +39,12 @@ class StringParameter : public Parameter {
   using Ptr = std::shared_ptr<StringParameter>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit StringParameter(std::string _name, std::string _value,
                            std::vector<Parameter *> *param_vector,
                            const std::string &description = "")
-      : Parameter(_name, STRING, description, param_vector), value(_value) {
-  }
+      : Parameter(_name, STRING, description, param_vector), value(_value) {}
 
   virtual ~StringParameter() {}
 
@@ -53,21 +52,21 @@ class StringParameter : public Parameter {
   // P U B L I C   M E T H O D S
 
   // Setter
-  void operator=(const std::string &_value) { setValue(_value); }
+  void operator=(const std::string &_value) { SetValue(_value); }
 
-  inline void setValue(const std::string &_value) { value = _value; }
+  inline void SetValue(const std::string &_value) { value = _value; }
 
   // Getter
   inline std::string getValue() const { return value; }
 
   std::string operator()() const { return value; }
 
-  virtual std::string toString() const override {
+  virtual std::string ToString() const override {
     std::stringstream ss;
-    ss << getName() << SEPARATOR << "String" << SEPARATOR << value
+    ss << GetName() << SEPARATOR << "String" << SEPARATOR << value
        << SEPARATOR /*min*/
        << SEPARATOR /*max*/
-       << SEPARATOR << getDescription() << ";";
+       << SEPARATOR << GetDescription() << ";";
     return ss.str();
   }
 

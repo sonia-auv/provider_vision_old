@@ -39,7 +39,7 @@ class AdaptiveThreshold : public Filter {
   using Ptr = std::shared_ptr<AdaptiveThreshold>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit AdaptiveThreshold(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -49,7 +49,7 @@ class AdaptiveThreshold : public Filter {
                         "0=BIN, 1=BIN_INV"),
         _block_size("Size", 1, 1, 40, &parameters_),
         _c_param("C_param", 0.0f, -255.0f, 255.0f, &parameters_) {
-    setName("AdaptiveThreshold");
+    SetName("AdaptiveThreshold");
   }
 
   virtual ~AdaptiveThreshold() {}
@@ -57,7 +57,7 @@ class AdaptiveThreshold : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       if (image.channels() > 1) {
         cv::cvtColor(image, image, CV_BGR2GRAY);

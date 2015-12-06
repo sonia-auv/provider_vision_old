@@ -41,7 +41,7 @@ class ImageAccumulator : public Filter {
   using Ptr = std::shared_ptr<ImageAccumulator>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit ImageAccumulator(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -54,7 +54,7 @@ class ImageAccumulator : public Filter {
         _last_method(CV_8UC1),
         _last_type(0),
         _last_nb_image(3) {
-    setName("ImageAccumulator");
+    SetName("ImageAccumulator");
   }
 
   virtual ~ImageAccumulator() {}
@@ -62,7 +62,7 @@ class ImageAccumulator : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       // Is there any change in the type of images
       // we input to the accumulator?

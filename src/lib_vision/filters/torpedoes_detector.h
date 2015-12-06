@@ -44,7 +44,7 @@ class TorpedoesDetector : public Filter {
   using Ptr = std::shared_ptr<TorpedoesDetector>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit TorpedoesDetector(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -56,7 +56,7 @@ class TorpedoesDetector : public Filter {
         _median("Median multp.", 2.0, 1.0, 100, &parameters_),
         _ratio_max("PCA Ratio max", 2.5, 1.0, 100, &parameters_),
         _ratio_min("PCA Ratio min", 1, 1.0, 100, &parameters_) {
-    setName("TorpedoesDetector");
+    SetName("TorpedoesDetector");
   }
 
   virtual ~TorpedoesDetector() {}
@@ -65,7 +65,7 @@ class TorpedoesDetector : public Filter {
   // P U B L I C   M E T H O D S
   //----------------------------------------------------------------------------
   //
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       if (_debug_contour()) {
         image.copyTo(_output_image);
@@ -224,7 +224,7 @@ class TorpedoesDetector : public Filter {
       for (auto &target : target_vec) {
         message << target.OutputString();
       }
-      notify_str(message.str());
+      NotifyString(message.str());
 
       if (_debug_contour()) {
         cv::cvtColor(image, image, CV_GRAY2BGR);

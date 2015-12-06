@@ -63,7 +63,7 @@ class InRange : public Filter {
         upper_u_("LUVhighU", 255, 0, 255, &parameters_),
         lower_v_("LUVlowV", 0, 0, 255, &parameters_),
         upper_v_("LUVhighV", 255, 0, 255, &parameters_) {
-    setName("InRange");
+    SetName("InRange");
   }
 
   virtual ~InRange() noexcept {}
@@ -78,7 +78,7 @@ class InRange : public Filter {
    *
    * \param image The image to process.
    */
-  void execute(cv::Mat &image) override {
+  void Execute(cv::Mat &image) override {
     if (enable_.getValue()) {
       cv::Mat hsv;
       cv::Mat luv;

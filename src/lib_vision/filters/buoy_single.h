@@ -45,7 +45,7 @@ class BuoySingle : public Filter {
   using Ptr = std::shared_ptr<BuoySingle>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit BuoySingle(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -66,7 +66,7 @@ class BuoySingle : public Filter {
         _admissible_horizontal_angle(
             "horizontal_max_angle", 50, 0, 90, &parameters_,
             "When angle smaller, is consider vertical") {
-    setName("BuoySingle");
+    SetName("BuoySingle");
   }
 
   virtual ~BuoySingle() {}
@@ -74,7 +74,7 @@ class BuoySingle : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       cv::Mat in;
       // -----------------   Setup the debug image
@@ -167,7 +167,7 @@ class BuoySingle : public Filter {
         std::stringstream message;
         buoy.SetTarget(objectVec[0]);
         message << "buoy_" << _color() << ":" << buoy.OutputString();
-        notify_str(message.str());
+        NotifyString(message.str());
 
         if (_debug_good_contour()) {
           objectVec[0]->GetContourCopy().DrawContours(_outputImage,

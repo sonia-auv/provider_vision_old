@@ -39,11 +39,11 @@ class OriginalImage : public Filter {
   using Ptr = std::shared_ptr<OriginalImage>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit OriginalImage(const GlobalParamHandler &globalParams)
       : Filter(globalParams), _enable("Enable", false, &parameters_) {
-    setName("OriginalImage");
+    SetName("OriginalImage");
   }
 
   virtual ~OriginalImage() {}
@@ -51,7 +51,7 @@ class OriginalImage : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       image = global_params_.getOriginalImage();
     }

@@ -39,7 +39,7 @@ class Morphology : public Filter {
   using Ptr = std::shared_ptr<Morphology>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit Morphology(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -51,7 +51,7 @@ class Morphology : public Filter {
         _iteration("Iteration", 1, 1, 20, &parameters_),
         _kernel_size("Kernel_size", 1, 1, 40, &parameters_),
         _anchor(-1, -1) {
-    setName("Morphology");
+    SetName("Morphology");
   }
 
   virtual ~Morphology() {}
@@ -59,7 +59,7 @@ class Morphology : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       if (image.channels() > 1) {
         cv::cvtColor(image, image, CV_BGR2GRAY);

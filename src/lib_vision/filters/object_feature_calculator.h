@@ -44,7 +44,7 @@ class ObjectFeatureCalculator : public Filter {
   using Ptr = std::shared_ptr<ObjectFeatureCalculator>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit ObjectFeatureCalculator(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -59,7 +59,7 @@ class ObjectFeatureCalculator : public Filter {
                        &parameters_),
         _min_area("Min_area", 200, 0, 10000, &parameters_),
         _feature_factory(5) {
-    setName("ObjectFeatureCalculator");
+    SetName("ObjectFeatureCalculator");
     //    _feature_factory.SetAllFeatureToCompute();
     // Little goodies for cvs
     // area_rank,length_rank,circularity,convexity,ratio,presence,percent_filled,hueMean,
@@ -70,7 +70,7 @@ class ObjectFeatureCalculator : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       if (_debug_contour()) {
         image.copyTo(_output_image);

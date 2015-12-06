@@ -42,7 +42,7 @@ class SubtractAllPlanes : public Filter {
   using Ptr = std::shared_ptr<SubtractAllPlanes>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit SubtractAllPlanes(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -64,7 +64,7 @@ class SubtractAllPlanes : public Filter {
         _weight_three("Weight_Plane_3", 1.0, 0.0, 10.0, &parameters_),
         _rows(0),
         _cols(0) {
-    setName("SubtractAllPlanes");
+    SetName("SubtractAllPlanes");
   }
 
   virtual ~SubtractAllPlanes() {}
@@ -72,7 +72,7 @@ class SubtractAllPlanes : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       if (CV_MAT_CN(image.type()) != 3) {
         return;

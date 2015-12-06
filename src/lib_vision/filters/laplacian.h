@@ -39,7 +39,7 @@ class Laplacian : public Filter {
   using Ptr = std::shared_ptr<Laplacian>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit Laplacian(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -48,7 +48,7 @@ class Laplacian : public Filter {
         _delta("Delta", 0, 0, 255, &parameters_),
         _scale("Scale", 1, 0, 255, &parameters_),
         _size("Size", 2, 1, 20, &parameters_) {
-    setName("Laplacian");
+    SetName("Laplacian");
   }
 
   virtual ~Laplacian() {}
@@ -56,7 +56,7 @@ class Laplacian : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       if (image.channels() > 1) {
         cv::cvtColor(image, image, CV_BGR2GRAY);

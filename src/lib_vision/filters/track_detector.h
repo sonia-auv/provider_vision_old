@@ -45,7 +45,7 @@ class TrackDetector : public Filter {
   using Ptr = std::shared_ptr<TrackDetector>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit TrackDetector(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -56,7 +56,7 @@ class TrackDetector : public Filter {
         _difference_from_target_ratio("Diff_from_ratio_target", 0.10f, 0.0f,
                                       1.0f, &parameters_),
         _feat_factory(3) {
-    setName("TrackDetector");
+    SetName("TrackDetector");
   }
 
   virtual ~TrackDetector() {}
@@ -64,7 +64,7 @@ class TrackDetector : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       if (_debug_contour()) {
         image.copyTo(_output_image);
@@ -162,7 +162,7 @@ class TrackDetector : public Filter {
                          object->GetLength(), object->GetRotatedRect().angle);
         std::stringstream ss;
         ss << "track:" << target.OutputString();
-        notify_str(ss.str().c_str());
+        NotifyString(ss.str().c_str());
         if (_debug_contour()) {
           cv::circle(_output_image, objVec[0]->GetCenter(), 3,
                      CV_RGB(0, 255, 0), 3);

@@ -39,7 +39,7 @@ class Erode : public Filter {
   using Ptr = std::shared_ptr<Erode>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit Erode(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -50,7 +50,7 @@ class Erode : public Filter {
         _kernel_size_y("Height", 1, 0, 20, &parameters_),
         _iteration("Iteration", 1, 0, 20, &parameters_),
         _anchor(-1, -1) {
-    setName("Erode");
+    SetName("Erode");
   }
 
   virtual ~Erode() {}
@@ -58,7 +58,7 @@ class Erode : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       int kernel_type = 0;
       switch (_kernel_type()) {

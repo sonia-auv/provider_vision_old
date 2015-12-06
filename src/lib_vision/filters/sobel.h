@@ -39,7 +39,7 @@ class Sobel : public Filter {
   using Ptr = std::shared_ptr<Sobel>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit Sobel(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -52,7 +52,7 @@ class Sobel : public Filter {
         _power_pixel_correction("pixel_correction_power", 1, -10, 10,
                                 &parameters_),
         _size("Size", 2, 1, 20, &parameters_) {
-    setName("Sobel");
+    SetName("Sobel");
   }
 
   virtual ~Sobel() {}
@@ -60,7 +60,7 @@ class Sobel : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       if (image.channels() > 1) {
         cv::cvtColor(image, image, CV_BGR2GRAY);

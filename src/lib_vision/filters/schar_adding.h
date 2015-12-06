@@ -40,7 +40,7 @@ class ScharrAdding : public Filter {
   using Ptr = std::shared_ptr<ScharrAdding>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit ScharrAdding(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -58,7 +58,7 @@ class ScharrAdding : public Filter {
         _plane_saturation("Saturation", false, &parameters_),
         _plane_intensity("Intensity", false, &parameters_),
         _plane_gray("Gray", false, &parameters_) {
-    setName("ScharrAdding");
+    SetName("ScharrAdding");
   }
 
   virtual ~ScharrAdding() {}
@@ -66,7 +66,7 @@ class ScharrAdding : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       if (image.channels() != 3) return;
       if (_run_small_image()) {

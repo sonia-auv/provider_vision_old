@@ -39,7 +39,7 @@ class Threshold : public Filter {
   using Ptr = std::shared_ptr<Threshold>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit Threshold(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -47,7 +47,7 @@ class Threshold : public Filter {
         _type("Threshold_type", 1, 0, 5, &parameters_,
               "0=BIN, 1=BIN_INV, 2=TRUNC, 3=TOZERO, 4=TOZERO_INV 5=OTSU"),
         _max("Max_value", 100, 0, 255, &parameters_) {
-    setName("Threshold");
+    SetName("Threshold");
   }
 
   virtual ~Threshold() {}
@@ -55,7 +55,7 @@ class Threshold : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       if (image.channels() > 1) {
         cv::cvtColor(image, image, CV_BGR2GRAY);

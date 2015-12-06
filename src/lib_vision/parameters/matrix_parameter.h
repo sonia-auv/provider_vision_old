@@ -42,7 +42,7 @@ class MatrixParameter : public Parameter {
   using Ptr = std::shared_ptr<MatrixParameter>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit MatrixParameter(const std::string &name, cv::Mat &mat,
                            std::vector<Parameter *> *param_vector)
@@ -61,10 +61,10 @@ class MatrixParameter : public Parameter {
 
   virtual std::string GetStringValue() const override { return ""; }
 
-  virtual std::string toString() const override {
+  virtual std::string ToString() const override {
     std::stringstream ss;
-    ss << "Matrix" << SEPARATOR << getName() << SEPARATOR << value.size
-       << SEPARATOR << getDescription() << ";";
+    ss << "Matrix" << SEPARATOR << GetName() << SEPARATOR << value.size
+       << SEPARATOR << GetDescription() << ";";
     return ss.str();
   }
 

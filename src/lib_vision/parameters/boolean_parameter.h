@@ -39,13 +39,12 @@ class BooleanParameter : public Parameter {
   using Ptr = std::shared_ptr<BooleanParameter>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit BooleanParameter(const std::string &_name, const bool _value,
                             std::vector<Parameter *> *param_vector,
                             const std::string &description = "")
-      : Parameter(_name, BOOL, description, param_vector), value(_value) {
-  }
+      : Parameter(_name, BOOL, description, param_vector), value(_value) {}
 
   virtual ~BooleanParameter() {}
 
@@ -86,12 +85,12 @@ class BooleanParameter : public Parameter {
     return std::to_string(value);
   }
 
-  virtual std::string toString() const override {
+  virtual std::string ToString() const override {
     std::stringstream ss;
-    ss << getName() << SEPARATOR << "Boolean" << SEPARATOR
+    ss << GetName() << SEPARATOR << "Boolean" << SEPARATOR
        << FromBoolToString(value) << SEPARATOR /*min*/
        << SEPARATOR                            /*max*/
-       << SEPARATOR << getDescription() << ";";
+       << SEPARATOR << GetDescription() << ";";
     return ss.str();
   }
 

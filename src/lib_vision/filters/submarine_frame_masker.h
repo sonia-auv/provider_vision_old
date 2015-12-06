@@ -39,7 +39,7 @@ class SubmarineFrameMasker : public Filter {
   using Ptr = std::shared_ptr<SubmarineFrameMasker>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit SubmarineFrameMasker(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -47,7 +47,7 @@ class SubmarineFrameMasker : public Filter {
         _rotate_type("Rotation_type", 0, 0, 3, &parameters_,
                      "Rotate type: 0=NONE, 1=x axis, 2=y axis, 3=all axis"),
         _prev_rot_value(0) {
-    setName("SubmarineFrameMasker");
+    SetName("SubmarineFrameMasker");
     std::string mask_name =
         std::string(getenv("SONIA_WORKSPACE_ROOT")) +
         std::string("/ros/src/vision_server/config/bottom_mask.jpg");
@@ -59,7 +59,7 @@ class SubmarineFrameMasker : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       if (_prev_rot_value != _rotate_type()) {
         _prev_rot_value = _rotate_type();

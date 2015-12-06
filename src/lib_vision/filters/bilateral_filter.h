@@ -51,7 +51,7 @@ class BilateralFilter : public Filter {
         diameter_("Diameter", -100, 0, 100, &parameters_),
         sigma_color_("Sigm_color", 0, 0, 300, &parameters_),
         sigma_space_("Sigma_space", 0, 0, 300, &parameters_) {
-    setName("BilateralFilter");
+    SetName("BilateralFilter");
   }
 
   virtual ~BilateralFilter() noexcept {}
@@ -66,7 +66,7 @@ class BilateralFilter : public Filter {
    *
    * \param image The image to process.
    */
-  void execute(cv::Mat &image) override {
+  void Execute(cv::Mat &image) override {
     if (enable_()) {
       cv::Mat blurred;
       cv::bilateralFilter(image, blurred, diameter_.getValue(),

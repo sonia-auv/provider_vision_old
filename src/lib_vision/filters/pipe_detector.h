@@ -43,7 +43,7 @@ class PipeDetector : public Filter {
   using Ptr = std::shared_ptr<PipeDetector>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit PipeDetector(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -51,7 +51,7 @@ class PipeDetector : public Filter {
         _debug_contour("Debug_contour", false, &parameters_),
         _look_for_rectangle("Look_for_Rectangle", false, &parameters_),
         _min_area("Min_area", 200, 0, 10000, &parameters_) {
-    setName("PipeDetector");
+    SetName("PipeDetector");
   }
 
   virtual ~PipeDetector() {}
@@ -59,7 +59,7 @@ class PipeDetector : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       if (_debug_contour()) {
         image.copyTo(_output_image);
@@ -120,7 +120,7 @@ class PipeDetector : public Filter {
                          object->GetLength(), object->GetRotatedRect().angle);
         std::stringstream ss;
         ss << "pipe:" << target.OutputString();
-        notify_str(ss.str().c_str());
+        NotifyString(ss.str().c_str());
         if (_debug_contour()) {
           cv::circle(_output_image, objVec[0]->GetCenter(), 3,
                      CV_RGB(0, 255, 0), 3);

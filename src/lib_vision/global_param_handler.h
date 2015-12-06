@@ -46,7 +46,7 @@ class GlobalParamHandler {
   using Ptr = std::shared_ptr<GlobalParamHandler>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit GlobalParamHandler()
       : _notify_string(std::string()), _params_vec(), _original_image() {}
@@ -86,7 +86,7 @@ class GlobalParamHandler {
   }
 
   // Params
-  inline void addParam(Parameter * param) { _params_vec.push_back(param); }
+  inline void addParam(Parameter *param) { _params_vec.push_back(param); }
 
   void removeParam(const std::string &name) {
     // Using iterator as it is simpler to erase.
@@ -94,17 +94,17 @@ class GlobalParamHandler {
     std::vector<Parameter *>::const_iterator end = _params_vec.end();
     bool deleted = false;
     for (; index != end && !deleted; index++) {
-      if ((*index)->getName() == name) {
+      if ((*index)->GetName() == name) {
         _params_vec.erase(index);
         deleted = true;
       }
     }
   }
 
-  inline Parameter * getParam(const std::string &name) const {
+  inline Parameter *getParam(const std::string &name) const {
     // Using [] accessor for optimisation.
     for (size_t i = 0, size = _params_vec.size(); i < size; i++) {
-      if (_params_vec[i]->getName() == name) {
+      if (_params_vec[i]->GetName() == name) {
         return _params_vec[i];
       }
     }

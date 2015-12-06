@@ -39,7 +39,7 @@ class IntegerParameter : public Parameter {
   using Ptr = std::shared_ptr<IntegerParameter>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit IntegerParameter(const std::string &_name, const int _value,
                             const int _min, const int _max,
@@ -48,8 +48,7 @@ class IntegerParameter : public Parameter {
       : Parameter(_name, INTEGER, description, param_vector),
         value(_value),
         min(_min),
-        max(_max) {
-  }
+        max(_max) {}
 
   virtual ~IntegerParameter() {}
 
@@ -57,8 +56,8 @@ class IntegerParameter : public Parameter {
   // P U B L I C   M E T H O D S
   // Boolean
   template <class TYPE>
-  bool operator>(const TYPE _value) {
-    return double(_value) > value;
+  bool operator>(const Tp_ &rhs) {
+    return _value > rhs;
   }
 
   template <class TYPE>
@@ -151,10 +150,10 @@ class IntegerParameter : public Parameter {
     return std::to_string(value);
   }
 
-  virtual std::string toString() const override {
+  virtual std::string ToString() const override {
     std::stringstream ss;
-    ss << getName() << SEPARATOR << "Integer" << SEPARATOR << value << SEPARATOR
-       << min << SEPARATOR << max << SEPARATOR << getDescription() << ";";
+    ss << GetName() << SEPARATOR << "Integer" << SEPARATOR << value << SEPARATOR
+       << min << SEPARATOR << max << SEPARATOR << GetDescription() << ";";
     return ss.str();
   }
 

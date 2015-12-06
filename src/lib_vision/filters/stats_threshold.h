@@ -39,7 +39,7 @@ class StatsThreshold : public Filter {
   using Ptr = std::shared_ptr<StatsThreshold>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit StatsThreshold(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -48,7 +48,7 @@ class StatsThreshold : public Filter {
         _mean_multiplier("Mean_multiplier", 1, -10, 10, &parameters_),
         _std_dev_multiplier("Standard_deviation_multiplier", 1, -10, 10,
                             &parameters_) {
-    setName("StatsThreshold");
+    SetName("StatsThreshold");
   }
 
   virtual ~StatsThreshold() {}
@@ -56,7 +56,7 @@ class StatsThreshold : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       if (image.channels() > 1) {
         cv::cvtColor(image, image, CV_BGR2GRAY);

@@ -43,7 +43,7 @@ class HandleDetector : public Filter {
   using Ptr = std::shared_ptr<HandleDetector>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit HandleDetector(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -63,7 +63,7 @@ class HandleDetector : public Filter {
         _difference_from_target_angle("Diff_from_angle_target", 30.0f, 0.0f,
                                       90.0f, &parameters_),
         _feature_factory(5) {
-    setName("HandleDetector");
+    SetName("HandleDetector");
     // Little goodies for cvs
     // area_rank,length_rank,circularity,convexity,ratio,presence,percent_filled,hueMean,
   }
@@ -73,7 +73,7 @@ class HandleDetector : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       if (_debug_contour()) {
         image.copyTo(_output_image);
@@ -158,7 +158,7 @@ class HandleDetector : public Filter {
         target.SetSpecField_2(_spec_2());
         std::stringstream ss;
         ss << _id() << target.OutputString();
-        notify_str(ss.str().c_str());
+        NotifyString(ss.str().c_str());
         if (_debug_contour()) {
           cv::circle(_output_image, objVec[0]->GetCenter(), 3,
                      CV_RGB(0, 255, 0), 3);

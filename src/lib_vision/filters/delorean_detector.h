@@ -43,7 +43,7 @@ class DeloreanDetector : public Filter {
   using Ptr = std::shared_ptr<DeloreanDetector>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit DeloreanDetector(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -57,7 +57,7 @@ class DeloreanDetector : public Filter {
         _difference_from_target_ratio("Diff_from_ratio_target", 0.10f, 0.0f,
                                       1.0f, &parameters_),
         _feat_factory(3) {
-    setName("DeloreanDetector");
+    SetName("DeloreanDetector");
   }
 
   virtual ~DeloreanDetector() {}
@@ -65,7 +65,7 @@ class DeloreanDetector : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       if (image.channels() != 1) {
         cv::cvtColor(image, image, CV_BGR2GRAY);
@@ -179,7 +179,7 @@ class DeloreanDetector : public Filter {
         } else {
           ss << "delorean:" << target.OutputString();
         }
-        notify_str(ss.str().c_str());
+        NotifyString(ss.str().c_str());
         if (_debug_contour()) {
           cv::circle(_output_image, objVec_big[0]->GetCenter(), 3,
                      CV_RGB(0, 255, 0), 3);

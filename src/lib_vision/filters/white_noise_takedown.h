@@ -39,7 +39,7 @@ class WhiteNoiseTakedown : public Filter {
   using Ptr = std::shared_ptr<WhiteNoiseTakedown>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit WhiteNoiseTakedown(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -52,7 +52,7 @@ class WhiteNoiseTakedown : public Filter {
         _highR("HighR", 0, 0, 255, &parameters_),
         _view_channel("Channel_view", 0, 0, 3, &parameters_,
                       "0=ALL, 1=Blue, 2=Green, 3=Red") {
-    setName("WhiteNoiseTakedown");
+    SetName("WhiteNoiseTakedown");
   }
 
   virtual ~WhiteNoiseTakedown() {}
@@ -60,7 +60,7 @@ class WhiteNoiseTakedown : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       std::vector<cv::Mat> channels;
       cv::Mat original_image(global_params_.getOriginalImage());

@@ -1,0 +1,205 @@
+/**
+ * \file	filter_inl.h
+ * \author	Thibaut Mattio <thibaut.mattio@gmail.com>
+ * \date	28/06/2015
+ *
+ * \copyright Copyright (c) 2015 S.O.N.I.A. All rights reserved.
+ *
+ * \section LICENSE
+ *
+ * This file is part of S.O.N.I.A. software.
+ *
+ * S.O.N.I.A. software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * S.O.N.I.A. software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#ifndef LIB_VISION_FILTER_H_
+#error This file may only be included from filter.h
+#endif
+
+#include <lib_atlas/macros.h>
+
+namespace lib_vision {
+
+//==============================================================================
+// C / D T O R   S E C T I O N
+
+//------------------------------------------------------------------------------
+//
+ATLAS_INLINE Filter::Filter(const GlobalParamHandler &globalParams)
+    : global_params_(const_cast<GlobalParamHandler &>(globalParams)),
+      // enable_("Enable", false, &parameters_),
+      // Explicit construction not needed here... Just reminder it exist.
+      parameters_() {}
+
+//------------------------------------------------------------------------------
+//
+ATLAS_INLINE const std::vector<Parameter *> &Filter::GetParameters() const {
+  return parameters_;
+}
+
+//------------------------------------------------------------------------------
+//
+ATLAS_INLINE std::string Filter::GetParameterValue(const std::string &name) {
+  std::string returnString("");
+  for (int i = 0; i < int(parameters_.size()); i++) {
+    // Here we give it a local value to limit the
+    // access to the vector (optimisation)
+    Parameter *param = parameters_[i];
+
+    // nullptr element should never append since the vector's object
+    // are added by the said object (which cannot be null if
+    // it gets to the constructor) and which are member of
+    // the filter class (which mean they are alive as long as the
+    // filter is alive)...
+    if (param != nullptr) {
+      // Is it the param we are searching
+      if (param->getName() == name) {
+        returnString = param->toString();
+      }
+    }
+  }
+  return returnString;
+}
+
+//------------------------------------------------------------------------------
+//
+ATLAS_INLINE void Filter::SetParameterValue(const std::string &name,
+                                            std::string value) {
+  for (int i = 0; i < int(parameters_.size()); i++) {
+    // Here we give it a local value to limit the
+    // access to the vector (optimisation)
+    Parameter *param = parameters_[i];
+
+    // nullptr element should never append since the vector's object
+    // are added by the said object (which cannot be null if
+    // it gets to the constructor) and which are member of
+    // the filter class (which mean they are alive as long as the
+    // filter is alive)...
+    if (param != nullptr) {
+      // Is it the param we are searching
+      if (param->getName() == name) {
+        // Need to dynamic cast in order to have
+        // access to the function of the specific params type.
+        // Necessary to instanciate them here, because of
+        // error:   crosses initialization of
+        // see:
+        // http://stackoverflow.com/questions/11578936/getting-a-bunch-of-crosses-initialization-error
+        // for more info.
+        BooleanParameter *p_bool = nullptr;
+        IntegerParameter *p_int = nullptr;
+        DoubleParameter *p_double = nullptr;
+        StringParameter *p_str = nullptr;
+        switch (param->getType()) {
+          case Parameter::BOOL:
+            p_bool = dynamic_cast<BooleanParameter *>(param);
+            // Just in case the cast didn't work.
+            if (p_bool == nullptr) {
+              break;
+            }
+            p_bool->setValue(BooleanParameter::FromStringToBool(value));
+            break;
+          case Parameter::INTEGER:
+            p_int = dynamic_cast<IntegerParameter *>(param);
+            // Just in case the cast didn't work.
+            if (p_int == nullptr) {
+              break;
+            }
+            p_int->setValue(atoi(value.c_str()));
+            break;
+          case Parameter::DOUBLE:
+            p_double = dynamic_cast<DoubleParameter *>(param);
+            // Just in case the cast didn't work.
+            if (p_double == nullptr) {
+              break;
+            }
+            p_double->setValue(atof(value.c_str()));
+            break;
+          case Parameter::STRING:
+            p_str = dynamic_cast<StringParameter *>(param);
+            // Just in case the cast didn't work.
+            if (p_str == nullptr) {
+              break;
+            }
+            p_str->setValue(value);
+            break;
+          // Nothing to default.
+          default:
+            break;
+        }
+      }
+    }
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+ATLAS_INLINE const std::string Filter::GetName() { return name_; }
+
+//------------------------------------------------------------------------------
+//
+ATLAS_INLINE void Filter::SetName(const std::string &name) { name_ = name; }
+
+//------------------------------------------------------------------------------
+//
+ATLAS_INLINE void Filter::NotifyString(const std::string &_notifyString) {
+  global_params_.setNotifyString(_notifyString);
+}
+
+//------------------------------------------------------------------------------
+//
+ATLAS_INLINE const std::string Filter::GetNotifyString() {
+  return global_params_.getNotifyString();
+}
+
+//------------------------------------------------------------------------------
+//
+ATLAS_INLINE void Filter::GlobalParamInteger(const std::string &name,
+                                             const int value, const int min,
+                                             const int max) {
+  global_params_.addParam(
+      new IntegerParameter(name, value, max, min, &parameters_));
+}
+
+//------------------------------------------------------------------------------
+//
+ATLAS_INLINE void Filter::GlobalParamDouble(const std::string &name,
+                                            const double value,
+                                            const double min,
+                                            const double max) {
+  global_params_.addParam(
+      new DoubleParameter(name, value, max, min, &parameters_));
+}
+
+//------------------------------------------------------------------------------
+//
+ATLAS_INLINE void Filter::GlobalParamBoolean(const std::string &name,
+                                             const bool value) {
+  global_params_.addParam(new BooleanParameter(name, value, &parameters_));
+}
+
+//------------------------------------------------------------------------------
+//
+ATLAS_INLINE void Filter::GlobalParamString(const std::string &name,
+                                            const std::string &value) {
+  global_params_.addParam(new StringParameter(name, value, &parameters_));
+}
+
+//------------------------------------------------------------------------------
+//
+ATLAS_INLINE void Filter::GlobalParamMatrix(const std::string &name,
+                                            cv::Mat &mat) {
+  global_params_.addParam(new MatrixParameter(name, mat, &parameters_));
+}
+
+}  // namespace lib_vision

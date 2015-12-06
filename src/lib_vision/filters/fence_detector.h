@@ -43,7 +43,7 @@ class FenceDetector : public Filter {
   using Ptr = std::shared_ptr<FenceDetector>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit FenceDetector(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -61,9 +61,10 @@ class FenceDetector : public Filter {
         _max_diff_from_0_tbca_vertical(
             "Max_diff_vertical", 20, 0, 90, &parameters_,
             "Maximum difference from 0 to be consider as vertical"),
-        _min_percent_filled("Minimum_percent_filled", 70, 0, 1000, &parameters_),
+        _min_percent_filled("Minimum_percent_filled", 70, 0, 1000,
+                            &parameters_),
         _feat_factory(3) {
-    setName("FenceDetector");
+    SetName("FenceDetector");
   }
 
   virtual ~FenceDetector() {}
@@ -71,7 +72,7 @@ class FenceDetector : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (!_enable()) {
       return;
     }
@@ -264,7 +265,7 @@ class FenceDetector : public Filter {
 
       std::stringstream message;
       message << "fence_big:" << fence.OutputString();
-      notify_str(message.str());
+      NotifyString(message.str());
     }
     if (_debug_contour()) {
       _output_image.copyTo(image);

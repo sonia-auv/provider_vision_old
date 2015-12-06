@@ -39,7 +39,7 @@ class TestFilter : public Filter {
   using Ptr = std::shared_ptr<TestFilter>;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   C / D T O R S
 
   explicit TestFilter(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
@@ -48,7 +48,7 @@ class TestFilter : public Filter {
         _bool("test_bool", false, &parameters_),
         _str("Test_string", "teststring", &parameters_),
         _double("test_double", 2.0f, 1, 3, &parameters_) {
-    setName("TestFilter");
+    SetName("TestFilter");
   }
 
   virtual ~TestFilter() {}
@@ -58,39 +58,39 @@ class TestFilter : public Filter {
 
   virtual void init() {
     // Testing creation of global param
-    global_param_int("test_int", 3, 1, 10);
-    global_param_bool("test_bool", false);
-    global_param_double("test_double", 2.0f, 0.0f, 15.0f);
-    global_param_string("test_string", "string");
+    GlobalParamInteger("test_int", 3, 1, 10);
+    GlobalParamBoolean("test_bool", false);
+    GlobalParamDouble("test_double", 2.0f, 0.0f, 15.0f);
+    GlobalParamString("test_string", "string");
     // global_param_mat("testmat", cv::Mat::zeros(100,100,CV_8UC1));
   }
 
-  virtual void execute(cv::Mat &image) {
+  virtual void Execute(cv::Mat &image) {
     if (_enable()) {
       cv::Mat imageOriginal = global_params_.getOriginalImage();
       imageOriginal = cv::Mat::zeros(1, 1, CV_8UC1);
-      IntegerParameter * int_test(dynamic_cast<IntegerParameter *>(
+      IntegerParameter *int_test(dynamic_cast<IntegerParameter *>(
           global_params_.getParam("test_int")));
       if (int_test != nullptr) {
-        notify_str("IntegerParameter OK");
+        NotifyString("IntegerParameter OK");
       }
 
-      BooleanParameter * bool_test(dynamic_cast<BooleanParameter *>(
+      BooleanParameter *bool_test(dynamic_cast<BooleanParameter *>(
           global_params_.getParam("test_bool")));
       if (bool_test != nullptr) {
-        notify_str("Bool OK");
+        NotifyString("Bool OK");
       }
 
-      DoubleParameter * double_test(dynamic_cast<DoubleParameter *>(
+      DoubleParameter *double_test(dynamic_cast<DoubleParameter *>(
           global_params_.getParam("test double")));
       if (double_test != nullptr) {
-        notify_str("DoubleParameter OK");
+        NotifyString("DoubleParameter OK");
       }
 
-      StringParameter * string_test(dynamic_cast<StringParameter *>(
+      StringParameter *string_test(dynamic_cast<StringParameter *>(
           global_params_.getParam("test_string")));
       if (string_test != nullptr) {
-        notify_str("String OK");
+        NotifyString("String OK");
       }
       image = global_params_.getOriginalImage();
     }
