@@ -57,18 +57,6 @@ class Filterchain : public Serializable {
 
   bool Deserialize() override;
 
-  /**
-   * For all the filters in the list of filters. This will call the init method
-   * in order to set the filter up.
-   */
-  void InitFilters();
-
-  /**
-   * For all the filters in the list of the filters, This will call the destroy
-   * method in order to shut the filter down.
-   */
-  void CloseFilters();
-
   lib_vision::Filter::Ptr GetFilter(const size_t &index) const;
 
   std::vector<lib_vision::Filter::Ptr> GetFiltersWithName(
@@ -103,7 +91,7 @@ class Filterchain : public Serializable {
                                const std::string &param_name,
                                const std::string &param_value);
 
-  std::vector<lib_vision::Parameter *> GetFilterAllParameters(
+  std::vector<lib_vision::ParameterInterface *> GetFilterAllParameters(
       const size_t &index);
 
   lib_vision::GlobalParamHandler::Ptr GetParameterHandler();
@@ -126,26 +114,6 @@ class Filterchain : public Serializable {
 
 //------------------------------------------------------------------------------
 //
-inline void Filterchain::InitFilters() {
-  for (auto &filter : filters_) {
-    if (filter != nullptr) {
-      filter->init();
-    }
-  }
-}
-
-//------------------------------------------------------------------------------
-//
-inline void Filterchain::CloseFilters() {
-  for (auto &filter : filters_) {
-    if (filter != nullptr) {
-      filter->destroy();
-    }
-  }
-}
-
-//------------------------------------------------------------------------------
-//
 inline lib_vision::Filter::Ptr Filterchain::GetFilter(
     const size_t &index) const {
   return filters_.at(index);
@@ -157,7 +125,7 @@ inline std::vector<lib_vision::Filter::Ptr> Filterchain::GetFiltersWithName(
     const std::string &filter_name) const {
   std::vector<lib_vision::Filter::Ptr> filters;
   for (const auto &filter : filters_) {
-    if (filter->getName() == filter_name) {
+    if (filter->GetName() == filter_name) {
       filters.push_back(filter);
     }
   }
@@ -174,7 +142,7 @@ inline std::vector<lib_vision::Filter::Ptr> Filterchain::GetAllFilters() const {
 //
 inline bool Filterchain::ContainsFilter(const std::string &filter_name) const {
   for (const auto &filter : filters_) {
-    if (filter->getName() == filter_name) {
+    if (filter->GetName() == filter_name) {
       return true;
     }
   }

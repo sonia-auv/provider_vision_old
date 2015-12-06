@@ -60,8 +60,6 @@ void DetectionTask::StartDetectionTask() {
   if (IsRunning()) {
     throw std::logic_error("This detection task is already running.");
   }
-  // Attach to the acquisition loop to receive notification from a new image.
-  filterchain_->InitFilters();
   Start();
   image_publisher_.Start();
   media_streamer_->Attach(*this);
@@ -78,7 +76,6 @@ void DetectionTask::StopDetectionTask() {
   media_streamer_->Detach(*this);
   image_publisher_.Stop();
   Stop();
-  filterchain_->CloseFilters();
 }
 
 //------------------------------------------------------------------------------

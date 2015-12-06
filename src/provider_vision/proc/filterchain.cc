@@ -55,10 +55,10 @@ bool Filterchain::Serialize() {
     auto node_name = std::string{"Filter"};
     auto filter_node = node.append_child(node_name.c_str());
     auto filter_attr = filter_node.append_attribute("name");
-    filter_attr.set_value(filter->getName().c_str());
+    filter_attr.set_value(filter->GetName().c_str());
     for (const auto parameter : filter->GetParameters()) {
       auto parameter_node =
-          filter_node.append_child(parameter->getName().c_str());
+          filter_node.append_child(parameter->GetName().c_str());
       auto param_attr = parameter_node.append_attribute("value");
       param_attr.set_value(parameter->GetStringValue().c_str());
     }
@@ -114,7 +114,7 @@ std::string Filterchain::ExecuteFilterChain(cv::Mat &image) {
       int index = 0;
       for (; it != filters_.end(); ++it) {
         if (!imageToProcess.empty()) {
-          (*it)->execute(imageToProcess);
+          (*it)->Execute(imageToProcess);
         }
 
         if (index == observer_index_) {
@@ -181,7 +181,7 @@ void Filterchain::MoveFilterUp(const size_t &index) {
 //
 std::string Filterchain::GetFilterParameterValue(
     const size_t &index, const std::string &param_name) {
-  return GetFilter(index)->getParamValue(param_name);
+  return GetFilter(index)->GetParameterValue(param_name);
 }
 
 //------------------------------------------------------------------------------
@@ -189,12 +189,12 @@ std::string Filterchain::GetFilterParameterValue(
 void Filterchain::SetFilterParameterValue(const size_t &index,
                                           const std::string &param_name,
                                           const std::string &param_value) {
-  GetFilter(index)->setParamValue(param_name, param_value);
+  GetFilter(index)->SetParameterValue(param_name, param_value);
 }
 
 //------------------------------------------------------------------------------
 //
-std::vector<lib_vision::Parameter *> Filterchain::GetFilterAllParameters(
+std::vector<lib_vision::ParameterInterface *> Filterchain::GetFilterAllParameters(
     const size_t &index) {
   return GetFilter(index)->GetParameters();
 }

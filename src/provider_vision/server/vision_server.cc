@@ -230,7 +230,7 @@ bool VisionServer::CallbackGetFilterAllParam(
     auto parameters = filterchain->GetFilterAllParameters(ExtractFilterIndexFromUIName(rqst.filter));
     std::vector<std::string> parameter_names;
     for (const auto &parameter : parameters) {
-      parameter_names.push_back(parameter->toString());
+      parameter_names.push_back(parameter->ToString());
     }
     rep.list = BuildRosMessage(parameter_names);
     return true;
@@ -282,7 +282,7 @@ bool VisionServer::CallbackGetFilter(get_filterchain_filter::Request &rqst,
     auto filters = filterchain->GetAllFilters();
     std::vector<std::string> filter_names;
     for(int i = 0; i < filters.size(); ++i) {
-      filter_names.push_back(ConstructFilterUIName(filters.at(i)->getName(), i));
+      filter_names.push_back(ConstructFilterUIName(filters.at(i)->GetName(), i));
     }
     rep.list = BuildRosMessage(filter_names);
     return true;
