@@ -32,62 +32,140 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <lib_atlas/macros.h>
 
 namespace lib_vision {
 
+template <typename Tp_>
 class Parameter {
  public:
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
 
-  using Ptr = std::shared_ptr<Parameter>;
+  using Ptr = std::shared_ptr<Parameter<Tp_>>;
 
   static const char SEPARATOR = '|';
 
-  enum TYPE { BOOL, INTEGER, DOUBLE, STRING, MATRIX, NONE };
+  //============================================================================
+  // P U B L I C   C / D T O R S
+
+  explicit Parameter(const std::string &name, const std::string &description,
+                     std::vector<Parameter *> *vector = nullptr);
+
+  virtual ~Parameter() ATLAS_NOEXCEPT = default;
 
   //============================================================================
-  // C O N S T R U C T O R S   A N D   D E S T R U C T O R
+  // P U B L I C   O P E R A T O R S
 
-  explicit Parameter(const std::string &name, const TYPE type,
-                     const std::string &description, std::vector<Parameter *> *vector = nullptr)
-      : name(name), description(description), type(type) {
-    if (vector != nullptr) {
-      vector->push_back(this);
-    }
+  template <class Ut_>
+  bool operator>(const Ut_ &rhs) {
+    return value_ > rhs;
   }
 
-  virtual ~Parameter() {}
+  template <class Ut_>
+  bool operator<(const Ut_ &rhs) {
+    return value_ < rhs;
+  }
+
+  template <class Ut_>
+  bool operator==(const Ut_ &rhs) {
+    return rhs == value_;
+  }
+
+  template <class Ut_>
+  bool operator!=(const Ut_ &rhs) {
+    return rhs != value_;
+  }
+
+  template <class Ut_>
+  void operator+=(const Ut_ &rhs) {
+    value_ += rhs;
+  }
+
+  template <class Ut_>
+  void operator++() {
+    value_++;
+  }
+
+  template <class Ut_>
+  void operator-=(const Ut_ &rhs) {
+    value_ -= rhs;
+  }
+
+  template <class Ut_>
+  void operator--() {
+    value_--;
+  }
+
+  template <class Ut_>
+  void operator*=(const Ut_ &rhs) {
+    value_ *= rhs;
+  }
+
+  template <class Ut_>
+  void operator/=(const Ut_ &rhs) {
+    value_ /= rhs;
+  }
+
+  template <class Ut_>
+  int operator+(const Ut_ &rhs) {
+    return value_ + rhs;
+  }
+
+  template <class Ut_>
+  int operator-(const Ut_ &rhs) {
+    return value_ - rhs;
+  }
+
+  template <class Ut_>
+  int operator*(const Ut_ &rhs) {
+    return value_ * rhs;
+  }
+
+  template <class Ut_>
+  int operator/(const Ut_ &rhs) {
+    return value_ / rhs;
+  }
+
+  template <class Ut_>
+  void operator=(const Ut_ &rhs) {
+    SetValue(rhs);
+  }
 
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  inline void setDescription(const std::string &_description) {
-    description = _description;
-  }
+  inline void SetDescription(const std::string &description);
 
-  inline std::string getDescription() const { return description; }
+  inline std::string GetDescription() const;
 
-  inline void setName(const std::string &_name) { name = _name; }
+  inline void SetName(const std::string &name);
 
-  inline void setType(const TYPE &_type) { type = _type; }
+  inline std::string GetName() const;
 
-  inline std::string getName() const { return name; }
+  virtual std::string ToString() const;
 
-  inline TYPE getType() const { return type; }
+  inline void SetValue(const Tp_ &value);
 
-  virtual std::string toString() const { return "Param,,,;"; }
+  inline const Tp_ &GetValue() const;
 
-  virtual std::string GetStringValue() const = 0;
+  inline std::string GetType() const;
+
+  virtual std::string GetStringValue() const;
 
  protected:
-  std::string name;
+  //============================================================================
+  // P R O T E C T E D   M E M B E R S
 
-  std::string description;
+  std::string name_;
 
-  TYPE type;
+  std::string description_;
+
+  Tp_ value_;
 };
 
 }  // namespace lib_vision
+
+#include <lib_vision/parameter_inl.h>
 
 #endif  // LIB_VISION_FILTER_PARAMETER_H_
