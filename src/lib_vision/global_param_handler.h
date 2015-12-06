@@ -82,7 +82,7 @@ class GlobalParamHandler {
   }
 
   // Params
-  inline void addParam(Parameter *param) { _params_vec.push_back(param); }
+  inline void addParam(ParameterInterface *param) { _params_vec.push_back(param); }
 
   void removeParam(const std::string &name) {
     // Using iterator as it is simpler to erase.
@@ -97,7 +97,7 @@ class GlobalParamHandler {
     }
   }
 
-  inline Parameter *getParam(const std::string &name) const {
+  inline ParameterInterface *getParam(const std::string &name) const {
     // Using [] accessor for optimisation.
     for (size_t i = 0, size = _params_vec.size(); i < size; i++) {
       if (_params_vec[i]->GetName() == name) {

@@ -55,7 +55,7 @@ ATLAS_INLINE std::string Filter::GetParameterValue(const std::string &name) {
   for (int i = 0; i < int(parameters_.size()); i++) {
     // Here we give it a local value to limit the
     // access to the vector (optimisation)
-    Parameter *param = parameters_[i];
+    ParameterInterface *param = parameters_[i];
 
     // nullptr element should never append since the vector's object
     // are added by the said object (which cannot be null if
@@ -64,8 +64,8 @@ ATLAS_INLINE std::string Filter::GetParameterValue(const std::string &name) {
     // filter is alive)...
     if (param != nullptr) {
       // Is it the param we are searching
-      if (param->getName() == name) {
-        returnString = param->toString();
+      if (param->GetName() == name) {
+        returnString = param->ToString();
       }
     }
   }
@@ -79,65 +79,10 @@ ATLAS_INLINE void Filter::SetParameterValue(const std::string &name,
   for (int i = 0; i < int(parameters_.size()); i++) {
     // Here we give it a local value to limit the
     // access to the vector (optimisation)
-    Parameter *param = parameters_[i];
+    ParameterInterface *param = parameters_[i];
 
-    // nullptr element should never append since the vector's object
-    // are added by the said object (which cannot be null if
-    // it gets to the constructor) and which are member of
-    // the filter class (which mean they are alive as long as the
-    // filter is alive)...
-    if (param != nullptr) {
-      // Is it the param we are searching
-      if (param->getName() == name) {
-        // Need to dynamic cast in order to have
-        // access to the function of the specific params type.
-        // Necessary to instanciate them here, because of
-        // error:   crosses initialization of
-        // see:
-        // http://stackoverflow.com/questions/11578936/getting-a-bunch-of-crosses-initialization-error
-        // for more info.
-        Parameter<bool> *p_bool = nullptr;
-        RangedParameter<int> *p_int = nullptr;
-        RangedParameter<double> *p_double = nullptr;
-        Parameter<std::string> *p_str = nullptr;
-        switch (param->getType()) {
-          case Parameter::BOOL:
-            p_bool = dynamic_cast<Parameter<bool> *>(param);
-            // Just in case the cast didn't work.
-            if (p_bool == nullptr) {
-              break;
-            }
-            p_bool->setValue(Parameter<bool>::FromStringToBool(value));
-            break;
-          case Parameter::INTEGER:
-            p_int = dynamic_cast<RangedParameter<int> *>(param);
-            // Just in case the cast didn't work.
-            if (p_int == nullptr) {
-              break;
-            }
-            p_int->setValue(atoi(value.c_str()));
-            break;
-          case Parameter::DOUBLE:
-            p_double = dynamic_cast<RangedParameter<double> *>(param);
-            // Just in case the cast didn't work.
-            if (p_double == nullptr) {
-              break;
-            }
-            p_double->setValue(atof(value.c_str()));
-            break;
-          case Parameter::STRING:
-            p_str = dynamic_cast<Parameter<std::string> *>(param);
-            // Just in case the cast didn't work.
-            if (p_str == nullptr) {
-              break;
-            }
-            p_str->setValue(value);
-            break;
-          // Nothing to default.
-          default:
-            break;
-        }
-      }
+    if (param != nullptr && param->GetName() == name) {
+      param->SetStringValue(value);
     }
   }
 }
@@ -193,13 +138,6 @@ ATLAS_INLINE void Filter::GlobalParamBoolean(const std::string &name,
 ATLAS_INLINE void Filter::GlobalParamString(const std::string &name,
                                             const std::string &value) {
   global_params_.addParam(new Parameter<std::string>(name, value, &parameters_));
-}
-
-//------------------------------------------------------------------------------
-//
-ATLAS_INLINE void Filter::GlobalParamMatrix(const std::string &name,
-                                            cv::Mat &mat) {
-  global_params_.addParam(new MatrixParameter(name, mat, &parameters_));
 }
 
 }  // namespace lib_vision

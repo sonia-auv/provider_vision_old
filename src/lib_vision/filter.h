@@ -82,8 +82,6 @@ class Filter {
 
   void GlobalParamString(const std::string &name, const std::string &value);
 
-  void GlobalParamMatrix(const std::string &name, cv::Mat &mat);
-
  protected:
   //============================================================================
   // P R O T E C T E D   M E M B E R S

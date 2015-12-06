@@ -50,8 +50,8 @@ class Parameter : public ParameterInterface {
   //============================================================================
   // P U B L I C   C / D T O R S
 
-  explicit Parameter(const std::string &name, const std::string &description,
-                     std::vector<ParameterInterface *> *vector = nullptr);
+  explicit Parameter(const std::string &name, const Tp_ &value,
+                     std::vector<ParameterInterface *> *vector = nullptr, const std::string &description = "");
 
   virtual ~Parameter() ATLAS_NOEXCEPT = default;
 
@@ -157,6 +157,8 @@ class Parameter : public ParameterInterface {
   std::string GetType() const override;
 
   std::string GetStringValue() const override;
+
+  void SetStringValue(const std::string &value) override;
 
  protected:
   //============================================================================

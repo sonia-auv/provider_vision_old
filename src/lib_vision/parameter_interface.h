@@ -65,6 +65,8 @@ class ParameterInterface {
   virtual std::string GetType() const = 0;
 
   virtual std::string GetStringValue() const = 0;
+
+  virtual void SetStringValue(const std::string &) = 0;
 };
 
 }  // namespace lib_vision

@@ -36,6 +36,7 @@ namespace lib_vision {
 
 template<typename Tp_>
 class RangedParameter : public Parameter<Tp_> {
+ public:
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
 
@@ -44,11 +45,11 @@ class RangedParameter : public Parameter<Tp_> {
   //============================================================================
   // P U B L I C   C / D T O R S
 
-  explicit RangedParameter(const std::string &name, const std::string &description,
-                     std::vector<ParameterInterface *> *vector) :
-      Parameter<Tp_>(name, description, vector),
-      min_(),
-      max_() {}
+  explicit RangedParameter(const std::string &name, const Tp_ &value, const Tp_ &min, const Tp_ &max,
+                     std::vector<ParameterInterface *> *vector, const std::string &description = "") :
+      Parameter<Tp_>(name, value, vector, description),
+      min_(min),
+      max_(max) {}
 
   virtual ~RangedParameter() ATLAS_NOEXCEPT = default;
 
@@ -65,7 +66,7 @@ class RangedParameter : public Parameter<Tp_> {
 
   std::string GetStringValue() const override {
     std::stringstream ss;
-    ss << std::to_string(GetValue()) << Parameter<Tp_>::SEPARATOR;
+    ss << std::to_string(Parameter<Tp_>::GetValue()) << Parameter<Tp_>::SEPARATOR;
     ss << std::to_string(GetMin()) << Parameter<Tp_>::SEPARATOR;
     ss << std::to_string(GetMax());
     return ss.str();
