@@ -311,8 +311,9 @@ class ObjectFinder : public Filter {
 
   Parameter<std::string> _id, _spec_1, _spec_2;
 
-  RangedParameter<double> _min_area, _targeted_ratio, _difference_from_target_ratio,
-      _targeted_angle, _difference_from_target_angle, _min_percent_filled;
+  RangedParameter<double> _min_area, _targeted_ratio,
+      _difference_from_target_ratio, _targeted_angle,
+      _difference_from_target_angle, _min_percent_filled;
 
   RangedParameter<int> _contour_retreval;
 

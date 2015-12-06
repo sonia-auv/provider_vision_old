@@ -23,10 +23,13 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <lib_vision/algorithm/general_function.h>
 #include <tuple>
+#include <lib_vision/algorithm/general_function.h>
 
-//=============================================================================
+//==============================================================================
+// M E T H O D S   S E C T I O N
+
+//------------------------------------------------------------------------------
 //
 std::vector<cv::Mat> getColorPlanes(cv::Mat image) {
   cv::Mat gray, hsi;
@@ -45,20 +48,20 @@ std::vector<cv::Mat> getColorPlanes(cv::Mat image) {
   return planes;
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 void setCameraOffset(cv::Point *pt, int rows, int cols) {
   pt->x = pt->x - (cols / 2);
   pt->y = -(pt->y - (rows / 2));
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 void retrieveContours(cv::Mat image, contourList_t &contours) {
   retrieveOuterContours(image, contours);
 }
 
-//============================================================================================
+//------------------------------------------------------------------------------
 //
 void retrieveInnerContours(cv::Mat image, contourList_t &contours) {
   if (image.channels() != 1) return;
@@ -81,7 +84,7 @@ void retrieveInnerContours(cv::Mat image, contourList_t &contours) {
   }
 }
 
-//============================================================================================
+//------------------------------------------------------------------------------
 //
 void retrieveAllInnerContours(cv::Mat image, contourList_t &contours) {
   if (image.channels() != 1) return;
@@ -104,7 +107,7 @@ void retrieveAllInnerContours(cv::Mat image, contourList_t &contours) {
   }
 }
 
-//============================================================================================
+//------------------------------------------------------------------------------
 //
 void retrieveOuterContours(cv::Mat image, contourList_t &contours) {
   if (image.channels() != 1) return;
@@ -122,7 +125,7 @@ void retrieveOuterContours(cv::Mat image, contourList_t &contours) {
   }
 }
 
-//============================================================================================
+//------------------------------------------------------------------------------
 //
 void retrieveOutNoChildContours(cv::Mat image, contourList_t &contours) {
   if (image.channels() != 1) return;
@@ -144,7 +147,7 @@ void retrieveOutNoChildContours(cv::Mat image, contourList_t &contours) {
   }
 }
 
-//============================================================================================
+//------------------------------------------------------------------------------
 //
 void retrieveAllContours(cv::Mat image, contourList_t &contours) {
   if (image.channels() != 1) return;
@@ -162,7 +165,7 @@ void retrieveAllContours(cv::Mat image, contourList_t &contours) {
   }
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 void retrieveHiearchyContours(cv::Mat image, contourList_t &contours,
                               hierachy_t &hierarchy) {
@@ -178,7 +181,7 @@ void retrieveHiearchyContours(cv::Mat image, contourList_t &contours,
   }
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 void retrieveContourRotRect(cv::RotatedRect rect, contour_t &contour) {
   cv::Point2f pts[4];
@@ -189,14 +192,14 @@ void retrieveContourRotRect(cv::RotatedRect rect, contour_t &contour) {
   }
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 float calculateRatio(float width, float height) {
   if (width == 0 && height == 0) return 0;
   return std::min((height / width), (width / height)) * 100;
 }
 
-//============================================================================================
+//------------------------------------------------------------------------------
 //
 float calculateConvexityRatio(contour_t contour) {
   if (contour.size() <= 2) return -1;
@@ -205,7 +208,7 @@ float calculateConvexityRatio(contour_t contour) {
   return (cv::contourArea(contour) / convexHullArea) * 100;
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 float calculateConvexHullArea(contour_t contour) {
   if (contour.size() <= 2) return -1;
@@ -214,7 +217,7 @@ float calculateConvexHullArea(contour_t contour) {
   return cv::contourArea(convexHull, false);
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 float calculateCircleIndex(float area, float perimeter) {
   float radiusCircum = perimeter / (2 * M_PI);
@@ -224,14 +227,14 @@ float calculateCircleIndex(float area, float perimeter) {
                                    : radiusCircum / radiusArea;
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 float calculateCircleIndex(contour_t contour) {
   return calculateCircleIndex(cv::contourArea(contour, false),
                               cv::arcLength(contour, true));
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 cv::Scalar calculateMeans(contour_t contour, cv::Mat image, bool middle) {
   cv::Mat opImage;
@@ -253,13 +256,13 @@ cv::Scalar calculateMeans(contour_t contour, cv::Mat image, bool middle) {
   return cv::mean(matRoi);
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 cv::Mat extractImageFromRect(contour_t rect, cv::Mat image) {
   return extractImageFromRect(RotRect(rect), image);
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 cv::Mat extractImageFromRect(cv::RotatedRect rect, cv::Mat image) {
   /*
@@ -286,7 +289,7 @@ cv::Mat extractImageFromRect(cv::RotatedRect rect, cv::Mat image) {
   return returnImage;
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 float calculatePourcentFilled(const cv::Mat &image, const cv::Rect &rectangle) {
   cv::Mat opImage;
@@ -301,7 +304,7 @@ float calculatePourcentFilled(const cv::Mat &image, const cv::Rect &rectangle) {
   return 0.0f;
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 float calculatePourcentFilled(const cv::Mat &image,
                               const cv::RotatedRect &rectangle) {
@@ -344,7 +347,7 @@ float calculatePourcentFilled(const cv::Mat &image,
   return (1 - (countNonZeroResult / rotRectPix)) * 100;
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 cv::Mat rotateImage(cv::Mat in, rotationType rotation, symmetryType symmetry) {
   // Could use extractRotation function with rotated rect?
@@ -390,7 +393,7 @@ cv::Mat rotateImage(cv::Mat in, rotationType rotation, symmetryType symmetry) {
   return out;
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 void drawRectangle(cv::Point2f *pts, cv::Mat &image, cv::Scalar color) {
   if (sizeof(pts) != 8 || image.data == nullptr) return;
@@ -401,7 +404,7 @@ void drawRectangle(cv::Point2f *pts, cv::Mat &image, cv::Scalar color) {
   cv::line(image, pts[3], pts[0], color, 3);
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 void inverseImage(const cv::Mat &in, cv::Mat &out) {
   cv::Mat temp(in.rows, in.cols, CV_16SC1);
@@ -420,6 +423,8 @@ void inverseImage(const cv::Mat &in, cv::Mat &out) {
   temp.convertTo(out, CV_8UC1);
 }
 
+//------------------------------------------------------------------------------
+//
 bool IsRectangle(contour_t &contour, unsigned int degreeAcuracy) {
   // Clip to make sure we have a good index.
   // unsigned, so no check for negative.
@@ -476,7 +481,7 @@ bool IsRectangle(contour_t &contour, unsigned int degreeAcuracy) {
   return trueSquareAngleCount == 4;
 }
 
-//==================================================================
+//------------------------------------------------------------------------------
 //
 bool IsSquare(std::vector<cv::Point> &approx, double min_area, double angle,
               double ratio_min, double ratio_max) {
@@ -507,7 +512,7 @@ bool IsSquare(std::vector<cv::Point> &approx, double min_area, double angle,
   }
 }
 
-//==================================================================
+//------------------------------------------------------------------------------
 //
 cv::Point getEigenPos(std::vector<cv::Point> &pts) {
   // Construct a buffer used by the pca analysis
@@ -528,7 +533,7 @@ cv::Point getEigenPos(std::vector<cv::Point> &pts) {
   return pos;
 }
 
-//==================================================================
+//------------------------------------------------------------------------------
 //
 std::vector<double> getEigenValues(std::vector<cv::Point> &pts) {
   // Construct a buffer used by the pca analysis
@@ -550,7 +555,7 @@ std::vector<double> getEigenValues(std::vector<cv::Point> &pts) {
   return eigen_val;
 }
 
-//==================================================================
+//------------------------------------------------------------------------------
 //
 std::vector<cv::Point2d> getEigenVectors(std::vector<cv::Point> &pts) {
   // Construct a buffer used by the pca analysis
@@ -573,9 +578,8 @@ std::vector<cv::Point2d> getEigenVectors(std::vector<cv::Point> &pts) {
   return eigen_vecs;
 }
 
-//==================================================================
+//------------------------------------------------------------------------------
 //
-// Return angleBetweenThreePoints between 3 points
 double angleBetweenThreePoints(cv::Point pt1, cv::Point pt2, cv::Point pt0) {
   double dx1 = pt1.x - pt0.x;
   double dy1 = pt1.y - pt0.y;
@@ -585,9 +589,8 @@ double angleBetweenThreePoints(cv::Point pt1, cv::Point pt2, cv::Point pt0) {
          sqrt((dx1 * dx1 + dy1 * dy1) * (dx2 * dx2 + dy2 * dy2) + 1e-10);
 }
 
-//==================================================================
+//------------------------------------------------------------------------------
 //
-// Draw every vector of 4 vertices
 void drawSquares(cv::Mat &image,
                  const std::vector<std::vector<cv::Point> > &squares) {
   for (size_t i = 0; i < squares.size(); i++) {
@@ -597,9 +600,8 @@ void drawSquares(cv::Mat &image,
   }
 }
 
-//==================================================================
+//------------------------------------------------------------------------------
 //
-// compare function for custom sort using cv::Point
 bool compareYX(const cv::Point &p1, const cv::Point &p2) {
   return std::tie(p1.x, p1.y) < std::tie(p2.x, p2.y);
 }

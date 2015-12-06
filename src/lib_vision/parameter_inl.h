@@ -73,9 +73,7 @@ struct StringConvertor<int> {
     return std::to_string(value);
   }
 
-  static int GetValue(const std::string &value) {
-    return atoi(value.c_str());
-  }
+  static int GetValue(const std::string &value) { return atoi(value.c_str()); }
 };
 
 //------------------------------------------------------------------------------
@@ -85,7 +83,7 @@ struct StringConvertor<bool> {
   static std::string TypeName() { return "Boolean"; }
 
   static std::string GetString(const bool &value) {
-    if(value) {
+    if (value) {
       return "1";
     } else {
       return "0";
@@ -94,8 +92,9 @@ struct StringConvertor<bool> {
 
   static bool GetValue(const std::string &value) {
     auto string_cpy = value;
-    std::transform(string_cpy.begin(), string_cpy.end(), string_cpy.begin(), ::tolower);
-    if(string_cpy == "true" || string_cpy == "1") {
+    std::transform(string_cpy.begin(), string_cpy.end(), string_cpy.begin(),
+                   ::tolower);
+    if (string_cpy == "true" || string_cpy == "1") {
       return true;
     } else if (string_cpy == "false" || string_cpy == "0") {
       return false;
@@ -125,13 +124,9 @@ template <>
 struct StringConvertor<std::string> {
   static std::string TypeName() { return "String"; }
 
-  static std::string GetString(const std::string &value) {
-    return value;
-  }
+  static std::string GetString(const std::string &value) { return value; }
 
-  static std::string GetValue(const std::string &value) {
-    return value;
-  }
+  static std::string GetValue(const std::string &value) { return value; }
 };
 
 }  // namespace details

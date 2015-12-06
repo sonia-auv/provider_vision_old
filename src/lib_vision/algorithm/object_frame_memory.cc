@@ -25,31 +25,31 @@
 
 #include <lib_vision/algorithm/object_frame_memory.h>
 
-//=============================================================================
-//	CONSTANT
-// 20 pix offset center should cover small noise error and small
-// displacement.
+// 20 pix offset center should cover small noise error and small displacement.
 const float ObjectFrameMemory::DISTANCE_MAX_DIFFERENCE = 20;
+
 // A difference of 10% of ratio is big enough to discard an object.
 const float ObjectFrameMemory::RATIO_MAX_DIFFERENCE = 0.1;
 
-//=============================================================================
-//	CONSTRUCTOR AND DESTRUCTOR
-//-----------------------------------------------------------------------------
+//==============================================================================
+// C / D T O R   S E C T I O N
+
+//------------------------------------------------------------------------------
 //
 ObjectFrameMemory::ObjectFrameMemory(unsigned int memorySize)
     : _previous_frames(memorySize), _memory_size(memorySize) {}
 
-//=============================================================================
-//	METHOD CODE SECTION
-//-----------------------------------------------------------------------------
+//==============================================================================
+// M E T H O D S   S E C T I O N
+
+//------------------------------------------------------------------------------
 //
 void ObjectFrameMemory::AddFrameObjects(
     ObjectFullData::FullObjectPtrVec &objectVector) {
   _previous_frames.push_back(objectVector);
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 ObjectFullData::FullObjectPtrVec ObjectFrameMemory::GetPastObjectsViaCenter(
     const cv::Point &center, const float objectRatio) {

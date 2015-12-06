@@ -73,7 +73,9 @@ class ObjectBasicData {
 
   // Voting system
   void IncrementVote();
+
   int GetVoteCount();
+
   void ResetVote();
 
   // All getters calculate their element if they are not already calculated.
@@ -130,19 +132,22 @@ class ObjectBasicData {
   Contour _contour;
 };
 
-//-----------------------------------------------------------------------------
+//==============================================================================
+// I N L I N E   F U N C T I O N S   D E F I N I T I O N S
+
+//------------------------------------------------------------------------------
 //
 inline void ObjectBasicData::IncrementVote() { _vote_count++; }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline int ObjectBasicData::GetVoteCount() { return _vote_count; }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline void ObjectBasicData::ResetVote() { _vote_count = 0; }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline float ObjectBasicData::GetArea() {
   if (!_is_calculated_map[AREA]) {
@@ -152,7 +157,7 @@ inline float ObjectBasicData::GetArea() {
   return _area;
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline float ObjectBasicData::GetLength() {
   if (!_is_calculated_map[ROTATED_RECT]) {
@@ -162,7 +167,7 @@ inline float ObjectBasicData::GetLength() {
   return _rect.size.height;
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline void ObjectBasicData::SetPlaneInRange(int &planeID) {
   // Clamping the planeID in [0; NB_OF_PLANE - 1]
@@ -170,7 +175,7 @@ inline void ObjectBasicData::SetPlaneInRange(int &planeID) {
       planeID < 0 ? 0 : (planeID > NB_OF_PLANE - 1 ? NB_OF_PLANE - 1 : planeID);
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline float ObjectBasicData::GetConvexHullArea() {
   if (!_is_calculated_map[CONVEX_HULL]) {
@@ -182,7 +187,7 @@ inline float ObjectBasicData::GetConvexHullArea() {
   return _convex_hull_area;
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline float ObjectBasicData::GetCircumference() {
   if (!_is_calculated_map[CIRCUMFERENCE]) {
@@ -192,7 +197,7 @@ inline float ObjectBasicData::GetCircumference() {
   return _circumference;
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline const RotRect &ObjectBasicData::GetRotatedRect() {
   if (!_is_calculated_map[ROTATED_RECT]) {
@@ -202,21 +207,21 @@ inline const RotRect &ObjectBasicData::GetRotatedRect() {
   return _rect;
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline float ObjectBasicData::GetAngle() {
   GetRotatedRect();
   return _rect.angle;
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline cv::Point2f &ObjectBasicData::GetCenter() {
   GetRotatedRect();
   return _rect.center;
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline const cv::Rect &ObjectBasicData::GetUprightRect() {
   if (!_is_calculated_map[UP_RIGHT_RECT]) {
@@ -226,7 +231,7 @@ inline const cv::Rect &ObjectBasicData::GetUprightRect() {
   return _up_right_rect;
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline cv::Mat ObjectBasicData::GetBinaryImageAtUprightRect() {
   // Making sure we have calculated the rectangle.
@@ -236,23 +241,23 @@ inline cv::Mat ObjectBasicData::GetBinaryImageAtUprightRect() {
   return cv::Mat(_binary_image, uprightRect);
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline Contour ObjectBasicData::GetContourCopy() { return _contour; }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline cv::Size ObjectBasicData::GetImageSize() {
   return _original_image.size();
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline const cv::Mat &ObjectBasicData::GetBinaryImage() {
   return _original_image;
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline const cv::Mat &ObjectBasicData::GetOriginalImage() {
   return _binary_image;

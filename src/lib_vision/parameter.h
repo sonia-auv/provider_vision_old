@@ -51,7 +51,8 @@ class Parameter : public ParameterInterface {
   // P U B L I C   C / D T O R S
 
   explicit Parameter(const std::string &name, const Tp_ &value,
-                     std::vector<ParameterInterface *> *vector = nullptr, const std::string &description = "");
+                     std::vector<ParameterInterface *> *vector = nullptr,
+                     const std::string &description = "");
 
   virtual ~Parameter() ATLAS_NOEXCEPT = default;
 
@@ -133,9 +134,7 @@ class Parameter : public ParameterInterface {
     SetValue(rhs);
   }
 
-  Tp_ operator()() {
-    return GetValue();
-  }
+  Tp_ operator()() { return GetValue(); }
 
   //============================================================================
   // P U B L I C   M E T H O D S

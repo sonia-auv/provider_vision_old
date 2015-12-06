@@ -25,6 +25,11 @@
 
 #include <lib_vision/algorithm/object_basic_data.h>
 
+//==============================================================================
+// C / D T O R   S E C T I O N
+
+//------------------------------------------------------------------------------
+//
 ObjectBasicData::ObjectBasicData(const cv::Mat &originalImage,
                                  const cv::Mat &binaryImage,
                                  const Contour &contour)
@@ -51,7 +56,10 @@ ObjectBasicData::ObjectBasicData(const cv::Mat &originalImage,
   assert(!binaryImage.empty());
 }
 
-//-----------------------------------------------------------------------------
+//==============================================================================
+// M E T H O D S   S E C T I O N
+
+//------------------------------------------------------------------------------
 //
 const cv::Mat &ObjectBasicData::GetPlanes(int planesID) {
   if (!_is_calculated_map[PLANES]) {
@@ -75,7 +83,7 @@ const cv::Mat &ObjectBasicData::GetPlanes(int planesID) {
   return _planes[planesID];
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 const cv::Moments &ObjectBasicData::GetMoments(bool useBinary) {
   if (!_is_calculated_map[MOMENTS]) {

@@ -44,7 +44,10 @@ class ObjectRanker {
   static bool LengthSortFunction(ObjectFullData::Ptr a, ObjectFullData::Ptr b);
 };
 
-//-----------------------------------------------------------------------------
+//==============================================================================
+// I N L I N E   F U N C T I O N S   D E F I N I T I O N S
+
+//------------------------------------------------------------------------------
 //
 inline bool ObjectRanker::AreaSortFunction(ObjectFullData::Ptr a,
                                            ObjectFullData::Ptr b) {
@@ -54,7 +57,7 @@ inline bool ObjectRanker::AreaSortFunction(ObjectFullData::Ptr a,
   return false;
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline bool ObjectRanker::LengthSortFunction(ObjectFullData::Ptr a,
                                              ObjectFullData::Ptr b) {

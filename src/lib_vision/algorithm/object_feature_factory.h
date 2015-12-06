@@ -98,9 +98,10 @@ class ObjectFeatureFactory {
   ObjectFrameMemory _frame_memory;
 };
 
-//=============================================================================
-//	INLINE
-//-----------------------------------------------------------------------------
+//==============================================================================
+// I N L I N E   F U N C T I O N S   D E F I N I T I O N S
+
+//------------------------------------------------------------------------------
 //
 inline void ObjectFeatureFactory::ComputeAllFeature(
     ObjectFullData::FullObjectPtrVec objects) {
@@ -109,7 +110,7 @@ inline void ObjectFeatureFactory::ComputeAllFeature(
   }
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline void ObjectFeatureFactory::ComputeAllFeature(
     ObjectFullData::Ptr object) {
@@ -119,7 +120,7 @@ inline void ObjectFeatureFactory::ComputeAllFeature(
   }
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline void ObjectFeatureFactory::ComputeSelectedFeature(
     ObjectFullData::FullObjectPtrVec objects,
@@ -129,7 +130,7 @@ inline void ObjectFeatureFactory::ComputeSelectedFeature(
   }
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline void ObjectFeatureFactory::ComputeSelectedFeature(
     ObjectFullData::Ptr object,
@@ -139,7 +140,7 @@ inline void ObjectFeatureFactory::ComputeSelectedFeature(
   }
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline void ObjectFeatureFactory::RatioFeature(ObjectFullData::Ptr object) {
   if ((object.get() != nullptr) && (object->GetRatio() == -1.0f)) {
@@ -148,7 +149,7 @@ inline void ObjectFeatureFactory::RatioFeature(ObjectFullData::Ptr object) {
   }
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline void ObjectFeatureFactory::ConvexityFeature(ObjectFullData::Ptr object) {
   if ((object.get() != nullptr) && (object->GetConvexity() == -1.0f)) {
@@ -160,7 +161,7 @@ inline void ObjectFeatureFactory::ConvexityFeature(ObjectFullData::Ptr object) {
   }
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline void ObjectFeatureFactory::CircularityFeature(
     ObjectFullData::Ptr object) {
@@ -177,7 +178,7 @@ inline void ObjectFeatureFactory::CircularityFeature(
   }
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline void ObjectFeatureFactory::PresenceConsistencyFeature(
     ObjectFullData::Ptr object) {
@@ -195,7 +196,7 @@ inline void ObjectFeatureFactory::PresenceConsistencyFeature(
   }
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline void ObjectFeatureFactory::HueMeanFeature(ObjectFullData::Ptr object) {
   if ((object.get() != nullptr) && (object->GetHueMean() == -1.0f)) {
@@ -203,7 +204,7 @@ inline void ObjectFeatureFactory::HueMeanFeature(ObjectFullData::Ptr object) {
   }
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline void ObjectFeatureFactory::SatMeanFeature(ObjectFullData::Ptr object) {
   if ((object.get() != nullptr) && (object->GetSatMean() == -1.0f)) {
@@ -211,7 +212,8 @@ inline void ObjectFeatureFactory::SatMeanFeature(ObjectFullData::Ptr object) {
         CalculatePlaneMean(object, ObjectBasicData::SATURATION_PLANE));
   }
 }
-//-----------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
 //
 inline void ObjectFeatureFactory::IntensityMeanFeature(
     std::shared_ptr<ObjectFullData> object) {
@@ -220,14 +222,16 @@ inline void ObjectFeatureFactory::IntensityMeanFeature(
         CalculatePlaneMean(object, ObjectBasicData::INTENSITY_PLANE));
   }
 }
-//-----------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
 //
 inline void ObjectFeatureFactory::RedMeanFeature(ObjectFullData::Ptr object) {
   if ((object.get() != nullptr) && (object->GetRedMean() == -1.0f)) {
     object->SetRedMean(CalculatePlaneMean(object, ObjectBasicData::RED_PLANE));
   }
 }
-//-----------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
 //
 inline void ObjectFeatureFactory::GreenMeanFeature(
     std::shared_ptr<ObjectFullData> object) {
@@ -236,7 +240,8 @@ inline void ObjectFeatureFactory::GreenMeanFeature(
         CalculatePlaneMean(object, ObjectBasicData::GREEN_PLANE));
   }
 }
-//-----------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
 //
 inline void ObjectFeatureFactory::BlueMeanFeature(ObjectFullData::Ptr object) {
   if ((object.get() != nullptr) && (object->GetBlueMean() == -1.0f)) {
@@ -244,7 +249,8 @@ inline void ObjectFeatureFactory::BlueMeanFeature(ObjectFullData::Ptr object) {
         CalculatePlaneMean(object, ObjectBasicData::BLUE_PLANE));
   }
 }
-//-----------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
 //
 inline void ObjectFeatureFactory::GrayMeanFeature(ObjectFullData::Ptr object) {
   if ((object.get() != nullptr) && (object->GetGrayMean() == -1.0f)) {
@@ -252,4 +258,5 @@ inline void ObjectFeatureFactory::GrayMeanFeature(ObjectFullData::Ptr object) {
         CalculatePlaneMean(object, ObjectBasicData::GRAY_PLANE));
   }
 }
+
 #endif  // LIB_VISION_ALGORITHM_OBJECT_FEATURE_FACTORY_H_

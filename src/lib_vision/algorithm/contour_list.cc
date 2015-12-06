@@ -25,8 +25,11 @@
 
 #include "contour_list.h"
 
-//=============================================================================
-//  CONSTRUCTOR
+//==============================================================================
+// C / D T O R   S E C T I O N
+
+//------------------------------------------------------------------------------
+//
 ContourList::ContourList(const cv::Mat &image, const METHOD method) {
   switch (method) {
     default:
@@ -54,9 +57,10 @@ ContourList::ContourList(const cv::Mat &image, const METHOD method) {
   }
 }
 
-//=============================================================================
-//  METHOD CODE SECTION
-//-----------------------------------------------------------------------------
+//==============================================================================
+// M E T H O D S   S E C T I O N
+
+//------------------------------------------------------------------------------
 //
 void ContourList::retrieveAllContours(const cv::Mat &image) {
   // Clone because find contour modifies the image.

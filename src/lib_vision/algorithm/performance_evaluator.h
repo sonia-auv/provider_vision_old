@@ -70,16 +70,16 @@ class PerformanceEvaluator {
   double _tick_frequency;
 };
 
-//=============================================================================
-//  INLINE FUNCTION
+//==============================================================================
+// I N L I N E   F U N C T I O N S   D E F I N I T I O N S
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline double PerformanceEvaluator::GetExecTimeSec() {
   return (cv::getTickCount() - _start_tick_count) / _tick_frequency;
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline void PerformanceEvaluator::UpdateStartTime() {
   _start_tick_count = cv::getTickCount();

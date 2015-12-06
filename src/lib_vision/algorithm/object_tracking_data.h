@@ -64,15 +64,16 @@ class ObjectTrackingData {
   // float _ratio_variation;
 };
 
-//=============================================================================
-//	INLINE METHOD CODE SECTION
-//-----------------------------------------------------------------------------
+//==============================================================================
+// I N L I N E   F U N C T I O N S   D E F I N I T I O N S
+
+//------------------------------------------------------------------------------
 //
 inline void ObjectTrackingData::SetPresenceCount(float presenceCount) {
   _presence_count = presenceCount;
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 inline float ObjectTrackingData::GetPresenceCount() { return _presence_count; }
 

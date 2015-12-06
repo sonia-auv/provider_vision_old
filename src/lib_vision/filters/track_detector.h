@@ -182,7 +182,8 @@ class TrackDetector : public Filter {
   cv::Mat _output_image;
   // Params
   Parameter<bool> _enable, _debug_contour;
-  RangedParameter<double> _min_area, _targeted_ratio, _difference_from_target_ratio;
+  RangedParameter<double> _min_area, _targeted_ratio,
+      _difference_from_target_ratio;
 
   ObjectFeatureFactory _feat_factory;
 };

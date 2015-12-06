@@ -25,8 +25,11 @@
 
 #include <lib_vision/algorithm/performance_evaluator.h>
 
-//=================================================================
-//  CONSTRUCTOR
+//==============================================================================
+// C / D T O R   S E C T I O N
+
+//------------------------------------------------------------------------------
+//
 PerformanceEvaluator::PerformanceEvaluator()
     : _tick_frequency(cv::getTickFrequency()),
       _start_tick_count(cv::getTickCount()) {
@@ -35,6 +38,3 @@ PerformanceEvaluator::PerformanceEvaluator()
     _tick_frequency = 1;
   }
 }
-
-//=================================================================
-// METHOD

@@ -82,7 +82,9 @@ class GlobalParamHandler {
   }
 
   // Params
-  inline void addParam(ParameterInterface *param) { _params_vec.push_back(param); }
+  inline void addParam(ParameterInterface *param) {
+    _params_vec.push_back(param);
+  }
 
   void removeParam(const std::string &name) {
     // Using iterator as it is simpler to erase.

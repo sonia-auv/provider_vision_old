@@ -71,6 +71,11 @@ class ObjectFrameMemory {
   unsigned int _memory_size;
 };
 
+//==============================================================================
+// I N L I N E   F U N C T I O N S   D E F I N I T I O N S
+
+//------------------------------------------------------------------------------
+//
 inline unsigned int ObjectFrameMemory::GetMemorySize() { return _memory_size; }
 
 #endif  // LIB_VISION_ALGORITHM_OBJECT_FRAME_MEMORY_H_

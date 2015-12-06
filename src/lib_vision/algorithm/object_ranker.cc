@@ -25,7 +25,10 @@
 
 #include <lib_vision/algorithm/object_ranker.h>
 
-//-----------------------------------------------------------------------------
+//==============================================================================
+// M E T H O D S   S E C T I O N
+
+//------------------------------------------------------------------------------
 //
 void ObjectRanker::RankByArea(ObjectFullData::FullObjectPtrVec objects) {
   std::sort(objects.begin(), objects.end(), ObjectRanker::AreaSortFunction);
@@ -36,7 +39,7 @@ void ObjectRanker::RankByArea(ObjectFullData::FullObjectPtrVec objects) {
   }
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 void ObjectRanker::RankByLength(ObjectFullData::FullObjectPtrVec objects) {
   std::sort(objects.begin(), objects.end(), ObjectRanker::LengthSortFunction);

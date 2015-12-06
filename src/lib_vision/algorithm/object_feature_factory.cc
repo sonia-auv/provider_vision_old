@@ -25,9 +25,10 @@
 
 #include "lib_vision/algorithm/object_feature_factory.h"
 
-//=============================================================================
-// 	CONSTRUCTOR CODE SECTION
-//-----------------------------------------------------------------------------
+//==============================================================================
+// C / D T O R   S E C T I O N
+
+//------------------------------------------------------------------------------
 //
 ObjectFeatureFactory::ObjectFeatureFactory(unsigned int memorySize)
     : _frame_memory(memorySize) {
@@ -70,9 +71,10 @@ ObjectFeatureFactory::ObjectFeatureFactory(unsigned int memorySize)
       std::bind(&ObjectFeatureFactory::GrayMeanFeature, this, _1));
 }
 
-//=============================================================================
-// 	METHOD CODE SECTION
-//-----------------------------------------------------------------------------
+//==============================================================================
+// M E T H O D S   S E C T I O N
+
+//------------------------------------------------------------------------------
 //
 void ObjectFeatureFactory::PercentFilledFeature(ObjectFullData::Ptr object) {
   if ((object.get() != nullptr) && (object->GetPercentFilled() == -1.0f)) {
@@ -106,7 +108,7 @@ void ObjectFeatureFactory::PercentFilledFeature(ObjectFullData::Ptr object) {
   }
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 float ObjectFeatureFactory::CalculatePlaneMean(ObjectFullData::Ptr object,
                                                int plane) {

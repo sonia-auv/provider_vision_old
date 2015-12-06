@@ -25,6 +25,11 @@
 
 #include <lib_vision/algorithm/object_full_data.h>
 
+//==============================================================================
+// C / D T O R   S E C T I O N
+
+//------------------------------------------------------------------------------
+//
 ObjectFullData::ObjectFullData(const cv::Mat &originalImage,
                                const cv::Mat &binaryImage,
                                const Contour &contour)

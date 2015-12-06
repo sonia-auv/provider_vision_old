@@ -65,7 +65,7 @@ class ObjectFullData : public ObjectTrackingData,
 };
 
 //==============================================================================
-// I N L I N E   M E T H O D S   D E F I N I T I O N
+// I N L I N E   F U N C T I O N S   D E F I N I T I O N S
 
 //------------------------------------------------------------------------------
 //

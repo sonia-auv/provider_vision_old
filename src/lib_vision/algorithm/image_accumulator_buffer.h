@@ -165,8 +165,8 @@ class ImageAccumulatorBuffer {
   cv::Size _image_size;
 };
 
-//=============================================================================
-// INLINE FUNCTION
+//==============================================================================
+// I N L I N E   F U N C T I O N S   D E F I N I T I O N S
 
 //-----------------------------------------------------------------------------
 //
@@ -180,7 +180,7 @@ inline void ImageAccumulatorBuffer::GetImage(size_t index, cv::Mat &image) {
   }
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 inline int ImageAccumulatorBuffer::GetIndexFromMostRecent(int elementNumber) {
   // Newest frame
@@ -195,7 +195,7 @@ inline int ImageAccumulatorBuffer::GetIndexFromMostRecent(int elementNumber) {
   return index;
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 inline int ImageAccumulatorBuffer::GetIndexFromOldest(int elementNumber) {
   // Newest frame
@@ -203,7 +203,7 @@ inline int ImageAccumulatorBuffer::GetIndexFromOldest(int elementNumber) {
   return (index + 1 + elementNumber) % _buffer_size;
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 inline void ImageAccumulatorBuffer::FillWithBlank() {
   cv::Mat zero = cv::Mat::zeros(_image_size, _image_type);
@@ -215,7 +215,7 @@ inline void ImageAccumulatorBuffer::FillWithBlank() {
   }
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 inline void ImageAccumulatorBuffer::SetAverageMethod(METHOD method) {
   switch (method) {

@@ -34,7 +34,7 @@
 
 namespace lib_vision {
 
-template<typename Tp_>
+template <typename Tp_>
 class RangedParameter : public Parameter<Tp_> {
  public:
   //==========================================================================
@@ -45,11 +45,13 @@ class RangedParameter : public Parameter<Tp_> {
   //============================================================================
   // P U B L I C   C / D T O R S
 
-  explicit RangedParameter(const std::string &name, const Tp_ &value, const Tp_ &min, const Tp_ &max,
-                     std::vector<ParameterInterface *> *vector, const std::string &description = "") :
-      Parameter<Tp_>(name, value, vector, description),
-      min_(min),
-      max_(max) {}
+  explicit RangedParameter(const std::string &name, const Tp_ &value,
+                           const Tp_ &min, const Tp_ &max,
+                           std::vector<ParameterInterface *> *vector,
+                           const std::string &description = "")
+      : Parameter<Tp_>(name, value, vector, description),
+        min_(min),
+        max_(max) {}
 
   virtual ~RangedParameter() ATLAS_NOEXCEPT = default;
 
@@ -69,8 +71,10 @@ class RangedParameter : public Parameter<Tp_> {
     ss << Parameter<Tp_>::GetName() << Parameter<Tp_>::SEPARATOR;
     ss << Parameter<Tp_>::GetType() << Parameter<Tp_>::SEPARATOR;
     ss << Parameter<Tp_>::GetStringValue() << Parameter<Tp_>::SEPARATOR;
-    ss << details::StringConvertor<Tp_>::GetString(min_) << Parameter<Tp_>::SEPARATOR;
-    ss << details::StringConvertor<Tp_>::GetString(max_) << Parameter<Tp_>::SEPARATOR;
+    ss << details::StringConvertor<Tp_>::GetString(min_)
+       << Parameter<Tp_>::SEPARATOR;
+    ss << details::StringConvertor<Tp_>::GetString(max_)
+       << Parameter<Tp_>::SEPARATOR;
     ss << Parameter<Tp_>::GetDescription();
     return ss.str();
   }

@@ -116,9 +116,4 @@ class ObjectFeatureData {
       green_mean_, blue_mean_, gray_mean_;
 };
 
-//=============================================================================
-//	INLINE CODE FUNCTION
-//-----------------------------------------------------------------------------
-//
-
 #endif  // LIB_VISION_ALGORITHM_OBJECT_FEATURE_H_

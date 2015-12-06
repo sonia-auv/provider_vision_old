@@ -44,7 +44,8 @@ ATLAS_INLINE Filter::Filter(const GlobalParamHandler &globalParams)
 
 //------------------------------------------------------------------------------
 //
-ATLAS_INLINE const std::vector<ParameterInterface *> &Filter::GetParameters() const {
+ATLAS_INLINE const std::vector<ParameterInterface *> &Filter::GetParameters()
+    const {
   return parameters_;
 }
 
@@ -137,7 +138,8 @@ ATLAS_INLINE void Filter::GlobalParamBoolean(const std::string &name,
 //
 ATLAS_INLINE void Filter::GlobalParamString(const std::string &name,
                                             const std::string &value) {
-  global_params_.addParam(new Parameter<std::string>(name, value, &parameters_));
+  global_params_.addParam(
+      new Parameter<std::string>(name, value, &parameters_));
 }
 
 }  // namespace lib_vision

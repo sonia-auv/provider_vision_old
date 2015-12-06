@@ -25,9 +25,11 @@
 
 #include <lib_vision/algorithm/image_accumulator_buffer.h>
 
-//=============================================================================
-//              CONSTRUCTOR
-//=============================================================================
+//==============================================================================
+// C / D T O R   S E C T I O N
+
+//------------------------------------------------------------------------------
+//
 ImageAccumulatorBuffer::ImageAccumulatorBuffer(int bufferLength,
                                                cv::Size imgSize, int type,
                                                METHOD method)
@@ -44,7 +46,10 @@ ImageAccumulatorBuffer::ImageAccumulatorBuffer(int bufferLength,
   SetAverageMethod(method);
 }
 
-//=============================================================================
+//==============================================================================
+// M E T H O D S   S E C T I O N
+
+//------------------------------------------------------------------------------
 //
 void ImageAccumulatorBuffer::GetImage(cv::Mat &image) {
   // We do not want to access blank...&
@@ -55,8 +60,8 @@ void ImageAccumulatorBuffer::GetImage(cv::Mat &image) {
   image.convertTo(image, _image_type);
 }
 
-//=============================================================================
-//              Method section
+//------------------------------------------------------------------------------
+//
 void ImageAccumulatorBuffer::AddImage(const cv::Mat &image) {
   if (_image_size != image.size() || _image_type != image.type()) {
     printf(
@@ -75,11 +80,11 @@ void ImageAccumulatorBuffer::AddImage(const cv::Mat &image) {
   _buffer_current_index++;
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 void ImageAccumulatorBuffer::ResetBuffer() { FillWithBlank(); }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 void ImageAccumulatorBuffer::ResetBuffer(int bufferLength, cv::Size imgSize,
                                          int type) {
@@ -92,7 +97,7 @@ void ImageAccumulatorBuffer::ResetBuffer(int bufferLength, cv::Size imgSize,
   FillWithBlank();
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 void ImageAccumulatorBuffer::AverageAllSameWeight(cv::Mat &resultImage) {
   if (_buffer_size == 0) {
@@ -111,7 +116,7 @@ void ImageAccumulatorBuffer::AverageAllSameWeight(cv::Mat &resultImage) {
              resultImage);
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 void ImageAccumulatorBuffer::AverageIncrease50Percent(cv::Mat &resultImage) {
   resultImage = _image_vec[GetIndexFromOldest(0)].clone();
@@ -121,7 +126,7 @@ void ImageAccumulatorBuffer::AverageIncrease50Percent(cv::Mat &resultImage) {
   }
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 void ImageAccumulatorBuffer::AverageAccumulateWithResultingWeight(
     cv::Mat &resultImage) {

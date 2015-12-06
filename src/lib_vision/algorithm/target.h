@@ -100,45 +100,48 @@ class Target {
   std::string special_field_2_;
 };
 
-//=============================================================================
+//==============================================================================
+// I N L I N E   F U N C T I O N S   D E F I N I T I O N S
+
+//------------------------------------------------------------------------------
 //
 inline void Target::SetCenter(int x, int y) {
   center_.x = x;
   center_.y = y;
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 inline void Target::SetCenter(const cv::Point &pt) { center_ = pt; }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 inline void Target::SetSize(int width, int height) {
   dimension_.width = width;
   dimension_.height = height;
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 inline void Target::SetSize(const cv::Size &sz) { dimension_ = sz; }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 inline void Target::SetAngle(float angle) { angle_ = angle; }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 inline void Target::SetSpecField_1(const std::string &field) {
   special_field_1_ = field;
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 inline void Target::SetSpecField_2(const std::string &field) {
   special_field_2_ = field;
 }
 
-//=============================================================================
+//------------------------------------------------------------------------------
 //
 inline void Target::SetSpecFields(const std::string &field1,
                                   const std::string &field2) {
@@ -146,8 +149,16 @@ inline void Target::SetSpecFields(const std::string &field1,
   special_field_2_ = field2;
 }
 
+//------------------------------------------------------------------------------
+//
 inline cv::Point Target::GetTarget() { return center_; }
-inline std::string Target::GetSpecField_1() { return special_field_1_; };
-inline std::string Target::GetSpecField_2() { return special_field_2_; };
+
+//------------------------------------------------------------------------------
+//
+inline std::string Target::GetSpecField_1() { return special_field_1_; }
+
+//------------------------------------------------------------------------------
+//
+inline std::string Target::GetSpecField_2() { return special_field_2_; }
 
 #endif  // LIB_VISION_ALGORITHM_TARGET_H_

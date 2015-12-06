@@ -25,34 +25,42 @@
 
 #include <lib_vision/algorithm/rot_rect.h>
 
+//==============================================================================
+// C / D T O R   S E C T I O N
+
+//------------------------------------------------------------------------------
+//
 RotRect::RotRect(const std::vector<cv::Point> &edges)
     : cv::RotatedRect(cv::minAreaRect(edges)) {
   setValues();
   points(pts);
 }
 
-//==============================================================
+//------------------------------------------------------------------------------
 //
 RotRect::RotRect() : cv::RotatedRect() {}
 
-//==============================================================
+//------------------------------------------------------------------------------
 //
 RotRect::RotRect(const cv::RotatedRect &rotRect) : cv::RotatedRect(rotRect) {
   setValues();
   points(pts);
 }
 
-//==============================================================
+//------------------------------------------------------------------------------
 //
 RotRect::RotRect(const RotRect &a) : cv::RotatedRect(a) {
   for (int i = 0; i < 4; i++) pts[i] = a.pts[i];
 }
 
-//==============================================================
+//------------------------------------------------------------------------------
 //
 RotRect::~RotRect() {}
 
-//==============================================================
+//==============================================================================
+// M E T H O D S   S E C T I O N
+
+//------------------------------------------------------------------------------
 //
 void RotRect::drawRect(cv::Mat &out, cv::Scalar color, int thickness) {
   cv::line(out, pts[0], pts[1], color, thickness);
@@ -61,9 +69,8 @@ void RotRect::drawRect(cv::Mat &out, cv::Scalar color, int thickness) {
   cv::line(out, pts[3], pts[0], color, thickness);
 }
 
-//==============================================================
+//------------------------------------------------------------------------------
 //
-// Set height to the longest side of the rectangle and
 void RotRect::setValues() {
   float in_angle = angle;
   float out_angle = in_angle;
@@ -81,7 +88,7 @@ void RotRect::setValues() {
   angle = out_angle;
 }
 
-//==============================================================
+//------------------------------------------------------------------------------
 //
 void RotRect::swap(RotRect &a) {
   std::swap(a.angle, angle);
@@ -90,14 +97,14 @@ void RotRect::swap(RotRect &a) {
   std::swap(a.size, size);
 }
 
-//==============================================================
+//------------------------------------------------------------------------------
 //
 RotRect &RotRect::operator=(RotRect rotRect) {
   swap(rotRect);
   return *this;
 }
 
-//==============================================================
+//------------------------------------------------------------------------------
 //
 RotRect &RotRect::operator=(cv::RotatedRect rotRect) {
   RotRect slRotRect(rotRect);
@@ -105,7 +112,7 @@ RotRect &RotRect::operator=(cv::RotatedRect rotRect) {
   return *this;
 }
 
-//==============================================================
+//------------------------------------------------------------------------------
 //
 bool RotRect::operator==(const RotRect &rotRect) {
   bool result = true;
@@ -121,6 +128,6 @@ bool RotRect::operator==(const RotRect &rotRect) {
   return result;
 }
 
-//==============================================================
+//------------------------------------------------------------------------------
 //
 cv::Point2f *RotRect::getCorners() { return pts; }

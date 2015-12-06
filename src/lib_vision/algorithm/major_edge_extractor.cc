@@ -25,26 +25,26 @@
 
 #include <lib_vision/algorithm/major_edge_extractor.h>
 
-//=============================================================================
-//		CONSTANT
 const float MajorEdgeExtractor::PERCENT_OF_VAL_FOR_VALUE_CONNECTION = 0.8;
 
-//=============================================================================
-//		CONTAINER CLASS
-//-----------------------------------------------------------------------------
+//==============================================================================
+// C / D T O R   S E C T I O N
+
+//------------------------------------------------------------------------------
 //
 ReferencePoint::ReferencePoint(float pix_val, int max_val_index)
     : _pix_value(pix_val), _reference_max_index(max_val_index) {}
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 RefKernel::RefKernel(const RefPointPtr &north, const RefPointPtr &west,
                      const RefPointPtr &center)
     : _north(north), _west(west), _center(center) {}
 
-//=============================================================================
-//		MAIN CLASS
-//-----------------------------------------------------------------------------
+//==============================================================================
+// M E T H O D S   S E C T I O N
+
+//------------------------------------------------------------------------------
 //
 void MajorEdgeExtractor::Init(const cv::Size &size) {
   // If the image is already created, no need for
@@ -52,7 +52,7 @@ void MajorEdgeExtractor::Init(const cv::Size &size) {
   if (_ref_image.size() != size) CreateRefImage(size);
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 void MajorEdgeExtractor::Clean() {
   // Free the RefPoint allocated previously.
@@ -68,7 +68,7 @@ void MajorEdgeExtractor::Clean() {
   }
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 void MajorEdgeExtractor::SetJunction(RefKernel &ref_kernel, float value, int x,
                                      int y) {
@@ -86,7 +86,7 @@ void MajorEdgeExtractor::SetJunction(RefKernel &ref_kernel, float value, int x,
   SetValInReferenceVec(second_value, GetValInReferenceVec(first_value));
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 cv::Mat MajorEdgeExtractor::ExtractEdge(const cv::Mat &image,
                                         int extreme_minimum) {

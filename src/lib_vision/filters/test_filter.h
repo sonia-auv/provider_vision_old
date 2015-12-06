@@ -81,14 +81,16 @@ class TestFilter : public Filter {
         NotifyString("Bool OK");
       }
 
-      RangedParameter<double> *double_test(dynamic_cast<RangedParameter<double> *>(
-          global_params_.getParam("test double")));
+      RangedParameter<double> *double_test(
+          dynamic_cast<RangedParameter<double> *>(
+              global_params_.getParam("test double")));
       if (double_test != nullptr) {
         NotifyString("RangedParameter<double> OK");
       }
 
-      Parameter<std::string> *string_test(dynamic_cast<Parameter<std::string> *>(
-          global_params_.getParam("test_string")));
+      Parameter<std::string> *string_test(
+          dynamic_cast<Parameter<std::string> *>(
+              global_params_.getParam("test_string")));
       if (string_test != nullptr) {
         NotifyString("String OK");
       }

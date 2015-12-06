@@ -177,8 +177,9 @@ class ObjectFinder : public Filter {
   // Params
   Parameter<bool> _enable, _debug_contour, _look_for_rectangle;
   Parameter<std::string> _id, _spec_1, _spec_2;
-  RangedParameter<double> _min_area, _targeted_ratio, _difference_from_target_ratio,
-      _targeted_angle, _difference_from_target_angle;
+  RangedParameter<double> _min_area, _targeted_ratio,
+      _difference_from_target_ratio, _targeted_angle,
+      _difference_from_target_angle;
 
   ObjectFeatureFactory _feature_factory;
 };
