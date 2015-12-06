@@ -105,8 +105,8 @@ class ImageAccumulator : public Filter {
  private:
   // Params
   ImageAccumulatorBuffer _accumulator;
-  BooleanParameter _enable;
-  IntegerParameter _nb_image, _method;
+  Parameter<bool> _enable;
+  RangedParameter<int> _nb_image, _method;
   // Here we need some sorte of remembering
   // so we can reset the accumulator on
   // param changing.

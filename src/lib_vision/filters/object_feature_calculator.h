@@ -128,9 +128,9 @@ class ObjectFeatureCalculator : public Filter {
   cv::Mat _output_image;
   unsigned int _recording_frame_index;
   // Params
-  BooleanParameter _enable, _debug_contour, _toggle_recording;
-  StringParameter _id, _spec_1, _spec_2, _output_folder;
-  DoubleParameter _min_area;
+  Parameter<bool> _enable, _debug_contour, _toggle_recording;
+  Parameter<std::string> _id, _spec_1, _spec_2, _output_folder;
+  RangedParameter<double> _min_area;
 
   ObjectFeatureFactory _feature_factory;
 };

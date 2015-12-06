@@ -196,10 +196,10 @@ class BuoySingle : public Filter {
   cv::Mat _outputImage;
   ObjectFeatureFactory feat_factory_;
   // Params
-  BooleanParameter _enable, _debug_good_contour, _eliminate_same_x_targets,
+  Parameter<bool> _enable, _debug_good_contour, _eliminate_same_x_targets,
       _detect_red;
-  StringParameter _color;
-  DoubleParameter _min_area, _max_ratio, _min_filled_percent,
+  Parameter<std::string> _color;
+  RangedParameter<double> _min_area, _max_ratio, _min_filled_percent,
       _max_x_difference_for_elimination, _ratio_for_angle_check,
       _admissible_horizontal_angle;
 };

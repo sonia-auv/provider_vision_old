@@ -121,14 +121,14 @@ class ScharrAdding : public Filter {
   // reducing the image size by two (in each direction)
   // so that the scharr computation does not take to much time
   // when multiple images.
-  BooleanParameter _enable, _run_small_image, _convert_to_uchar;
+  Parameter<bool> _enable, _run_small_image, _convert_to_uchar;
   // _mean_multiplier act as threshold for noise.
   // When set, it remove everything under the mean to keep only
   // proeminent contours.
-  DoubleParameter _delta, _scale, _mean_multiplier;
-  BooleanParameter _plane_blue, _plane_green, _plane_red;
-  BooleanParameter _plane_hue, _plane_saturation, _plane_intensity;
-  BooleanParameter _plane_gray;
+  RangedParameter<double> _delta, _scale, _mean_multiplier;
+  Parameter<bool> _plane_blue, _plane_green, _plane_red;
+  Parameter<bool> _plane_hue, _plane_saturation, _plane_intensity;
+  Parameter<bool> _plane_gray;
 };
 
 }  // namespace lib_vision

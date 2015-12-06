@@ -299,14 +299,14 @@ class ObjectFinder : public Filter {
  private:
   cv::Mat _output_image;
   // Params
-  BooleanParameter _enable, _debug_contour, _look_for_rectangle, _disable_ratio,
+  Parameter<bool> _enable, _debug_contour, _look_for_rectangle, _disable_ratio,
       _disable_angle, _use_convex_hull;
-  BooleanParameter _vote_most_centered, _vote_most_upright,
+  Parameter<bool> _vote_most_centered, _vote_most_upright,
       _vote_less_difference_from_targeted_ratio, _vote_length, _vote_higher;
-  StringParameter _id, _spec_1, _spec_2;
-  DoubleParameter _min_area, _targeted_ratio, _difference_from_target_ratio,
+  Parameter<std::string> _id, _spec_1, _spec_2;
+  RangedParameter<double> _min_area, _targeted_ratio, _difference_from_target_ratio,
       _targeted_angle, _difference_from_target_angle, _min_percent_filled;
-  IntegerParameter _contour_retreval;
+  RangedParameter<int> _contour_retreval;
 
   ObjectFeatureFactory _feature_factory;
 };

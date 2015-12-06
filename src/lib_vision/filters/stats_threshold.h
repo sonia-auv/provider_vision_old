@@ -76,9 +76,9 @@ class StatsThreshold : public Filter {
 
  private:
   // Params
-  BooleanParameter _enable;
-  IntegerParameter _min_thresh;
-  DoubleParameter _mean_multiplier, _std_dev_multiplier;
+  Parameter<bool> _enable;
+  RangedParameter<int> _min_thresh;
+  RangedParameter<double> _mean_multiplier, _std_dev_multiplier;
 };
 
 }  // namespace lib_vision

@@ -69,25 +69,25 @@ class TestFilter : public Filter {
     if (_enable()) {
       cv::Mat imageOriginal = global_params_.getOriginalImage();
       imageOriginal = cv::Mat::zeros(1, 1, CV_8UC1);
-      IntegerParameter *int_test(dynamic_cast<IntegerParameter *>(
+      RangedParameter<int> *int_test(dynamic_cast<RangedParameter<int> *>(
           global_params_.getParam("test_int")));
       if (int_test != nullptr) {
-        NotifyString("IntegerParameter OK");
+        NotifyString("RangedParameter<int> OK");
       }
 
-      BooleanParameter *bool_test(dynamic_cast<BooleanParameter *>(
+      Parameter<bool> *bool_test(dynamic_cast<Parameter<bool> *>(
           global_params_.getParam("test_bool")));
       if (bool_test != nullptr) {
         NotifyString("Bool OK");
       }
 
-      DoubleParameter *double_test(dynamic_cast<DoubleParameter *>(
+      RangedParameter<double> *double_test(dynamic_cast<RangedParameter<double> *>(
           global_params_.getParam("test double")));
       if (double_test != nullptr) {
-        NotifyString("DoubleParameter OK");
+        NotifyString("RangedParameter<double> OK");
       }
 
-      StringParameter *string_test(dynamic_cast<StringParameter *>(
+      Parameter<std::string> *string_test(dynamic_cast<Parameter<std::string> *>(
           global_params_.getParam("test_string")));
       if (string_test != nullptr) {
         NotifyString("String OK");
@@ -98,11 +98,11 @@ class TestFilter : public Filter {
 
  private:
   // Params
-  BooleanParameter _enable;
-  IntegerParameter _int;
-  BooleanParameter _bool;
-  StringParameter _str;
-  DoubleParameter _double;
+  Parameter<bool> _enable;
+  RangedParameter<int> _int;
+  Parameter<bool> _bool;
+  Parameter<std::string> _str;
+  RangedParameter<double> _double;
 };
 
 }  // namespace lib_vision

@@ -113,8 +113,8 @@ class ConvexHull : public Filter {
 
  private:
   // Params
-  BooleanParameter _enable;
-  IntegerParameter _mode, _method;
+  Parameter<bool> _enable;
+  RangedParameter<int> _mode, _method;
 };
 
 }  // namespace lib_vision

@@ -33,11 +33,12 @@
 #include <vector>
 #include <sstream>
 #include <lib_atlas/macros.h>
+#include <lib_vision/parameter_interface.h>
 
 namespace lib_vision {
 
 template <typename Tp_>
-class Parameter {
+class Parameter : public ParameterInterface {
  public:
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
@@ -50,7 +51,7 @@ class Parameter {
   // P U B L I C   C / D T O R S
 
   explicit Parameter(const std::string &name, const std::string &description,
-                     std::vector<Parameter *> *vector = nullptr);
+                     std::vector<ParameterInterface *> *vector = nullptr);
 
   virtual ~Parameter() ATLAS_NOEXCEPT = default;
 
@@ -132,26 +133,30 @@ class Parameter {
     SetValue(rhs);
   }
 
+  Tp_ operator()() {
+    return GetValue();
+  }
+
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  inline void SetDescription(const std::string &description);
+  void SetValue(const Tp_ &value);
 
-  inline std::string GetDescription() const;
+  const Tp_ &GetValue() const;
 
-  inline void SetName(const std::string &name);
+  void SetDescription(const std::string &description) override;
 
-  inline std::string GetName() const;
+  std::string GetDescription() const override;
 
-  virtual std::string ToString() const;
+  void SetName(const std::string &name) override;
 
-  inline void SetValue(const Tp_ &value);
+  std::string GetName() const override;
 
-  inline const Tp_ &GetValue() const;
+  virtual std::string ToString() const override;
 
-  inline std::string GetType() const;
+  std::string GetType() const override;
 
-  virtual std::string GetStringValue() const;
+  std::string GetStringValue() const override;
 
  protected:
   //============================================================================

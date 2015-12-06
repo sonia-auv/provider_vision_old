@@ -173,10 +173,10 @@ class HandleDetector : public Filter {
  private:
   cv::Mat _output_image;
   // Params
-  BooleanParameter _enable, _debug_contour, _look_for_rectangle, _disable_ratio,
+  Parameter<bool> _enable, _debug_contour, _look_for_rectangle, _disable_ratio,
       _disable_angle;
-  StringParameter _id, _spec_1, _spec_2;
-  DoubleParameter _min_area, _targeted_ratio, _difference_from_target_ratio,
+  Parameter<std::string> _id, _spec_1, _spec_2;
+  RangedParameter<double> _min_area, _targeted_ratio, _difference_from_target_ratio,
       _targeted_angle, _difference_from_target_angle;
 
   ObjectFeatureFactory _feature_factory;

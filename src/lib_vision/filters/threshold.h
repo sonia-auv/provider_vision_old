@@ -94,8 +94,8 @@ class Threshold : public Filter {
 
  private:
   // Params
-  BooleanParameter _enable;
-  IntegerParameter _type, _max;
+  Parameter<bool> _enable;
+  RangedParameter<int> _type, _max;
 };
 
 }  // namespace lib_vision

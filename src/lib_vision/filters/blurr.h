@@ -85,8 +85,8 @@ class Blurr : public Filter {
 
  private:
   // Params
-  BooleanParameter _enable;
-  IntegerParameter _type, _kernel_size;
+  Parameter<bool> _enable;
+  RangedParameter<int> _type, _kernel_size;
 
   const cv::Point _anchor;
 };

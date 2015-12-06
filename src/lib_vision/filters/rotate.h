@@ -74,8 +74,8 @@ class Rotate : public Filter {
 
  private:
   // Params
-  BooleanParameter _enable;
-  IntegerParameter _rotate_type;
+  Parameter<bool> _enable;
+  RangedParameter<int> _rotate_type;
 };
 
 }  // namespace lib_vision

@@ -84,10 +84,10 @@ class Erode : public Filter {
 
  private:
   // Params
-  BooleanParameter _enable, _use_square_kernel;
-  IntegerParameter _kernel_type;
-  IntegerParameter _kernel_size_x, _kernel_size_y;
-  IntegerParameter _iteration;
+  Parameter<bool> _enable, _use_square_kernel;
+  RangedParameter<int> _kernel_type;
+  RangedParameter<int> _kernel_size_x, _kernel_size_y;
+  RangedParameter<int> _iteration;
 
   const cv::Point _anchor;
 };

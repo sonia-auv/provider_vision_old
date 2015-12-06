@@ -101,9 +101,9 @@ class WhiteNoiseTakedown : public Filter {
 
  private:
   // Params
-  BooleanParameter _enable;
-  IntegerParameter _lowB, _highB, _lowG, _highG, _lowR, _highR;
-  IntegerParameter _view_channel;
+  Parameter<bool> _enable;
+  RangedParameter<int> _lowB, _highB, _lowG, _highG, _lowR, _highR;
+  RangedParameter<int> _view_channel;
 };
 
 }  // namespace lib_vision

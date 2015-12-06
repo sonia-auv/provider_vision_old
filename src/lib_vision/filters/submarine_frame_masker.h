@@ -82,8 +82,8 @@ class SubmarineFrameMasker : public Filter {
 
  private:
   // Params
-  BooleanParameter _enable;
-  IntegerParameter _rotate_type;
+  Parameter<bool> _enable;
+  RangedParameter<int> _rotate_type;
   cv::Mat _bottom_mask;
   int _prev_rot_value;
 };

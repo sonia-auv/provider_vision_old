@@ -30,11 +30,7 @@
 #include <string>
 #include <sstream>
 #include <lib_vision/parameter.h>
-#include <lib_vision/parameters/integer_parameter.h>
-#include <lib_vision/parameters/double_parameter.h>
-#include <lib_vision/parameters/string_parameter.h>
-#include <lib_vision/parameters/boolean_parameter.h>
-#include <lib_vision/parameters/matrix_parameter.h>
+#include <lib_vision/ranged_parameter.h>
 
 namespace lib_vision {
 
@@ -90,8 +86,8 @@ class GlobalParamHandler {
 
   void removeParam(const std::string &name) {
     // Using iterator as it is simpler to erase.
-    std::vector<Parameter *>::iterator index = _params_vec.begin();
-    std::vector<Parameter *>::const_iterator end = _params_vec.end();
+    std::vector<ParameterInterface *>::iterator index = _params_vec.begin();
+    std::vector<ParameterInterface *>::const_iterator end = _params_vec.end();
     bool deleted = false;
     for (; index != end && !deleted; index++) {
       if ((*index)->GetName() == name) {
@@ -118,7 +114,7 @@ class GlobalParamHandler {
   std::string _notify_string;
   // Using pointer here to preserve the object if
   // the vector is moved in memory.
-  std::vector<Parameter *> _params_vec;
+  std::vector<ParameterInterface *> _params_vec;
   cv::Mat _original_image;
 };
 

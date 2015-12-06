@@ -73,9 +73,9 @@ class AdaptiveThreshold : public Filter {
 
  private:
   // Params
-  BooleanParameter _enable;
-  IntegerParameter _method, _threshold_type, _block_size;
-  DoubleParameter _c_param;
+  Parameter<bool> _enable;
+  RangedParameter<int> _method, _threshold_type, _block_size;
+  RangedParameter<double> _c_param;
 };
 
 }  // namespace lib_vision

@@ -59,7 +59,7 @@ class OriginalImage : public Filter {
 
  private:
   // Params
-  BooleanParameter _enable;
+  Parameter<bool> _enable;
 };
 
 }  // namespace lib_vision

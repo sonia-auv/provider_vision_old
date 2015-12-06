@@ -349,13 +349,13 @@ class TorpedoesDetector : public Filter {
 
  private:
   // Params
-  BooleanParameter _enable, _debug_contour;
-  DoubleParameter _sensibility;
-  DoubleParameter _min_area;
-  DoubleParameter _angle;
-  DoubleParameter _median;
-  DoubleParameter _ratio_max;
-  DoubleParameter _ratio_min;
+  Parameter<bool> _enable, _debug_contour;
+  RangedParameter<double> _sensibility;
+  RangedParameter<double> _min_area;
+  RangedParameter<double> _angle;
+  RangedParameter<double> _median;
+  RangedParameter<double> _ratio_max;
+  RangedParameter<double> _ratio_min;
   cv::Mat _output_image;
 };
 

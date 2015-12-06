@@ -115,8 +115,8 @@ class Morphology : public Filter {
 
  private:
   // Params
-  BooleanParameter _enable;
-  IntegerParameter _morph_type, _kernel_type, _iteration, _kernel_size;
+  Parameter<bool> _enable;
+  RangedParameter<int> _morph_type, _kernel_type, _iteration, _kernel_size;
   const cv::Point _anchor;
 };
 

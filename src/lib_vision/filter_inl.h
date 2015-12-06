@@ -44,7 +44,7 @@ ATLAS_INLINE Filter::Filter(const GlobalParamHandler &globalParams)
 
 //------------------------------------------------------------------------------
 //
-ATLAS_INLINE const std::vector<Parameter *> &Filter::GetParameters() const {
+ATLAS_INLINE const std::vector<ParameterInterface *> &Filter::GetParameters() const {
   return parameters_;
 }
 
@@ -96,21 +96,21 @@ ATLAS_INLINE void Filter::SetParameterValue(const std::string &name,
         // see:
         // http://stackoverflow.com/questions/11578936/getting-a-bunch-of-crosses-initialization-error
         // for more info.
-        BooleanParameter *p_bool = nullptr;
-        IntegerParameter *p_int = nullptr;
-        DoubleParameter *p_double = nullptr;
-        StringParameter *p_str = nullptr;
+        Parameter<bool> *p_bool = nullptr;
+        RangedParameter<int> *p_int = nullptr;
+        RangedParameter<double> *p_double = nullptr;
+        Parameter<std::string> *p_str = nullptr;
         switch (param->getType()) {
           case Parameter::BOOL:
-            p_bool = dynamic_cast<BooleanParameter *>(param);
+            p_bool = dynamic_cast<Parameter<bool> *>(param);
             // Just in case the cast didn't work.
             if (p_bool == nullptr) {
               break;
             }
-            p_bool->setValue(BooleanParameter::FromStringToBool(value));
+            p_bool->setValue(Parameter<bool>::FromStringToBool(value));
             break;
           case Parameter::INTEGER:
-            p_int = dynamic_cast<IntegerParameter *>(param);
+            p_int = dynamic_cast<RangedParameter<int> *>(param);
             // Just in case the cast didn't work.
             if (p_int == nullptr) {
               break;
@@ -118,7 +118,7 @@ ATLAS_INLINE void Filter::SetParameterValue(const std::string &name,
             p_int->setValue(atoi(value.c_str()));
             break;
           case Parameter::DOUBLE:
-            p_double = dynamic_cast<DoubleParameter *>(param);
+            p_double = dynamic_cast<RangedParameter<double> *>(param);
             // Just in case the cast didn't work.
             if (p_double == nullptr) {
               break;
@@ -126,7 +126,7 @@ ATLAS_INLINE void Filter::SetParameterValue(const std::string &name,
             p_double->setValue(atof(value.c_str()));
             break;
           case Parameter::STRING:
-            p_str = dynamic_cast<StringParameter *>(param);
+            p_str = dynamic_cast<Parameter<std::string> *>(param);
             // Just in case the cast didn't work.
             if (p_str == nullptr) {
               break;
@@ -168,7 +168,7 @@ ATLAS_INLINE void Filter::GlobalParamInteger(const std::string &name,
                                              const int value, const int min,
                                              const int max) {
   global_params_.addParam(
-      new IntegerParameter(name, value, max, min, &parameters_));
+      new RangedParameter<int>(name, value, max, min, &parameters_));
 }
 
 //------------------------------------------------------------------------------
@@ -178,21 +178,21 @@ ATLAS_INLINE void Filter::GlobalParamDouble(const std::string &name,
                                             const double min,
                                             const double max) {
   global_params_.addParam(
-      new DoubleParameter(name, value, max, min, &parameters_));
+      new RangedParameter<double>(name, value, max, min, &parameters_));
 }
 
 //------------------------------------------------------------------------------
 //
 ATLAS_INLINE void Filter::GlobalParamBoolean(const std::string &name,
                                              const bool value) {
-  global_params_.addParam(new BooleanParameter(name, value, &parameters_));
+  global_params_.addParam(new Parameter<bool>(name, value, &parameters_));
 }
 
 //------------------------------------------------------------------------------
 //
 ATLAS_INLINE void Filter::GlobalParamString(const std::string &name,
                                             const std::string &value) {
-  global_params_.addParam(new StringParameter(name, value, &parameters_));
+  global_params_.addParam(new Parameter<std::string>(name, value, &parameters_));
 }
 
 //------------------------------------------------------------------------------

@@ -30,11 +30,8 @@
 #include <string>
 #include <memory>
 #include <opencv2/opencv.hpp>
-#include <lib_vision/parameters/integer_parameter.h>
-#include <lib_vision/parameters/boolean_parameter.h>
-#include <lib_vision/parameters/double_parameter.h>
-#include <lib_vision/parameters/string_parameter.h>
 #include <lib_vision/parameter.h>
+#include <lib_vision/ranged_parameter.h>
 #include <lib_vision/global_param_handler.h>
 
 namespace lib_vision {
@@ -63,7 +60,7 @@ class Filter {
 
   inline void SetName(const std::string &name);
 
-  const std::vector<Parameter *> &GetParameters() const;
+  const std::vector<ParameterInterface *> &GetParameters() const;
 
   std::string GetParameterValue(const std::string &name);
 
@@ -93,7 +90,7 @@ class Filter {
 
   GlobalParamHandler &global_params_;
 
-  std::vector<Parameter *> parameters_;
+  std::vector<ParameterInterface *> parameters_;
 
   // Useful to identify the filter.
   std::string name_;

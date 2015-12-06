@@ -125,10 +125,10 @@ class SubtractAllPlanes : public Filter {
   }
 
   // Params
-  BooleanParameter _enable;
-  IntegerParameter _plane_one, _plane_two, _plane_three;
-  BooleanParameter _invert_one, _invert_two, _invert_three;
-  DoubleParameter _weight_one, _weight_two, _weight_three;
+  Parameter<bool> _enable;
+  RangedParameter<int> _plane_one, _plane_two, _plane_three;
+  Parameter<bool> _invert_one, _invert_two, _invert_three;
+  RangedParameter<double> _weight_one, _weight_two, _weight_three;
 
   // Color matrices
   std::vector<cv::Mat> _channel_vec;

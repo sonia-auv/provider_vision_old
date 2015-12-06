@@ -110,43 +110,43 @@ class InRange : public Filter {
    * This is being used by the vision server for calling the filter in the
    * filterchain.
    */
-  BooleanParameter enable_;
+  Parameter<bool> enable_;
 
   /** Inclusive Hue lower boundary. */
-  IntegerParameter lower_hue_;
+  RangedParameter<int> lower_hue_;
 
   /**  Inclusive Hue upper boundary. */
-  IntegerParameter upper_hue_;
+  RangedParameter<int> upper_hue_;
 
   /** Inclusive Saturation lower boundary. */
-  IntegerParameter lower_saturation_;
+  RangedParameter<int> lower_saturation_;
 
   /** Inclusive Saturation upper boundary. */
-  IntegerParameter upper_saturation_;
+  RangedParameter<int> upper_saturation_;
 
   /** Inclusive Value lower boundary. */
-  IntegerParameter lower_value_;
+  RangedParameter<int> lower_value_;
 
   /** Inclusive Value upper boundary. */
-  IntegerParameter upper_value_;
+  RangedParameter<int> upper_value_;
 
   /** Inclusive Lightness lower boundary. */
-  IntegerParameter lower_lightness_;
+  RangedParameter<int> lower_lightness_;
 
   /** Inclusive Lightness upper boundary. */
-  IntegerParameter upper_lightness_;
+  RangedParameter<int> upper_lightness_;
 
   /** Inclusive u lower boundary. */
-  IntegerParameter lower_u_;
+  RangedParameter<int> lower_u_;
 
   /** Inclusive u upper boundary. */
-  IntegerParameter upper_u_;
+  RangedParameter<int> upper_u_;
 
   /** Inclusive v lower boundary. */
-  IntegerParameter lower_v_;
+  RangedParameter<int> lower_v_;
 
   /** Inclusive v upper boundary. */
-  IntegerParameter upper_v_;
+  RangedParameter<int> upper_v_;
 };
 
 }  // namespace lib_vision

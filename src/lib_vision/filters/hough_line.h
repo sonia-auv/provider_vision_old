@@ -79,9 +79,9 @@ class HoughLine : public Filter {
 
  private:
   // Params
-  BooleanParameter _enable;
-  DoubleParameter _rho, _theta, _min_length, _max_gap;
-  IntegerParameter _threshold;
+  Parameter<bool> _enable;
+  RangedParameter<double> _rho, _theta, _min_length, _max_gap;
+  RangedParameter<int> _threshold;
 };
 
 }  // namespace lib_vision

@@ -68,8 +68,8 @@ class Canny : public Filter {
 
  private:
   // Params
-  BooleanParameter _enable, _l2_gradiant;
-  IntegerParameter _thresh_one, _thresh_two, _aperture_size;
+  Parameter<bool> _enable, _l2_gradiant;
+  RangedParameter<int> _thresh_one, _thresh_two, _aperture_size;
 };
 
 }  // namespace lib_vision

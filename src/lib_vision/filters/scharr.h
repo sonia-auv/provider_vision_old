@@ -91,8 +91,8 @@ class Scharr : public Filter {
 
  private:
   // Params
-  BooleanParameter _enable, _convert_to_uchar, _use_pixel_intensity_correction;
-  DoubleParameter _delta, _scale, _power_pixel_correction;
+  Parameter<bool> _enable, _convert_to_uchar, _use_pixel_intensity_correction;
+  RangedParameter<double> _delta, _scale, _power_pixel_correction;
 };
 
 }  // namespace lib_vision

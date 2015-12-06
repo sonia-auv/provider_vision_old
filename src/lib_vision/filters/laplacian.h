@@ -75,9 +75,9 @@ class Laplacian : public Filter {
 
  private:
   // Params
-  BooleanParameter _enable, _convert_to_uchar;
-  DoubleParameter _delta, _scale;
-  IntegerParameter _size;
+  Parameter<bool> _enable, _convert_to_uchar;
+  RangedParameter<double> _delta, _scale;
+  RangedParameter<int> _size;
 };
 
 }  // namespace lib_vision

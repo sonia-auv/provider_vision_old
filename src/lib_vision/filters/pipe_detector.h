@@ -135,8 +135,8 @@ class PipeDetector : public Filter {
  private:
   cv::Mat _output_image;
   // Params
-  BooleanParameter _enable, _debug_contour, _look_for_rectangle;
-  DoubleParameter _min_area;
+  Parameter<bool> _enable, _debug_contour, _look_for_rectangle;
+  RangedParameter<double> _min_area;
 };
 
 }  // namespace lib_vision

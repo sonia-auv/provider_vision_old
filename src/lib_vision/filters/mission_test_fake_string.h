@@ -61,8 +61,8 @@ class MissionTestFakeString : public Filter {
 
  private:
   // Params
-  BooleanParameter _enable;
-  StringParameter _string;
+  Parameter<bool> _enable;
+  Parameter<std::string> _string;
 };
 
 }  // namespace lib_vision

@@ -85,14 +85,14 @@ class BilateralFilter : public Filter {
    * This is being used by the vision server for calling the filter in the
    * filterchain.
    */
-  BooleanParameter enable_;
+  Parameter<bool> enable_;
 
   /**
    * From the OpenCV definition:
    * Diameter of each pixel neighborhood that is used during filtering.
    * If it is non-positive, it is computed from sigmaSpace .
    */
-  IntegerParameter diameter_;
+  RangedParameter<int> diameter_;
 
   /**
    * From the OpenCV definition:
@@ -100,7 +100,7 @@ class BilateralFilter : public Filter {
    * that farther colors within the pixel neighborhood (see sigmaSpace )
    * will be mixed together, resulting in larger areas of semi-equal color.
    */
-  IntegerParameter sigma_color_;
+  RangedParameter<int> sigma_color_;
 
   /**
    * From the OpenCV definition:
@@ -110,7 +110,7 @@ class BilateralFilter : public Filter {
    * the neighborhood size regardless of sigmaSpace . Otherwise, d is
    * proportional to sigmaSpace .
    */
-  IntegerParameter sigma_space_;
+  RangedParameter<int> sigma_space_;
 };
 
 }  // namespace lib_vision

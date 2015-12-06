@@ -1,5 +1,5 @@
 /**
- * \file	string_parameter.h
+ * \file	parameter.h
  * \author	Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
  * \author  Pierluc Bédard <pierlucbed@gmail.com>
  *
@@ -23,59 +23,63 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LIB_VISION_PARAMETERS_STRING_PARAMETER_H_
-#define LIB_VISION_PARAMETERS_STRING_PARAMETER_H_
+#ifndef LIB_VISION_RANGED_PARAMETER_H_
+#define LIB_VISION_RANGED_PARAMETER_H_
 
-#include <memory>
+#include <string>
+#include <vector>
+#include <iostream>
+#include <lib_atlas/macros.h>
 #include <lib_vision/parameter.h>
 
 namespace lib_vision {
 
-class StringParameter : public Parameter {
- public:
+template<typename Tp_>
+class RangedParameter : public Parameter<Tp_> {
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
 
-  using Ptr = std::shared_ptr<StringParameter>;
+  using Ptr = std::shared_ptr<RangedParameter<Tp_>>;
 
   //============================================================================
   // P U B L I C   C / D T O R S
 
-  explicit StringParameter(std::string _name, std::string _value,
-                           std::vector<Parameter *> *param_vector,
-                           const std::string &description = "")
-      : Parameter(_name, STRING, description, param_vector), value(_value) {}
+  explicit RangedParameter(const std::string &name, const std::string &description,
+                     std::vector<ParameterInterface *> *vector) :
+      Parameter<Tp_>(name, description, vector),
+      min_(),
+      max_() {}
 
-  virtual ~StringParameter() {}
+  virtual ~RangedParameter() ATLAS_NOEXCEPT = default;
 
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  // Setter
-  void operator=(const std::string &_value) { SetValue(_value); }
+  const Tp_ &GetMin() const { return min_; }
 
-  inline void SetValue(const std::string &_value) { value = _value; }
+  void SetMin(const Tp_ &min) { min_ = min; }
 
-  // Getter
-  inline std::string getValue() const { return value; }
+  const Tp_ &GetMax() const { return max_; }
 
-  std::string operator()() const { return value; }
+  void SetMax(const Tp_ &max) { max_ = max; }
 
-  virtual std::string ToString() const override {
+  std::string GetStringValue() const override {
     std::stringstream ss;
-    ss << GetName() << SEPARATOR << "String" << SEPARATOR << value
-       << SEPARATOR /*min*/
-       << SEPARATOR /*max*/
-       << SEPARATOR << GetDescription() << ";";
+    ss << std::to_string(GetValue()) << Parameter<Tp_>::SEPARATOR;
+    ss << std::to_string(GetMin()) << Parameter<Tp_>::SEPARATOR;
+    ss << std::to_string(GetMax());
     return ss.str();
   }
 
-  virtual inline std::string GetStringValue() const override { return value; }
+ protected:
+  //============================================================================
+  // P R O T E C T E D   M E M B E R S
 
- private:
-  std::string value;
+  Tp_ min_;
+
+  Tp_ max_;
 };
 
 }  // namespace lib_vision
 
-#endif  // LIB_VISION_PARAMETERS_STRING_PARAMETER_H_
+#endif  // LIB_VISION_RANGED_PARAMETER_H_

@@ -316,9 +316,9 @@ class FenceDetector : public Filter {
     return ratio_ok && y_diff_ok;
   }
 
-  BooleanParameter _enable, _debug_contour, _search_only_bottom;
+  Parameter<bool> _enable, _debug_contour, _search_only_bottom;
   // tbca = To Be Consider As
-  IntegerParameter _min_length, _max_distance_from_bottom_bar_extremum,
+  RangedParameter<int> _min_length, _max_distance_from_bottom_bar_extremum,
       _min_area, _max_diff_from_90_tbca_horizontal,
       _max_diff_from_0_tbca_vertical, _min_percent_filled;
 

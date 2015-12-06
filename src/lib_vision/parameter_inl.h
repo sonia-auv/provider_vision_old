@@ -30,6 +30,8 @@
 #include <string>
 #include <cstdlib>
 #include <cxxabi.h>
+#include <opencv/cv.h>
+#include <vector>
 #include <lib_atlas/macros.h>
 
 namespace lib_vision {
@@ -86,7 +88,7 @@ struct TypeName<cv::Mat> {
 template <class Tp_>
 ATLAS_INLINE Parameter<Tp_>::Parameter(
     const std::string &name, const std::string &description,
-    std::vector<Parameter *> *vector = nullptr)
+    std::vector<ParameterInterface *> *vector)
     : name_(name), description_(description) {
   if (vector != nullptr) {
     vector->push_back(this);
@@ -130,9 +132,7 @@ ATLAS_INLINE std::string Parameter<Tp_>::GetName() const {
 template <class Tp_>
 ATLAS_INLINE std::string Parameter<Tp_>::ToString() const {
   std::stringstream ss;
-  ss << GetName() << SEPARATOR << "String" << SEPARATOR << GetValue()
-     << SEPARATOR /*min*/
-     << SEPARATOR /*max*/
+  ss << GetName() << SEPARATOR << GetType() << SEPARATOR << GetStringValue()
      << SEPARATOR << GetDescription() << ";";
   return ss.str();
 }

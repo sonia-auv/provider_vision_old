@@ -189,8 +189,8 @@ class TrainDetector : public Filter {
  private:
   cv::Mat _output_image;
   // Params
-  BooleanParameter _enable, _debug_contour;
-  IntegerParameter _pair_distance_maximum, _min_area;
+  Parameter<bool> _enable, _debug_contour;
+  RangedParameter<int> _pair_distance_maximum, _min_area;
 
   ObjectFeatureFactory _feat_factory;
 };
