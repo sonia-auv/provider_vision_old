@@ -92,7 +92,9 @@ class Sobel : public Filter {
   }
 
  private:
-  // Params
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
   Parameter<bool> _enable, _convert_to_uchar, _use_pixel_intensity_correction;
   RangedParameter<double> _delta, _scale, _power_pixel_correction;
   RangedParameter<int> _size;

@@ -273,6 +273,9 @@ class FenceDetector : public Filter {
   }
 
  private:
+  //============================================================================
+  // P R I V A T E   M E T H O D S
+
   inline int CalculateYFromBottomBar(float bar_size, int bar_y) {
     int offset = static_cast<int>((bar_size) / 5.0f);
     return bar_y - offset;
@@ -315,6 +318,9 @@ class FenceDetector : public Filter {
     bool y_diff_ok = y_diff < 0.1;
     return ratio_ok && y_diff_ok;
   }
+
+  //============================================================================
+  // P R I V A T E   M E M B E R S
 
   Parameter<bool> _enable, _debug_contour, _search_only_bottom;
   // tbca = To Be Consider As

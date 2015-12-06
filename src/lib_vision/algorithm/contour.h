@@ -38,21 +38,40 @@ class Contour {
 
   using ContourVec = std::vector<cv::Point>;
 
+  //============================================================================
+  // P U B L I C   C / D T O R S
+
   Contour(const std::vector<cv::Point> &ctr);
+
   Contour(const cv::RotatedRect &rect);
 
-  // Approximate contours and merges vertex together
-  // using cv::approxContour
+  //============================================================================
+  // P U B L I C   O P E R A T O R S
+
+  cv::Point operator[](unsigned int index);
+
+  //============================================================================
+  // P U B L I C   M E T H O D S
+
+  /**
+   * Approximate contours and merges vertex together
+   */
   void Approximate(double accuracy);
+
   void ApproximateBySize();
 
-  // Draw contour in the image.
+  /**
+   * Draw contour in the image.
+   */
   void DrawContours(cv::Mat &image, cv::Scalar color, int thickness);
 
-  // Vector overload
+  //============================================================================
+  // P U B L I C   M E M B E R S
+
   size_t size();
+
   std::vector<cv::Point> Get();
-  cv::Point operator[](unsigned int index);
+
   std::vector<cv::Point> _contour;
 };
 

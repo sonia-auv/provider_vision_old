@@ -58,10 +58,16 @@ class ObjectBasicData {
     PLANES
   };
 
+  //============================================================================
+  // P U B L I C   C / D T O R S
+
   ObjectBasicData(const cv::Mat &originalImage, const cv::Mat &binaryImage,
                   const Contour &contour);
 
   virtual ~ObjectBasicData() {}
+
+  //============================================================================
+  // P U B L I C   M E T H O D S
 
   void SetPlaneInRange(int &planeID);
 
@@ -104,6 +110,9 @@ class ObjectBasicData {
   const cv::Mat &GetOriginalImage();
 
  private:
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
   std::map<OBJECT_DATA, bool> _is_calculated_map;
 
   int _vote_count;

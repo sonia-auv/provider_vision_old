@@ -103,7 +103,9 @@ class ImageAccumulator : public Filter {
   }
 
  private:
-  // Params
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
   ImageAccumulatorBuffer _accumulator;
   Parameter<bool> _enable;
   RangedParameter<int> _nb_image, _method;

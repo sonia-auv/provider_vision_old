@@ -46,6 +46,9 @@ class RotRect : public cv::RotatedRect {
 
   using Ptr = std::shared_ptr<RotRect>;
 
+  //============================================================================
+  // P U B L I C   C / D T O R S
+
   // Constructor/destructor
   RotRect(const std::vector<cv::Point> &edges);
 
@@ -57,10 +60,8 @@ class RotRect : public cv::RotatedRect {
 
   ~RotRect();
 
-  void drawRect(cv::Mat &out, cv::Scalar color, int thickness = 1);
-
-  // Create the class with another rotated rect
-  void swap(RotRect &a);
+  //============================================================================
+  // P U B L I C   O P E R A T O R S
 
   RotRect &operator=(RotRect rotRect);
 
@@ -68,11 +69,25 @@ class RotRect : public cv::RotatedRect {
 
   bool operator==(const RotRect &rotRect);
 
+  //============================================================================
+  // P U B L I C   M E T H O D S
+
+  void drawRect(cv::Mat &out, cv::Scalar color, int thickness = 1);
+
+  // Create the class with another rotated rect
+  void swap(RotRect &a);
+
   cv::Point2f *getCorners();
 
  private:
+  //============================================================================
+  // P R I V A T E   M E T H O D S
+
   // Set height to the longest side of the rectangle and
   void setValues();
+
+  //============================================================================
+  // P R I V A T E   M E M B E R S
 
   cv::Point2f pts[4];
 };

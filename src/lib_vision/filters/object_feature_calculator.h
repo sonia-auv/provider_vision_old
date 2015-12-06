@@ -125,17 +125,19 @@ class ObjectFeatureCalculator : public Filter {
   }
 
  private:
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
   cv::Mat _output_image;
+
   unsigned int _recording_frame_index;
-  // Params
+
   Parameter<bool> _enable, _debug_contour, _toggle_recording;
   Parameter<std::string> _id, _spec_1, _spec_2, _output_folder;
   RangedParameter<double> _min_area;
 
   ObjectFeatureFactory _feature_factory;
 };
-
-#define LIB_VISION_FILTERS_PI 3.14159265
 
 }  // namespace lib_vision
 

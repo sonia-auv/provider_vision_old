@@ -41,8 +41,13 @@ class Line {
 
   using Ptr = std::shared_ptr<Line>;
 
-  // CSTR/DSTR
+  //============================================================================
+  // P U B L I C   C / D T O R S
+
   Line(const cv::Point &start, const cv::Point &end);
+
+  //============================================================================
+  // P U B L I C   M E T H O D S
 
   // Debug
   void draw(cv::Mat &img, cv::Scalar color);
@@ -59,10 +64,19 @@ class Line {
   float getLength();
 
  private:
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
   // start point is leftmosst point, end id farrigth point
-  cv::Point center_, start_, end_;
+  cv::Point center_;
+
+  cv::Point start_;
+
+  cv::Point end_;
+
   // Degree
   float angle_;
+
   float length_;
 };
 

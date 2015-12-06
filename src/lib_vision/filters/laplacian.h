@@ -74,7 +74,9 @@ class Laplacian : public Filter {
   }
 
  private:
-  // Params
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
   Parameter<bool> _enable, _convert_to_uchar;
   RangedParameter<double> _delta, _scale;
   RangedParameter<int> _size;

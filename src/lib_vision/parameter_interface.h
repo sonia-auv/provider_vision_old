@@ -35,6 +35,12 @@
 
 namespace lib_vision {
 
+/**
+ * This is the public interface of a parameter. We want to use an interface
+ * because we have to store the list of the parameter in a container.
+ * We cannot store the templates pointers, in this case, we will simply store
+ * this interface and apply polymorphism on the different methods.
+ */
 class ParameterInterface {
  public:
   //==========================================================================

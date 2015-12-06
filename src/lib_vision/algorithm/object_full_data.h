@@ -55,13 +55,18 @@ class ObjectFullData : public ObjectTrackingData,
 
   typedef std::vector<ObjectFullData::Ptr> FullObjectPtrVec;
 
+  //============================================================================
+  // P U B L I C   C / D T O R S
+
   ObjectFullData(const cv::Mat &originalImage, const cv::Mat &binaryImage,
                  const Contour &contour);
 
   virtual ~ObjectFullData(){};
 };
+
 //==============================================================================
-// SORTING INLINE FUNCTION
+// I N L I N E   M E T H O D S   D E F I N I T I O N
+
 //------------------------------------------------------------------------------
 //
 inline bool AreaSorts(ObjectFullData::Ptr a, ObjectFullData::Ptr b) {

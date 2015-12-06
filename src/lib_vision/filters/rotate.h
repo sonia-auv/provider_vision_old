@@ -73,8 +73,11 @@ class Rotate : public Filter {
   }
 
  private:
-  // Params
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
   Parameter<bool> _enable;
+
   RangedParameter<int> _rotate_type;
 };
 

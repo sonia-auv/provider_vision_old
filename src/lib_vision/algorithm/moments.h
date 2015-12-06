@@ -38,19 +38,31 @@ class Moments {
 
   using Ptr = std::shared_ptr<Moments>;
 
+  //============================================================================
+  // P U B L I C   C / D T O R S
+
   Moments(cv::Mat image, bool binary);
 
   Moments();
 
   ~Moments();
 
+  //============================================================================
+  // P U B L I C   O P E R A T O R S
+
   void operator=(Moments moments);
+
+  //============================================================================
+  // P U B L I C   M E M B E R S
 
   // Points are in local coordinate, meaning that if the image was taken
   // from a rotated rectangle, the x and y a rotated too!
   cv::Point realCenter;
+
   cv::Point massCenter;
+
   float yDistanceFromCenter;
+
   float xDistanceFromCenter;
 
   cv::Moments cvMoments;

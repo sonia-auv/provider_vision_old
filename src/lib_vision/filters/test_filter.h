@@ -97,7 +97,9 @@ class TestFilter : public Filter {
   }
 
  private:
-  // Params
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
   Parameter<bool> _enable;
   RangedParameter<int> _int;
   Parameter<bool> _bool;

@@ -39,9 +39,15 @@ class Target {
 
   using Ptr = std::shared_ptr<Target>;
 
+  //============================================================================
+  // P U B L I C   C / D T O R S
+
   Target();
 
   ~Target();
+
+  //============================================================================
+  // P U B L I C   M E T H O D S
 
   void SetTarget(int x, int y, float width, float height, float angle,
                  const std::string &spec_field_1 = "",
@@ -67,20 +73,31 @@ class Target {
   void SetSpecFields(const std::string &field1, const std::string &field2);
 
   cv::Point GetTarget();
+
   std::string GetSpecField_1();
+
   std::string GetSpecField_2();
 
   std::string OutputString();
 
  private:
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
   // To know if we should put the data in the output or return empty
   // descriptor
   bool target_is_inited_;
+
   cv::Point center_;
+
   cv::Size dimension_;
+
   float angle_;
+
   // Bins name, buoy colors, etc.
-  std::string special_field_1_, special_field_2_;
+  std::string special_field_1_;
+
+  std::string special_field_2_;
 };
 
 //=============================================================================

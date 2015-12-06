@@ -37,9 +37,7 @@
  * the time in millisecond since its construction.
  * you can update the start time (time since construction)
  * by calling UpdateStartTime()
- *
  */
-
 class PerformanceEvaluator {
  public:
   //==========================================================================
@@ -47,8 +45,15 @@ class PerformanceEvaluator {
 
   using Ptr = std::shared_ptr<PerformanceEvaluator>;
 
+  //============================================================================
+  // P U B L I C   C / D T O R S
+
   PerformanceEvaluator();
+
   ~PerformanceEvaluator(){};
+
+  //============================================================================
+  // P U B L I C   M E T H O D S
 
   // Return the time in second since construction or call to UpdateStartTime
   double GetExecTimeSec();
@@ -57,7 +62,11 @@ class PerformanceEvaluator {
   void UpdateStartTime();
 
  private:
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
   double _start_tick_count;
+
   double _tick_frequency;
 };
 

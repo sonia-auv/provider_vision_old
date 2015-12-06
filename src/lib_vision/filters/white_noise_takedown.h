@@ -100,7 +100,9 @@ class WhiteNoiseTakedown : public Filter {
   }
 
  private:
-  // Params
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
   Parameter<bool> _enable;
   RangedParameter<int> _lowB, _highB, _lowG, _highG, _lowR, _highR;
   RangedParameter<int> _view_channel;

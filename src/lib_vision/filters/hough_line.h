@@ -78,7 +78,9 @@ class HoughLine : public Filter {
   }
 
  private:
-  // Params
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
   Parameter<bool> _enable;
   RangedParameter<double> _rho, _theta, _min_length, _max_gap;
   RangedParameter<int> _threshold;

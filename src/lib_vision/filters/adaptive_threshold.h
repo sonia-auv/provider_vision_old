@@ -72,9 +72,13 @@ class AdaptiveThreshold : public Filter {
   }
 
  private:
-  // Params
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
   Parameter<bool> _enable;
+
   RangedParameter<int> _method, _threshold_type, _block_size;
+
   RangedParameter<double> _c_param;
 };
 

@@ -96,6 +96,9 @@ class ScharrAdding : public Filter {
   }
 
  private:
+  //============================================================================
+  // P R I V A T E   M E T H O D S
+
   cv::Mat calcScharr(const cv::Mat &img) {
     cv::Mat abs_x, scharrX, abs_y, scharrY, diff;
 
@@ -115,7 +118,8 @@ class ScharrAdding : public Filter {
     return diff;
   }
 
-  // Params
+  //============================================================================
+  // P R I V A T E   M E M B E R S
 
   // _run_small_image accelerate the pipeline by
   // reducing the image size by two (in each direction)

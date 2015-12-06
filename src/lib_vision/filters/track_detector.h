@@ -176,6 +176,9 @@ class TrackDetector : public Filter {
   }
 
  private:
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
   cv::Mat _output_image;
   // Params
   Parameter<bool> _enable, _debug_contour;

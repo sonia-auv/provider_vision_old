@@ -38,6 +38,8 @@ namespace lib_vision {
 
 namespace details {
 
+//------------------------------------------------------------------------------
+//
 template <typename Tp_>
 struct StringConvertor {
   static std::string TypeName() {
@@ -61,6 +63,8 @@ struct StringConvertor {
   }
 };
 
+//------------------------------------------------------------------------------
+//
 template <>
 struct StringConvertor<int> {
   static std::string TypeName() { return "Integer"; }
@@ -74,6 +78,8 @@ struct StringConvertor<int> {
   }
 };
 
+//------------------------------------------------------------------------------
+//
 template <>
 struct StringConvertor<bool> {
   static std::string TypeName() { return "Boolean"; }
@@ -98,6 +104,8 @@ struct StringConvertor<bool> {
   }
 };
 
+//------------------------------------------------------------------------------
+//
 template <>
 struct StringConvertor<double> {
   static std::string TypeName() { return "Double"; }
@@ -111,6 +119,8 @@ struct StringConvertor<double> {
   }
 };
 
+//------------------------------------------------------------------------------
+//
 template <>
 struct StringConvertor<std::string> {
   static std::string TypeName() { return "String"; }

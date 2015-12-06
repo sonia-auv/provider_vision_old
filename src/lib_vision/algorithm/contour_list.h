@@ -54,20 +54,42 @@ class ContourList {
     HIERARCHY        // All the contours, fills the hierarchy member
   };
 
+  //============================================================================
+  // P U B L I C   C / D T O R S
+
   ContourList(const cv::Mat &image, const METHOD method);
+
+  //============================================================================
+  // P U B L I C   O P E R A T O R S
+
+  Contour operator[](size_t index);
+
+  //============================================================================
+  // P U B L I C   M E T H O D S
 
   void DrawContours(cv::Mat &img, const cv::Scalar &color, int thickness = 2);
 
   // Vector overload
   size_t size();
-  Contour operator[](size_t index);
 
   std::vector<std::vector<cv::Point>> GetAsPoint();
   std::vector<Contour> GetAsContour();
   std::vector<cv::Vec4i> GetHierachy();
 
+  //============================================================================
+  // P U B L I C   M E M B E R S
+
+  ContourListVector contour_list_point_;
+  std::vector<Contour> contour_vec_;
+  // Contains the hierachy when METHOD used is HIERACHY
+  std::vector<cv::Vec4i> _hierarchy;
+
  private:
+  //============================================================================
+  // P R I V A T E   M E T H O D S
+
   bool HasChild(const cv::Vec4i &hierarchy_def);
+
   bool HasParent(const cv::Vec4i &hierarchy_def);
 
   // Retrieval method
@@ -87,12 +109,6 @@ class ContourList {
 
   // All contour that has no child AND no parent
   void retrieveOutNoChildContours(const cv::Mat &image);
-
- public:
-  ContourListVector contour_list_point_;
-  std::vector<Contour> contour_vec_;
-  // Contains the hierachy when METHOD used is HIERACHY
-  std::vector<cv::Vec4i> _hierarchy;
 };
 
 //=============================================================================

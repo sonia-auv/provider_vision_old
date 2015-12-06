@@ -182,6 +182,9 @@ class BuoySingle : public Filter {
   }
 
  private:
+  //============================================================================
+  // P R I V A T E   M E T H O D S
+
   float getRadiusFromRectangle(ObjectFullData::Ptr &rectangle);
 
   bool IsSameX(ObjectFullData::Ptr a, ObjectFullData::Ptr b);
@@ -192,6 +195,9 @@ class BuoySingle : public Filter {
   void EliminateSameXTarget(ObjectFullData::FullObjectPtrVec &vec);
 
   void ChooseMostRed(ObjectFullData::FullObjectPtrVec &vec);
+
+  //============================================================================
+  // P R I V A T E   M E M B E R S
 
   cv::Mat _outputImage;
   ObjectFeatureFactory feat_factory_;

@@ -39,17 +39,27 @@ class ObjectTrackingData {
 
   using Ptr = std::shared_ptr<ObjectTrackingData>;
 
+  //============================================================================
+  // P U B L I C   C / D T O R S
+
   ObjectTrackingData() : _presence_count(0.0f){};
 
   virtual ~ObjectTrackingData(){};
+
+  //============================================================================
+  // P U B L I C   M E T H O D S
 
   void SetPresenceCount(float presenceCount);
 
   float GetPresenceCount();
 
  private:
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
   // In percent, nb of presence/ nb of frame in memory
   float _presence_count;
+
   // In percent, the variation of the ratio value
   // float _ratio_variation;
 };

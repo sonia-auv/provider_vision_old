@@ -288,6 +288,7 @@ class ObjectFinder : public Filter {
       }
     }
   }
+
   float GetDistanceFromCenter(ObjectFullData::Ptr object) {
     cv::Point center(object->GetBinaryImage().cols / 2,
                      object->GetBinaryImage().rows / 2);
@@ -297,15 +298,22 @@ class ObjectFinder : public Filter {
   };
 
  private:
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
   cv::Mat _output_image;
-  // Params
+
   Parameter<bool> _enable, _debug_contour, _look_for_rectangle, _disable_ratio,
       _disable_angle, _use_convex_hull;
+
   Parameter<bool> _vote_most_centered, _vote_most_upright,
       _vote_less_difference_from_targeted_ratio, _vote_length, _vote_higher;
+
   Parameter<std::string> _id, _spec_1, _spec_2;
+
   RangedParameter<double> _min_area, _targeted_ratio, _difference_from_target_ratio,
       _targeted_angle, _difference_from_target_angle, _min_percent_filled;
+
   RangedParameter<int> _contour_retreval;
 
   ObjectFeatureFactory _feature_factory;

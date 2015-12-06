@@ -39,9 +39,15 @@ class ObjectRankingData {
 
   using Ptr = std::shared_ptr<ObjectRankingData>;
 
+  //============================================================================
+  // P U B L I C   C / D T O R S
+
   ObjectRankingData() : _area_rank(0.0f), _length_rank(0.0f){};
 
   virtual ~ObjectRankingData(){};
+
+  //============================================================================
+  // P U B L I C   M E T H O D S
 
   // Rank are grade from 0 to 1, 0 being the last, 1 being the first
   void SetAreaRank(float rank);
@@ -53,9 +59,13 @@ class ObjectRankingData {
   float GetLengthRank();
 
  private:
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
   float _area_rank;
   float _length_rank;
 };
+
 //=============================================================================
 // 	INLINE METHOD IMPLEMENTATION
 

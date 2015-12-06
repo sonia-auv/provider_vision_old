@@ -40,9 +40,22 @@ class ObjectFeatureFactory {
 
   using Ptr = std::shared_ptr<ObjectFeatureFactory>;
 
+  /**
+   * Defines the type "Pointer to method to calculate a feature"
+   * typedef float
+   * (ObjectFeatureFactory::*FeatureFunction)(std::shared_ptr<ObjectFullData>);
+   */
+  typedef std::function<void(ObjectFullData::Ptr)> FeatureFunction;
+
+  //============================================================================
+  // P U B L I C   C / D T O R S
+
   ObjectFeatureFactory(unsigned int memorySize);
 
   ~ObjectFeatureFactory(){};
+
+  //============================================================================
+  // P U B L I C   M E T H O D S
 
   void ComputeAllFeature(ObjectFullData::FullObjectPtrVec objects);
   void ComputeAllFeature(ObjectFullData::Ptr object);
@@ -70,13 +83,13 @@ class ObjectFeatureFactory {
   void GrayMeanFeature(ObjectFullData::Ptr object);
 
  private:
+  //============================================================================
+  // P R I V A T E   M E T H O D S
+
   float CalculatePlaneMean(ObjectFullData::Ptr object, int plane);
 
-  // define the type "Pointer to method to calculate a feature"
-  // typedef float
-  // (ObjectFeatureFactory::*FeatureFunction)(std::shared_ptr<ObjectFullData>);
-
-  typedef std::function<void(ObjectFullData::Ptr)> FeatureFunction;
+  //============================================================================
+  // P R I V A T E   M E M B E R S
 
   // the vector of function enables iterating through the function that needs
   // to be call in odrer to compute the good feature.

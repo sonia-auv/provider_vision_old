@@ -38,16 +38,22 @@ class ObjectFrameMemory {
 
   using Ptr = std::shared_ptr<ObjectFrameMemory>;
 
-  ObjectFrameMemory(unsigned int memorySize);
-
-  ~ObjectFrameMemory() {}
-
   // When getting object in the past, we compare the center
   // and the ratio to make sure it stills fit the same object.
   // If the ratio difference is smaller than RATIO_MAX_DIFFERENCE
   // we consider it as good object.
   static const float DISTANCE_MAX_DIFFERENCE;
   static const float RATIO_MAX_DIFFERENCE;
+
+  //============================================================================
+  // P U B L I C   C / D T O R S
+
+  ObjectFrameMemory(unsigned int memorySize);
+
+  ~ObjectFrameMemory() {}
+
+  //============================================================================
+  // P U B L I C   M E T H O D S
 
   void AddFrameObjects(ObjectFullData::FullObjectPtrVec &objectVector);
 
@@ -58,6 +64,9 @@ class ObjectFrameMemory {
       const cv::Point &center, const float objectRatio);
 
  private:
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
   std::vector<ObjectFullData::FullObjectPtrVec> _previous_frames;
   unsigned int _memory_size;
 };

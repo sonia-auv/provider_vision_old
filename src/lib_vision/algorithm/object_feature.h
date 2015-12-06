@@ -57,6 +57,9 @@ class ObjectFeatureData {
 
   typedef std::vector<ObjectFeatureData::Ptr> ObjectFeatureVector;
 
+  //============================================================================
+  // P U B L I C   C / D T O R S
+
   ObjectFeatureData()
       : ratio_(-1.0f),
         convexity_(-1.0f),
@@ -70,7 +73,11 @@ class ObjectFeatureData {
         green_mean_(-1.0f),
         blue_mean_(-1.0f),
         gray_mean_(-1.0f){};
+
   virtual ~ObjectFeatureData(){};
+
+  //============================================================================
+  // P U B L I C   M E T H O D S
 
   inline float GetRatio() const { return ratio_; }
   inline float GetConvexity() const { return convexity_; }
@@ -101,6 +108,9 @@ class ObjectFeatureData {
   inline void SetGrayMean(float value) { gray_mean_ = value; }
 
  private:
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
   float ratio_, convexity_, percent_filled_, circularity_,
       presence_consistency_, hue_mean_, sat_mean_, intensity_mean_, red_mean_,
       green_mean_, blue_mean_, gray_mean_;

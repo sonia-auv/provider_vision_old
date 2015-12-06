@@ -36,6 +36,9 @@ class ReferencePoint {
 
   using Ptr = std::shared_ptr<ReferencePoint>;
 
+  //============================================================================
+  // P U B L I C   C / D T O R S
+
   ReferencePoint(float pix_val, int max_val_index);
 
   float _pix_value;
@@ -74,10 +77,16 @@ class MajorEdgeExtractor {
 
   using Ptr = std::shared_ptr<MajorEdgeExtractor>;
 
+  static const float PERCENT_OF_VAL_FOR_VALUE_CONNECTION;
+
+  //============================================================================
+  // P U B L I C   M E T H O D S
+
   cv::Mat ExtractEdge(const cv::Mat &image, int extreme_minimum);
 
  private:
-  static const float PERCENT_OF_VAL_FOR_VALUE_CONNECTION;
+  //============================================================================
+  // P R I V A T E   M E T H O D S
 
   void Init(const cv::Size &size);
 
@@ -113,15 +122,21 @@ class MajorEdgeExtractor {
 
   void SetValInReferenceVec(RefPointPtr ptr, float value);
 
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
   RefImage _ref_image;
+
   std::vector<float> _max_value_reference;
+
   cv::Size _img_size;
 
   friend class MajorEdgeExtractorUT;
 };
 
 //=============================================================================
-// 	INLINE CODE FUNCTION
+// I N L I N E   M E T H O D S   D E F I N I T I O N
+
 //-----------------------------------------------------------------------------
 //
 inline void MajorEdgeExtractor::CreateRefImage(const cv::Size &size) {

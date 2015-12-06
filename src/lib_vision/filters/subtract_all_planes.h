@@ -109,6 +109,9 @@ class SubtractAllPlanes : public Filter {
   }
 
  private:
+  //============================================================================
+  // P R I V A T E   M E T H O D S
+
   void set_image(const int choice, cv::Mat &out, const double weight,
                  const bool inverse) {
     cv::Mat two_five_five(_rows, _cols, CV_16SC1, cv::Scalar(255));
@@ -124,7 +127,9 @@ class SubtractAllPlanes : public Filter {
     cv::multiply(out, one, out, weight, CV_8UC1);
   }
 
-  // Params
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
   Parameter<bool> _enable;
   RangedParameter<int> _plane_one, _plane_two, _plane_three;
   Parameter<bool> _invert_one, _invert_two, _invert_three;

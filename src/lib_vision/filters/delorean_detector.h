@@ -193,11 +193,16 @@ class DeloreanDetector : public Filter {
   }
 
  private:
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
   cv::Mat _output_image;
-  // Params
+
   Parameter<bool> _enable, _debug_contour, _output_train;
+
   RangedParameter<double> _min_area, _targeted_ratio_big, _targeted_ratio_small,
       _difference_from_target_ratio;
+
   ObjectFeatureFactory _feat_factory;
 };
 

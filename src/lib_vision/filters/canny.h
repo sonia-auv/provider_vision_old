@@ -67,7 +67,9 @@ class Canny : public Filter {
   }
 
  private:
-  // Params
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
   Parameter<bool> _enable, _l2_gradiant;
   RangedParameter<int> _thresh_one, _thresh_two, _aperture_size;
 };

@@ -83,7 +83,9 @@ class Erode : public Filter {
   }
 
  private:
-  // Params
+  //============================================================================
+  // P R I V A T E   M E M B E R S
+
   Parameter<bool> _enable, _use_square_kernel;
   RangedParameter<int> _kernel_type;
   RangedParameter<int> _kernel_size_x, _kernel_size_y;
