@@ -144,25 +144,25 @@ class ImageAccumulatorBuffer {
    */
   void FillWithBlank();
 
-  /**
-   * Pointer to the method to use for averaging the frame
-   */
-  void (ImageAccumulatorBuffer::*_average_method)(cv::Mat &);
-
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  size_t _buffer_size;
+  /**
+   * Pointer to the method to use for averaging the frame
+   */
+  void (ImageAccumulatorBuffer::*average_method_)(cv::Mat &);
 
-  double _individual_weight;
+  size_t buffer_size_;
 
-  uint _buffer_current_index;
+  double individual_weight_;
 
-  std::vector<cv::Mat> _image_vec;
+  uint buffer_current_index_;
 
-  int _image_type;
+  std::vector<cv::Mat> image_vec_;
 
-  cv::Size _image_size;
+  int image_type_;
+
+  cv::Size image_size_;
 };
 
 //==============================================================================
@@ -170,13 +170,13 @@ class ImageAccumulatorBuffer {
 
 //-----------------------------------------------------------------------------
 //
-inline int ImageAccumulatorBuffer::GetBufferLength() { return _buffer_size; }
+inline int ImageAccumulatorBuffer::GetBufferLength() { return buffer_size_; }
 
 //-----------------------------------------------------------------------------
 //
 inline void ImageAccumulatorBuffer::GetImage(size_t index, cv::Mat &image) {
-  if (index < _buffer_size) {
-    _image_vec[index].copyTo(image);
+  if (index < buffer_size_) {
+    image_vec_[index].copyTo(image);
   }
 }
 
@@ -184,13 +184,13 @@ inline void ImageAccumulatorBuffer::GetImage(size_t index, cv::Mat &image) {
 //
 inline int ImageAccumulatorBuffer::GetIndexFromMostRecent(int elementNumber) {
   // Newest frame
-  int index = _buffer_current_index % _buffer_size;
+  int index = buffer_current_index_ % buffer_size_;
   index -= elementNumber;
   // return at the end of the vector to continue moving
   if (index < 0) {
     // In reality its _buffer_size - abs(index) but y'know
     // computation and stuff
-    index = _buffer_size + index;
+    index = buffer_size_ + index;
   }
   return index;
 }
@@ -199,19 +199,19 @@ inline int ImageAccumulatorBuffer::GetIndexFromMostRecent(int elementNumber) {
 //
 inline int ImageAccumulatorBuffer::GetIndexFromOldest(int elementNumber) {
   // Newest frame
-  int index = _buffer_current_index % _buffer_size;
-  return (index + 1 + elementNumber) % _buffer_size;
+  int index = buffer_current_index_ % buffer_size_;
+  return (index + 1 + elementNumber) % buffer_size_;
 }
 
 //------------------------------------------------------------------------------
 //
 inline void ImageAccumulatorBuffer::FillWithBlank() {
-  cv::Mat zero = cv::Mat::zeros(_image_size, _image_type);
+  cv::Mat zero = cv::Mat::zeros(image_size_, image_type_);
   // It is possible to call fillWithBlank when the buffer is active,
   // we must clear it before pushing back new values.
-  _image_vec.clear();
-  for (int i = 0; i < _buffer_size; i++) {
-    _image_vec.push_back(zero);
+  image_vec_.clear();
+  for (int i = 0; i < buffer_size_; i++) {
+    image_vec_.push_back(zero);
   }
 }
 
@@ -220,13 +220,13 @@ inline void ImageAccumulatorBuffer::FillWithBlank() {
 inline void ImageAccumulatorBuffer::SetAverageMethod(METHOD method) {
   switch (method) {
     case ACC_ALL_SAME_WEIGHT:
-      _average_method = &ImageAccumulatorBuffer::AverageAllSameWeight;
+      average_method_ = &ImageAccumulatorBuffer::AverageAllSameWeight;
       break;
     case ACC_50_PERCENT:
-      _average_method = &ImageAccumulatorBuffer::AverageIncrease50Percent;
+      average_method_ = &ImageAccumulatorBuffer::AverageIncrease50Percent;
       break;
     case ACC_ADJUST_WEIGHT:
-      _average_method =
+      average_method_ =
           &ImageAccumulatorBuffer::AverageAccumulateWithResultingWeight;
       break;
   }

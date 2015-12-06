@@ -43,7 +43,7 @@ class TestFilter : public Filter {
 
   explicit TestFilter(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, &parameters_, "Enable the filter"),
+        enable_("Enable", false, &parameters_, "Enable the filter"),
         _int("Test_int", 2, 1, 3, &parameters_, "Test int"),
         _bool("test_bool", false, &parameters_),
         _str("Test_string", "teststring", &parameters_),
@@ -66,7 +66,7 @@ class TestFilter : public Filter {
   }
 
   virtual void Execute(cv::Mat &image) {
-    if (_enable()) {
+    if (enable_()) {
       cv::Mat imageOriginal = global_params_.getOriginalImage();
       imageOriginal = cv::Mat::zeros(1, 1, CV_8UC1);
       RangedParameter<int> *int_test(dynamic_cast<RangedParameter<int> *>(
@@ -81,16 +81,14 @@ class TestFilter : public Filter {
         NotifyString("Bool OK");
       }
 
-      RangedParameter<double> *double_test(
-          dynamic_cast<RangedParameter<double> *>(
-              global_params_.getParam("test double")));
+      RangedParameter<double> *double_test(dynamic_cast<RangedParameter<double> *>(
+          global_params_.getParam("test double")));
       if (double_test != nullptr) {
         NotifyString("RangedParameter<double> OK");
       }
 
-      Parameter<std::string> *string_test(
-          dynamic_cast<Parameter<std::string> *>(
-              global_params_.getParam("test_string")));
+      Parameter<std::string> *string_test(dynamic_cast<Parameter<std::string> *>(
+          global_params_.getParam("test_string")));
       if (string_test != nullptr) {
         NotifyString("String OK");
       }
@@ -102,7 +100,7 @@ class TestFilter : public Filter {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  Parameter<bool> _enable;
+  Parameter<bool> enable_;
   RangedParameter<int> _int;
   Parameter<bool> _bool;
   Parameter<std::string> _str;

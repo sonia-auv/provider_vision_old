@@ -44,20 +44,20 @@ class ScharrAdding : public Filter {
 
   explicit ScharrAdding(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, &parameters_),
-        _run_small_image("Run_small_image", true, &parameters_,
+        enable_("Enable", false, &parameters_),
+        run_small_image_("Run_small_image", true, &parameters_,
                          "Resize image to run on smaller image"),
-        _convert_to_uchar("Convert_to_uchar", false, &parameters_),
-        _delta("Delta", 0, 0, 255, &parameters_),
-        _scale("Scale", 1, 0, 255, &parameters_),
-        _mean_multiplier("Mean_multiplier", 1.0f, 0.0f, 10.0f, &parameters_),
-        _plane_blue("Blue", false, &parameters_),
-        _plane_green("Green", false, &parameters_),
-        _plane_red("Red", false, &parameters_),
-        _plane_hue("Hue", false, &parameters_),
-        _plane_saturation("Saturation", false, &parameters_),
-        _plane_intensity("Intensity", false, &parameters_),
-        _plane_gray("Gray", false, &parameters_) {
+        convert_to_uchar_("Convert_to_uchar", false, &parameters_),
+        delta_("Delta", 0, 0, 255, &parameters_),
+        scale_("Scale", 1, 0, 255, &parameters_),
+        mean_multiplier_("Mean_multiplier", 1.0f, 0.0f, 10.0f, &parameters_),
+        plane_blue_("Blue", false, &parameters_),
+        plane_green_("Green", false, &parameters_),
+        plane_red_("Red", false, &parameters_),
+        plane_hue_("Hue", false, &parameters_),
+        plane_saturation_("Saturation", false, &parameters_),
+        plane_intensity_("Intensity", false, &parameters_),
+        plane_gray_("Gray", false, &parameters_) {
     SetName("ScharrAdding");
   }
 
@@ -67,29 +67,29 @@ class ScharrAdding : public Filter {
   // P U B L I C   M E T H O D S
 
   virtual void Execute(cv::Mat &image) {
-    if (_enable()) {
+    if (enable_()) {
       if (image.channels() != 3) return;
-      if (_run_small_image()) {
+      if (run_small_image_()) {
         cv::resize(image, image, cv::Size(image.cols / 2, image.rows / 2));
       }
 
-      std::vector<cv::Mat> colorPlanes = getColorPlanes(image);
+      std::vector<cv::Mat> colorPlanes = GetColorPlanes(image);
       cv::Mat sum = cv::Mat::zeros(image.rows, image.cols, CV_32FC1);
 
-      if (_plane_blue()) cv::add(calcScharr(colorPlanes[0]), sum, sum);
-      if (_plane_green()) cv::add(calcScharr(colorPlanes[1]), sum, sum);
-      if (_plane_red()) cv::add(calcScharr(colorPlanes[2]), sum, sum);
-      if (_plane_hue()) cv::add(calcScharr(colorPlanes[3]), sum, sum);
-      if (_plane_saturation()) cv::add(calcScharr(colorPlanes[4]), sum, sum);
-      if (_plane_intensity()) cv::add(calcScharr(colorPlanes[5]), sum, sum);
-      if (_plane_gray()) cv::add(calcScharr(colorPlanes[6]), sum, sum);
+      if (plane_blue_()) cv::add(calcScharr(colorPlanes[0]), sum, sum);
+      if (plane_green_()) cv::add(calcScharr(colorPlanes[1]), sum, sum);
+      if (plane_red_()) cv::add(calcScharr(colorPlanes[2]), sum, sum);
+      if (plane_hue_()) cv::add(calcScharr(colorPlanes[3]), sum, sum);
+      if (plane_saturation_()) cv::add(calcScharr(colorPlanes[4]), sum, sum);
+      if (plane_intensity_()) cv::add(calcScharr(colorPlanes[5]), sum, sum);
+      if (plane_gray_()) cv::add(calcScharr(colorPlanes[6]), sum, sum);
 
       sum.copyTo(image);
-      if (_run_small_image()) {
+      if (run_small_image_()) {
         cv::resize(image, image, cv::Size(image.cols * 2, image.rows * 2));
       }
 
-      if (_convert_to_uchar() && image.channels() < 3) {
+      if (convert_to_uchar_() && image.channels() < 3) {
         cv::cvtColor(image, image, CV_GRAY2BGR);
       }
     }
@@ -102,9 +102,9 @@ class ScharrAdding : public Filter {
   cv::Mat calcScharr(const cv::Mat &img) {
     cv::Mat abs_x, scharrX, abs_y, scharrY, diff;
 
-    cv::Scharr(img, scharrX, CV_32F, 1, 0, _scale(), _delta(),
+    cv::Scharr(img, scharrX, CV_32F, 1, 0, scale_(), delta_(),
                cv::BORDER_REPLICATE);
-    cv::Scharr(img, scharrY, CV_32F, 0, 1, _scale(), _delta(),
+    cv::Scharr(img, scharrY, CV_32F, 0, 1, scale_(), delta_(),
                cv::BORDER_REPLICATE);
     cv::absdiff(scharrX, 0, scharrX);
     cv::absdiff(scharrY, 0, scharrY);
@@ -112,7 +112,7 @@ class ScharrAdding : public Filter {
     cv::addWeighted(scharrX, 0.5, scharrY, 0.5, 0, diff, CV_32F);
 
     cv::Scalar mean = cv::mean(diff);
-    cv::threshold(diff, diff, (mean[0] * _mean_multiplier()), 0,
+    cv::threshold(diff, diff, (mean[0] * mean_multiplier_()), 0,
                   CV_THRESH_TOZERO);
 
     return diff;
@@ -125,14 +125,14 @@ class ScharrAdding : public Filter {
   // reducing the image size by two (in each direction)
   // so that the scharr computation does not take to much time
   // when multiple images.
-  Parameter<bool> _enable, _run_small_image, _convert_to_uchar;
+  Parameter<bool> enable_, run_small_image_, convert_to_uchar_;
   // _mean_multiplier act as threshold for noise.
   // When set, it remove everything under the mean to keep only
   // proeminent contours.
-  RangedParameter<double> _delta, _scale, _mean_multiplier;
-  Parameter<bool> _plane_blue, _plane_green, _plane_red;
-  Parameter<bool> _plane_hue, _plane_saturation, _plane_intensity;
-  Parameter<bool> _plane_gray;
+  RangedParameter<double> delta_, scale_, mean_multiplier_;
+  Parameter<bool> plane_blue_, plane_green_, plane_red_;
+  Parameter<bool> plane_hue_, plane_saturation_, plane_intensity_;
+  Parameter<bool> plane_gray_;
 };
 
 }  // namespace lib_vision

@@ -93,9 +93,9 @@ class ObjectFeatureFactory {
 
   // the vector of function enables iterating through the function that needs
   // to be call in odrer to compute the good feature.
-  std::map<ObjectFeatureData::Feature, FeatureFunction> feature_fct_map;
+  std::map<ObjectFeatureData::Feature, FeatureFunction> feature_fct_map_;
 
-  ObjectFrameMemory _frame_memory;
+  ObjectFrameMemory frame_memory_;
 };
 
 //==============================================================================
@@ -114,7 +114,7 @@ inline void ObjectFeatureFactory::ComputeAllFeature(
 //
 inline void ObjectFeatureFactory::ComputeAllFeature(
     ObjectFullData::Ptr object) {
-  for (auto &fct : feature_fct_map) {
+  for (auto &fct : feature_fct_map_) {
     fct.second(object);  //(*(fct.second));
     //*tmp(object);
   }
@@ -136,7 +136,7 @@ inline void ObjectFeatureFactory::ComputeSelectedFeature(
     ObjectFullData::Ptr object,
     const std::vector<ObjectFeatureData::Feature> &feature) {
   for (const auto &feat : feature) {
-    (feature_fct_map[feat])(object);
+    (feature_fct_map_[feat])(object);
   }
 }
 
@@ -190,9 +190,9 @@ inline void ObjectFeatureFactory::PresenceConsistencyFeature(
       ratio = object->GetRatio();
     }
     ObjectFullData::FullObjectPtrVec vec =
-        _frame_memory.GetPastObjectsViaCenter(object->GetCenter(), ratio);
+        frame_memory_.GetPastObjectsViaCenter(object->GetCenter(), ratio);
     object->SetPresenceConsistency(float(vec.size()) /
-                                   float(_frame_memory.GetMemorySize()));
+                                   float(frame_memory_.GetMemorySize()));
   }
 }
 

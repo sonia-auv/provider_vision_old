@@ -50,20 +50,20 @@ class BuoySingle : public Filter {
   explicit BuoySingle(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
         feat_factory_(1),
-        _enable("Enable", false, &parameters_),
-        _debug_good_contour("Debug_contour", false, &parameters_),
-        _eliminate_same_x_targets("Eliminate_same_x", false, &parameters_),
-        _detect_red("Detect_red", false, &parameters_),
-        _color("Buoy", "red", &parameters_),
-        _min_area("Min_area", 200, 0, 10000, &parameters_),
-        _max_ratio("Max_ratio", 50, 0, 100, &parameters_),
-        _min_filled_percent("Min_percent", 50, 0, 100, &parameters_),
-        _max_x_difference_for_elimination("Min_x_difference", 50.0f, 0.0f,
+        enable_("Enable", false, &parameters_),
+        debug_good_contour_("Debug_contour", false, &parameters_),
+        eliminate_same_x_targets_("Eliminate_same_x", false, &parameters_),
+        detect_red_("Detect_red", false, &parameters_),
+        color_("Buoy", "red", &parameters_),
+        min_area_("Min_area", 200, 0, 10000, &parameters_),
+        max_ratio_("Max_ratio", 50, 0, 100, &parameters_),
+        min_filled_percent_("Min_percent", 50, 0, 100, &parameters_),
+        max_x_difference_for_elimination_("Min_x_difference", 50.0f, 0.0f,
                                           1000.0f, &parameters_),
-        _ratio_for_angle_check(
+        ratio_for_angle_check_(
             "Ratio_for_angle_check", 50, 0, 100, &parameters_,
             "When ratio smaller, will discard if vertical contour"),
-        _admissible_horizontal_angle(
+        admissible_horizontal_angle_(
             "horizontal_max_angle", 50, 0, 90, &parameters_,
             "When angle smaller, is consider vertical") {
     SetName("BuoySingle");
@@ -75,16 +75,16 @@ class BuoySingle : public Filter {
   // P U B L I C   M E T H O D S
 
   virtual void Execute(cv::Mat &image) {
-    if (_enable()) {
+    if (enable_()) {
       cv::Mat in;
       // -----------------   Setup the debug image
       // Copy the received image so we can see the objects.
-      if (_debug_good_contour()) {
+      if (debug_good_contour_()) {
         // Case we receive a color or gray scale image.
         if (image.channels() == 1)
-          cv::cvtColor(image, _outputImage, CV_GRAY2BGR);
+          cv::cvtColor(image, output_image_, CV_GRAY2BGR);
         else
-          image.copyTo(_outputImage);
+          image.copyTo(output_image_);
       }
 
       if (image.channels() > 1) {
@@ -100,8 +100,8 @@ class BuoySingle : public Filter {
       // Filter contours
       ObjectFullData::FullObjectPtrVec objectVec;
 
-      for (size_t j = 0; j < contours.size(); j++) {
-        if (contours[j].size() <= 2) {
+      for (size_t j = 0; j < contours.GetSize(); j++) {
+        if (contours[j].GetSize() <= 2) {
           continue;
         }
 
@@ -109,21 +109,21 @@ class BuoySingle : public Filter {
             global_params_.getOriginalImage(), image, contours[j]);
 
         // AREA
-        if (_min_area() > object->GetArea()) {
+        if (min_area_() > object->GetArea()) {
           continue;
         }
 
-        if (_debug_good_contour()) {
-          contours[j].DrawContours(_outputImage, CV_RGB(255, 0, 0), 3);
+        if (debug_good_contour_()) {
+          contours[j].DrawContours(output_image_, CV_RGB(255, 0, 0), 3);
         }
         feat_factory_.RatioFeature(object);
         // RATIO
-        if (_max_ratio() > object->GetRatio()) {
+        if (max_ratio_() > object->GetRatio()) {
           continue;
         }
 
-        if (_debug_good_contour()) {
-          contours[j].DrawContours(_outputImage, CV_RGB(255, 255, 0), 3);
+        if (debug_good_contour_()) {
+          contours[j].DrawContours(output_image_, CV_RGB(255, 255, 0), 3);
         }
 
         // Angle of contour. If more rectangular, check to make sure it is
@@ -131,17 +131,17 @@ class BuoySingle : public Filter {
         // not vertical, horizontal is caused by washed out buoy in the sun,
         // while
         // vertical is probably a pipe
-        if (object->GetAngle() < _ratio_for_angle_check() &&
-            fabs(object->GetAngle()) < _admissible_horizontal_angle()) {
+        if (object->GetAngle() < ratio_for_angle_check_() &&
+            fabs(object->GetAngle()) < admissible_horizontal_angle_()) {
           continue;
         }
 
-        if (_debug_good_contour()) {
-          contours[j].DrawContours(_outputImage, CV_RGB(255, 0, 255), 3);
+        if (debug_good_contour_()) {
+          contours[j].DrawContours(output_image_, CV_RGB(255, 0, 255), 3);
         }
 
         feat_factory_.PercentFilledFeature(object);
-        if (_min_filled_percent() > object->GetPercentFilled()) {
+        if (min_filled_percent_() > object->GetPercentFilled()) {
           continue;
         }
 
@@ -152,12 +152,12 @@ class BuoySingle : public Filter {
       std::sort(objectVec.begin(), objectVec.end(), AreaSorts);
 
       // Eliminate same target
-      if (_eliminate_same_x_targets()) {
+      if (eliminate_same_x_targets_()) {
         EliminateSameXTarget(objectVec);
       }
 
       // Choose red if need be
-      if (_detect_red() && objectVec.size() > 1) {
+      if (detect_red_() && objectVec.size() > 1) {
         ChooseMostRed(objectVec);
       }
 
@@ -166,17 +166,17 @@ class BuoySingle : public Filter {
         Target buoy;
         std::stringstream message;
         buoy.SetTarget(objectVec[0]);
-        message << "buoy_" << _color() << ":" << buoy.OutputString();
+        message << "buoy_" << color_() << ":" << buoy.OutputString();
         NotifyString(message.str());
 
-        if (_debug_good_contour()) {
-          objectVec[0]->GetContourCopy().DrawContours(_outputImage,
+        if (debug_good_contour_()) {
+          objectVec[0]->GetContourCopy().DrawContours(output_image_,
                                                       CV_RGB(0, 255, 0), 5);
         }
       }
 
-      if (_debug_good_contour()) {
-        _outputImage.copyTo(image);
+      if (debug_good_contour_()) {
+        output_image_.copyTo(image);
       }
     }
   }
@@ -199,18 +199,20 @@ class BuoySingle : public Filter {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  cv::Mat _outputImage;
+  cv::Mat output_image_;
   ObjectFeatureFactory feat_factory_;
   // Params
-  Parameter<bool> _enable, _debug_good_contour, _eliminate_same_x_targets,
-      _detect_red;
-  Parameter<std::string> _color;
-  RangedParameter<double> _min_area, _max_ratio, _min_filled_percent,
-      _max_x_difference_for_elimination, _ratio_for_angle_check,
-      _admissible_horizontal_angle;
+  Parameter<bool> enable_, debug_good_contour_, eliminate_same_x_targets_,
+      detect_red_;
+  Parameter<std::string> color_;
+  RangedParameter<double> min_area_, max_ratio_, min_filled_percent_,
+      max_x_difference_for_elimination_, ratio_for_angle_check_,
+      admissible_horizontal_angle_;
 };
+
 //==============================================================================
-//    INLINE FUNCTION
+// I N L I N E   F U N C T I O N S   D E F I N I T I O N S
+
 //------------------------------------------------------------------------------
 //
 inline float BuoySingle::getRadiusFromRectangle(
@@ -226,7 +228,7 @@ inline bool BuoySingle::IsSameX(ObjectFullData::Ptr a, ObjectFullData::Ptr b) {
   double x_difference = static_cast<double>(a->GetCenter().x) -
                         static_cast<double>(b->GetCenter().x);
   double abs_x_difference = fabs(x_difference);
-  return abs_x_difference < _max_x_difference_for_elimination();
+  return abs_x_difference < max_x_difference_for_elimination_();
 }
 
 //------------------------------------------------------------------------------

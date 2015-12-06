@@ -47,10 +47,10 @@ class PipeDetector : public Filter {
 
   explicit PipeDetector(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, &parameters_),
-        _debug_contour("Debug_contour", false, &parameters_),
-        _look_for_rectangle("Look_for_Rectangle", false, &parameters_),
-        _min_area("Min_area", 200, 0, 10000, &parameters_) {
+        enable_("Enable", false, &parameters_),
+        debug_contour_("Debug_contour", false, &parameters_),
+        look_for_rectangle_("Look_for_Rectangle", false, &parameters_),
+        min_area_("Min_area", 200, 0, 10000, &parameters_) {
     SetName("PipeDetector");
   }
 
@@ -60,11 +60,11 @@ class PipeDetector : public Filter {
   // P U B L I C   M E T H O D S
 
   virtual void Execute(cv::Mat &image) {
-    if (_enable()) {
-      if (_debug_contour()) {
-        image.copyTo(_output_image);
-        if (_output_image.channels() == 1) {
-          cv::cvtColor(_output_image, _output_image, CV_GRAY2BGR);
+    if (enable_()) {
+      if (debug_contour_()) {
+        image.copyTo(output_image_);
+        if (output_image_.channels() == 1) {
+          cv::cvtColor(output_image_, output_image_, CV_GRAY2BGR);
         }
       }
 
@@ -75,7 +75,7 @@ class PipeDetector : public Filter {
       timer.UpdateStartTime();
 
       contourList_t contours;
-      retrieveAllContours(image, contours);
+      RetrieveAllContours(image, contours);
       ObjectFullData::FullObjectPtrVec objVec;
       for (int i = 0, size = contours.size(); i < size; i++) {
         ObjectFullData::Ptr object =
@@ -86,21 +86,21 @@ class PipeDetector : public Filter {
         //
         // AREA
         //
-        if (object->GetArea() < _min_area()) {
+        if (object->GetArea() < min_area_()) {
           continue;
         }
-        if (_debug_contour()) {
-          cv::drawContours(_output_image, contours, i, CV_RGB(255, 0, 0), 2);
+        if (debug_contour_()) {
+          cv::drawContours(output_image_, contours, i, CV_RGB(255, 0, 0), 2);
         }
 
         //
         // RECTANGLE
         //
-        if (_look_for_rectangle() && !IsRectangle(contours[i], 10)) {
+        if (look_for_rectangle_() && !IsRectangle(contours[i], 10)) {
           continue;
         }
-        if (_debug_contour()) {
-          cv::drawContours(_output_image, contours, i, CV_RGB(0, 255, 0), 2);
+        if (debug_contour_()) {
+          cv::drawContours(output_image_, contours, i, CV_RGB(0, 255, 0), 2);
         }
 
         objVec.push_back(object);
@@ -115,19 +115,19 @@ class PipeDetector : public Filter {
         Target target;
         ObjectFullData::Ptr object = objVec[0];
         cv::Point center = object->GetCenter();
-        setCameraOffset(&center, image.rows, image.cols);
+        SetCameraOffset(&center, image.rows, image.cols);
         target.SetTarget(center.x, center.y, object->GetLength(),
                          object->GetLength(), object->GetRotatedRect().angle);
         std::stringstream ss;
         ss << "pipe:" << target.OutputString();
         NotifyString(ss.str().c_str());
-        if (_debug_contour()) {
-          cv::circle(_output_image, objVec[0]->GetCenter(), 3,
+        if (debug_contour_()) {
+          cv::circle(output_image_, objVec[0]->GetCenter(), 3,
                      CV_RGB(0, 255, 0), 3);
         }
       }
-      if (_debug_contour()) {
-        _output_image.copyTo(image);
+      if (debug_contour_()) {
+        output_image_.copyTo(image);
       }
     }
   }
@@ -136,11 +136,11 @@ class PipeDetector : public Filter {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  cv::Mat _output_image;
+  cv::Mat output_image_;
 
-  Parameter<bool> _enable, _debug_contour, _look_for_rectangle;
+  Parameter<bool> enable_, debug_contour_, look_for_rectangle_;
 
-  RangedParameter<double> _min_area;
+  RangedParameter<double> min_area_;
 };
 
 }  // namespace lib_vision

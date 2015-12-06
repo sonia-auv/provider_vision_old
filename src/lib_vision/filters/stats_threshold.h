@@ -43,10 +43,10 @@ class StatsThreshold : public Filter {
 
   explicit StatsThreshold(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, &parameters_),
-        _min_thresh("Min_thresh", 0, 0, 255, &parameters_),
-        _mean_multiplier("Mean_multiplier", 1, -10, 10, &parameters_),
-        _std_dev_multiplier("Standard_deviation_multiplier", 1, -10, 10,
+        enable_("Enable", false, &parameters_),
+        min_thresh_("Min_thresh", 0, 0, 255, &parameters_),
+        mean_multiplier_("Mean_multiplier", 1, -10, 10, &parameters_),
+        std_dev_multiplier_("Standard_deviation_multiplier", 1, -10, 10,
                             &parameters_) {
     SetName("StatsThreshold");
   }
@@ -57,7 +57,7 @@ class StatsThreshold : public Filter {
   // P U B L I C   M E T H O D S
 
   virtual void Execute(cv::Mat &image) {
-    if (_enable()) {
+    if (enable_()) {
       if (image.channels() > 1) {
         cv::cvtColor(image, image, CV_BGR2GRAY);
       }
@@ -68,8 +68,8 @@ class StatsThreshold : public Filter {
 
       cv::meanStdDev(image, mean, stdDev);
       int thresh_val =
-          mean[0] * _mean_multiplier() + stdDev[0] * _std_dev_multiplier();
-      thresh_val = thresh_val < _min_thresh() ? _min_thresh() : thresh_val;
+          mean[0] * mean_multiplier_() + stdDev[0] * std_dev_multiplier_();
+      thresh_val = thresh_val < min_thresh_() ? min_thresh_() : thresh_val;
       cv::threshold(image, image, thresh_val, 255, CV_THRESH_BINARY);
     }
   }
@@ -78,9 +78,9 @@ class StatsThreshold : public Filter {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  Parameter<bool> _enable;
-  RangedParameter<int> _min_thresh;
-  RangedParameter<double> _mean_multiplier, _std_dev_multiplier;
+  Parameter<bool> enable_;
+  RangedParameter<int> min_thresh_;
+  RangedParameter<double> mean_multiplier_, std_dev_multiplier_;
 };
 
 }  // namespace lib_vision

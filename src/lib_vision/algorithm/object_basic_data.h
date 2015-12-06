@@ -115,21 +115,21 @@ class ObjectBasicData {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  std::map<OBJECT_DATA, bool> _is_calculated_map;
+  std::map<OBJECT_DATA, bool> is_calculated_map_;
 
-  int _vote_count;
+  int vote_count_;
 
-  float _area, _convex_hull_area, _circumference, _distance_from_center;
+  float area_, convex_hull_area_, circumference_, distance_from_center_;
 
   // Correspond to the centile rank
-  float _areaRanking, _lengthRanking;
-  RotRect _rect;
-  cv::Rect _up_right_rect;
-  cv::Moments _cv_moments;
-  std::vector<cv::Mat> _planes;
+  float area_ranking_, length_ranking_;
+  RotRect rect_;
+  cv::Rect up_right_rect_;
+  cv::Moments cv_moments_;
+  std::vector<cv::Mat> planes_;
 
-  cv::Mat _original_image, _binary_image;
-  Contour _contour;
+  cv::Mat original_image_, binary_image_;
+  Contour contour_;
 };
 
 //==============================================================================
@@ -137,34 +137,34 @@ class ObjectBasicData {
 
 //------------------------------------------------------------------------------
 //
-inline void ObjectBasicData::IncrementVote() { _vote_count++; }
+inline void ObjectBasicData::IncrementVote() { vote_count_++; }
 
 //------------------------------------------------------------------------------
 //
-inline int ObjectBasicData::GetVoteCount() { return _vote_count; }
+inline int ObjectBasicData::GetVoteCount() { return vote_count_; }
 
 //------------------------------------------------------------------------------
 //
-inline void ObjectBasicData::ResetVote() { _vote_count = 0; }
+inline void ObjectBasicData::ResetVote() { vote_count_ = 0; }
 
 //------------------------------------------------------------------------------
 //
 inline float ObjectBasicData::GetArea() {
-  if (!_is_calculated_map[AREA]) {
-    _area = cv::contourArea(_contour.Get(), false);
-    _is_calculated_map[AREA] = true;
+  if (!is_calculated_map_[AREA]) {
+    area_ = cv::contourArea(contour_.GetContour(), false);
+    is_calculated_map_[AREA] = true;
   }
-  return _area;
+  return area_;
 }
 
 //------------------------------------------------------------------------------
 //
 inline float ObjectBasicData::GetLength() {
-  if (!_is_calculated_map[ROTATED_RECT]) {
-    _rect = RotRect(_contour.Get());
-    _is_calculated_map[ROTATED_RECT] = true;
+  if (!is_calculated_map_[ROTATED_RECT]) {
+    rect_ = RotRect(contour_.GetContour());
+    is_calculated_map_[ROTATED_RECT] = true;
   }
-  return _rect.size.height;
+  return rect_.size.height;
 }
 
 //------------------------------------------------------------------------------
@@ -178,57 +178,57 @@ inline void ObjectBasicData::SetPlaneInRange(int &planeID) {
 //------------------------------------------------------------------------------
 //
 inline float ObjectBasicData::GetConvexHullArea() {
-  if (!_is_calculated_map[CONVEX_HULL]) {
+  if (!is_calculated_map_[CONVEX_HULL]) {
     contour_t convexHull;
-    cv::convexHull(_contour.Get(), convexHull, false, true);
-    _convex_hull_area = cv::contourArea(convexHull, false);
-    _is_calculated_map[CONVEX_HULL] = true;
+    cv::convexHull(contour_.GetContour(), convexHull, false, true);
+    convex_hull_area_ = cv::contourArea(convexHull, false);
+    is_calculated_map_[CONVEX_HULL] = true;
   }
-  return _convex_hull_area;
+  return convex_hull_area_;
 }
 
 //------------------------------------------------------------------------------
 //
 inline float ObjectBasicData::GetCircumference() {
-  if (!_is_calculated_map[CIRCUMFERENCE]) {
-    _circumference = cv::arcLength(_contour.Get(), true);
-    _is_calculated_map[CIRCUMFERENCE] = true;
+  if (!is_calculated_map_[CIRCUMFERENCE]) {
+    circumference_ = cv::arcLength(contour_.GetContour(), true);
+    is_calculated_map_[CIRCUMFERENCE] = true;
   }
-  return _circumference;
+  return circumference_;
 }
 
 //------------------------------------------------------------------------------
 //
 inline const RotRect &ObjectBasicData::GetRotatedRect() {
-  if (!_is_calculated_map[ROTATED_RECT]) {
-    _rect = RotRect(_contour.Get());
-    _is_calculated_map[ROTATED_RECT] = true;
+  if (!is_calculated_map_[ROTATED_RECT]) {
+    rect_ = RotRect(contour_.GetContour());
+    is_calculated_map_[ROTATED_RECT] = true;
   }
-  return _rect;
+  return rect_;
 }
 
 //------------------------------------------------------------------------------
 //
 inline float ObjectBasicData::GetAngle() {
   GetRotatedRect();
-  return _rect.angle;
+  return rect_.angle;
 }
 
 //------------------------------------------------------------------------------
 //
 inline cv::Point2f &ObjectBasicData::GetCenter() {
   GetRotatedRect();
-  return _rect.center;
+  return rect_.center;
 }
 
 //------------------------------------------------------------------------------
 //
 inline const cv::Rect &ObjectBasicData::GetUprightRect() {
-  if (!_is_calculated_map[UP_RIGHT_RECT]) {
-    _up_right_rect = cv::boundingRect(_contour.Get());
-    _is_calculated_map[UP_RIGHT_RECT] = true;
+  if (!is_calculated_map_[UP_RIGHT_RECT]) {
+    up_right_rect_ = cv::boundingRect(contour_.GetContour());
+    is_calculated_map_[UP_RIGHT_RECT] = true;
   }
-  return _up_right_rect;
+  return up_right_rect_;
 }
 
 //------------------------------------------------------------------------------
@@ -238,29 +238,29 @@ inline cv::Mat ObjectBasicData::GetBinaryImageAtUprightRect() {
   cv::Rect uprightRect = GetUprightRect();
   // Clone is necessary since the object is created now
   // OpenCV Mat are smart pointer
-  return cv::Mat(_binary_image, uprightRect);
+  return cv::Mat(binary_image_, uprightRect);
 }
 
 //------------------------------------------------------------------------------
 //
-inline Contour ObjectBasicData::GetContourCopy() { return _contour; }
+inline Contour ObjectBasicData::GetContourCopy() { return contour_; }
 
 //------------------------------------------------------------------------------
 //
 inline cv::Size ObjectBasicData::GetImageSize() {
-  return _original_image.size();
+  return original_image_.size();
 }
 
 //------------------------------------------------------------------------------
 //
 inline const cv::Mat &ObjectBasicData::GetBinaryImage() {
-  return _original_image;
+  return original_image_;
 }
 
 //------------------------------------------------------------------------------
 //
 inline const cv::Mat &ObjectBasicData::GetOriginalImage() {
-  return _binary_image;
+  return binary_image_;
 }
 
 #endif  // LIB_VISION_ALGORITHM_OBJECT_BASIC_DATA_H_

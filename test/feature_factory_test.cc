@@ -40,7 +40,7 @@ TEST(FeatureFactory, AllTest) {
   cv::Mat debug = cv::Mat::zeros(original_image.rows, original_image.cols, CV_8UC3);
   ContourList list(binary_image, ContourList::OUTER);
 
-  ASSERT_EQ(list.size(), 4);
+  ASSERT_EQ(list.GetSize(), 4);
 
   ObjectFeatureFactory feat_factory(3);
   ObjectFullData::FullObjectPtrVec obj_vec;

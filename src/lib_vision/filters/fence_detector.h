@@ -47,23 +47,23 @@ class FenceDetector : public Filter {
 
   explicit FenceDetector(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, &parameters_),
-        _debug_contour("Debug_contour", false, &parameters_),
-        _search_only_bottom("Search_only_bottom", false, &parameters_,
+        enable_("Enable", false, &parameters_),
+        debug_contour_("Debug_contour", false, &parameters_),
+        search_only_bottom_("Search_only_bottom", false, &parameters_,
                             "Enables searching only for bottom bar"),
-        _min_length("Minimum_length", 50, 0, 2000, &parameters_),
-        _max_distance_from_bottom_bar_extremum("Max_dist_from_extremum", 50, 0,
+        min_length_("Minimum_length", 50, 0, 2000, &parameters_),
+        max_distance_from_bottom_bar_extremum_("Max_dist_from_extremum", 50, 0,
                                                2000, &parameters_),
-        _min_area("Minimum_area", 300, 0, 10000, &parameters_),
-        _max_diff_from_90_tbca_horizontal(
+        min_area_("Minimum_area", 300, 0, 10000, &parameters_),
+        max_diff_from_90_tbca_horizontal_(
             "Max_diff_horizontal", 20, 0, 90, &parameters_,
             "Maximum difference from 90 to be consider as horizontal"),
-        _max_diff_from_0_tbca_vertical(
+        max_diff_from_0_tbca_vertical_(
             "Max_diff_vertical", 20, 0, 90, &parameters_,
             "Maximum difference from 0 to be consider as vertical"),
-        _min_percent_filled("Minimum_percent_filled", 70, 0, 1000,
+        min_percent_filled_("Minimum_percent_filled", 70, 0, 1000,
                             &parameters_),
-        _feat_factory(3) {
+        feat_factory_(3) {
     SetName("FenceDetector");
   }
 
@@ -73,17 +73,17 @@ class FenceDetector : public Filter {
   // P U B L I C   M E T H O D S
 
   virtual void Execute(cv::Mat &image) {
-    if (!_enable()) {
+    if (!enable_()) {
       return;
     }
 
     cv::Mat in;
-    if (_debug_contour()) {
+    if (debug_contour_()) {
       // Case we receive a color or gray scale image.
       if (image.channels() == 1) {
-        cv::cvtColor(image, _output_image, CV_GRAY2BGR);
+        cv::cvtColor(image, output_image_, CV_GRAY2BGR);
       } else {
-        image.copyTo(_output_image);
+        image.copyTo(output_image_);
       }
     }
 
@@ -94,7 +94,7 @@ class FenceDetector : public Filter {
     }
 
     contourList_t contours;
-    retrieveOuterContours(in, contours);
+    RetrieveOuterContours(in, contours);
     std::vector<ObjectFullData::Ptr> verticalBars, horizontalBar,
         merged_horizontal_bar;
 
@@ -112,33 +112,33 @@ class FenceDetector : public Filter {
       //
       // AREA
       //
-      if (object->GetArea() < _min_area()) {
+      if (object->GetArea() < min_area_()) {
         continue;
       }
-      if (_debug_contour()) {
-        cv::drawContours(_output_image, contours, i, CV_RGB(255, 0, 0), 2);
+      if (debug_contour_()) {
+        cv::drawContours(output_image_, contours, i, CV_RGB(255, 0, 0), 2);
       }
 
       //
       // LENGTH
       //
-      if (object->GetRotatedRect().size.height < _min_length()) continue;
-      if (_debug_contour()) {
-        cv::drawContours(_output_image, contours, i, CV_RGB(255, 255, 0), 3);
+      if (object->GetRotatedRect().size.height < min_length_()) continue;
+      if (debug_contour_()) {
+        cv::drawContours(output_image_, contours, i, CV_RGB(255, 255, 0), 3);
       }
-      _feat_factory.PercentFilledFeature(object);
+      feat_factory_.PercentFilledFeature(object);
 
-      if (int(object->GetPercentFilled() * 100.0f) < _min_percent_filled())
+      if (int(object->GetPercentFilled() * 100.0f) < min_percent_filled_())
         continue;
-      if (_debug_contour()) {
-        cv::drawContours(_output_image, contours, i, CV_RGB(255, 0, 255), 4);
+      if (debug_contour_()) {
+        cv::drawContours(output_image_, contours, i, CV_RGB(255, 0, 255), 4);
       }
 
       float angle = fabs(object->GetRotatedRect().angle);
 
-      if (angle < _max_diff_from_0_tbca_vertical()) {
+      if (angle < max_diff_from_0_tbca_vertical_()) {
         verticalBars.push_back(object);
-      } else if ((90 - angle) < _max_diff_from_90_tbca_horizontal()) {
+      } else if ((90 - angle) < max_diff_from_90_tbca_horizontal_()) {
         horizontalBar.push_back(object);
       }
     }
@@ -157,8 +157,8 @@ class FenceDetector : public Filter {
            ref_idx++) {
         if (IsSplitBar(horizontalBar[0], horizontalBar[1])) {
           contour_t tmp, a, b;
-          a = horizontalBar[0]->GetContourCopy().Get();
-          b = horizontalBar[1]->GetContourCopy().Get();
+          a = horizontalBar[0]->GetContourCopy().GetContour();
+          b = horizontalBar[1]->GetContourCopy().GetContour();
 
           tmp.reserve(a.size() + b.size());
           tmp.insert(tmp.end(), a.begin(), a.end());
@@ -177,14 +177,14 @@ class FenceDetector : public Filter {
       // Gets bottom bar info.
       ObjectFullData::Ptr final_horizontal_bar = horizontalBar[0];
       RotRect rect_from_hori_bar = final_horizontal_bar->GetRotatedRect();
-      if (_debug_contour()) {
-        cv::circle(_output_image, rect_from_hori_bar.center, 3,
+      if (debug_contour_()) {
+        cv::circle(output_image_, rect_from_hori_bar.center, 3,
                    CV_RGB(0, 0, 255), 3);
       }
 
       Target fence;
       cv::Point center = (rect_from_hori_bar.center);
-      setCameraOffset(&center, image.rows, image.cols);
+      SetCameraOffset(&center, image.rows, image.cols);
       fence.SetTarget(center.x, center.y, rect_from_hori_bar.size.width,
                       rect_from_hori_bar.size.height, rect_from_hori_bar.angle,
                       "", "");
@@ -192,12 +192,12 @@ class FenceDetector : public Filter {
       int y_coord_from_bottom = CalculateYFromBottomBar(
           rect_from_hori_bar.size.height, rect_from_hori_bar.center.y);
 
-      if (_search_only_bottom()) {
+      if (search_only_bottom_()) {
         center = cv::Point(rect_from_hori_bar.center.x, y_coord_from_bottom);
-        if (_debug_contour()) {
-          cv::circle(_output_image, center, 5, CV_RGB(0, 255, 255), 20);
+        if (debug_contour_()) {
+          cv::circle(output_image_, center, 5, CV_RGB(0, 255, 255), 20);
         }
-        setCameraOffset(&center, image.rows, image.cols);
+        SetCameraOffset(&center, image.rows, image.cols);
 
         fence.SetCenter(center);
 
@@ -220,8 +220,8 @@ class FenceDetector : public Filter {
           if (IsNearExtremum(verticalBars[i]->GetRotatedRect().center.x, leftX,
                              rightX)) {
             final_vert_bar.push_back(verticalBars[i]->GetRotatedRect().center);
-            if (_debug_contour()) {
-              cv::circle(_output_image,
+            if (debug_contour_()) {
+              cv::circle(output_image_,
                          verticalBars[i]->GetRotatedRect().center, 5,
                          CV_RGB(0, 255, 255), 20);
             }
@@ -240,25 +240,25 @@ class FenceDetector : public Filter {
                final_vert_bar[1].y) /
               3;
           center = cv::Point(x, y);
-          if (_debug_contour()) {
-            cv::circle(_output_image, center, 5, CV_RGB(0, 255, 255), 20);
+          if (debug_contour_()) {
+            cv::circle(output_image_, center, 5, CV_RGB(0, 255, 255), 20);
           }
-          setCameraOffset(&center, image.rows, image.cols);
+          SetCameraOffset(&center, image.rows, image.cols);
           fence.SetCenter(center);
         } else if (bar_founded == 1) {
           int y = (y_coord_from_bottom + final_vert_bar[0].y) / 2;
           center = cv::Point(rect_from_hori_bar.center.x, y);
-          if (_debug_contour()) {
-            cv::circle(_output_image, center, 5, CV_RGB(0, 255, 255), 20);
+          if (debug_contour_()) {
+            cv::circle(output_image_, center, 5, CV_RGB(0, 255, 255), 20);
           }
-          setCameraOffset(&center, image.rows, image.cols);
+          SetCameraOffset(&center, image.rows, image.cols);
           fence.SetCenter(center);
         } else {
           center = cv::Point(rect_from_hori_bar.center.x, y_coord_from_bottom);
-          if (_debug_contour()) {
-            cv::circle(_output_image, center, 5, CV_RGB(0, 255, 255), 20);
+          if (debug_contour_()) {
+            cv::circle(output_image_, center, 5, CV_RGB(0, 255, 255), 20);
           }
-          setCameraOffset(&center, image.rows, image.cols);
+          SetCameraOffset(&center, image.rows, image.cols);
           fence.SetCenter(center);
         }
       }
@@ -267,8 +267,8 @@ class FenceDetector : public Filter {
       message << "fence_big:" << fence.OutputString();
       NotifyString(message.str());
     }
-    if (_debug_contour()) {
-      _output_image.copyTo(image);
+    if (debug_contour_()) {
+      output_image_.copyTo(image);
     }
   }
 
@@ -285,7 +285,7 @@ class FenceDetector : public Filter {
                                     int &rightX) {
     leftX = 20000;
     rightX = -1;
-    contour_t contour = bottom_bar->GetContourCopy().Get();
+    contour_t contour = bottom_bar->GetContourCopy().GetContour();
     for (auto pt : contour) {
       if (leftX > pt.x) {
         leftX = pt.x;
@@ -301,8 +301,8 @@ class FenceDetector : public Filter {
   }
 
   inline bool IsBetweenLimit(int pt_x, int ref_x) {
-    int left_max = (ref_x - _max_distance_from_bottom_bar_extremum());
-    int right_max = (ref_x + _max_distance_from_bottom_bar_extremum());
+    int left_max = (ref_x - max_distance_from_bottom_bar_extremum_());
+    int right_max = (ref_x + max_distance_from_bottom_bar_extremum_());
     bool left_ok = left_max < pt_x;
     bool right_ok = right_max > pt_x;
     return left_ok && right_ok;
@@ -322,14 +322,14 @@ class FenceDetector : public Filter {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  Parameter<bool> _enable, _debug_contour, _search_only_bottom;
+  Parameter<bool> enable_, debug_contour_, search_only_bottom_;
   // tbca = To Be Consider As
-  RangedParameter<int> _min_length, _max_distance_from_bottom_bar_extremum,
-      _min_area, _max_diff_from_90_tbca_horizontal,
-      _max_diff_from_0_tbca_vertical, _min_percent_filled;
+  RangedParameter<int> min_length_, max_distance_from_bottom_bar_extremum_,
+      min_area_, max_diff_from_90_tbca_horizontal_,
+      max_diff_from_0_tbca_vertical_, min_percent_filled_;
 
-  cv::Mat _output_image;
-  ObjectFeatureFactory _feat_factory;
+  cv::Mat output_image_;
+  ObjectFeatureFactory feat_factory_;
 };
 
 }  // namespace lib_vision

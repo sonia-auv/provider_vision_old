@@ -92,11 +92,11 @@ TEST(FrameMemory, AllTest) {
   cv::cvtColor(tmpOriginal, tmpBinary, CV_BGR2GRAY);
   ContourList contoursTemp(tmpBinary, ContourList::OUTER);
 
-  ASSERT_TRUE(contoursTemp.size() == 4);
+  ASSERT_TRUE(contoursTemp.GetSize() == 4);
 
   // Push faulty object
   ObjectFullData::FullObjectPtrVec tmp2;
-  for (int i = 0; i < contoursTemp.size(); i++) {
+  for (int i = 0; i < contoursTemp.GetSize(); i++) {
     tmp2.push_back(
         ObjectFullData::Ptr(std::make_shared<ObjectFullData>(
             originalImage, binaryImage, contoursTemp[i])));

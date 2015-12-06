@@ -43,14 +43,14 @@ class Morphology : public Filter {
 
   explicit Morphology(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, &parameters_),
-        _morph_type("Morphology_type", 0, 0, 4, &parameters_,
+        enable_("Enable", false, &parameters_),
+        morph_type_("Morphology_type", 0, 0, 4, &parameters_,
                     "0=Gradient, 1=TopHat, 2=BlackHat, 3=Opening, 4=Closing"),
-        _kernel_type("Kernel_type", 0, 0, 2, &parameters_,
+        kernel_type_("Kernel_type", 0, 0, 2, &parameters_,
                      "0=Rect, 1=Elipse, 2=Cross"),
-        _iteration("Iteration", 1, 1, 20, &parameters_),
-        _kernel_size("Kernel_size", 1, 1, 40, &parameters_),
-        _anchor(-1, -1) {
+        iteration_("Iteration", 1, 1, 20, &parameters_),
+        kernel_size_("Kernel_size", 1, 1, 40, &parameters_),
+        anchor_(-1, -1) {
     SetName("Morphology");
   }
 
@@ -60,14 +60,14 @@ class Morphology : public Filter {
   // P U B L I C   M E T H O D S
 
   virtual void Execute(cv::Mat &image) {
-    if (_enable()) {
+    if (enable_()) {
       if (image.channels() > 1) {
         cv::cvtColor(image, image, CV_BGR2GRAY);
       }
 
       // Kernel selection
       int kernelType;
-      switch (_kernel_type()) {
+      switch (kernel_type_()) {
         case 0:
           kernelType = cv::MORPH_RECT;
           break;
@@ -84,30 +84,30 @@ class Morphology : public Filter {
 
       // Creating the kernel
       cv::Mat kernel = cv::getStructuringElement(
-          kernelType, cv::Size(_kernel_size() * 2 + 1, _kernel_size() * 2 + 1),
-          _anchor);
+          kernelType, cv::Size(kernel_size_() * 2 + 1, kernel_size_() * 2 + 1),
+          anchor_);
 
       // Selecting with _morph_type wich operation to use
-      switch (_morph_type()) {
+      switch (morph_type_()) {
         case 0:
-          cv::morphologyEx(image, image, cv::MORPH_GRADIENT, kernel, _anchor,
-                           _iteration(), CV_8U);
+          cv::morphologyEx(image, image, cv::MORPH_GRADIENT, kernel, anchor_,
+                           iteration_(), CV_8U);
           break;
         case 1:
-          cv::morphologyEx(image, image, cv::MORPH_TOPHAT, kernel, _anchor,
-                           _iteration(), CV_8U);
+          cv::morphologyEx(image, image, cv::MORPH_TOPHAT, kernel, anchor_,
+                           iteration_(), CV_8U);
           break;
         case 2:
-          cv::morphologyEx(image, image, cv::MORPH_BLACKHAT, kernel, _anchor,
-                           _iteration(), CV_8U);
+          cv::morphologyEx(image, image, cv::MORPH_BLACKHAT, kernel, anchor_,
+                           iteration_(), CV_8U);
           break;
         case 3:
-          cv::morphologyEx(image, image, cv::MORPH_OPEN, kernel, _anchor,
-                           _iteration(), CV_8U);
+          cv::morphologyEx(image, image, cv::MORPH_OPEN, kernel, anchor_,
+                           iteration_(), CV_8U);
           break;
         case 4:
-          cv::morphologyEx(image, image, cv::MORPH_CLOSE, kernel, _anchor,
-                           _iteration(), CV_8U);
+          cv::morphologyEx(image, image, cv::MORPH_CLOSE, kernel, anchor_,
+                           iteration_(), CV_8U);
           break;
       }
     }
@@ -117,9 +117,9 @@ class Morphology : public Filter {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  Parameter<bool> _enable;
-  RangedParameter<int> _morph_type, _kernel_type, _iteration, _kernel_size;
-  const cv::Point _anchor;
+  Parameter<bool> enable_;
+  RangedParameter<int> morph_type_, kernel_type_, iteration_, kernel_size_;
+  const cv::Point anchor_;
 };
 
 }  // namespace lib_vision

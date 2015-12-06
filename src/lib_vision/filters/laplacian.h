@@ -43,11 +43,11 @@ class Laplacian : public Filter {
 
   explicit Laplacian(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, &parameters_),
-        _convert_to_uchar("Convert_to_uchar", true, &parameters_),
-        _delta("Delta", 0, 0, 255, &parameters_),
-        _scale("Scale", 1, 0, 255, &parameters_),
-        _size("Size", 2, 1, 20, &parameters_) {
+        enable_("Enable", false, &parameters_),
+        convert_to_uchar_("Convert_to_uchar", true, &parameters_),
+        delta_("Delta", 0, 0, 255, &parameters_),
+        scale_("Scale", 1, 0, 255, &parameters_),
+        size_("Size", 2, 1, 20, &parameters_) {
     SetName("Laplacian");
   }
 
@@ -57,17 +57,17 @@ class Laplacian : public Filter {
   // P U B L I C   M E T H O D S
 
   virtual void Execute(cv::Mat &image) {
-    if (_enable()) {
+    if (enable_()) {
       if (image.channels() > 1) {
         cv::cvtColor(image, image, CV_BGR2GRAY);
       }
-      int size = _size() * 2 + 1;
+      int size = size_() * 2 + 1;
 
-      if (_convert_to_uchar()) {
-        cv::Laplacian(image, image, CV_8U, size, _scale(), _delta(),
+      if (convert_to_uchar_()) {
+        cv::Laplacian(image, image, CV_8U, size, scale_(), delta_(),
                       cv::BORDER_DEFAULT);
       } else {
-        cv::Laplacian(image, image, CV_32F, size, _scale(), _delta(),
+        cv::Laplacian(image, image, CV_32F, size, scale_(), delta_(),
                       cv::BORDER_DEFAULT);
       }
     }
@@ -77,9 +77,9 @@ class Laplacian : public Filter {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  Parameter<bool> _enable, _convert_to_uchar;
-  RangedParameter<double> _delta, _scale;
-  RangedParameter<int> _size;
+  Parameter<bool> enable_, convert_to_uchar_;
+  RangedParameter<double> delta_, scale_;
+  RangedParameter<int> size_;
 };
 
 }  // namespace lib_vision

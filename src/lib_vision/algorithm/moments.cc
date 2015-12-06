@@ -38,28 +38,28 @@ Moments::Moments(cv::Mat image, bool binary) {
   }
 
   // Gets the moment by opencv moment function
-  cvMoments = cv::moments(image, binary);
+  cv_moments_ = cv::moments(image, binary);
 
-  massCenter =
-      cv::Point2f(cvMoments.m10 / cvMoments.m00, cvMoments.m01 / cvMoments.m00);
+  mass_center_ =
+      cv::Point2f(cv_moments_.m10 / cv_moments_.m00, cv_moments_.m01 / cv_moments_.m00);
 
   // Here, remember that the mome are calculated on an image. If the image
   // was extract from a rotatedRect, it means the coordinate are in the angle
   // of the rotatedRect. X and Y axis of the image are rotated of angle degree
-  realCenter = cv::Point(image.cols / 2, image.rows / 2);
+  real_center_ = cv::Point(image.cols / 2, image.rows / 2);
 
-  xDistanceFromCenter = massCenter.x - realCenter.x;
-  yDistanceFromCenter = massCenter.y - realCenter.y;
+  x_distance_from_center_ = mass_center_.x - real_center_.x;
+  y_distance_from_center_ = mass_center_.y - real_center_.y;
 }
 
 //------------------------------------------------------------------------------
 //
 Moments::Moments() {
-  cvMoments = cv::Moments();
-  massCenter = cv::Point(-1, -1);
-  realCenter = cv::Point(-1, -1);
-  xDistanceFromCenter = 0.0f;
-  yDistanceFromCenter = 0.0f;
+  cv_moments_ = cv::Moments();
+  mass_center_ = cv::Point(-1, -1);
+  real_center_ = cv::Point(-1, -1);
+  x_distance_from_center_ = 0.0f;
+  y_distance_from_center_ = 0.0f;
 }
 
 //------------------------------------------------------------------------------
@@ -72,9 +72,9 @@ Moments::~Moments() {}
 //------------------------------------------------------------------------------
 //
 void Moments::operator=(Moments moments) {
-  cvMoments = moments.cvMoments;
-  massCenter = moments.massCenter;
-  realCenter = moments.realCenter;
-  xDistanceFromCenter = moments.xDistanceFromCenter;
-  yDistanceFromCenter = moments.yDistanceFromCenter;
+  cv_moments_ = moments.cv_moments_;
+  mass_center_ = moments.mass_center_;
+  real_center_ = moments.real_center_;
+  x_distance_from_center_ = moments.x_distance_from_center_;
+  y_distance_from_center_ = moments.y_distance_from_center_;
 }

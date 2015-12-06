@@ -33,7 +33,7 @@
 RotRect::RotRect(const std::vector<cv::Point> &edges)
     : cv::RotatedRect(cv::minAreaRect(edges)) {
   setValues();
-  points(pts);
+  points(pts_);
 }
 
 //------------------------------------------------------------------------------
@@ -44,13 +44,13 @@ RotRect::RotRect() : cv::RotatedRect() {}
 //
 RotRect::RotRect(const cv::RotatedRect &rotRect) : cv::RotatedRect(rotRect) {
   setValues();
-  points(pts);
+  points(pts_);
 }
 
 //------------------------------------------------------------------------------
 //
 RotRect::RotRect(const RotRect &a) : cv::RotatedRect(a) {
-  for (int i = 0; i < 4; i++) pts[i] = a.pts[i];
+  for (int i = 0; i < 4; i++) pts_[i] = a.pts_[i];
 }
 
 //------------------------------------------------------------------------------
@@ -63,10 +63,10 @@ RotRect::~RotRect() {}
 //------------------------------------------------------------------------------
 //
 void RotRect::drawRect(cv::Mat &out, cv::Scalar color, int thickness) {
-  cv::line(out, pts[0], pts[1], color, thickness);
-  cv::line(out, pts[1], pts[2], color, thickness);
-  cv::line(out, pts[2], pts[3], color, thickness);
-  cv::line(out, pts[3], pts[0], color, thickness);
+  cv::line(out, pts_[0], pts_[1], color, thickness);
+  cv::line(out, pts_[1], pts_[2], color, thickness);
+  cv::line(out, pts_[2], pts_[3], color, thickness);
+  cv::line(out, pts_[3], pts_[0], color, thickness);
 }
 
 //------------------------------------------------------------------------------
@@ -93,7 +93,7 @@ void RotRect::setValues() {
 void RotRect::swap(RotRect &a) {
   std::swap(a.angle, angle);
   std::swap(a.center, center);
-  std::swap(a.pts, pts);
+  std::swap(a.pts_, pts_);
   std::swap(a.size, size);
 }
 
@@ -130,4 +130,4 @@ bool RotRect::operator==(const RotRect &rotRect) {
 
 //------------------------------------------------------------------------------
 //
-cv::Point2f *RotRect::getCorners() { return pts; }
+cv::Point2f *RotRect::getCorners() { return pts_; }

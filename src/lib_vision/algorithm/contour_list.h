@@ -70,19 +70,23 @@ class ContourList {
   void DrawContours(cv::Mat &img, const cv::Scalar &color, int thickness = 2);
 
   // Vector overload
-  size_t size();
+  size_t GetSize();
 
   std::vector<std::vector<cv::Point>> GetAsPoint();
+
   std::vector<Contour> GetAsContour();
+
   std::vector<cv::Vec4i> GetHierachy();
 
   //============================================================================
   // P U B L I C   M E M B E R S
 
   ContourListVector contour_list_point_;
+
   std::vector<Contour> contour_vec_;
+
   // Contains the hierachy when METHOD used is HIERACHY
-  std::vector<cv::Vec4i> _hierarchy;
+  std::vector<cv::Vec4i> hierarchy_;
 
  private:
   //============================================================================
@@ -93,22 +97,22 @@ class ContourList {
   bool HasParent(const cv::Vec4i &hierarchy_def);
 
   // Retrieval method
-  void retrieveAllContours(const cv::Mat &image);
+  void RetrieveAllContours(const cv::Mat &image);
 
   // Retrieve contour with hierachy. Sets the vector _hierachy of this object.
-  void retrieveHiearchyContours(const cv::Mat &image);
+  void RetrieveHiearchyContours(const cv::Mat &image);
 
   // All innermost contour i.e. no child
-  void retrieveInnerContours(const cv::Mat &image);
+  void RetrieveInnerContours(const cv::Mat &image);
 
   // All inner contour i.e. has a parent
-  void retrieveInnerMostContours(const cv::Mat &image);
+  void RetrieveInnerMostContours(const cv::Mat &image);
 
   // All outer contour i.e. has no parent
-  void retrieveOuterContours(const cv::Mat &image);
+  void RetrieveOuterContours(const cv::Mat &image);
 
   // All contour that has no child AND no parent
-  void retrieveOutNoChildContours(const cv::Mat &image);
+  void RetrieveOutNoChildContours(const cv::Mat &image);
 };
 
 //==============================================================================
@@ -116,7 +120,7 @@ class ContourList {
 
 //------------------------------------------------------------------------------
 //
-inline size_t ContourList::size() { return contour_vec_.size(); }
+inline size_t ContourList::GetSize() { return contour_vec_.size(); }
 
 //------------------------------------------------------------------------------
 //
@@ -130,7 +134,7 @@ inline std::vector<Contour> ContourList::GetAsContour() { return contour_vec_; }
 
 //------------------------------------------------------------------------------
 //
-inline std::vector<cv::Vec4i> ContourList::GetHierachy() { return _hierarchy; }
+inline std::vector<cv::Vec4i> ContourList::GetHierachy() { return hierarchy_; }
 
 //------------------------------------------------------------------------------
 //

@@ -57,15 +57,15 @@ class Moments {
 
   // Points are in local coordinate, meaning that if the image was taken
   // from a rotated rectangle, the x and y a rotated too!
-  cv::Point realCenter;
+  cv::Point real_center_;
 
-  cv::Point massCenter;
+  cv::Point mass_center_;
 
-  float yDistanceFromCenter;
+  float y_distance_from_center_;
 
-  float xDistanceFromCenter;
+  float x_distance_from_center_;
 
-  cv::Moments cvMoments;
+  cv::Moments cv_moments_;
 };
 
 #endif  // LIB_VISION_ALGORITHM_MOMENTS_H_

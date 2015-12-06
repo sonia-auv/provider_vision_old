@@ -125,11 +125,11 @@ class MajorEdgeExtractor {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  RefImage _ref_image;
+  RefImage ref_image_;
 
-  std::vector<float> _max_value_reference;
+  std::vector<float> max_value_reference_;
 
-  cv::Size _img_size;
+  cv::Size img_size_;
 
   friend class MajorEdgeExtractorUT;
 };
@@ -140,11 +140,11 @@ class MajorEdgeExtractor {
 //-----------------------------------------------------------------------------
 //
 inline void MajorEdgeExtractor::CreateRefImage(const cv::Size &size) {
-  _ref_image = RefImage(size);
+  ref_image_ = RefImage(size);
   // Free the RefPoint allocated previously.
-  for (int y = 0, rows = _ref_image.rows, cols = _ref_image.cols; y < rows;
+  for (int y = 0, rows = ref_image_.rows, cols = ref_image_.cols; y < rows;
        y++) {
-    RefPointPtr *ptr = _ref_image.ptr<RefPointPtr>(y);
+    RefPointPtr *ptr = ref_image_.ptr<RefPointPtr>(y);
     for (int x = 0; x < cols; x++) {
       ptr[x] = nullptr;
     }
@@ -154,9 +154,9 @@ inline void MajorEdgeExtractor::CreateRefImage(const cv::Size &size) {
 //-----------------------------------------------------------------------------
 //
 inline void MajorEdgeExtractor::AddRef(int x, int y, float value) {
-  _max_value_reference.push_back(value);
-  _ref_image.at<RefPointPtr>(y, x) =
-      new ReferencePoint(value, _max_value_reference.size() - 1);
+  max_value_reference_.push_back(value);
+  ref_image_.at<RefPointPtr>(y, x) =
+      new ReferencePoint(value, max_value_reference_.size() - 1);
 }
 
 //-----------------------------------------------------------------------------
@@ -201,7 +201,7 @@ inline bool MajorEdgeExtractor::IsValueConnected(const RefPointPtr ref,
 inline bool MajorEdgeExtractor::IsValueGreater(const RefPointPtr ref,
                                                float value) const {
   if (ref != nullptr)
-    return _max_value_reference[ref->_reference_max_index] < value;
+    return max_value_reference_[ref->_reference_max_index] < value;
   return false;
 }
 
@@ -219,7 +219,7 @@ inline bool MajorEdgeExtractor::IsJunction(const RefKernel &ref_kernel,
 inline void MajorEdgeExtractor::SetLink(const RefPointPtr ref, float value,
                                         int x, int y) {
   if (ref != nullptr) {
-    _ref_image.at<RefPointPtr>(y, x) =
+    ref_image_.at<RefPointPtr>(y, x) =
         new ReferencePoint(value, ref->_reference_max_index);
     if (IsValueGreater(ref, value)) {
       SetValInReferenceVec(ref, value);
@@ -230,7 +230,7 @@ inline void MajorEdgeExtractor::SetLink(const RefPointPtr ref, float value,
 //-----------------------------------------------------------------------------
 //
 inline float MajorEdgeExtractor::GetValInReferenceVec(int index) {
-  return _max_value_reference[index];
+  return max_value_reference_[index];
 }
 
 //-----------------------------------------------------------------------------
@@ -242,7 +242,7 @@ inline float MajorEdgeExtractor::GetValInReferenceVec(RefPointPtr ptr) {
 //-----------------------------------------------------------------------------
 //
 inline void MajorEdgeExtractor::SetValInReferenceVec(int index, float value) {
-  _max_value_reference[index] = value;
+  max_value_reference_[index] = value;
 }
 
 //-----------------------------------------------------------------------------

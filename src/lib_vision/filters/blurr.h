@@ -49,11 +49,11 @@ class Blurr : public Filter {
 
   explicit Blurr(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, &parameters_),
-        _type("Type", 2, 0, 3, &parameters_,
+        enable_("Enable", false, &parameters_),
+        type_("Type", 2, 0, 3, &parameters_,
               "1=Blur, 2=GaussianBlur, 3=MedianBlur"),
-        _kernel_size("Kernel_size", 1, 0, 35, &parameters_),
-        _anchor(-1, -1) {
+        kernel_size_("Kernel_size", 1, 0, 35, &parameters_),
+        anchor_(-1, -1) {
     SetName("Blurr");
   }
 
@@ -63,21 +63,21 @@ class Blurr : public Filter {
   // P U B L I C   M E T H O D S
 
   virtual void Execute(cv::Mat &image) {
-    if (_enable()) {
-      cv::Size2i kernelSize((int)_kernel_size() * 2 + 1,
-                            (int)(_kernel_size() * 2 + 1));
-      switch (_type()) {
+    if (enable_()) {
+      cv::Size2i kernelSize((int)kernel_size_() * 2 + 1,
+                            (int)(kernel_size_() * 2 + 1));
+      switch (type_()) {
         // Could be optimized via function pointer maybe?
         case 0:
           break;
         case 1:
-          cv::blur(image, image, kernelSize, _anchor);
+          cv::blur(image, image, kernelSize, anchor_);
           break;
         case 2:
           cv::GaussianBlur(image, image, kernelSize, 0, 0);
           break;
         case 3:
-          cv::medianBlur(image, image, _kernel_size() * 2 + 1);
+          cv::medianBlur(image, image, kernel_size_() * 2 + 1);
           break;
       }
     }
@@ -87,10 +87,10 @@ class Blurr : public Filter {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  Parameter<bool> _enable;
-  RangedParameter<int> _type, _kernel_size;
+  Parameter<bool> enable_;
+  RangedParameter<int> type_, kernel_size_;
 
-  const cv::Point _anchor;
+  const cv::Point anchor_;
 };
 
 }  // namespace lib_vision

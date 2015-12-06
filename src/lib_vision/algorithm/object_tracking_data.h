@@ -42,7 +42,7 @@ class ObjectTrackingData {
   //============================================================================
   // P U B L I C   C / D T O R S
 
-  ObjectTrackingData() : _presence_count(0.0f){};
+  ObjectTrackingData() : presence_count_(0.0f){};
 
   virtual ~ObjectTrackingData(){};
 
@@ -58,7 +58,7 @@ class ObjectTrackingData {
   // P R I V A T E   M E M B E R S
 
   // In percent, nb of presence/ nb of frame in memory
-  float _presence_count;
+  float presence_count_;
 
   // In percent, the variation of the ratio value
   // float _ratio_variation;
@@ -70,11 +70,11 @@ class ObjectTrackingData {
 //------------------------------------------------------------------------------
 //
 inline void ObjectTrackingData::SetPresenceCount(float presenceCount) {
-  _presence_count = presenceCount;
+  presence_count_ = presenceCount;
 }
 
 //------------------------------------------------------------------------------
 //
-inline float ObjectTrackingData::GetPresenceCount() { return _presence_count; }
+inline float ObjectTrackingData::GetPresenceCount() { return presence_count_; }
 
 #endif  // LIB_VISION_ALGORITHM_OBJECT_TRACKING_DATA_H_

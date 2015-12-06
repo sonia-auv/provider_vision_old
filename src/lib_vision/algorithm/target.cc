@@ -51,7 +51,7 @@ void Target::SetTarget(ObjectFullData::Ptr obj) {
   target_is_inited_ = true;
   RotRect rrect = obj->GetRotatedRect();
   SetCenter(rrect.center.x, rrect.center.y);
-  setCameraOffset(&center_, obj->GetImageSize().height,
+  SetCameraOffset(&center_, obj->GetImageSize().height,
                   obj->GetImageSize().width);
   SetSize(rrect.size.height, rrect.size.width);
   SetAngle(rrect.angle);

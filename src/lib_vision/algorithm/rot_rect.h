@@ -89,7 +89,7 @@ class RotRect : public cv::RotatedRect {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  cv::Point2f pts[4];
+  cv::Point2f pts_[4];
 };
 
 #endif  // LIB_VISION_ALGORITHM_ROT_RECT_H_

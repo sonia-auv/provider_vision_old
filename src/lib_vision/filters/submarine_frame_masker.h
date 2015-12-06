@@ -43,15 +43,15 @@ class SubmarineFrameMasker : public Filter {
 
   explicit SubmarineFrameMasker(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, &parameters_),
-        _rotate_type("Rotation_type", 0, 0, 3, &parameters_,
+        enable_("Enable", false, &parameters_),
+        rotate_type_("Rotation_type", 0, 0, 3, &parameters_,
                      "Rotate type: 0=NONE, 1=x axis, 2=y axis, 3=all axis"),
-        _prev_rot_value(0) {
+        prev_rot_value_(0) {
     SetName("SubmarineFrameMasker");
     std::string mask_name =
         std::string(getenv("SONIA_WORKSPACE_ROOT")) +
         std::string("/ros/src/vision_server/config/bottom_mask.jpg");
-    _bottom_mask = cv::imread(mask_name, CV_LOAD_IMAGE_GRAYSCALE);
+    bottom_mask_ = cv::imread(mask_name, CV_LOAD_IMAGE_GRAYSCALE);
   }
 
   virtual ~SubmarineFrameMasker() {}
@@ -60,23 +60,23 @@ class SubmarineFrameMasker : public Filter {
   // P U B L I C   M E T H O D S
 
   virtual void Execute(cv::Mat &image) {
-    if (_enable()) {
-      if (_prev_rot_value != _rotate_type()) {
-        _prev_rot_value = _rotate_type();
-        switch (_rotate_type()) {
+    if (enable_()) {
+      if (prev_rot_value_ != rotate_type_()) {
+        prev_rot_value_ = rotate_type_();
+        switch (rotate_type_()) {
           case 1:
-            cv::flip(_bottom_mask, _bottom_mask, 0);
+            cv::flip(bottom_mask_, bottom_mask_, 0);
             break;
           case 2:
-            cv::flip(_bottom_mask, _bottom_mask, 1);
+            cv::flip(bottom_mask_, bottom_mask_, 1);
             break;
           case 3:
-            cv::flip(_bottom_mask, _bottom_mask, -1);
+            cv::flip(bottom_mask_, bottom_mask_, -1);
             break;
         }
       }
-      if (image.size() == _bottom_mask.size())
-        cv::bitwise_and(image, _bottom_mask, image);
+      if (image.size() == bottom_mask_.size())
+        cv::bitwise_and(image, bottom_mask_, image);
     }
   }
 
@@ -84,10 +84,10 @@ class SubmarineFrameMasker : public Filter {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  Parameter<bool> _enable;
-  RangedParameter<int> _rotate_type;
-  cv::Mat _bottom_mask;
-  int _prev_rot_value;
+  Parameter<bool> enable_;
+  RangedParameter<int> rotate_type_;
+  cv::Mat bottom_mask_;
+  int prev_rot_value_;
 };
 
 }  // namespace lib_vision

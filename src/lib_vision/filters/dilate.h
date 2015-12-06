@@ -43,13 +43,13 @@ class Dilate : public Filter {
 
   explicit Dilate(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, &parameters_),
-        _use_square_kernel("Square_kernel", true, &parameters_),
-        _kernel_type("Kernel_type", 0, 0, 2, &parameters_),
-        _kernel_size_x("Width", 1, 0, 20, &parameters_),
-        _kernel_size_y("Height", 1, 0, 20, &parameters_),
-        _iteration("Iteration", 1, 0, 20, &parameters_),
-        _anchor(-1, -1) {
+        enable_("Enable", false, &parameters_),
+        use_square_kernel_("Square_kernel", true, &parameters_),
+        kernel_type_("Kernel_type", 0, 0, 2, &parameters_),
+        kernel_size_x_("Width", 1, 0, 20, &parameters_),
+        kernel_size_y_("Height", 1, 0, 20, &parameters_),
+        iteration_("Iteration", 1, 0, 20, &parameters_),
+        anchor_(-1, -1) {
     SetName("Dilate");
   }
 
@@ -59,9 +59,9 @@ class Dilate : public Filter {
   // P U B L I C   M E T H O D S
 
   virtual void Execute(cv::Mat &image) {
-    if (_enable()) {
+    if (enable_()) {
       int kernel_type = 0;
-      switch (_kernel_type()) {
+      switch (kernel_type_()) {
         case 0:
           kernel_type = cv::MORPH_RECT;
           break;
@@ -73,12 +73,12 @@ class Dilate : public Filter {
           break;
       }
 
-      cv::Size size(_kernel_size_x() * 2 + 1,
-                    (_use_square_kernel() ? _kernel_size_x() * 2 + 1
-                                          : _kernel_size_y() * 2 + 1));
-      cv::Mat kernel = cv::getStructuringElement(kernel_type, size, _anchor);
+      cv::Size size(kernel_size_x_() * 2 + 1,
+                    (use_square_kernel_() ? kernel_size_x_() * 2 + 1
+                                          : kernel_size_y_() * 2 + 1));
+      cv::Mat kernel = cv::getStructuringElement(kernel_type, size, anchor_);
 
-      cv::dilate(image, image, kernel, _anchor, _iteration());
+      cv::dilate(image, image, kernel, anchor_, iteration_());
     }
   }
 
@@ -86,12 +86,12 @@ class Dilate : public Filter {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  Parameter<bool> _enable, _use_square_kernel;
-  RangedParameter<int> _kernel_type;
-  RangedParameter<int> _kernel_size_x, _kernel_size_y;
-  RangedParameter<int> _iteration;
+  Parameter<bool> enable_, use_square_kernel_;
+  RangedParameter<int> kernel_type_;
+  RangedParameter<int> kernel_size_x_, kernel_size_y_;
+  RangedParameter<int> iteration_;
 
-  const cv::Point _anchor;
+  const cv::Point anchor_;
 };
 
 }  // namespace lib_vision

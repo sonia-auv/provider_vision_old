@@ -46,7 +46,7 @@ TEST(BasicData, AllTest) {
   }
   contourList_t contours;
   hierachy_t hierachy;
-  retrieveAllContours(binaryImage, contours);
+  RetrieveAllContours(binaryImage, contours);
 
   std::vector<ObjectBasicData> objectData;
 

@@ -45,15 +45,15 @@ class ImageAccumulator : public Filter {
 
   explicit ImageAccumulator(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _accumulator(3, cv::Size(0, 0), CV_8UC1),
-        _enable("Enable", false, &parameters_),
-        _nb_image("NB_of_images", 3, 1, 20, &parameters_),
-        _method("Method_to_use", 1, 0, 2, &parameters_,
+        accumulator_(3, cv::Size(0, 0), CV_8UC1),
+        enable_("Enable", false, &parameters_),
+        nb_image_("NB_of_images", 3, 1, 20, &parameters_),
+        method_("Method_to_use", 1, 0, 2, &parameters_,
                 "Method: 1=SameWeight, 2=Adding50Percent, 3=Adjusted"),
-        _last_size(0, 0),
-        _last_method(CV_8UC1),
-        _last_type(0),
-        _last_nb_image(3) {
+        last_size_(0, 0),
+        last_method_(CV_8UC1),
+        last_type_(0),
+        last_nb_image_(3) {
     SetName("ImageAccumulator");
   }
 
@@ -63,42 +63,42 @@ class ImageAccumulator : public Filter {
   // P U B L I C   M E T H O D S
 
   virtual void Execute(cv::Mat &image) {
-    if (_enable()) {
+    if (enable_()) {
       // Is there any change in the type of images
       // we input to the accumulator?
       // If yes, reset it.
-      if (_last_type != image.type() || _last_method != _method() ||
-          _last_nb_image != _nb_image() || _last_size != image.size()) {
-        _accumulator.ResetBuffer(_nb_image(), image.size(), image.type());
+      if (last_type_ != image.type() || last_method_ != method_() ||
+          last_nb_image_ != nb_image_() || last_size_ != image.size()) {
+        accumulator_.ResetBuffer(nb_image_(), image.size(), image.type());
 
-        _last_nb_image = _nb_image();
-        _last_size = image.size();
+        last_nb_image_ = nb_image_();
+        last_size_ = image.size();
 
-        switch (_method()) {
+        switch (method_()) {
           case 0:
-            _accumulator.SetAverageMethod(
+            accumulator_.SetAverageMethod(
                 ImageAccumulatorBuffer::ACC_ALL_SAME_WEIGHT);
             break;
           case 1:
-            _accumulator.SetAverageMethod(
+            accumulator_.SetAverageMethod(
                 ImageAccumulatorBuffer::ACC_50_PERCENT);
             break;
           case 2:
-            _accumulator.SetAverageMethod(
+            accumulator_.SetAverageMethod(
                 ImageAccumulatorBuffer::ACC_ADJUST_WEIGHT);
             break;
           default:
-            _accumulator.SetAverageMethod(
+            accumulator_.SetAverageMethod(
                 ImageAccumulatorBuffer::ACC_ALL_SAME_WEIGHT);
             break;
         }
-        _last_method = _method();
-        _last_type = image.type();
+        last_method_ = method_();
+        last_type_ = image.type();
       }
       // Add the newest frame
-      _accumulator.AddImage(image);
+      accumulator_.AddImage(image);
       // Change the input for the newest averaging.
-      _accumulator.GetImage(image);
+      accumulator_.GetImage(image);
     }
   }
 
@@ -106,14 +106,14 @@ class ImageAccumulator : public Filter {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  ImageAccumulatorBuffer _accumulator;
-  Parameter<bool> _enable;
-  RangedParameter<int> _nb_image, _method;
+  ImageAccumulatorBuffer accumulator_;
+  Parameter<bool> enable_;
+  RangedParameter<int> nb_image_, method_;
   // Here we need some sorte of remembering
   // so we can reset the accumulator on
   // param changing.
-  cv::Size _last_size;
-  int _last_method, _last_type, _last_nb_image;
+  cv::Size last_size_;
+  int last_method_, last_type_, last_nb_image_;
 };
 
 }  // namespace lib_vision

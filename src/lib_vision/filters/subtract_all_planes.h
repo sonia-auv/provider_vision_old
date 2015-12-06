@@ -46,7 +46,7 @@ class SubtractAllPlanes : public Filter {
 
   explicit SubtractAllPlanes(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("enable", false, &parameters_),
+        enable_("enable", false, &parameters_),
         _plane_one("Plane_1", 1, 0, 7, &parameters_,
                    "0=None, 1=Blue, 2=Green, 3=Red, 4=Hue, 5=Saturation, "
                    "6=Intensity, 7=Gray"),
@@ -62,8 +62,8 @@ class SubtractAllPlanes : public Filter {
         _weight_one("Weight_Plane_1", 1.0, 0.0, 10.0, &parameters_),
         _weight_two("Weight_Plane_2", 1.0, 0.0, 10.0, &parameters_),
         _weight_three("Weight_Plane_3", 1.0, 0.0, 10.0, &parameters_),
-        _rows(0),
-        _cols(0) {
+        rows_(0),
+        cols_(0) {
     SetName("SubtractAllPlanes");
   }
 
@@ -73,23 +73,23 @@ class SubtractAllPlanes : public Filter {
   // P U B L I C   M E T H O D S
 
   virtual void Execute(cv::Mat &image) {
-    if (_enable()) {
+    if (enable_()) {
       if (CV_MAT_CN(image.type()) != 3) {
         return;
       }
 
-      _rows = image.rows;
-      _cols = image.cols;
+      rows_ = image.rows;
+      cols_ = image.cols;
       // Set final matrices
-      cv::Mat zero = cv::Mat::zeros(_rows, _cols, CV_8UC1);
-      cv::Mat one = cv::Mat::zeros(_rows, _cols, CV_8UC1);
-      cv::Mat two = cv::Mat::zeros(_rows, _cols, CV_8UC1);
-      cv::Mat three = cv::Mat::zeros(_rows, _cols, CV_8UC1);
-      cv::Mat final = cv::Mat::zeros(_rows, _cols, CV_8UC1);
+      cv::Mat zero = cv::Mat::zeros(rows_, cols_, CV_8UC1);
+      cv::Mat one = cv::Mat::zeros(rows_, cols_, CV_8UC1);
+      cv::Mat two = cv::Mat::zeros(rows_, cols_, CV_8UC1);
+      cv::Mat three = cv::Mat::zeros(rows_, cols_, CV_8UC1);
+      cv::Mat final = cv::Mat::zeros(rows_, cols_, CV_8UC1);
 
       // Replace with new images
 
-      _channel_vec = getColorPlanes(image);
+      _channel_vec = GetColorPlanes(image);
 
       // Set subtraction
       if (_plane_one() != 0)
@@ -114,15 +114,15 @@ class SubtractAllPlanes : public Filter {
 
   void set_image(const int choice, cv::Mat &out, const double weight,
                  const bool inverse) {
-    cv::Mat two_five_five(_rows, _cols, CV_16SC1, cv::Scalar(255));
-    cv::Mat one(_rows, _cols, CV_16SC1, cv::Scalar(1));
+    cv::Mat two_five_five(rows_, cols_, CV_16SC1, cv::Scalar(255));
+    cv::Mat one(rows_, cols_, CV_16SC1, cv::Scalar(1));
 
     // Thightly couple with parameter, but putting safety...
     int index = choice < 0 ? 0 : (choice > 6 ? 6 : choice);
     _channel_vec[index].copyTo(out);
 
     if (inverse) {
-      inverseImage(out, out);
+      InverseImage(out, out);
     }
     cv::multiply(out, one, out, weight, CV_8UC1);
   }
@@ -130,24 +130,16 @@ class SubtractAllPlanes : public Filter {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  Parameter<bool> _enable;
+  Parameter<bool> enable_;
   RangedParameter<int> _plane_one, _plane_two, _plane_three;
   Parameter<bool> _invert_one, _invert_two, _invert_three;
   RangedParameter<double> _weight_one, _weight_two, _weight_three;
 
   // Color matrices
   std::vector<cv::Mat> _channel_vec;
-  cv::Mat _blue;
-  cv::Mat _red;
-  cv::Mat _green;
-  cv::Mat _hue;
-  cv::Mat _saturation;
-  cv::Mat _intensity;
-  cv::Mat _gray;
-  std::vector<cv::Mat> _bgr, _hsi;
 
-  int _rows;
-  int _cols;
+  int rows_;
+  int cols_;
 };
 
 }  // namespace lib_vision

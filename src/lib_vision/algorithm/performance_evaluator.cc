@@ -31,10 +31,10 @@
 //------------------------------------------------------------------------------
 //
 PerformanceEvaluator::PerformanceEvaluator()
-    : _tick_frequency(cv::getTickFrequency()),
-      _start_tick_count(cv::getTickCount()) {
+    : tick_frequency_(cv::getTickFrequency()),
+      start_tick_count_(cv::getTickCount()) {
   // Should never occur but...
-  if (_tick_frequency == 0.0f) {
-    _tick_frequency = 1;
+  if (tick_frequency_ == 0.0f) {
+    tick_frequency_ = 1;
   }
 }

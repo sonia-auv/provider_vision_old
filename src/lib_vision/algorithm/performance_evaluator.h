@@ -65,9 +65,9 @@ class PerformanceEvaluator {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  double _start_tick_count;
+  double start_tick_count_;
 
-  double _tick_frequency;
+  double tick_frequency_;
 };
 
 //==============================================================================
@@ -76,13 +76,13 @@ class PerformanceEvaluator {
 //------------------------------------------------------------------------------
 //
 inline double PerformanceEvaluator::GetExecTimeSec() {
-  return (cv::getTickCount() - _start_tick_count) / _tick_frequency;
+  return (cv::getTickCount() - start_tick_count_) / tick_frequency_;
 }
 
 //------------------------------------------------------------------------------
 //
 inline void PerformanceEvaluator::UpdateStartTime() {
-  _start_tick_count = cv::getTickCount();
+  start_tick_count_ = cv::getTickCount();
 }
 
 #endif  // LIB_VISION_ALGORITHM_PERFORMANCE_EVALUATOR_H_

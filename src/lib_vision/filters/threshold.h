@@ -43,8 +43,8 @@ class Threshold : public Filter {
 
   explicit Threshold(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, &parameters_),
-        _type("Threshold_type", 1, 0, 5, &parameters_,
+        enable_("Enable", false, &parameters_),
+        type_("Threshold_type", 1, 0, 5, &parameters_,
               "0=BIN, 1=BIN_INV, 2=TRUNC, 3=TOZERO, 4=TOZERO_INV 5=OTSU"),
         _max("Max_value", 100, 0, 255, &parameters_) {
     SetName("Threshold");
@@ -56,7 +56,7 @@ class Threshold : public Filter {
   // P U B L I C   M E T H O D S
 
   virtual void Execute(cv::Mat &image) {
-    if (_enable()) {
+    if (enable_()) {
       if (image.channels() > 1) {
         cv::cvtColor(image, image, CV_BGR2GRAY);
       }
@@ -65,7 +65,7 @@ class Threshold : public Filter {
       }
 
       int threshold_type = CV_THRESH_BINARY;
-      switch (_type()) {
+      switch (type_()) {
         case 0:
           threshold_type = CV_THRESH_BINARY;
           break;
@@ -96,8 +96,8 @@ class Threshold : public Filter {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  Parameter<bool> _enable;
-  RangedParameter<int> _type, _max;
+  Parameter<bool> enable_;
+  RangedParameter<int> type_, _max;
 };
 
 }  // namespace lib_vision

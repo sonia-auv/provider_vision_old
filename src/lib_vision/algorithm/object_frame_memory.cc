@@ -37,7 +37,7 @@ const float ObjectFrameMemory::RATIO_MAX_DIFFERENCE = 0.1;
 //------------------------------------------------------------------------------
 //
 ObjectFrameMemory::ObjectFrameMemory(unsigned int memorySize)
-    : _previous_frames(memorySize), _memory_size(memorySize) {}
+    : previous_frames_(memorySize), memory_size_(memorySize) {}
 
 //==============================================================================
 // M E T H O D S   S E C T I O N
@@ -46,7 +46,7 @@ ObjectFrameMemory::ObjectFrameMemory(unsigned int memorySize)
 //
 void ObjectFrameMemory::AddFrameObjects(
     ObjectFullData::FullObjectPtrVec &objectVector) {
-  _previous_frames.push_back(objectVector);
+  previous_frames_.push_back(objectVector);
 }
 
 //------------------------------------------------------------------------------
@@ -56,17 +56,17 @@ ObjectFullData::FullObjectPtrVec ObjectFrameMemory::GetPastObjectsViaCenter(
   ObjectFullData::FullObjectPtrVec objVec;
 
   // For i frame
-  for (int i = 0, buffSize = _previous_frames.size(); i < buffSize; i++) {
+  for (int i = 0, buffSize = previous_frames_.size(); i < buffSize; i++) {
     float shortestDistance = 100000.0f;
     ObjectFullData::Ptr nearestObject = nullptr;
-    ObjectFullData::FullObjectPtrVec currentFrameData = _previous_frames.at(i);
+    ObjectFullData::FullObjectPtrVec currentFrameData = previous_frames_.at(i);
 
     // for all the object in the frame
     for (int j = 0, size = currentFrameData.size(); j < size; j++) {
       ObjectFullData::Ptr analysedObject = currentFrameData[j];
       if (analysedObject.get() != nullptr) {
         cv::Point analysedCenter = analysedObject->GetCenter();
-        float distance = eucledianPointDistance(center, analysedCenter);
+        float distance = EucledianPointDistance(center, analysedCenter);
 
         float analysedRatio = analysedObject->GetRatio();
         float ratioDifference = fabsf(analysedRatio - objectRatio);

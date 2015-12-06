@@ -44,34 +44,34 @@ TEST(ContourTest, AllTest) {
   // Expect 7 contours
 
   ContourList contour_list_all(img, ContourList::METHOD::ALL);
-  ASSERT_TRUE(contour_list_all.size() == 7);
+  ASSERT_TRUE(contour_list_all.GetSize() == 7);
 
   // Expect 7 contours, hierarchy should be filled and same size.
   ContourList contour_list_hier(img, ContourList::METHOD::HIERARCHY);
-  ASSERT_TRUE(contour_list_hier.size() == 7);
-  ASSERT_TRUE(contour_list_hier._hierarchy.size() == 7);
+  ASSERT_TRUE(contour_list_hier.GetSize() == 7);
+  ASSERT_TRUE(contour_list_hier.hierarchy_.size() == 7);
 
   // Expect 4
   ContourList contour_list_inner(img, ContourList::METHOD::INNER);
-  ASSERT_TRUE(contour_list_inner.size() == 4);
+  ASSERT_TRUE(contour_list_inner.GetSize() == 4);
 
   // Expect 3
   ContourList contour_list_inner_most(img, ContourList::METHOD::INNER_MOST);
-  ASSERT_TRUE(contour_list_inner_most.size() == 3);
+  ASSERT_TRUE(contour_list_inner_most.GetSize() == 3);
 
   // Expect 3
   ContourList contour_list_outer(img, ContourList::METHOD::OUTER);
-  ASSERT_TRUE(contour_list_outer.size() == 3);
+  ASSERT_TRUE(contour_list_outer.GetSize() == 3);
 
   // Expect 1
   ContourList contour_list_outer_no_child(img, ContourList::METHOD::OUTER_NO_CHILD);
-  ASSERT_TRUE(contour_list_outer_no_child.size() == 1);
+  ASSERT_TRUE(contour_list_outer_no_child.GetSize() == 1);
 
   // Since perfect square, should not approximate.
   Contour tmp (contour_list_outer_no_child[0]);
   tmp.Approximate(2);
 
-  ASSERT_TRUE(tmp.size() == 4);
+  ASSERT_TRUE(tmp.GetSize() == 4);
 
   std::vector<cv::Point>  vec;
   vec.push_back(cv::Point(0,0));
@@ -80,11 +80,11 @@ TEST(ContourTest, AllTest) {
   vec.push_back(cv::Point(10,10));
   vec.push_back(cv::Point(10,0));
   Contour ctr(vec), ctr2(vec);
-  ASSERT_TRUE( ctr._contour.size() == 5 );
+  ASSERT_TRUE( ctr.contour_.size() == 5 );
   ctr.Approximate(3);
   ctr2.ApproximateBySize();
-  ASSERT_TRUE( ctr._contour.size() == 4 );
-  ASSERT_TRUE( ctr2._contour.size() == 4 );
+  ASSERT_TRUE( ctr.contour_.size() == 4 );
+  ASSERT_TRUE( ctr2.contour_.size() == 4 );
 }
 
 int main(int argc, char **argv) {

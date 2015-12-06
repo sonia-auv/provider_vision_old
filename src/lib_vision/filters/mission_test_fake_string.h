@@ -43,7 +43,7 @@ class MissionTestFakeString : public Filter {
 
   explicit MissionTestFakeString(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, &parameters_),
+        enable_("Enable", false, &parameters_),
         _string("String_to_return", "test", &parameters_) {
     SetName("MissionTestFakeString");
   }
@@ -54,7 +54,7 @@ class MissionTestFakeString : public Filter {
   // P U B L I C   M E T H O D S
 
   virtual void Execute(cv::Mat &image) {
-    if (_enable()) {
+    if (enable_()) {
       NotifyString(_string());
     }
   }
@@ -63,7 +63,7 @@ class MissionTestFakeString : public Filter {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  Parameter<bool> _enable;
+  Parameter<bool> enable_;
   Parameter<std::string> _string;
 };
 

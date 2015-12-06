@@ -48,32 +48,32 @@ class ObjectFinder : public Filter {
 
   explicit ObjectFinder(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, &parameters_),
-        _debug_contour("Debug_contour", false, &parameters_),
-        _look_for_rectangle("Look_for_Rectangle", false, &parameters_),
-        _disable_ratio("disable_ratio_check", false, &parameters_),
-        _disable_angle("disable_angle_check", false, &parameters_),
-        _use_convex_hull("Use_convex_hull", false, &parameters_),
-        _vote_most_centered("Vote_most_centered", false, &parameters_),
-        _vote_most_upright("Vote_most_upright", false, &parameters_),
-        _vote_less_difference_from_targeted_ratio(
+        enable_("Enable", false, &parameters_),
+        debug_contour_("Debug_contour", false, &parameters_),
+        look_for_rectangle_("Look_for_Rectangle", false, &parameters_),
+        disable_ratio_("disable_ratio_check", false, &parameters_),
+        disable_angle_("disable_angle_check", false, &parameters_),
+        use_convex_hull_("Use_convex_hull", false, &parameters_),
+        vote_most_centered_("Vote_most_centered", false, &parameters_),
+        vote_most_upright_("Vote_most_upright", false, &parameters_),
+        vote_less_difference_from_targeted_ratio_(
             "Vote_less_diff_from_target_ratio", false, &parameters_),
-        _vote_length("Vote_length", false, &parameters_),
-        _vote_higher("Vote_higher", false, &parameters_),
-        _id("ID", "buoy", &parameters_),
-        _spec_1("spec1", "red", &parameters_),
-        _spec_2("spec2", "blue", &parameters_),
-        _min_area("Min_area", 200, 0, 10000, &parameters_),
-        _targeted_ratio("Ratio_target", 0.5f, 0.0f, 1.0f, &parameters_),
-        _difference_from_target_ratio("Diff_from_ratio_target", 0.10f, 0.0f,
+        vote_length_("Vote_length", false, &parameters_),
+        vote_higher_("Vote_higher", false, &parameters_),
+        id_("ID", "buoy", &parameters_),
+        spec_1_("spec1", "red", &parameters_),
+        spec_2_("spec2", "blue", &parameters_),
+        min_area_("Min_area", 200, 0, 10000, &parameters_),
+        targeted_ratio_("Ratio_target", 0.5f, 0.0f, 1.0f, &parameters_),
+        difference_from_target_ratio_("Diff_from_ratio_target", 0.10f, 0.0f,
                                       1.0f, &parameters_),
-        _targeted_angle("angle_target", 0.0f, 0.0f, 90.0f, &parameters_),
-        _difference_from_target_angle("Diff_from_angle_target", 30.0f, 0.0f,
+        targeted_angle_("angle_target", 0.0f, 0.0f, 90.0f, &parameters_),
+        difference_from_target_angle_("Diff_from_angle_target", 30.0f, 0.0f,
                                       90.0f, &parameters_),
-        _min_percent_filled("Min_percent_filled", 50, 0, 100, &parameters_),
-        _contour_retreval("Contour_retreval", 0, 0, 4, &parameters_,
+        min_percent_filled_("Min_percent_filled", 50, 0, 100, &parameters_),
+        contour_retreval_("Contour_retreval", 0, 0, 4, &parameters_,
                           "0=All, 1=Out, 2=Inner, 3=InnerMost, 4=OutNoChild"),
-        _feature_factory(5) {
+        feature_factory_(5) {
     SetName("ObjectFinder");
     // Little goodies for cvs
     // area_rank,length_rank,circularity,convexity,ratio,presence,percent_filled,hueMean,
@@ -85,11 +85,11 @@ class ObjectFinder : public Filter {
   // P U B L I C   M E T H O D S
 
   virtual void Execute(cv::Mat &image) {
-    if (_enable()) {
-      if (_debug_contour()) {
-        image.copyTo(_output_image);
-        if (_output_image.channels() == 1) {
-          cv::cvtColor(_output_image, _output_image, CV_GRAY2BGR);
+    if (enable_()) {
+      if (debug_contour_()) {
+        image.copyTo(output_image_);
+        if (output_image_.channels() == 1) {
+          cv::cvtColor(output_image_, output_image_, CV_GRAY2BGR);
         }
       }
 
@@ -97,27 +97,27 @@ class ObjectFinder : public Filter {
       cv::Mat originalImage = global_params_.getOriginalImage();
 
       contourList_t contours;
-      switch (_contour_retreval()) {
+      switch (contour_retreval_()) {
         case 0:
-          retrieveAllContours(image, contours);
+          RetrieveAllContours(image, contours);
           break;
         case 1:
-          retrieveOuterContours(image, contours);
+          RetrieveOuterContours(image, contours);
           break;
         case 2:
-          retrieveAllInnerContours(image, contours);
+          RetrieveAllInnerContours(image, contours);
           break;
         case 3:
-          retrieveInnerContours(image, contours);
+          RetrieveInnerContours(image, contours);
           break;
         case 4:
-          retrieveOutNoChildContours(image, contours);
+          RetrieveOutNoChildContours(image, contours);
           break;
       }
 
       ObjectFullData::FullObjectPtrVec objVec;
       for (int i = 0, size = contours.size(); i < size; i++) {
-        if (_use_convex_hull()) {
+        if (use_convex_hull_()) {
           cv::convexHull(contours[i], contours[i]);
         }
 
@@ -129,22 +129,22 @@ class ObjectFinder : public Filter {
         //
         // AREA
         //
-        if (object->GetArea() < _min_area()) {
+        if (object->GetArea() < min_area_()) {
           continue;
         }
-        if (_debug_contour()) {
-          cv::drawContours(_output_image, contours, i, CV_RGB(255, 0, 0), 2);
+        if (debug_contour_()) {
+          cv::drawContours(output_image_, contours, i, CV_RGB(255, 0, 0), 2);
         }
 
         //
         // RATIO
         //
-        if (!_disable_ratio() && (fabs(object->GetRatio() - _targeted_ratio()) >
-                                  fabs(_difference_from_target_ratio()))) {
+        if (!disable_ratio_() && (fabs(object->GetRatio() - targeted_ratio_()) >
+                                  fabs(difference_from_target_ratio_()))) {
           continue;
         }
-        if (_debug_contour()) {
-          cv::drawContours(_output_image, contours, i, CV_RGB(0, 0, 255), 2);
+        if (debug_contour_()) {
+          cv::drawContours(output_image_, contours, i, CV_RGB(0, 0, 255), 2);
         }
 
         //
@@ -152,100 +152,100 @@ class ObjectFinder : public Filter {
         //
 
         float percent_filled =
-            calculatePourcentFilled(image, object->GetUprightRect());
-        if ((percent_filled) < _min_percent_filled()) {
+            CalculatePourcentFilled(image, object->GetUprightRect());
+        if ((percent_filled) < min_percent_filled_()) {
           continue;
         }
-        if (_debug_contour()) {
-          cv::drawContours(_output_image, contours, i, CV_RGB(255, 255, 0), 2);
+        if (debug_contour_()) {
+          cv::drawContours(output_image_, contours, i, CV_RGB(255, 255, 0), 2);
         }
 
         //
         // ANGLE
         //
-        if (!_disable_angle() &&
-            (fabs(object->GetRotatedRect().angle - _targeted_angle()) >
-             fabs(_difference_from_target_angle()))) {
+        if (!disable_angle_() &&
+            (fabs(object->GetRotatedRect().angle - targeted_angle_()) >
+             fabs(difference_from_target_angle_()))) {
           continue;
         }
 
         //
         // RECTANGLE
         //
-        if (_look_for_rectangle() && !IsRectangle(contours[i], 10)) {
-          // if (_look_for_rectangle() && !IsSquare(contours[i], _min_area(),
+        if (look_for_rectangle_() && !IsRectangle(contours[i], 10)) {
+          // if (look_for_rectangle_() && !IsSquare(contours[i], min_area_(),
           // 80.0f, 0.0f, 100.0f)) {
           continue;
         }
 
-        if (_debug_contour()) {
-          cv::drawContours(_output_image, contours, i, CV_RGB(0, 255, 0), 2);
+        if (debug_contour_()) {
+          cv::drawContours(output_image_, contours, i, CV_RGB(0, 255, 0), 2);
         }
 
         objVec.push_back(object);
       }
 
       if (objVec.size() > 1) {
-        if (_vote_most_centered()) {
+        if (vote_most_centered_()) {
           std::sort(
               objVec.begin(), objVec.end(),
               [this](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
                 return GetDistanceFromCenter(a) < GetDistanceFromCenter(b);
               });
           objVec[0]->IncrementVote();
-          cv::circle(_output_image, cv::Point(objVec[0]->GetCenter().x,
+          cv::circle(output_image_, cv::Point(objVec[0]->GetCenter().x,
                                               objVec[0]->GetCenter().y) -
                                         cv::Point(12, 12),
                      6, CV_RGB(255, 0, 0), -1);
         }
 
-        if (_vote_length()) {
+        if (vote_length_()) {
           std::sort(objVec.begin(), objVec.end(),
                     [](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
                       return fabs(a->GetLength()) > fabs(b->GetLength());
                     });
           objVec[0]->IncrementVote();
-          cv::circle(_output_image, cv::Point(objVec[0]->GetCenter().x,
+          cv::circle(output_image_, cv::Point(objVec[0]->GetCenter().x,
                                               objVec[0]->GetCenter().y) -
                                         cv::Point(12, 6),
                      6, CV_RGB(0, 0, 255), -1);
         }
 
-        if (_vote_most_upright()) {
+        if (vote_most_upright_()) {
           std::sort(objVec.begin(), objVec.end(),
                     [](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
                       return fabs(a->GetRotatedRect().angle) <
                              fabs(b->GetRotatedRect().angle);
                     });
           objVec[0]->IncrementVote();
-          cv::circle(_output_image, cv::Point(objVec[0]->GetCenter().x,
+          cv::circle(output_image_, cv::Point(objVec[0]->GetCenter().x,
                                               objVec[0]->GetCenter().y) -
                                         cv::Point(12, 0),
                      6, CV_RGB(255, 0, 255), -1);
         }
 
-        if (_vote_less_difference_from_targeted_ratio()) {
+        if (vote_less_difference_from_targeted_ratio_()) {
           std::sort(
               objVec.begin(), objVec.end(),
               [this](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
-                return fabs(a->GetRatio() - _targeted_ratio()) <
-                       fabs(b->GetRatio() - _targeted_ratio());
+                return fabs(a->GetRatio() - targeted_ratio_()) <
+                       fabs(b->GetRatio() - targeted_ratio_());
               });
           objVec[0]->IncrementVote();
-          cv::circle(_output_image, cv::Point(objVec[0]->GetCenter().x,
+          cv::circle(output_image_, cv::Point(objVec[0]->GetCenter().x,
                                               objVec[0]->GetCenter().y) -
                                         cv::Point(12, -6),
                      6, CV_RGB(0, 255, 255), -1);
         }
 
-        if (_vote_higher()) {
+        if (vote_higher_()) {
           std::sort(
               objVec.begin(), objVec.end(),
               [this](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
                   -> bool { return a->GetCenter().y < b->GetCenter().y; });
           objVec[0]->IncrementVote();
 
-          cv::circle(_output_image, cv::Point(objVec[0]->GetCenter().x,
+          cv::circle(output_image_, cv::Point(objVec[0]->GetCenter().x,
                                               objVec[0]->GetCenter().y) -
                                         cv::Point(12, -12),
                      6, CV_RGB(255, 255, 0), -1);
@@ -256,7 +256,7 @@ class ObjectFinder : public Filter {
                       -> bool { return a->GetArea() > b->GetArea(); });
 
         objVec[0]->IncrementVote();
-        cv::circle(_output_image, cv::Point(objVec[0]->GetCenter().x,
+        cv::circle(output_image_, cv::Point(objVec[0]->GetCenter().x,
                                             objVec[0]->GetCenter().y) -
                                       cv::Point(12, -18),
                    6, CV_RGB(255, 150, 150), -1);
@@ -270,21 +270,21 @@ class ObjectFinder : public Filter {
         Target target;
         ObjectFullData::Ptr object = objVec[0];
         cv::Point center = object->GetCenter();
-        setCameraOffset(&center, image.rows, image.cols);
+        SetCameraOffset(&center, image.rows, image.cols);
         target.SetTarget(center.x, center.y, object->GetLength(),
                          object->GetLength(), object->GetRotatedRect().angle);
-        target.SetSpecField_1(_spec_1());
-        target.SetSpecField_2(_spec_2());
+        target.SetSpecField_1(spec_1_());
+        target.SetSpecField_2(spec_2_());
         std::stringstream ss;
-        ss << _id() << target.OutputString();
+        ss << id_() << target.OutputString();
         NotifyString(ss.str().c_str());
-        if (_debug_contour()) {
-          cv::circle(_output_image, objVec[0]->GetCenter(), 3,
+        if (debug_contour_()) {
+          cv::circle(output_image_, objVec[0]->GetCenter(), 3,
                      CV_RGB(0, 255, 0), 3);
         }
       }
-      if (_debug_contour()) {
-        _output_image.copyTo(image);
+      if (debug_contour_()) {
+        output_image_.copyTo(image);
       }
     }
   }
@@ -301,23 +301,22 @@ class ObjectFinder : public Filter {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  cv::Mat _output_image;
+  cv::Mat output_image_;
 
-  Parameter<bool> _enable, _debug_contour, _look_for_rectangle, _disable_ratio,
-      _disable_angle, _use_convex_hull;
+  Parameter<bool> enable_, debug_contour_, look_for_rectangle_, disable_ratio_,
+      disable_angle_, use_convex_hull_;
 
-  Parameter<bool> _vote_most_centered, _vote_most_upright,
-      _vote_less_difference_from_targeted_ratio, _vote_length, _vote_higher;
+  Parameter<bool> vote_most_centered_, vote_most_upright_,
+      vote_less_difference_from_targeted_ratio_, vote_length_, vote_higher_;
 
-  Parameter<std::string> _id, _spec_1, _spec_2;
+  Parameter<std::string> id_, spec_1_, spec_2_;
 
-  RangedParameter<double> _min_area, _targeted_ratio,
-      _difference_from_target_ratio, _targeted_angle,
-      _difference_from_target_angle, _min_percent_filled;
+  RangedParameter<double> min_area_, targeted_ratio_, difference_from_target_ratio_,
+      targeted_angle_, difference_from_target_angle_, min_percent_filled_;
 
-  RangedParameter<int> _contour_retreval;
+  RangedParameter<int> contour_retreval_;
 
-  ObjectFeatureFactory _feature_factory;
+  ObjectFeatureFactory feature_factory_;
 };
 
 }  // namespace lib_vision

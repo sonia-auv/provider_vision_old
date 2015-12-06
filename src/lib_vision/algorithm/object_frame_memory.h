@@ -67,8 +67,8 @@ class ObjectFrameMemory {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  std::vector<ObjectFullData::FullObjectPtrVec> _previous_frames;
-  unsigned int _memory_size;
+  std::vector<ObjectFullData::FullObjectPtrVec> previous_frames_;
+  unsigned int memory_size_;
 };
 
 //==============================================================================
@@ -76,6 +76,6 @@ class ObjectFrameMemory {
 
 //------------------------------------------------------------------------------
 //
-inline unsigned int ObjectFrameMemory::GetMemorySize() { return _memory_size; }
+inline unsigned int ObjectFrameMemory::GetMemorySize() { return memory_size_; }
 
 #endif  // LIB_VISION_ALGORITHM_OBJECT_FRAME_MEMORY_H_

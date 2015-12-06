@@ -34,22 +34,22 @@ ContourList::ContourList(const cv::Mat &image, const METHOD method) {
   switch (method) {
     default:
     case ALL:
-      retrieveAllContours(image);
+      RetrieveAllContours(image);
       break;
     case INNER:
-      retrieveInnerContours(image);
+      RetrieveInnerContours(image);
       break;
     case INNER_MOST:
-      retrieveInnerMostContours(image);
+      RetrieveInnerMostContours(image);
       break;
     case OUTER:
-      retrieveOuterContours(image);
+      RetrieveOuterContours(image);
       break;
     case OUTER_NO_CHILD:
-      retrieveOutNoChildContours(image);
+      RetrieveOutNoChildContours(image);
       break;
     case HIERARCHY:
-      retrieveHiearchyContours(image);
+      RetrieveHiearchyContours(image);
       break;
   }
   for (const auto &ctr : contour_list_point_) {
@@ -62,7 +62,7 @@ ContourList::ContourList(const cv::Mat &image, const METHOD method) {
 
 //------------------------------------------------------------------------------
 //
-void ContourList::retrieveAllContours(const cv::Mat &image) {
+void ContourList::RetrieveAllContours(const cv::Mat &image) {
   // Clone because find contour modifies the image.
   cv::findContours(image.clone(), contour_list_point_, CV_RETR_LIST,
                    CV_CHAIN_APPROX_SIMPLE);
@@ -70,21 +70,21 @@ void ContourList::retrieveAllContours(const cv::Mat &image) {
 
 //-----------------------------------------------------------------------------
 //
-void ContourList::retrieveHiearchyContours(const cv::Mat &image) {
-  cv::findContours(image.clone(), contour_list_point_, _hierarchy, CV_RETR_TREE,
+void ContourList::RetrieveHiearchyContours(const cv::Mat &image) {
+  cv::findContours(image.clone(), contour_list_point_, hierarchy_, CV_RETR_TREE,
                    CV_CHAIN_APPROX_SIMPLE);
 }
 
 //-----------------------------------------------------------------------------
 //
-void ContourList::retrieveInnerContours(const cv::Mat &image) {
-  cv::findContours(image.clone(), contour_list_point_, _hierarchy, CV_RETR_TREE,
+void ContourList::RetrieveInnerContours(const cv::Mat &image) {
+  cv::findContours(image.clone(), contour_list_point_, hierarchy_, CV_RETR_TREE,
                    CV_CHAIN_APPROX_SIMPLE);
 
   std::vector<std::vector<cv::Point> > new_contour_list;
 
-  for (size_t i = 0, size = _hierarchy.size(); i < size; i++) {
-    if (HasParent(_hierarchy[i])) {
+  for (size_t i = 0, size = hierarchy_.size(); i < size; i++) {
+    if (HasParent(hierarchy_[i])) {
       new_contour_list.push_back((contour_list_point_)[i]);
     }
   }
@@ -94,14 +94,14 @@ void ContourList::retrieveInnerContours(const cv::Mat &image) {
 
 //-----------------------------------------------------------------------------
 //
-void ContourList::retrieveInnerMostContours(const cv::Mat &image) {
-  cv::findContours(image.clone(), contour_list_point_, _hierarchy, CV_RETR_TREE,
+void ContourList::RetrieveInnerMostContours(const cv::Mat &image) {
+  cv::findContours(image.clone(), contour_list_point_, hierarchy_, CV_RETR_TREE,
                    CV_CHAIN_APPROX_SIMPLE);
 
   std::vector<std::vector<cv::Point> > new_contour_list;
 
-  for (size_t i = 0, size = _hierarchy.size(); i < size; i++) {
-    if (HasParent(_hierarchy[i]) && !HasChild(_hierarchy[i])) {
+  for (size_t i = 0, size = hierarchy_.size(); i < size; i++) {
+    if (HasParent(hierarchy_[i]) && !HasChild(hierarchy_[i])) {
       new_contour_list.push_back((contour_list_point_)[i]);
     }
   }
@@ -111,14 +111,14 @@ void ContourList::retrieveInnerMostContours(const cv::Mat &image) {
 
 //-----------------------------------------------------------------------------
 //
-void ContourList::retrieveOuterContours(const cv::Mat &image) {
-  cv::findContours(image.clone(), contour_list_point_, _hierarchy, CV_RETR_TREE,
+void ContourList::RetrieveOuterContours(const cv::Mat &image) {
+  cv::findContours(image.clone(), contour_list_point_, hierarchy_, CV_RETR_TREE,
                    CV_CHAIN_APPROX_SIMPLE);
 
   std::vector<std::vector<cv::Point> > new_contour_list;
 
-  for (size_t i = 0, size = _hierarchy.size(); i < size; i++) {
-    if (!HasParent(_hierarchy[i])) {
+  for (size_t i = 0, size = hierarchy_.size(); i < size; i++) {
+    if (!HasParent(hierarchy_[i])) {
       new_contour_list.push_back((contour_list_point_)[i]);
     }
   }
@@ -128,14 +128,14 @@ void ContourList::retrieveOuterContours(const cv::Mat &image) {
 
 //-----------------------------------------------------------------------------
 //
-void ContourList::retrieveOutNoChildContours(const cv::Mat &image) {
-  cv::findContours(image.clone(), contour_list_point_, _hierarchy, CV_RETR_TREE,
+void ContourList::RetrieveOutNoChildContours(const cv::Mat &image) {
+  cv::findContours(image.clone(), contour_list_point_, hierarchy_, CV_RETR_TREE,
                    CV_CHAIN_APPROX_SIMPLE);
 
   std::vector<std::vector<cv::Point> > new_contour_list;
 
-  for (size_t i = 0, size = _hierarchy.size(); i < size; i++) {
-    if (!HasParent(_hierarchy[i]) && !HasChild(_hierarchy[i])) {
+  for (size_t i = 0, size = hierarchy_.size(); i < size; i++) {
+    if (!HasParent(hierarchy_[i]) && !HasChild(hierarchy_[i])) {
       new_contour_list.push_back((contour_list_point_)[i]);
     }
   }

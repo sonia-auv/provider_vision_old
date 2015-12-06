@@ -43,11 +43,11 @@ class ConvexHull : public Filter {
 
   explicit ConvexHull(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, &parameters_),
-        _mode("Mode", 0, 0, 3, &parameters_,
+        enable_("Enable", false, &parameters_),
+        mode_("Mode", 0, 0, 3, &parameters_,
               "0=CV_RETR_EXTERNAL,1=CV_RETR_LIST, 2=CV_RETR_CCOMP, "
               "3=CV_RETR_TREE"),
-        _method("Method", 0, 0, 3, &parameters_,
+        method_("Method", 0, 0, 3, &parameters_,
                 "0=CV_CHAIN_APPROX_NONE, 1=CV_CHAIN_APPROX_SIMPLE, "
                 "2=CV_CHAIN_APPROX_TC89_L1, "
                 "3=CV_CHAIN_APPROX_TC89_KCOS") {
@@ -60,9 +60,9 @@ class ConvexHull : public Filter {
   // P U B L I C   M E T H O D S
 
   virtual void Execute(cv::Mat &image) {
-    if (_enable()) {
+    if (enable_()) {
       int mode, method;
-      switch (_mode()) {
+      switch (mode_()) {
         case 0:
           mode = char(CV_RETR_EXTERNAL);
           break;
@@ -76,7 +76,7 @@ class ConvexHull : public Filter {
           mode = char(CV_RETR_TREE);
           break;
       }
-      switch (_method()) {
+      switch (method_()) {
         case 0:
           method = char(CV_CHAIN_APPROX_NONE);
           break;
@@ -115,8 +115,8 @@ class ConvexHull : public Filter {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  Parameter<bool> _enable;
-  RangedParameter<int> _mode, _method;
+  Parameter<bool> enable_;
+  RangedParameter<int> mode_, method_;
 };
 
 }  // namespace lib_vision

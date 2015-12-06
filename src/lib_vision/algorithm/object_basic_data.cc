@@ -33,24 +33,24 @@
 ObjectBasicData::ObjectBasicData(const cv::Mat &originalImage,
                                  const cv::Mat &binaryImage,
                                  const Contour &contour)
-    : _area(0.0f),
-      _convex_hull_area(0.0f),
-      _circumference(0.0f),
-      _planes(NB_OF_PLANE),
-      _original_image(originalImage),
-      _binary_image(binaryImage),
-      _contour(contour),
-      _areaRanking(0.0f),
-      _lengthRanking(0.0f),
-      _distance_from_center(10000.0f),
-      _vote_count(0) {
-  _is_calculated_map.insert(std::pair<OBJECT_DATA, bool>(AREA, false));
-  _is_calculated_map.insert(std::pair<OBJECT_DATA, bool>(CONVEX_HULL, false));
-  _is_calculated_map.insert(std::pair<OBJECT_DATA, bool>(CIRCUMFERENCE, false));
-  _is_calculated_map.insert(std::pair<OBJECT_DATA, bool>(ROTATED_RECT, false));
-  _is_calculated_map.insert(std::pair<OBJECT_DATA, bool>(UP_RIGHT_RECT, false));
-  _is_calculated_map.insert(std::pair<OBJECT_DATA, bool>(MOMENTS, false));
-  _is_calculated_map.insert(std::pair<OBJECT_DATA, bool>(PLANES, false));
+    : area_(0.0f),
+      convex_hull_area_(0.0f),
+      circumference_(0.0f),
+      planes_(NB_OF_PLANE),
+      original_image_(originalImage),
+      binary_image_(binaryImage),
+      contour_(contour),
+      area_ranking_(0.0f),
+      length_ranking_(0.0f),
+      distance_from_center_(10000.0f),
+      vote_count_(0) {
+  is_calculated_map_.insert(std::pair<OBJECT_DATA, bool>(AREA, false));
+  is_calculated_map_.insert(std::pair<OBJECT_DATA, bool>(CONVEX_HULL, false));
+  is_calculated_map_.insert(std::pair<OBJECT_DATA, bool>(CIRCUMFERENCE, false));
+  is_calculated_map_.insert(std::pair<OBJECT_DATA, bool>(ROTATED_RECT, false));
+  is_calculated_map_.insert(std::pair<OBJECT_DATA, bool>(UP_RIGHT_RECT, false));
+  is_calculated_map_.insert(std::pair<OBJECT_DATA, bool>(MOMENTS, false));
+  is_calculated_map_.insert(std::pair<OBJECT_DATA, bool>(PLANES, false));
 
   assert(!originalImage.empty());
   assert(!binaryImage.empty());
@@ -62,39 +62,39 @@ ObjectBasicData::ObjectBasicData(const cv::Mat &originalImage,
 //------------------------------------------------------------------------------
 //
 const cv::Mat &ObjectBasicData::GetPlanes(int planesID) {
-  if (!_is_calculated_map[PLANES]) {
+  if (!is_calculated_map_[PLANES]) {
     cv::Mat gray, hsi;
-    _planes.resize(ObjectBasicData::NB_OF_PLANE);
-    cv::cvtColor(_original_image, gray, CV_BGR2GRAY);
-    cv::cvtColor(_original_image, hsi, CV_BGR2HSV);
+    planes_.resize(ObjectBasicData::NB_OF_PLANE);
+    cv::cvtColor(original_image_, gray, CV_BGR2GRAY);
+    cv::cvtColor(original_image_, hsi, CV_BGR2HSV);
     // Set to zeros
     for (int i = 0; i < 7; i++)
-      _planes[i] =
-          cv::Mat::zeros(_original_image.rows, _original_image.cols, CV_8UC1);
+      planes_[i] =
+          cv::Mat::zeros(original_image_.rows, original_image_.cols, CV_8UC1);
 
-    cv::split(_original_image, &_planes[0]);
-    cv::split(hsi, &_planes[3]);
-    gray.copyTo(_planes[6]);
-    _is_calculated_map[PLANES] = true;
+    cv::split(original_image_, &planes_[0]);
+    cv::split(hsi, &planes_[3]);
+    gray.copyTo(planes_[6]);
+    is_calculated_map_[PLANES] = true;
   }
   // Safety. Should be the constant set in this class, but...
   SetPlaneInRange(planesID);
 
-  return _planes[planesID];
+  return planes_[planesID];
 }
 
 //------------------------------------------------------------------------------
 //
 const cv::Moments &ObjectBasicData::GetMoments(bool useBinary) {
-  if (!_is_calculated_map[MOMENTS]) {
+  if (!is_calculated_map_[MOMENTS]) {
     if (useBinary)
-      _cv_moments = cv::moments(_binary_image, useBinary);
+      cv_moments_ = cv::moments(binary_image_, useBinary);
     else {
       cv::Mat gray;
-      cv::cvtColor(_original_image, gray, CV_BGR2GRAY);
-      _cv_moments = cv::moments(_binary_image, useBinary);
+      cv::cvtColor(original_image_, gray, CV_BGR2GRAY);
+      cv_moments_ = cv::moments(binary_image_, useBinary);
     }
-    _is_calculated_map[MOMENTS] = true;
+    is_calculated_map_[MOMENTS] = true;
   }
-  return _cv_moments;
+  return cv_moments_;
 }

@@ -61,38 +61,38 @@ Line::Line(const cv::Point &start, const cv::Point &end)
 
 //------------------------------------------------------------------------------
 //
-void Line::draw(cv::Mat &img, cv::Scalar color) {
+void Line::Draw(cv::Mat &img, cv::Scalar color) {
   cv::line(img, start_, end_, color, 4, 8);
 }
 
 //------------------------------------------------------------------------------
 //
-cv::Point Line::getCenter() { return center_; }
+cv::Point Line::GetCenter() { return center_; }
 
 //------------------------------------------------------------------------------
 //
-cv::Point Line::getStart() { return start_; }
+cv::Point Line::GetStart() { return start_; }
 
 //------------------------------------------------------------------------------
 //
-cv::Point Line::getEnd() { return end_; }
+cv::Point Line::GetEnd() { return end_; }
 
 //------------------------------------------------------------------------------
 //
-float Line::getAngle() { return angle_; }
+float Line::GetAngle() { return angle_; }
 
 //------------------------------------------------------------------------------
 //
-float Line::getLength() { return length_; }
+float Line::GetLength() { return length_; }
 
 //------------------------------------------------------------------------------
 //
-bool lengthSort(Line a, Line b) { return a.getLength() > b.getLength(); }
+bool lengthSort(Line a, Line b) { return a.GetLength() > b.GetLength(); }
 
 //------------------------------------------------------------------------------
 //
-bool centerXSort(Line a, Line b) { return a.getCenter().x > b.getCenter().x; }
+bool centerXSort(Line a, Line b) { return a.GetCenter().x > b.GetCenter().x; }
 
 //------------------------------------------------------------------------------
 //
-bool centerYSort(Line a, Line b) { return a.getCenter().y > b.getCenter().y; }
+bool centerYSort(Line a, Line b) { return a.GetCenter().y > b.GetCenter().y; }

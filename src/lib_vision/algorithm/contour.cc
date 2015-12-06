@@ -30,7 +30,7 @@
 
 //------------------------------------------------------------------------------
 //
-Contour::Contour(const std::vector<cv::Point> &ctr) : _contour(ctr) {}
+Contour::Contour(const std::vector<cv::Point> &ctr) : contour_(ctr) {}
 
 //------------------------------------------------------------------------------
 //
@@ -39,6 +39,6 @@ Contour::Contour(const cv::RotatedRect &rect) {
   rect.points(pts);
 
   for (int j = 0; j < 4; j++) {
-    _contour.push_back(pts[j]);
+    contour_.push_back(pts[j]);
   }
 }

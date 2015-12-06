@@ -42,7 +42,7 @@ class OriginalImage : public Filter {
   // P U B L I C   C / D T O R S
 
   explicit OriginalImage(const GlobalParamHandler &globalParams)
-      : Filter(globalParams), _enable("Enable", false, &parameters_) {
+      : Filter(globalParams), enable_("Enable", false, &parameters_) {
     SetName("OriginalImage");
   }
 
@@ -52,7 +52,7 @@ class OriginalImage : public Filter {
   // P U B L I C   M E T H O D S
 
   virtual void Execute(cv::Mat &image) {
-    if (_enable()) {
+    if (enable_()) {
       image = global_params_.getOriginalImage();
     }
   }
@@ -61,7 +61,7 @@ class OriginalImage : public Filter {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  Parameter<bool> _enable;
+  Parameter<bool> enable_;
 };
 
 }  // namespace lib_vision

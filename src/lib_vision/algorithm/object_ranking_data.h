@@ -42,7 +42,7 @@ class ObjectRankingData {
   //============================================================================
   // P U B L I C   C / D T O R S
 
-  ObjectRankingData() : _area_rank(0.0f), _length_rank(0.0f){};
+  ObjectRankingData() : area_rank_(0.0f), length_rank_(0.0f){};
 
   virtual ~ObjectRankingData(){};
 
@@ -62,8 +62,8 @@ class ObjectRankingData {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  float _area_rank;
-  float _length_rank;
+  float area_rank_;
+  float length_rank_;
 };
 
 //==============================================================================
@@ -71,20 +71,20 @@ class ObjectRankingData {
 
 //------------------------------------------------------------------------------
 //
-inline void ObjectRankingData::SetAreaRank(float rank) { _area_rank = rank; }
+inline void ObjectRankingData::SetAreaRank(float rank) { area_rank_ = rank; }
 
 //------------------------------------------------------------------------------
 //
 inline void ObjectRankingData::SetLengthRank(float rank) {
-  _length_rank = rank;
+  length_rank_ = rank;
 }
 
 //------------------------------------------------------------------------------
 //
-inline float ObjectRankingData::GetAreaRank() { return _area_rank; }
+inline float ObjectRankingData::GetAreaRank() { return area_rank_; }
 
 //------------------------------------------------------------------------------
 //
-inline float ObjectRankingData::GetLengthRank() { return _length_rank; }
+inline float ObjectRankingData::GetLengthRank() { return length_rank_; }
 
 #endif  // LIB_VISION_ALGORITHM_OBJECT_RANKING_DATA_H_

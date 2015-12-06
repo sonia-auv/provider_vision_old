@@ -47,7 +47,7 @@ class SubtractPlaneAdder : public Filter {
 
   explicit SubtractPlaneAdder(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("enable", false, &parameters_),
+        enable_("enable", false, &parameters_),
         _show_adding_result("show_adding_result", false, &parameters_),
         _plane_one("Plane_1", 1, 0, 7, &parameters_,
                    "0=None, 1=Blue, 2=Green, 3=Red, 4=Hue, 5=Saturation, "
@@ -75,7 +75,7 @@ class SubtractPlaneAdder : public Filter {
   // P U B L I C   M E T H O D S
 
   virtual void execute(cv::Mat &image) {
-    if (_enable()) {
+    if (enable_()) {
       cv::Mat original = global_params_.getOriginalImage();
       if (CV_MAT_CN(original.type()) != 3) {
         return;
@@ -137,7 +137,7 @@ class SubtractPlaneAdder : public Filter {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  Parameter<bool> _enable, _show_adding_result;
+  Parameter<bool> enable_, _show_adding_result;
   RangedParameter<int> _plane_one, _plane_two, _plane_three;
   Parameter<bool> _invert_one, _invert_two, _invert_three;
   RangedParameter<double> _weight_one, _weight_two, _weight_three;

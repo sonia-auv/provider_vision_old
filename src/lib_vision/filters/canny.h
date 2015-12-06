@@ -43,11 +43,11 @@ class Canny : public Filter {
 
   explicit Canny(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, &parameters_),
-        _l2_gradiant("l2_gradient", false, &parameters_),
-        _thresh_one("thres_one", 100, 0, 255, &parameters_),
-        _thresh_two("thres_two", 200, 0, 255, &parameters_),
-        _aperture_size("Aperture_size", 3, 0, 20, &parameters_) {
+        enable_("Enable", false, &parameters_),
+        l2_gradiant_("l2_gradient", false, &parameters_),
+        thresh_one_("thres_one", 100, 0, 255, &parameters_),
+        thresh_two_("thres_two", 200, 0, 255, &parameters_),
+        aperture_size_("Aperture_size", 3, 0, 20, &parameters_) {
     SetName("Canny");
   }
 
@@ -57,12 +57,12 @@ class Canny : public Filter {
   // P U B L I C   M E T H O D S
 
   virtual void Execute(cv::Mat &image) {
-    if (_enable()) {
+    if (enable_()) {
       if (image.channels() > 1) {
         cv::cvtColor(image, image, CV_BGR2GRAY);
       }
-      cv::Canny(image, image, _thresh_one(), _thresh_two(),
-                _aperture_size() * 2 + 1, _l2_gradiant());
+      cv::Canny(image, image, thresh_one_(), thresh_two_(),
+                aperture_size_() * 2 + 1, l2_gradiant_());
     }
   }
 
@@ -70,8 +70,8 @@ class Canny : public Filter {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  Parameter<bool> _enable, _l2_gradiant;
-  RangedParameter<int> _thresh_one, _thresh_two, _aperture_size;
+  Parameter<bool> enable_, l2_gradiant_;
+  RangedParameter<int> thresh_one_, thresh_two_, aperture_size_;
 };
 
 }  // namespace lib_vision

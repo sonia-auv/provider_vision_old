@@ -43,8 +43,8 @@ class Rotate : public Filter {
 
   explicit Rotate(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("enable", false, &parameters_),
-        _rotate_type("Rotation_type", 0, 0, 3, &parameters_,
+        enable_("enable", false, &parameters_),
+        rotate_type_("Rotation_type", 0, 0, 3, &parameters_,
                      "Rotate type: 0=NONE, 1=x axis, 2=y axis, 3=all axis") {
     SetName("Rotate");
   }
@@ -55,8 +55,8 @@ class Rotate : public Filter {
   // P U B L I C   M E T H O D S
 
   virtual void Execute(cv::Mat &image) {
-    if (_enable()) {
-      switch (_rotate_type()) {
+    if (enable_()) {
+      switch (rotate_type_()) {
         case 0:
           break;
         case 1:
@@ -76,9 +76,9 @@ class Rotate : public Filter {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  Parameter<bool> _enable;
+  Parameter<bool> enable_;
 
-  RangedParameter<int> _rotate_type;
+  RangedParameter<int> rotate_type_;
 };
 
 }  // namespace lib_vision

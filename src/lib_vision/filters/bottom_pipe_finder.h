@@ -49,22 +49,22 @@ class ObjectFinder : public Filter {
 
   explicit ObjectFinder(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, &parameters_),
-        _debug_contour("Debug_contour", false, &parameters_),
-        _look_for_rectangle("Look_for_Rectangle", false, &parameters_),
-        _id("ID", "buoy", &parameters_),
-        _spec_1("spec1", "red", &parameters_),
-        _spec_2("spec2", "blue", &parameters_),
-        _min_area("Min_area", 200, 0, 10000, &parameters_),
-        _targeted_ratio("Ratio_target", 0.5f, 0.0f, 1.0f, &parameters_),
-        _difference_from_target_ratio("Diff_from_ratio_target", 0.10f, 0.0f,
+        enable_("Enable", false, &parameters_),
+        debug_contour_("Debug_contour", false, &parameters_),
+        look_for_rectangle_("Look_for_Rectangle", false, &parameters_),
+        id_("ID", "buoy", &parameters_),
+        spec_1_("spec1", "red", &parameters_),
+        spec_2_("spec2", "blue", &parameters_),
+        min_area_("Min_area", 200, 0, 10000, &parameters_),
+        targeted_ratio_("Ratio_target", 0.5f, 0.0f, 1.0f, &parameters_),
+        difference_from_target_ratio_("Diff_from_ratio_target", 0.10f, 0.0f,
                                       1.0f, &parameters_),
-        _targeted_angle("angle_target", 0.0f, 0.0f, 90.0f, &parameters_),
-        _difference_from_target_angle("Diff_from_angle_target", 30.0f, 0.0f,
+        targeted_angle_("angle_target", 0.0f, 0.0f, 90.0f, &parameters_),
+        difference_from_target_angle_("Diff_from_angle_target", 30.0f, 0.0f,
                                       90.0f, &parameters_),
-        _feature_factory(5) {
+        feature_factory_(5) {
     SetName("ObjectFinder");
-    _feature_factory.SetAllFeatureToCompute();
+    feature_factory_.SetAllFeatureToCompute();
     // Little goodies for cvs
     // area_rank,length_rank,circularity,convexity,ratio,presence,percent_filled,hueMean,
   }
@@ -75,11 +75,11 @@ class ObjectFinder : public Filter {
   // P U B L I C   M E T H O D S
 
   virtual void Execute(cv::Mat &image) {
-    if (_enable()) {
-      if (_debug_contour()) {
-        image.copyTo(_output_image);
-        if (_output_image.channels() == 1) {
-          cv::cvtColor(_output_image, _output_image, CV_GRAY2BGR);
+    if (enable_()) {
+      if (debug_contour_()) {
+        image.copyTo(output_image_);
+        if (output_image_.channels() == 1) {
+          cv::cvtColor(output_image_, output_image_, CV_GRAY2BGR);
         }
       }
 
@@ -101,42 +101,42 @@ class ObjectFinder : public Filter {
         //
         // AREA
         //
-        if (object->GetArea() < _min_area()) {
+        if (object->GetArea() < min_area_()) {
           continue;
         }
-        if (_debug_contour()) {
-          cv::drawContours(_output_image, contours, i, CV_RGB(255, 0, 0), 2);
+        if (debug_contour_()) {
+          cv::drawContours(output_image_, contours, i, CV_RGB(255, 0, 0), 2);
         }
 
         //
         // RATIO
         //
-        _feature_factory.RatioFeature(object);
-        if (fabs(object->GetRatio() - _targeted_ratio()) >
-            fabs(_difference_from_target_ratio() - _targeted_ratio())) {
+        feature_factory_.RatioFeature(object);
+        if (fabs(object->GetRatio() - targeted_ratio_()) >
+            fabs(difference_from_target_ratio_() - targeted_ratio_())) {
           continue;
         }
-        if (_debug_contour()) {
-          cv::drawContours(_output_image, contours, i, CV_RGB(0, 0, 255), 2);
+        if (debug_contour_()) {
+          cv::drawContours(output_image_, contours, i, CV_RGB(0, 0, 255), 2);
         }
 
         //
         // ANGLE
         //
-        if (fabs(object->GetRotatedRect().angle - _targeted_angle()) >
-            fabs(_difference_from_target_angle() - _targeted_angle())) {
+        if (fabs(object->GetRotatedRect().angle - targeted_angle_()) >
+            fabs(difference_from_target_angle_() - targeted_angle_())) {
           continue;
         }
 
         //
         // RECTANGLE
         //
-        if (_look_for_rectangle() && !IsRectangle(contours[i], 10)) {
+        if (look_for_rectangle_() && !IsRectangle(contours[i], 10)) {
           continue;
         }
 
-        if (_debug_contour()) {
-          cv::drawContours(_output_image, contours, i, CV_RGB(0, 255, 0), 2);
+        if (debug_contour_()) {
+          cv::drawContours(output_image_, contours, i, CV_RGB(0, 255, 0), 2);
         }
 
         objVec.push_back(object);
@@ -158,13 +158,13 @@ class ObjectFinder : public Filter {
         std::stringstream ss;
         ss << "train:" << target.OutputString();
         NotifyString(ss.str().c_str());
-        if (_debug_contour()) {
-          cv::circle(_output_image, objVec[0]->GetCenter(), 3,
+        if (debug_contour_()) {
+          cv::circle(output_image_, objVec[0]->GetCenter(), 3,
                      CV_RGB(0, 255, 0), 3);
         }
       }
-      if (_debug_contour()) {
-        _output_image.copyTo(image);
+      if (debug_contour_()) {
+        output_image_.copyTo(image);
       }
     }
   }
@@ -173,15 +173,14 @@ class ObjectFinder : public Filter {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  cv::Mat _output_image;
+  cv::Mat output_image_;
   // Params
-  Parameter<bool> _enable, _debug_contour, _look_for_rectangle;
-  Parameter<std::string> _id, _spec_1, _spec_2;
-  RangedParameter<double> _min_area, _targeted_ratio,
-      _difference_from_target_ratio, _targeted_angle,
-      _difference_from_target_angle;
+  Parameter<bool> enable_, debug_contour_, look_for_rectangle_;
+  Parameter<std::string> id_, spec_1_, spec_2_;
+  RangedParameter<double> min_area_, targeted_ratio_, difference_from_target_ratio_,
+      targeted_angle_, difference_from_target_angle_;
 
-  ObjectFeatureFactory _feature_factory;
+  ObjectFeatureFactory feature_factory_;
 };
 
 }  // namespace lib_vision

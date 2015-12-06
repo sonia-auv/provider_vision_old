@@ -50,18 +50,18 @@ class Line {
   // P U B L I C   M E T H O D S
 
   // Debug
-  void draw(cv::Mat &img, cv::Scalar color);
+  void Draw(cv::Mat &img, cv::Scalar color);
 
   // Getters
-  cv::Point getCenter();
+  cv::Point GetCenter();
 
-  cv::Point getStart();
+  cv::Point GetStart();
 
-  cv::Point getEnd();
+  cv::Point GetEnd();
 
-  float getAngle();
+  float GetAngle();
 
-  float getLength();
+  float GetLength();
 
  private:
   //============================================================================

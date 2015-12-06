@@ -43,7 +43,7 @@ class WhiteNoiseTakedown : public Filter {
 
   explicit WhiteNoiseTakedown(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, &parameters_),
+        enable_("Enable", false, &parameters_),
         _lowB("LowB", 0, 0, 255, &parameters_),
         _highB("HighB", 0, 0, 255, &parameters_),
         _lowG("LowG", 0, 0, 255, &parameters_),
@@ -61,7 +61,7 @@ class WhiteNoiseTakedown : public Filter {
   // P U B L I C   M E T H O D S
 
   virtual void Execute(cv::Mat &image) {
-    if (_enable()) {
+    if (enable_()) {
       std::vector<cv::Mat> channels;
       cv::Mat original_image(global_params_.getOriginalImage());
       cv::split(original_image, channels);
@@ -103,7 +103,7 @@ class WhiteNoiseTakedown : public Filter {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  Parameter<bool> _enable;
+  Parameter<bool> enable_;
   RangedParameter<int> _lowB, _highB, _lowG, _highG, _lowR, _highR;
   RangedParameter<int> _view_channel;
 };
