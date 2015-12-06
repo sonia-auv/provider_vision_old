@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>vision_server</name>
+  <name>provider_vision</name>
   <version>0.0.0</version>
   <description>The vision_server package</description>
   <maintainer email="jeremie.st.jules.prevost@gmail.com">jeremie</maintainer>
