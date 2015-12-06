@@ -1,37 +1,53 @@
 /**
- * \file	ConvexHull.h
- * \author  Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
- * \date	14/12/2014
- * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
- * Use of this source code is governed by the MIT license that can be
- * found in the LICENSE file.
+ * \file	convex_hull.h
+ * \author	Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
+ * \author  Pierluc Bédard <pierlucbed@gmail.com>
+ *
+ * \copyright Copyright (c) 2015 S.O.N.I.A. All rights reserved.
+ *
+ * \section LICENSE
+ *
+ * This file is part of S.O.N.I.A. software.
+ *
+ * S.O.N.I.A. software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * S.O.N.I.A. software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_CONVEXHULL_H_
-#define VISION_FILTER_CONVEXHULL_H_
+#ifndef LIB_VISION_FILTERS_CONVEX_HULL_H_
+#define LIB_VISION_FILTERS_CONVEX_HULL_H_
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
+#include <memory>
 #include <lib_vision/filter.h>
 
-namespace vision_filter {
-
-//==============================================================================
-// C L A S S E S
+namespace lib_vision {
 
 class ConvexHull : public Filter {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<ConvexHull>;
+
   //============================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
   explicit ConvexHull(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _mode("Mode", 0, 0, 3, parameters_,
+        _enable("Enable", false, &parameters_),
+        _mode("Mode", 0, 0, 3, &parameters_,
               "0=CV_RETR_EXTERNAL,1=CV_RETR_LIST, 2=CV_RETR_CCOMP, "
               "3=CV_RETR_TREE"),
-        _method("Method", 0, 0, 3, parameters_,
+        _method("Method", 0, 0, 3, &parameters_,
                 "0=CV_CHAIN_APPROX_NONE, 1=CV_CHAIN_APPROX_SIMPLE, "
                 "2=CV_CHAIN_APPROX_TC89_L1, "
                 "3=CV_CHAIN_APPROX_TC89_KCOS") {
@@ -101,6 +117,6 @@ class ConvexHull : public Filter {
   IntegerParameter _mode, _method;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
-#endif  // VISION_FILTER_CONVEXHULL_H_
+#endif  // LIB_VISION_FILTERS_CONVEX_HULL_H_

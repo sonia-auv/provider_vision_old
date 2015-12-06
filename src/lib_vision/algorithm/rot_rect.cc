@@ -1,10 +1,26 @@
 /**
- * \file	rot_rect.cpp
- * \author  Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
- * \date	1/01/2014
- * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
- * Use of this source code is governed by the MIT license that can be
- * found in the LICENSE file.
+ * \file	rot_rect.cc
+ * \author	Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
+ * \author  Pierluc Bédard <pierlucbed@gmail.com>
+ *
+ * \copyright Copyright (c) 2015 S.O.N.I.A. All rights reserved.
+ *
+ * \section LICENSE
+ *
+ * This file is part of S.O.N.I.A. software.
+ *
+ * S.O.N.I.A. software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * S.O.N.I.A. software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <lib_vision/algorithm/rot_rect.h>
@@ -12,7 +28,7 @@
 RotRect::RotRect(const std::vector<cv::Point> &edges)
     : cv::RotatedRect(cv::minAreaRect(edges)) {
   setValues();
-  this->points(this->pts);
+  points(pts);
 }
 
 //==============================================================
@@ -23,13 +39,13 @@ RotRect::RotRect() : cv::RotatedRect() {}
 //
 RotRect::RotRect(const cv::RotatedRect &rotRect) : cv::RotatedRect(rotRect) {
   setValues();
-  this->points(this->pts);
+  points(pts);
 }
 
 //==============================================================
 //
 RotRect::RotRect(const RotRect &a) : cv::RotatedRect(a) {
-  for (int i = 0; i < 4; i++) this->pts[i] = a.pts[i];
+  for (int i = 0; i < 4; i++) pts[i] = a.pts[i];
 }
 
 //==============================================================
@@ -49,20 +65,20 @@ void RotRect::drawRect(cv::Mat &out, cv::Scalar color, int thickness) {
 //
 // Set height to the longest side of the rectangle and
 void RotRect::setValues() {
-  float in_angle = this->angle;
+  float in_angle = angle;
   float out_angle = in_angle;
   // angle is consider in of height in opencv
   // since height always is not always on the longest size,
   // make sure always return the longest size in the height
   // and makes the angle follow.
-  if (this->size.width > this->size.height) {
-    std::swap(this->size.width, this->size.height);
+  if (size.width > size.height) {
+    std::swap(size.width, size.height);
     if (in_angle < 0)
       out_angle = 90 + in_angle;
     else
       out_angle = -(90 - in_angle);
   }
-  this->angle = out_angle;
+  angle = out_angle;
 }
 
 //==============================================================
@@ -93,10 +109,10 @@ RotRect &RotRect::operator=(cv::RotatedRect rotRect) {
 //
 bool RotRect::operator==(const RotRect &rotRect) {
   bool result = true;
-  if (rotRect.center != this->center) {
+  if (rotRect.center != center) {
     result = false;
   }
-  if (rotRect.size != this->size) {
+  if (rotRect.size != size) {
     result = false;
   }
   if (abs(rotRect.angle - rotRect.angle) > 0.5) {
@@ -107,4 +123,4 @@ bool RotRect::operator==(const RotRect &rotRect) {
 
 //==============================================================
 //
-cv::Point2f *RotRect::getCorners() { return this->pts; }
+cv::Point2f *RotRect::getCorners() { return pts; }

@@ -1,52 +1,66 @@
 /**
- * \file	ObjectFeatureCalculator.h
- * \author  Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
- * \date	14/12/2014
- * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
- * Use of this source code is governed by the MIT license that can be
- * found in the LICENSE file.
+ * \file	object_feature_calculator.h
+ * \author	Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
+ * \author  Pierluc Bédard <pierlucbed@gmail.com>
+ *
+ * \copyright Copyright (c) 2015 S.O.N.I.A. All rights reserved.
+ *
+ * \section LICENSE
+ *
+ * This file is part of S.O.N.I.A. software.
+ *
+ * S.O.N.I.A. software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * S.O.N.I.A. software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_OBJECT_CALCULATOR_H_
-#define VISION_FILTER_OBJECT_CALCULATOR_H_
+#ifndef LIB_VISION_FILTERS_OBJECT_CALCULATOR_H_
+#define LIB_VISION_FILTERS_OBJECT_CALCULATOR_H_
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
+#include <memory>
 #include <lib_vision/filter.h>
-#include <lib_vision/algorithm/features.h>
 #include <lib_vision/algorithm/general_function.h>
 #include <lib_vision/algorithm/target.h>
 #include <lib_vision/algorithm/object_full_data.h>
-#include <lib_vision/algorithm/feature_factory.h>
+#include <lib_vision/algorithm/object_feature_factory.h>
 #include <lib_vision/algorithm/performance_evaluator.h>
-#include <lib_vision/algorithm/ai_trainer.h>
 
-namespace vision_filter {
-
-//==============================================================================
-// C L A S S E S
+namespace lib_vision {
 
 class ObjectFeatureCalculator : public Filter {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<ObjectFeatureCalculator>;
+
   //============================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
   explicit ObjectFeatureCalculator(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
         _recording_frame_index(0),
-        _enable("Enable", false, parameters_),
-        _debug_contour("Debug_contour", false, parameters_),
-        _toggle_recording("toggle_recording", false, parameters_),
-        _id("ID", "buoy", parameters_),
-        _spec_1("spec1", "red", parameters_),
-        _spec_2("spec2", "blue", parameters_),
+        _enable("Enable", false, &parameters_),
+        _debug_contour("Debug_contour", false, &parameters_),
+        _toggle_recording("toggle_recording", false, &parameters_),
+        _id("ID", "buoy", &parameters_),
+        _spec_1("spec1", "red", &parameters_),
+        _spec_2("spec2", "blue", &parameters_),
         _output_folder("output_folder", "/home/jeremie/aidata/rec1/",
-                       parameters_),
-        _min_area("Min_area", 200, 0, 10000, parameters_),
+                       &parameters_),
+        _min_area("Min_area", 200, 0, 10000, &parameters_),
         _feature_factory(5) {
     setName("ObjectFeatureCalculator");
-    _feature_factory.SetAllFeatureToCompute();
+    //    _feature_factory.SetAllFeatureToCompute();
     // Little goodies for cvs
     // area_rank,length_rank,circularity,convexity,ratio,presence,percent_filled,hueMean,
   }
@@ -75,7 +89,7 @@ class ObjectFeatureCalculator : public Filter {
       retrieveAllContours(image, contours);
       ObjectFullData::FullObjectPtrVec objVec;
       for (int i = 0, size = contours.size(); i < size; i++) {
-        std::shared_ptr<ObjectFullData> object =
+        ObjectFullData::Ptr object =
             std::make_shared<ObjectFullData>(originalImage, image, contours[i]);
         if (object.get() == nullptr) {
           continue;
@@ -98,11 +112,12 @@ class ObjectFeatureCalculator : public Filter {
       //			_feature_factory.CalculateFeatureVectors(objVec);
       //			printf("Image parsing took: %f seconds\n",
       // timer.GetExecTime());
-      if (_toggle_recording()) {
-        AITrainer::OutputFrameData(_output_folder(), objVec, originalImage,
-                                   image, _recording_frame_index);
-        _recording_frame_index++;
-      }
+      //      if (_toggle_recording()) {
+      //        AITrainer::OutputFrameData(_output_folder(), objVec,
+      //        originalImage,
+      //                                   image, _recording_frame_index);
+      //        _recording_frame_index++;
+      //      }
       if (_debug_contour()) {
         _output_image.copyTo(image);
       }
@@ -117,11 +132,11 @@ class ObjectFeatureCalculator : public Filter {
   StringParameter _id, _spec_1, _spec_2, _output_folder;
   DoubleParameter _min_area;
 
-  FeatureFactory _feature_factory;
+  ObjectFeatureFactory _feature_factory;
 };
 
-#define VISION_FILTER_PI 3.14159265
+#define LIB_VISION_FILTERS_PI 3.14159265
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
-#endif  // VISION_FILTER_OBJECT_CALCULATOR_H_
+#endif  // LIB_VISION_FILTERS_OBJECT_CALCULATOR_H_

@@ -1,20 +1,34 @@
 /**
- * \file	Filter.h
- * \author  Karl Ritchie <ritchie.karl@gmail.com>
- * \date	1/01/2015
- * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
- * Use of this source code is governed by the MIT license that can be
- * found in the LICENSE file.
+ * \file	filter.h
+ * \author	Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
+ * \author  Pierluc Bédard <pierlucbed@gmail.com>
+ *
+ * \copyright Copyright (c) 2015 S.O.N.I.A. All rights reserved.
+ *
+ * \section LICENSE
+ *
+ * This file is part of S.O.N.I.A. software.
+ *
+ * S.O.N.I.A. software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * S.O.N.I.A. software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_FILTER_H_
-#define VISION_FILTER_FILTER_H_
-
-//==============================================================================
-// I N C L U D E   F I L E S
+#ifndef LIB_VISION_FILTER_H_
+#define LIB_VISION_FILTER_H_
 
 #include <vector>
 #include <string>
+#include <memory>
 #include <opencv2/opencv.hpp>
 #include <lib_vision/parameters/integer_parameter.h>
 #include <lib_vision/parameters/boolean_parameter.h>
@@ -23,19 +37,22 @@
 #include <lib_vision/parameter.h>
 #include <lib_vision/global_param_handler.h>
 
-namespace vision_filter {
-
-//==============================================================================
-// C L A S S E S
+namespace lib_vision {
 
 class Filter {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<Filter>;
+
   //============================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
   // KEEPING A REFERENCE TO GlobalParamHandler. VERY IMPORTANT
   explicit Filter(const GlobalParamHandler &globalParams)
       : global_params_(const_cast<GlobalParamHandler &>(globalParams)),
+        // enable_("Enable", false, &parameters_),
         // Explicit construction not needed here... Just reminder it exist.
         parameters_() {}
 
@@ -62,28 +79,30 @@ class Filter {
       // Should never append since the vector's object
       // are added by the said object which are member of
       // the filter class...
-      if (parameters_[i] != NULL) {
+      if (parameters_[i] != nullptr) {
         ss << parameters_[i]->toString();
       }
     }
     return ss.str();
   }
 
-  const std::vector<Parameter *> &GetParameters() const { return parameters_; }
+  const std::vector<Parameter *> &GetParameters() const {
+    return parameters_;
+  }
 
   std::string getParamValue(const std::string &name) {
     std::string returnString("");
     for (int i = 0; i < int(parameters_.size()); i++) {
       // Here we give it a local value to limit the
       // access to the vector (optimisation)
-      Parameter *param = parameters_[i];
+      Parameter * param = parameters_[i];
 
-      // NULL element should never append since the vector's object
+      // nullptr element should never append since the vector's object
       // are added by the said object (which cannot be null if
       // it gets to the constructor) and which are member of
       // the filter class (which mean they are alive as long as the
       // filter is alive)...
-      if (param != NULL) {
+      if (param != nullptr) {
         // Is it the param we are searching
         if (param->getName() == name) {
           returnString = param->toString();
@@ -97,14 +116,14 @@ class Filter {
     for (int i = 0; i < int(parameters_.size()); i++) {
       // Here we give it a local value to limit the
       // access to the vector (optimisation)
-      Parameter *param = parameters_[i];
+      Parameter * param = parameters_[i];
 
-      // NULL element should never append since the vector's object
+      // nullptr element should never append since the vector's object
       // are added by the said object (which cannot be null if
       // it gets to the constructor) and which are member of
       // the filter class (which mean they are alive as long as the
       // filter is alive)...
-      if (param != NULL) {
+      if (param != nullptr) {
         // Is it the param we are searching
         if (param->getName() == name) {
           // Need to dynamic cast in order to have
@@ -114,15 +133,15 @@ class Filter {
           // see:
           // http://stackoverflow.com/questions/11578936/getting-a-bunch-of-crosses-initialization-error
           // for more info.
-          BooleanParameter *p_bool = NULL;
-          IntegerParameter *p_int = NULL;
-          DoubleParameter *p_double = NULL;
-          StringParameter *p_str = NULL;
+          BooleanParameter *p_bool = nullptr;
+          IntegerParameter *p_int = nullptr;
+          DoubleParameter *p_double = nullptr;
+          StringParameter *p_str = nullptr;
           switch (param->getType()) {
             case Parameter::BOOL:
               p_bool = dynamic_cast<BooleanParameter *>(param);
               // Just in case the cast didn't work.
-              if (p_bool == NULL) {
+              if (p_bool == nullptr) {
                 break;
               }
               p_bool->setValue(BooleanParameter::FromStringToBool(value));
@@ -130,7 +149,7 @@ class Filter {
             case Parameter::INTEGER:
               p_int = dynamic_cast<IntegerParameter *>(param);
               // Just in case the cast didn't work.
-              if (p_int == NULL) {
+              if (p_int == nullptr) {
                 break;
               }
               p_int->setValue(atoi(value.c_str()));
@@ -138,7 +157,7 @@ class Filter {
             case Parameter::DOUBLE:
               p_double = dynamic_cast<DoubleParameter *>(param);
               // Just in case the cast didn't work.
-              if (p_double == NULL) {
+              if (p_double == nullptr) {
                 break;
               }
               p_double->setValue(atof(value.c_str()));
@@ -146,7 +165,7 @@ class Filter {
             case Parameter::STRING:
               p_str = dynamic_cast<StringParameter *>(param);
               // Just in case the cast didn't work.
-              if (p_str == NULL) {
+              if (p_str == nullptr) {
                 break;
               }
               p_str->setValue(value);
@@ -179,31 +198,30 @@ class Filter {
   // Creator.
   void global_param_int(const std::string &name, const int value, const int min,
                         const int max) {
-    global_params_.addParam(
-        new IntegerParameter(name, value, max, min, parameters_));
+    global_params_.addParam(new IntegerParameter(name, value, max, min, &parameters_));
   }
 
   void global_param_double(const std::string &name, const double value,
                            const double min, const double max) {
-    global_params_.addParam(
-        new DoubleParameter(name, value, max, min, parameters_));
+    global_params_.addParam(new DoubleParameter(name, value, max, min, &parameters_));
   }
 
   void global_param_bool(const std::string &name, const bool value) {
-    global_params_.addParam(new BooleanParameter(name, value, parameters_));
+    global_params_.addParam(new BooleanParameter(name, value, &parameters_));
   }
 
   void global_param_string(const std::string &name, const std::string &value) {
-    global_params_.addParam(new StringParameter(name, value, parameters_));
+    global_params_.addParam(new StringParameter(name, value, &parameters_));
   }
 
   void global_param_mat(const std::string &name, cv::Mat &mat) {
-    global_params_.addParam(new MatrixParameter(name, mat, parameters_));
+    global_params_.addParam(new MatrixParameter(name, mat, &parameters_));
   }
 
  protected:
   // KEEPING A REFERENCE. VERY IMPORTANT
   GlobalParamHandler &global_params_;
+  //  BooleanParameter enable_;
 
   // vector parameter, so we can list them.
   std::vector<Parameter *> parameters_;
@@ -212,6 +230,6 @@ class Filter {
   std::string name_;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
-#endif  // VISION_FILTER_FILTER_H_
+#endif  // LIB_VISION_FILTER_H_

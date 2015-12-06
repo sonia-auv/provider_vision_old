@@ -1,11 +1,28 @@
 /**
- * \file  contour_test.cc
- * \author  Jeremie St-Jules-Prevost <jeremie.st.jules.prevost@gmail.com>
- * \date  28/06/2015
- * \copyright Copyright (c) 2015 Thibaut Mattio. All rights reserved.
- * Use of this source code is governed by the MIT license that can be
- * found in the LICENSE file.
+ * \file	contour_test.cc
+ * \author	Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
+ * \author  Pierluc Bédard <pierlucbed@gmail.com>
+ *
+ * \copyright Copyright (c) 2015 S.O.N.I.A. All rights reserved.
+ *
+ * \section LICENSE
+ *
+ * This file is part of S.O.N.I.A. software.
+ *
+ * S.O.N.I.A. software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * S.O.N.I.A. software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
+
 
 #include <gtest/gtest.h>
 #include <lib_atlas/config.h>
@@ -13,7 +30,7 @@
 
 TEST(ContourTest, AllTest) {
   std::string path = atlas::kWorkspaceRoot +
-      std::string("src/lib_vision/test/contour_test_img.png");
+      std::string("src/lib_vision/test/img/contour_test_img.png");
 
   cv::Mat img_tmp, img;
 
@@ -27,28 +44,28 @@ TEST(ContourTest, AllTest) {
   // Expect 7 contours
 
   ContourList contour_list_all(img, ContourList::METHOD::ALL);
-  ASSERT_TRUE(contour_list_all._contour_list.size() == 7);
+  ASSERT_TRUE(contour_list_all.size() == 7);
 
   // Expect 7 contours, hierarchy should be filled and same size.
   ContourList contour_list_hier(img, ContourList::METHOD::HIERARCHY);
-  ASSERT_TRUE(contour_list_hier._contour_list.size() == 7);
+  ASSERT_TRUE(contour_list_hier.size() == 7);
   ASSERT_TRUE(contour_list_hier._hierarchy.size() == 7);
 
   // Expect 4
   ContourList contour_list_inner(img, ContourList::METHOD::INNER);
-  ASSERT_TRUE(contour_list_inner._contour_list.size() == 4);
+  ASSERT_TRUE(contour_list_inner.size() == 4);
 
   // Expect 3
   ContourList contour_list_inner_most(img, ContourList::METHOD::INNER_MOST);
-  ASSERT_TRUE(contour_list_inner_most._contour_list.size() == 3);
+  ASSERT_TRUE(contour_list_inner_most.size() == 3);
 
   // Expect 3
   ContourList contour_list_outer(img, ContourList::METHOD::OUTER);
-  ASSERT_TRUE(contour_list_outer._contour_list.size() == 3);
+  ASSERT_TRUE(contour_list_outer.size() == 3);
 
   // Expect 1
   ContourList contour_list_outer_no_child(img, ContourList::METHOD::OUTER_NO_CHILD);
-  ASSERT_TRUE(contour_list_outer_no_child._contour_list.size() == 1);
+  ASSERT_TRUE(contour_list_outer_no_child.size() == 1);
 
   // Since perfect square, should not approximate.
   Contour tmp (contour_list_outer_no_child[0]);

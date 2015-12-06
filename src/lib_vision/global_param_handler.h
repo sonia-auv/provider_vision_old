@@ -1,39 +1,55 @@
 /**
- * \file	GlobalParamHandler.h
- * \author  Karl Ritchie <ritchie.karl@gmail.com>
- * \date	1/01/2015
- * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
- * Use of this source code is governed by the MIT license that can be
- * found in the LICENSE file.
+ * \file	global_param_handler.h
+ * \author	Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
+ * \author  Pierluc Bédard <pierlucbed@gmail.com>
+ *
+ * \copyright Copyright (c) 2015 S.O.N.I.A. All rights reserved.
+ *
+ * \section LICENSE
+ *
+ * This file is part of S.O.N.I.A. software.
+ *
+ * S.O.N.I.A. software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * S.O.N.I.A. software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_GLOBAL_PARAMETER_H_
-#define VISION_FILTER_GLOBAL_PARAMETER_H_
+#ifndef LIB_VISION_FILTER_GLOBAL_PARAM_HANDLER_H_
+#define LIB_VISION_FILTER_GLOBAL_PARAM_HANDLER_H_
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
+#include <memory>
 #include <string>
+#include <sstream>
 #include <lib_vision/parameter.h>
 #include <lib_vision/parameters/integer_parameter.h>
 #include <lib_vision/parameters/double_parameter.h>
 #include <lib_vision/parameters/string_parameter.h>
 #include <lib_vision/parameters/boolean_parameter.h>
 #include <lib_vision/parameters/matrix_parameter.h>
-#include <sstream>
 
-namespace vision_filter {
-
-//==============================================================================
-// C L A S S E S
+namespace lib_vision {
 
 class GlobalParamHandler {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<GlobalParamHandler>;
+
   //============================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
   explicit GlobalParamHandler()
-      : _notify_string(std::string()), _params_vec(),_original_image() {}
+      : _notify_string(std::string()), _params_vec(), _original_image() {}
 
   // Since we erase everything, it is easier to delete objet first
   // then calling clear method, since erase invalidate pointer AND
@@ -41,15 +57,7 @@ class GlobalParamHandler {
   // that they are consecutive in memory... on long vector it
   // is "very" long to do. To prevent that, we can use reverse
   // iterator, but erase does not take it...
-  ~GlobalParamHandler() {
-    // Using index base for performance.
-    auto size = _params_vec.size();
-    for (size_t i = 0; i < size; i++) {
-      // Delete the object
-      delete (_params_vec[i]);
-    }
-    _params_vec.clear();
-  }
+  ~GlobalParamHandler() { _params_vec.clear(); }
 
   //============================================================================
   // P U B L I C   M E T H O D S
@@ -78,7 +86,7 @@ class GlobalParamHandler {
   }
 
   // Params
-  inline void addParam(Parameter *param) { _params_vec.push_back(param); }
+  inline void addParam(Parameter * param) { _params_vec.push_back(param); }
 
   void removeParam(const std::string &name) {
     // Using iterator as it is simpler to erase.
@@ -93,7 +101,7 @@ class GlobalParamHandler {
     }
   }
 
-  inline Parameter *getParam(const std::string &name) const {
+  inline Parameter * getParam(const std::string &name) const {
     // Using [] accessor for optimisation.
     for (size_t i = 0, size = _params_vec.size(); i < size; i++) {
       if (_params_vec[i]->getName() == name) {
@@ -114,6 +122,6 @@ class GlobalParamHandler {
   cv::Mat _original_image;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
-#endif  // VISION_FILTER_GLOBAL_PARAMETER_H_
+#endif  // LIB_VISION_FILTER_GLOBAL_PARAM_HANDLER_H_

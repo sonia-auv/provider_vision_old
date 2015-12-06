@@ -1,46 +1,61 @@
 /**
- * \file	DeloreanDetector.h
- * \author  Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
- * \date	14/12/2014
- * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
- * Use of this source code is governed by the MIT license that can be
- * found in the LICENSE file.
+ * \file	delorean_detector.h
+ * \author	Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
+ * \author  Pierluc Bédard <pierlucbed@gmail.com>
+ *
+ * \copyright Copyright (c) 2015 S.O.N.I.A. All rights reserved.
+ *
+ * \section LICENSE
+ *
+ * This file is part of S.O.N.I.A. software.
+ *
+ * S.O.N.I.A. software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * S.O.N.I.A. software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_DELOREAN_DETECTOR_H_
-#define VISION_FILTER_DELOREAN_DETECTOR_H_
+#ifndef LIB_VISION_FILTERS_DELOREAN_DETECTOR_H_
+#define LIB_VISION_FILTERS_DELOREAN_DETECTOR_H_
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
-#include <lib_vision/algorithm/features.h>
+#include <memory>
 #include <lib_vision/algorithm/general_function.h>
 #include <lib_vision/algorithm/target.h>
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/object_full_data.h>
-#include <lib_vision/algorithm/feature_factory.h>
+#include <lib_vision/algorithm/object_feature_factory.h>
 
-namespace vision_filter {
-
-//==============================================================================
-// C L A S S E S
+namespace lib_vision {
 
 class DeloreanDetector : public Filter {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<DeloreanDetector>;
+
   //============================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
   explicit DeloreanDetector(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _debug_contour("Debug_contour", false, parameters_),
-        _output_train("Output_train", false, parameters_),
-        _min_area("Min_area", 200, 0, 10000, parameters_),
-        _targeted_ratio_big("Ratio_target_big", 0.5f, 0.0f, 1.0f, parameters_),
+        _enable("Enable", false, &parameters_),
+        _debug_contour("Debug_contour", false, &parameters_),
+        _output_train("Output_train", false, &parameters_),
+        _min_area("Min_area", 200, 0, 10000, &parameters_),
+        _targeted_ratio_big("Ratio_target_big", 0.5f, 0.0f, 1.0f, &parameters_),
         _targeted_ratio_small("Ratio_target_small", 0.5f, 0.0f, 1.0f,
-                              parameters_),
+                              &parameters_),
         _difference_from_target_ratio("Diff_from_ratio_target", 0.10f, 0.0f,
-                                      1.0f, parameters_),
+                                      1.0f, &parameters_),
         _feat_factory(3) {
     setName("DeloreanDetector");
   }
@@ -70,7 +85,7 @@ class DeloreanDetector : public Filter {
       ObjectFullData::FullObjectPtrVec objVec_big;
       ObjectFullData::FullObjectPtrVec objVec_small;
       for (size_t i = 0, size = contours.size(); i < size; i++) {
-        std::shared_ptr<ObjectFullData> object =
+        ObjectFullData::Ptr object =
             std::make_shared<ObjectFullData>(originalImage, image, contours[i]);
         if (object.get() == nullptr) {
           continue;
@@ -96,7 +111,7 @@ class DeloreanDetector : public Filter {
         //                    cv::Scalar(255, 0, 0), 3 /*thickness*/, 6
         //                    /*lineType*/,
         //                    false);
-
+        _feat_factory.RatioFeature(object);
         double ratio_difference_big =
             fabs(object->GetRatio() - _targeted_ratio_big());
         double ratio_difference_small =
@@ -132,21 +147,19 @@ class DeloreanDetector : public Filter {
       }
 
       std::sort(objVec_big.begin(), objVec_big.end(),
-                [](std::shared_ptr<ObjectFullData> a,
-                   std::shared_ptr<ObjectFullData> b)
+                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
                     -> bool { return a->GetArea() > b->GetArea(); });
       std::sort(objVec_small.begin(), objVec_small.end(),
-                [](std::shared_ptr<ObjectFullData> a,
-                   std::shared_ptr<ObjectFullData> b)
+                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
                     -> bool { return a->GetArea() > b->GetArea(); });
 
       if (objVec_big.size() > 0) {
         Target target;
-        std::shared_ptr<ObjectFullData> object_big = objVec_big[0];
+        ObjectFullData::Ptr object_big = objVec_big[0];
         cv::Point center_big = object_big->GetCenter();
         double angle = 181;
         if (objVec_small.size() > 0) {
-          std::shared_ptr<ObjectFullData> object_small = objVec_small[0];
+          ObjectFullData::Ptr object_small = objVec_small[0];
           cv::Point center_small = object_small->GetCenter();
           if (_debug_contour()) {
             cv::circle(_output_image, center_small, 2, CV_RGB(255, 0, 255), 2);
@@ -158,13 +171,13 @@ class DeloreanDetector : public Filter {
                   (2 * 3.1416);
         }
         setCameraOffset(&center_big, image.rows, image.cols);
-        target.setTarget(center_big.x, center_big.y, object_big->GetLength(),
+        target.SetTarget(center_big.x, center_big.y, object_big->GetLength(),
                          object_big->GetLength(), float(angle));
         std::stringstream ss;
         if (_output_train()) {
-          ss << "train:" << target.outputString();
+          ss << "train:" << target.OutputString();
         } else {
-          ss << "delorean:" << target.outputString();
+          ss << "delorean:" << target.OutputString();
         }
         notify_str(ss.str().c_str());
         if (_debug_contour()) {
@@ -185,9 +198,9 @@ class DeloreanDetector : public Filter {
   BooleanParameter _enable, _debug_contour, _output_train;
   DoubleParameter _min_area, _targeted_ratio_big, _targeted_ratio_small,
       _difference_from_target_ratio;
-  FeatureFactory _feat_factory;
+  ObjectFeatureFactory _feat_factory;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
-#endif  // VISION_FILTER_DELOREAN_DETECTOR_H_
+#endif  // LIB_VISION_FILTERS_DELOREAN_DETECTOR_H_

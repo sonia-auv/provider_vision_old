@@ -1,45 +1,60 @@
 /**
- * \file	TrackDetector.h
- * \author  Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
- * \date	14/12/2014
- * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
- * Use of this source code is governed by the MIT license that can be
- * found in the LICENSE file.
+ * \file	track_detector.h
+ * \author	Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
+ * \author  Pierluc Bédard <pierlucbed@gmail.com>
+ *
+ * \copyright Copyright (c) 2015 S.O.N.I.A. All rights reserved.
+ *
+ * \section LICENSE
+ *
+ * This file is part of S.O.N.I.A. software.
+ *
+ * S.O.N.I.A. software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * S.O.N.I.A. software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_TRACK_DETECTOR_H_
-#define VISION_FILTER_TRACK_DETECTOR_H_
+#ifndef LIB_VISION_FILTERS_TRACK_DETECTOR_H_
+#define LIB_VISION_FILTERS_TRACK_DETECTOR_H_
 
-//==============================================================================
-// I N C L U D E   F I L E S
 #include <vector>
 #include <memory>
 #include <lib_vision/filter.h>
-#include <lib_vision/algorithm/features.h>
 #include <lib_vision/algorithm/general_function.h>
 #include <lib_vision/algorithm/target.h>
 #include <lib_vision/algorithm/object_full_data.h>
-#include <lib_vision/algorithm/feature_factory.h>
+#include <lib_vision/algorithm/object_feature_factory.h>
 #include <lib_vision/algorithm/type_and_const.h>
 
-namespace vision_filter {
-
-//==============================================================================
-// C L A S S E S
+namespace lib_vision {
 
 class TrackDetector : public Filter {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<TrackDetector>;
+
   //============================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
   explicit TrackDetector(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _debug_contour("Debug_contour", false, parameters_),
-        _min_area("Min_area", 200, 0, 10000, parameters_),
-        _targeted_ratio("Ratio_target", 0.5f, 0.0f, 1.0f, parameters_),
+        _enable("Enable", false, &parameters_),
+        _debug_contour("Debug_contour", false, &parameters_),
+        _min_area("Min_area", 200, 0, 10000, &parameters_),
+        _targeted_ratio("Ratio_target", 0.5f, 0.0f, 1.0f, &parameters_),
         _difference_from_target_ratio("Diff_from_ratio_target", 0.10f, 0.0f,
-                                      1.0f, parameters_),
+                                      1.0f, &parameters_),
         _feat_factory(3) {
     setName("TrackDetector");
   }
@@ -69,7 +84,7 @@ class TrackDetector : public Filter {
       for (int i = 0, size = contours.size(); i < size; i++) {
         contour_t hull;
         cv::convexHull(contours[i], hull, false);
-        std::shared_ptr<ObjectFullData> object =
+        ObjectFullData::Ptr object =
             std::make_shared<ObjectFullData>(originalImage, image, hull);
         if (object.get() == nullptr) {
           continue;
@@ -88,8 +103,7 @@ class TrackDetector : public Filter {
       }
 
       std::sort(objVec.begin(), objVec.end(),
-                [](std::shared_ptr<ObjectFullData> a,
-                   std::shared_ptr<ObjectFullData> b)
+                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
                     -> bool { return a->GetArea() > b->GetArea(); });
 
       // Get all the square contours.
@@ -109,47 +123,45 @@ class TrackDetector : public Filter {
       }
 
       // Votes for the contour with the most
-      std::vector<std::pair<std::shared_ptr<ObjectFullData>, int> >
-          contour_vote;
+      std::vector<std::pair<ObjectFullData::Ptr, int> > contour_vote;
       for (auto &square : squareContour) {
         for (auto &already_voted_for : contour_vote) {
-          if (cv::pointPolygonTest(already_voted_for.first->GetContourCopy(),
-                                   cv::Point2f(square[0].x, square[0].y),
-                                   false) > 0.0f) {
+          if (cv::pointPolygonTest(
+                  already_voted_for.first->GetContourCopy().Get(),
+                  cv::Point2f(square[0].x, square[0].y), false) > 0.0f) {
             already_voted_for.second++;
             continue;
           }
         }
 
         for (auto &to_added_to_the_voted_pool : objVec) {
-          if (cv::pointPolygonTest(to_added_to_the_voted_pool->GetContourCopy(),
-                                   cv::Point2f(square[0].x, square[0].y),
-                                   false) > 0.0f) {
-            contour_vote.push_back(
-                std::pair<std::shared_ptr<ObjectFullData>, int>(
-                    to_added_to_the_voted_pool, 1));
+          if (cv::pointPolygonTest(
+                  to_added_to_the_voted_pool->GetContourCopy().Get(),
+                  cv::Point2f(square[0].x, square[0].y), false) > 0.0f) {
+            contour_vote.push_back(std::pair<ObjectFullData::Ptr, int>(
+                to_added_to_the_voted_pool, 1));
             cv::polylines(_output_image,
-                          to_added_to_the_voted_pool->GetContourCopy(), true,
-                          CV_RGB(255, 0, 255), 3);
+                          to_added_to_the_voted_pool->GetContourCopy().Get(),
+                          true, CV_RGB(255, 0, 255), 3);
             continue;
           }
         }
       }
       std::sort(contour_vote.begin(), contour_vote.end(),
-                [](const std::pair<std::shared_ptr<ObjectFullData>, int> &a,
-                   const std::pair<std::shared_ptr<ObjectFullData>, int> &b)
+                [](const std::pair<ObjectFullData::Ptr, int> &a,
+                   const std::pair<ObjectFullData::Ptr, int> &b)
                     -> bool { return a.second > b.second; });
 
       // Since we search only one buoy, get the biggest from sort function
       if (contour_vote.size() > 0) {
         Target target;
-        std::shared_ptr<ObjectFullData> object = contour_vote[0].first;
+        ObjectFullData::Ptr object = contour_vote[0].first;
         cv::Point center = object->GetCenter();
         setCameraOffset(&center, image.rows, image.cols);
-        target.setTarget(center.x, center.y, object->GetLength(),
+        target.SetTarget(center.x, center.y, object->GetLength(),
                          object->GetLength(), object->GetRotatedRect().angle);
         std::stringstream ss;
-        ss << "track:" << target.outputString();
+        ss << "track:" << target.OutputString();
         notify_str(ss.str().c_str());
         if (_debug_contour()) {
           cv::circle(_output_image, objVec[0]->GetCenter(), 3,
@@ -169,9 +181,9 @@ class TrackDetector : public Filter {
   BooleanParameter _enable, _debug_contour;
   DoubleParameter _min_area, _targeted_ratio, _difference_from_target_ratio;
 
-  FeatureFactory _feat_factory;
+  ObjectFeatureFactory _feat_factory;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
-#endif  // VISION_FILTER_TRACK_DETECTOR_H_
+#endif  // LIB_VISION_FILTERS_TRACK_DETECTOR_H_

@@ -1,18 +1,35 @@
 /**
  * \file	in_range.h
+ * \author	Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
  * \author  Pierluc Bédard <pierlucbed@gmail.com>
- * \date	16/10/2015
- * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
- * Use of this source code is governed by the MIT license that can be
- * found in the LICENSE file.
+ *
+ * \copyright Copyright (c) 2015 S.O.N.I.A. All rights reserved.
+ *
+ * \section LICENSE
+ *
+ * This file is part of S.O.N.I.A. software.
+ *
+ * S.O.N.I.A. software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * S.O.N.I.A. software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef LIB_VISION_FILTERS_IN_RANGE_FILTER_H_
 #define LIB_VISION_FILTERS_IN_RANGE_FILTER_H_
 
+#include <memory>
 #include <lib_vision/filter.h>
 
-namespace vision_filter {
+namespace lib_vision {
 
 /**
  * The filter inRange check if array elements lie between certain value of HSV
@@ -23,24 +40,29 @@ namespace vision_filter {
  */
 class InRange : public Filter {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<InRange>;
+
   //============================================================================
   // P U B L I C   C / D T O R
 
   explicit InRange(const GlobalParamHandler &globalParams) noexcept
       : Filter(globalParams),
-        enable_("Enable", false, parameters_),
-        lower_hue_("HSVLowH", 0, 0, 255, parameters_),
-        upper_hue_("HSVHighH", 255, 0, 255, parameters_),
-        lower_saturation_("HSVLowS", 0, 0, 255, parameters_),
-        upper_saturation_("HSVHighS", 255, 0, 255, parameters_),
-        lower_value_("HSVLowV", 0, 0, 255, parameters_),
-        upper_value_("HSVHighV", 255, 0, 255, parameters_),
-        lower_lightness_("LUVlowL", 0, 0, 255, parameters_),
-        upper_lightness_("LUVhighL", 255, 0, 255, parameters_),
-        lower_u_("LUVlowU", 0, 0, 255, parameters_),
-        upper_u_("LUVhighU", 255, 0, 255, parameters_),
-        lower_v_("LUVlowV", 0, 0, 255, parameters_),
-        upper_v_("LUVhighV", 255, 0, 255, parameters_) {
+        enable_("Enable", false, &parameters_),
+        lower_hue_("HSVLowH", 0, 0, 255, &parameters_),
+        upper_hue_("HSVHighH", 255, 0, 255, &parameters_),
+        lower_saturation_("HSVLowS", 0, 0, 255, &parameters_),
+        upper_saturation_("HSVHighS", 255, 0, 255, &parameters_),
+        lower_value_("HSVLowV", 0, 0, 255, &parameters_),
+        upper_value_("HSVHighV", 255, 0, 255, &parameters_),
+        lower_lightness_("LUVlowL", 0, 0, 255, &parameters_),
+        upper_lightness_("LUVhighL", 255, 0, 255, &parameters_),
+        lower_u_("LUVlowU", 0, 0, 255, &parameters_),
+        upper_u_("LUVhighU", 255, 0, 255, &parameters_),
+        lower_v_("LUVlowV", 0, 0, 255, &parameters_),
+        upper_v_("LUVhighV", 255, 0, 255, &parameters_) {
     setName("InRange");
   }
 
@@ -127,6 +149,6 @@ class InRange : public Filter {
   IntegerParameter upper_v_;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
 #endif  // LIB_VISION_FILTERS_IN_RANGE_FILTER_H_

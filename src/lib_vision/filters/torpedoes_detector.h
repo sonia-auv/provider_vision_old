@@ -1,44 +1,61 @@
 /**
- * \file	TorpedoesDetector.h
- * \author  Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
- * \date	14/12/2014
- * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
- * Use of this source code is governed by the MIT license that can be
- * found in the LICENSE file.
+ * \file	torpedoes_detector.h
+ * \author	Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
+ * \author  Pierluc Bédard <pierlucbed@gmail.com>
+ *
+ * \copyright Copyright (c) 2015 S.O.N.I.A. All rights reserved.
+ *
+ * \section LICENSE
+ *
+ * This file is part of S.O.N.I.A. software.
+ *
+ * S.O.N.I.A. software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * S.O.N.I.A. software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_TORPEDOES_DETECTOR_H_
-#define VISION_FILTER_TORPEDOES_DETECTOR_H_
+#ifndef LIB_VISION_FILTERS_TORPEDOES_DETECTOR_H_
+#define LIB_VISION_FILTERS_TORPEDOES_DETECTOR_H_
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
+#include <memory>
 #include <string>
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/general_function.h>
 #include <lib_vision/algorithm/target.h>
 #include <lib_vision/algorithm/object_full_data.h>
 #include <lib_vision/algorithm/object_ranker.h>
-namespace vision_filter {
 
-//==============================================================================
-// C L A S S E S
+namespace lib_vision {
 
 class TorpedoesDetector : public Filter {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<TorpedoesDetector>;
+
   //============================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
   explicit TorpedoesDetector(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _debug_contour("Debug_contour", false, parameters_),
-        _sensibility("Sensibility", 0.05, 0.0, 1.0, parameters_),
-        _min_area("Minimum Area", 150, 0, 10000, parameters_),
-        _angle("Angle", 0.75, 0.0, 3.14, parameters_),
-        _median("Median multp.", 2.0, 1.0, 100, parameters_),
-        _ratio_max("PCA Ratio max", 2.5, 1.0, 100, parameters_),
-        _ratio_min("PCA Ratio min", 1, 1.0, 100, parameters_) {
+        _enable("Enable", false, &parameters_),
+        _debug_contour("Debug_contour", false, &parameters_),
+        _sensibility("Sensibility", 0.05, 0.0, 1.0, &parameters_),
+        _min_area("Minimum Area", 150, 0, 10000, &parameters_),
+        _angle("Angle", 0.75, 0.0, 3.14, &parameters_),
+        _median("Median multp.", 2.0, 1.0, 100, &parameters_),
+        _ratio_max("PCA Ratio max", 2.5, 1.0, 100, &parameters_),
+        _ratio_min("PCA Ratio min", 1, 1.0, 100, &parameters_) {
     setName("TorpedoesDetector");
   }
 
@@ -59,7 +76,7 @@ class TorpedoesDetector : public Filter {
       if (image.channels() != 1) cv::cvtColor(image, image, CV_BGR2GRAY);
 
       ObjectFullData::FullObjectPtrVec interior_squares;
-      std::shared_ptr<ObjectFullData> panel;
+      ObjectFullData::Ptr panel;
       std::vector<Target> target_vec;
       GetInnerSquare(image, interior_squares);
       GetBigSquare(image, panel, interior_squares);
@@ -81,11 +98,11 @@ class TorpedoesDetector : public Filter {
 
         // Approach real near, only one square.
         if (nb_of_element == 1) {
-          std::shared_ptr<ObjectFullData> obj = interior_squares[0];
+          ObjectFullData::Ptr obj = interior_squares[0];
           Target current_square_target;
-          current_square_target.setTarget(obj);
-          current_square_target.setSpecField_1("a");
-          current_square_target.setSpecField_2("small");
+          current_square_target.SetTarget(obj);
+          current_square_target.SetSpecField_1("a");
+          current_square_target.SetSpecField_2("small");
           target_vec.push_back(current_square_target);
           if (_debug_contour()) {
             cv::circle(_output_image, obj->GetCenter(), 4, CV_RGB(0, 255, 0),
@@ -98,7 +115,7 @@ class TorpedoesDetector : public Filter {
           // Approach, select the smallest one.
         } else if (nb_of_element == 2) {
           // Get the smallest one.
-          std::shared_ptr<ObjectFullData> small, big;
+          ObjectFullData::Ptr small, big;
           if (interior_squares[0]->GetArea() < interior_squares[1]->GetArea()) {
             small = interior_squares[0];
             big = interior_squares[1];
@@ -107,14 +124,14 @@ class TorpedoesDetector : public Filter {
             big = interior_squares[0];
           }
           Target small_target, big_target;
-          small_target.setTarget(small);
-          small_target.setSpecField_1("a");
-          small_target.setSpecField_2("small");
+          small_target.SetTarget(small);
+          small_target.SetSpecField_1("a");
+          small_target.SetSpecField_2("small");
           target_vec.push_back(small_target);
 
-          big_target.setTarget(big);
-          big_target.setSpecField_1("b");
-          big_target.setSpecField_2("big");
+          big_target.SetTarget(big);
+          big_target.SetSpecField_1("b");
+          big_target.SetSpecField_2("big");
           target_vec.push_back(big_target);
 
           if (_debug_contour()) {
@@ -139,7 +156,7 @@ class TorpedoesDetector : public Filter {
             //-------
             // B | D
             Target current_square_target;
-            current_square_target.setTarget(inner_square);
+            current_square_target.SetTarget(inner_square);
 
             // Big square
             float area_dist_from_bigger =
@@ -151,14 +168,14 @@ class TorpedoesDetector : public Filter {
             // or the smaller object right now. If so, set their values
             // if not check it is near wich one.
             if (area_dist_from_bigger < 1) {
-              current_square_target.setSpecField_2("big");
+              current_square_target.SetSpecField_2("big");
             } else if (area_dist_from_smaller < 1) {
-              current_square_target.setSpecField_2("small");
+              current_square_target.SetSpecField_2("small");
             } else if (area_dist_from_bigger < area_dist_from_smaller) {
-              current_square_target.setSpecField_2("big");
+              current_square_target.SetSpecField_2("big");
             } else  // Small square
             {
-              current_square_target.setSpecField_2("small");
+              current_square_target.SetSpecField_2("small");
             }
             // LEFT
             if (square_center.x < panel_center.x) {
@@ -168,10 +185,10 @@ class TorpedoesDetector : public Filter {
 
               // UP
               if (square_center.y < panel_center.y) {
-                current_square_target.setSpecField_1("d");
+                current_square_target.SetSpecField_1("d");
               }  // DOWN
               else {
-                current_square_target.setSpecField_1("c");
+                current_square_target.SetSpecField_1("c");
               }
             } else  // RIGHT
             {
@@ -181,18 +198,18 @@ class TorpedoesDetector : public Filter {
 
               // UP
               if (square_center.y < panel_center.y) {
-                current_square_target.setSpecField_1("b");
+                current_square_target.SetSpecField_1("b");
               }  // DOWN
               else {
-                current_square_target.setSpecField_1("a");
+                current_square_target.SetSpecField_1("a");
               }
             }
             target_vec.push_back(current_square_target);
             if (_debug_contour()) {
               cv::circle(_output_image, square_center, 4, CV_RGB(0, 255, 0), 4);
               std::stringstream ss;
-              ss << current_square_target.getSpecField_1() << "-"
-                 << current_square_target.getSpecField_2();
+              ss << current_square_target.GetSpecField_1() << "-"
+                 << current_square_target.GetSpecField_2();
               cv::putText(_output_image, ss.str(), square_center,
                           cv::FONT_HERSHEY_SIMPLEX, 1 /*fontscale*/,
                           cv::Scalar(255, 0, 0), 3 /*thickness*/,
@@ -205,7 +222,7 @@ class TorpedoesDetector : public Filter {
       std::stringstream message;
       message << "torpedoes:";
       for (auto &target : target_vec) {
-        message << target.outputString();
+        message << target.OutputString();
       }
       notify_str(message.str());
 
@@ -219,64 +236,46 @@ class TorpedoesDetector : public Filter {
   //
   void GetInnerSquare(const cv::Mat &in,
                       ObjectFullData::FullObjectPtrVec &object_data) {
-    contourList_t inner_contours, precontours;
-    hierachy_t hierarchy;
-
-    // Find contours
-
-    cv::findContours(in.clone(), precontours, hierarchy, CV_RETR_TREE,
-                     CV_CHAIN_APPROX_SIMPLE);
-
+    ContourList inner_contours(in, ContourList::INNER_MOST);
     cv::Mat original = global_params_.getOriginalImage();
-    for (int i = 0; i < (int)hierarchy.size(); i++) {
-      // No child means no contour inside that contours.
-      // 1 parent mean that it is inside a contour.
-      if (hierarchy[i][FIRST_CHILD_CTR] == -1 &&
-          hierarchy[i][PARENT_CTR] != -1) {
-        contour_t approx;
-        double admissible_error =
-            cv::arcLength(precontours[i], true) * _sensibility();
-        cv::approxPolyDP(precontours[i], approx, admissible_error, true);
 
-        if (IsSquare(approx, _min_area(), _angle(), _ratio_min(),
-                     _ratio_max())) {
-          object_data.push_back(
-              std::make_shared<ObjectFullData>(original, in, approx));
-        }
+    for (auto &contour : inner_contours.contour_vec_) {
+      contour.ApproximateBySize();
+      Contour::ContourVec ctr = contour.Get();
+      if (IsSquare(ctr, _min_area(), _angle(), _ratio_min(), _ratio_max())) {
+        object_data.push_back(
+            std::make_shared<ObjectFullData>(original, in, ctr));
+      }
+    }
+
+    std::sort(object_data.begin(), object_data.end(),
+              [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
+                  -> bool { return a->GetArea() > b->GetArea(); });
+
+    if (object_data.size() > 4) {
+      object_data.erase(object_data.begin() + 4, object_data.end());
+    }
+
+    if (_debug_contour()) {
+      for (auto &object : object_data) {
+        cv::polylines(_output_image, object->GetContourCopy().Get(), true,
+                      CV_RGB(255, 0, 0), 3);
       }
 
-      std::sort(object_data.begin(), object_data.end(),
-                [](std::shared_ptr<ObjectFullData> a,
-                   std::shared_ptr<ObjectFullData> b)
-                    -> bool { return a->GetArea() > b->GetArea(); });
-      if (object_data.size() > 4) {
-        object_data.erase(object_data.begin() + 4, object_data.end());
-      }
-
-      if (_debug_contour()) {
-        for (auto &object : object_data) {
-          cv::polylines(_output_image, object->GetContourCopy(), true,
-                        CV_RGB(255, 0, 0), 3);
-        }
-
-      }  // End if was a square
-    }    // End iteration through contours.
-  }
+    }  // End if was a square
+  }    // End iteration through contours.
 
   //----------------------------------------------------------------------------
   //
-  void GetBigSquare(const cv::Mat &in,
-                    std::shared_ptr<ObjectFullData> &big_square,
+  void GetBigSquare(const cv::Mat &in, ObjectFullData::Ptr &big_square,
                     const ObjectFullData::FullObjectPtrVec &inside_squares) {
-    contourList_t contours;
-    retrieveOuterContours(in, contours);
+    ContourList contours(in, ContourList::OUTER);
 
-    std::vector<std::pair<std::shared_ptr<ObjectFullData>, int> > contour_vote;
+    std::vector<std::pair<ObjectFullData::Ptr, int> > contour_vote;
 
     cv::Mat original(global_params_.getOriginalImage());
-    for (const auto &contour : contours) {
-      // if(cv::contourArea(contour, false) > _min_area() )
-      contour_vote.push_back(std::pair<std::shared_ptr<ObjectFullData>, int>(
+    for (const auto &contour : contours.GetAsPoint()) {
+      contour_vote.push_back(std::pair<ObjectFullData::Ptr, int>(
           std::make_shared<ObjectFullData>(original, in, contour), 0));
     }
 
@@ -284,20 +283,22 @@ class TorpedoesDetector : public Filter {
     // for each contours found, count how many inner square there is inside.
     for (auto &outer_square : contour_vote) {
       for (auto inner_square : inside_squares) {
-        if (cv::pointPolygonTest(outer_square.first->GetContourCopy(),
+        if (cv::pointPolygonTest(outer_square.first->GetContourCopy().Get(),
                                  inner_square->GetCenter(), false) > 0.0f) {
           outer_square.second += 1;
         }
       }
     }
+
     std::sort(contour_vote.begin(), contour_vote.end(),
-              [](const std::pair<std::shared_ptr<ObjectFullData>, int> &a,
-                 const std::pair<std::shared_ptr<ObjectFullData>, int> &b)
+              [](const std::pair<ObjectFullData::Ptr, int> &a,
+                 const std::pair<ObjectFullData::Ptr, int> &b)
                   -> bool { return a.second > b.second; });
+
     if (contour_vote.size() != 0) {
       big_square = contour_vote[0].first;
       if (_debug_contour()) {
-        cv::polylines(_output_image, big_square->GetContourCopy(), true,
+        cv::polylines(_output_image, big_square->GetContourCopy().Get(), true,
                       CV_RGB(255, 0, 255), 3);
       }
     }
@@ -358,6 +359,6 @@ class TorpedoesDetector : public Filter {
   cv::Mat _output_image;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
-#endif  // VISION_FILTER_TORPEDOES_DETECTOR_H_
+#endif  // LIB_VISION_FILTERS_TORPEDOES_DETECTOR_H_

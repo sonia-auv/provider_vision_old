@@ -1,23 +1,45 @@
 /**
  * \file	image_accumulator_buffer.h
- * \author  Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
- * \date	1/01/2014
- * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
- * Use of this source code is governed by the MIT license that can be
- * found in the LICENSE file.
+ * \author	Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
+ * \author  Pierluc Bédard <pierlucbed@gmail.com>
+ *
+ * \copyright Copyright (c) 2015 S.O.N.I.A. All rights reserved.
+ *
+ * \section LICENSE
+ *
+ * This file is part of S.O.N.I.A. software.
+ *
+ * S.O.N.I.A. software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * S.O.N.I.A. software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_ACCUMULATOR_H_
-#define VISION_FILTER_ACCUMULATOR_H_
+#ifndef LIB_VISION_ALGORITHM_IMAGE_ACCUMULATOR_BUFFER_H_
+#define LIB_VISION_ALGORITHM_IMAGE_ACCUMULATOR_BUFFER_H_
 
-#include <opencv2/opencv.hpp>
+#include <memory>
 #include <stdlib.h>
 #include <stdio.h>
+#include <opencv2/opencv.hpp>
 
 // Simple circular buffer
 // that returns the weighted sum of all images in his buffer.
 class ImageAccumulatorBuffer {
-public:
+ public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<ImageAccumulatorBuffer>;
+
   enum METHOD { ACC_ALL_SAME_WEIGHT, ACC_50_PERCENT, ACC_ADJUST_WEIGHT };
 
   // Creates a circular buffer of bufferLength,
@@ -66,7 +88,7 @@ public:
 
   void GetImage(size_t index, cv::Mat &image);
 
-private:
+ private:
   // Averaging methods
   // They all keep the image in CV_32FCN
   // All images in the buffer have the same weights
@@ -110,10 +132,8 @@ inline int ImageAccumulatorBuffer::GetBufferLength() { return _buffer_size; }
 
 //-----------------------------------------------------------------------------
 //
-inline void ImageAccumulatorBuffer::GetImage(size_t index,
-                                             cv::Mat &image) {
-  if (index < _buffer_size)
-  {
+inline void ImageAccumulatorBuffer::GetImage(size_t index, cv::Mat &image) {
+  if (index < _buffer_size) {
     _image_vec[index].copyTo(image);
   }
 }
@@ -159,14 +179,14 @@ inline void ImageAccumulatorBuffer::SetAverageMethod(METHOD method) {
   switch (method) {
     case ACC_ALL_SAME_WEIGHT:
       _average_method = &ImageAccumulatorBuffer::AverageAllSameWeight;
-          break;
+      break;
     case ACC_50_PERCENT:
       _average_method = &ImageAccumulatorBuffer::AverageIncrease50Percent;
-          break;
+      break;
     case ACC_ADJUST_WEIGHT:
       _average_method =
-              &ImageAccumulatorBuffer::AverageAccumulateWithResultingWeight;
-          break;
+          &ImageAccumulatorBuffer::AverageAccumulateWithResultingWeight;
+      break;
   }
 }
 
@@ -272,4 +292,5 @@ inline void ImageAccumulatorBuffer::SetAverageMethod(METHOD method) {
 //    //Return 128
 //    std::cout << "Adjust Weight" << mean << std::endl;
 //}
-#endif
+
+#endif  // LIB_VISION_ALGORITHM_IMAGE_ACCUMULATOR_BUFFER_H_

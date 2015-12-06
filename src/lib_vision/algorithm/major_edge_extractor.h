@@ -1,23 +1,41 @@
 /**
  * \file	major_edge_extractor.h
- * \author  Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
- * \date	1/01/2014
- * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
- * Use of this source code is governed by the MIT license that can be
- * found in the LICENSE file.
+ * \author	Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
+ * \author  Pierluc Bédard <pierlucbed@gmail.com>
+ *
+ * \copyright Copyright (c) 2015 S.O.N.I.A. All rights reserved.
+ *
+ * \section LICENSE
+ *
+ * This file is part of S.O.N.I.A. software.
+ *
+ * S.O.N.I.A. software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * S.O.N.I.A. software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_MAJOR_EDGE_EXTRACTOR_H_
-#define VISION_FILTER_MAJOR_EDGE_EXTRACTOR_H_
+#ifndef LIB_VISION_ALGORITHM_MAJOR_EDGE_EXTRACTOR_H_
+#define LIB_VISION_ALGORITHM_MAJOR_EDGE_EXTRACTOR_H_
 
+#include <memory>
 #include <opencv2/opencv.hpp>
 
-//=============================================================================
-//		CONTAINER CLASS
-//-----------------------------------------------------------------------------
-//
 class ReferencePoint {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<ReferencePoint>;
+
   ReferencePoint(float pix_val, int max_val_index);
 
   float _pix_value;
@@ -31,6 +49,11 @@ typedef cv::Mat_<RefPointPtr> RefImage;
 //
 class RefKernel {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<RefKernel>;
+
   RefKernel(const RefPointPtr &north, const RefPointPtr &west,
             const RefPointPtr &center);
 
@@ -46,6 +69,11 @@ class RefKernel {
 //
 class MajorEdgeExtractor {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<MajorEdgeExtractor>;
+
   cv::Mat ExtractEdge(const cv::Mat &image, int extreme_minimum);
 
  private:
@@ -209,4 +237,4 @@ inline void MajorEdgeExtractor::SetValInReferenceVec(RefPointPtr ptr,
   SetValInReferenceVec(ptr->_reference_max_index, value);
 }
 
-#endif  //_MAJOR_EDGE_EXTRACTOR_H_
+#endif  // LIB_VISION_ALGORITHM_MAJOR_EDGE_EXTRACTOR_H_

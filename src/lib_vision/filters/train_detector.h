@@ -1,34 +1,47 @@
 /**
- * \file	TrainDetector.h
- * \author  Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
- * \date	14/12/2014
- * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
- * Use of this source code is governed by the MIT license that can be
- * found in the LICENSE file.
+ * \file	train_detector.h
+ * \author	Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
+ * \author  Pierluc Bédard <pierlucbed@gmail.com>
+ *
+ * \copyright Copyright (c) 2015 S.O.N.I.A. All rights reserved.
+ *
+ * \section LICENSE
+ *
+ * This file is part of S.O.N.I.A. software.
+ *
+ * S.O.N.I.A. software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * S.O.N.I.A. software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_TRAIN_DETECTOR_H_
-#define VISION_FILTER_TRAIN_DETECTOR_H_
+#ifndef LIB_VISION_FILTERS_TRAIN_DETECTOR_H_
+#define LIB_VISION_FILTERS_TRAIN_DETECTOR_H_
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
+#include <memory>
 #include <lib_vision/filter.h>
-#include <lib_vision/algorithm/features.h>
 #include <lib_vision/algorithm/general_function.h>
 #include <lib_vision/algorithm/target.h>
 #include <lib_vision/algorithm/object_full_data.h>
-#include <lib_vision/algorithm/feature_factory.h>
 #include <lib_vision/algorithm/performance_evaluator.h>
-#include <lib_vision/algorithm/ai_trainer.h>
 
-namespace vision_filter {
-
-//==============================================================================
-// C L A S S E S
+namespace lib_vision {
 
 class TrainDetector : public Filter {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<TrainDetector>;
+
   //==========================================================================
   // N E S T E D   C L A S S   D E F I N I T I O N
 
@@ -37,14 +50,17 @@ class TrainDetector : public Filter {
     //==========================================================================
     // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
-    explicit ObjectPair(std::shared_ptr<ObjectFullData> object1,
-                        std::shared_ptr<ObjectFullData> object2,
-                        FeatureFactory &featFactory)
-        : _object1(object1),
-          _object2(object2),
-          _convexity_mean(0) {
-      _convexity_mean = featFactory.ConvexityFeature(_object1);
-      _convexity_mean += featFactory.ConvexityFeature(_object2);
+    explicit ObjectPair(ObjectFullData::Ptr object1,
+                        ObjectFullData::Ptr object2,
+                        ObjectFeatureFactory &featFactory)
+        : _object1(object1), _object2(object2), _convexity_mean(0) {
+      assert(object1.get() != nullptr);
+      assert(object2.get() != nullptr);
+
+      featFactory.ConvexityFeature(object1);
+      featFactory.ConvexityFeature(object2);
+      _convexity_mean = _object1->GetConvexity();
+      _convexity_mean += _object2->GetConvexity();
       _convexity_mean /= 2.0f;
     }
 
@@ -54,7 +70,7 @@ class TrainDetector : public Filter {
       return a._convexity_mean > b._convexity_mean;
     }
 
-    std::shared_ptr<ObjectFullData> _object1, _object2;
+    ObjectFullData::Ptr _object1, _object2;
     float _convexity_mean;
   };
 
@@ -63,11 +79,11 @@ class TrainDetector : public Filter {
 
   explicit TrainDetector(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _debug_contour("Debug_contour", false, parameters_),
+        _enable("Enable", false, &parameters_),
+        _debug_contour("Debug_contour", false, &parameters_),
         _pair_distance_maximum("Pair_distance_maximum", 200, 0, 10000,
-                               parameters_),
-        _min_area("Min_area", 200, 0, 10000, parameters_),
+                               &parameters_),
+        _min_area("Min_area", 200, 0, 10000, &parameters_),
 
         _feat_factory(3) {
     setName("TrainDetector");
@@ -97,7 +113,7 @@ class TrainDetector : public Filter {
       retrieveAllContours(image, contours);
       ObjectFullData::FullObjectPtrVec objVec;
       for (int i = 0, size = contours.size(); i < size; i++) {
-        std::shared_ptr<ObjectFullData> object =
+        ObjectFullData::Ptr object =
             std::make_shared<ObjectFullData>(originalImage, image, contours[i]);
         if (object.get() == nullptr) {
           continue;
@@ -117,7 +133,7 @@ class TrainDetector : public Filter {
       std::vector<ObjectPair> pairs;
       // Iterate through object to find pair between objects
       for (int i = 0, size = objVec.size(); i < size; i++) {
-        std::shared_ptr<ObjectFullData> currentObj = objVec[i];
+        ObjectFullData::Ptr currentObj = objVec[i];
         if (currentObj.get() == nullptr) continue;
         for (int j = 0; j < size; j++) {
           if (j == i || objVec[j].get() == nullptr) continue;
@@ -139,21 +155,21 @@ class TrainDetector : public Filter {
         std::sort(pairs.begin(), pairs.end(), ObjectPair::ConvexitySort);
 
         Target target;
-        contour_t obj1(pairs[0]._object1->GetContourCopy()),
-            obj2(pairs[0]._object2->GetContourCopy());
+        contour_t obj1(pairs[0]._object1->GetContourCopy().Get()),
+            obj2(pairs[0]._object2->GetContourCopy().Get());
 
         for (int i = 0, size = obj2.size(); i < size; i++) {
           obj1.push_back(obj2[i]);
         }
-        std::shared_ptr<ObjectFullData> object =
+        ObjectFullData::Ptr object =
             std::make_shared<ObjectFullData>(originalImage, image, obj1);
         cv::Point center = object->GetCenter();
         setCameraOffset(&center, image.rows, image.cols);
-        target.setTarget(center.x, center.y, object->GetLength(),
+        target.SetTarget(center.x, center.y, object->GetLength(),
                          object->GetLength(),
                          abs(object->GetRotatedRect().angle - 90));
         std::stringstream ss;
-        ss << "train:" << target.outputString();
+        ss << "train:" << target.OutputString();
         notify_str(ss.str().c_str());
         if (_debug_contour()) {
           contourList_t tmp;
@@ -176,9 +192,9 @@ class TrainDetector : public Filter {
   BooleanParameter _enable, _debug_contour;
   IntegerParameter _pair_distance_maximum, _min_area;
 
-  FeatureFactory _feat_factory;
+  ObjectFeatureFactory _feat_factory;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
-#endif  // VISION_FILTER_TRAIN_DETECTOR_H_
+#endif  // LIB_VISION_FILTERS_TRAIN_DETECTOR_H_

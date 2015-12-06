@@ -1,34 +1,50 @@
 /**
- * \file	SubmarineFrameMasker.h
- * \author  Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
- * \date	14/12/2014
- * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
- * Use of this source code is governed by the MIT license that can be
- * found in the LICENSE file.
+ * \file	submarine_frame_masker.h
+ * \author	Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
+ * \author  Pierluc Bédard <pierlucbed@gmail.com>
+ *
+ * \copyright Copyright (c) 2015 S.O.N.I.A. All rights reserved.
+ *
+ * \section LICENSE
+ *
+ * This file is part of S.O.N.I.A. software.
+ *
+ * S.O.N.I.A. software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * S.O.N.I.A. software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_SUB_FRAME_MASK_H_
-#define VISION_FILTER_SUB_FRAME_MASK_H_
+#ifndef LIB_VISION_FILTERS_SUBMARINE_FRAME_MASKER_H_
+#define LIB_VISION_FILTERS_SUBMARINE_FRAME_MASKER_H_
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
+#include <memory>
 #include <lib_vision/filter.h>
 
-namespace vision_filter {
-
-//==============================================================================
-// C L A S S E S
+namespace lib_vision {
 
 class SubmarineFrameMasker : public Filter {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<SubmarineFrameMasker>;
+
   //============================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
   explicit SubmarineFrameMasker(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _rotate_type("Rotation_type", 0, 0, 3, parameters_,
+        _enable("Enable", false, &parameters_),
+        _rotate_type("Rotation_type", 0, 0, 3, &parameters_,
                      "Rotate type: 0=NONE, 1=x axis, 2=y axis, 3=all axis"),
         _prev_rot_value(0) {
     setName("SubmarineFrameMasker");
@@ -72,6 +88,6 @@ class SubmarineFrameMasker : public Filter {
   int _prev_rot_value;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
-#endif  // VISION_FILTER_SUB_FRAME_MASK_H_
+#endif  // LIB_VISION_FILTERS_SUBMARINE_FRAME_MASKER_H_

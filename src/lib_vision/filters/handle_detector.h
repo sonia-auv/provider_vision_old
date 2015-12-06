@@ -1,56 +1,69 @@
 /**
- * \file	ObjectFinder.h
- * \author  Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
- * \date	14/12/2014
- * \copyright	Copyright (c) 2015 SONIA AUV ETS. All rights reserved.
- * Use of this source code is governed by the MIT license that can be
- * found in the LICENSE file.
+ * \file	handle_detector.h
+ * \author	Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
+ * \author  Pierluc Bédard <pierlucbed@gmail.com>
+ *
+ * \copyright Copyright (c) 2015 S.O.N.I.A. All rights reserved.
+ *
+ * \section LICENSE
+ *
+ * This file is part of S.O.N.I.A. software.
+ *
+ * S.O.N.I.A. software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * S.O.N.I.A. software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VISION_FILTER_HANDLE_DETECTOR_H_
-#define VISION_FILTER_HANDLE_DETECTOR_H_
+#ifndef LIB_VISION_FILTERS_HANDLE_DETECTOR_H_
+#define LIB_VISION_FILTERS_HANDLE_DETECTOR_H_
 
-//==============================================================================
-// I N C L U D E   F I L E S
-
+#include <memory>
 #include <lib_vision/filter.h>
-#include <lib_vision/algorithm/features.h>
-#include <lib_vision/algorithm/general_function.h>
 #include <lib_vision/algorithm/target.h>
 #include <lib_vision/algorithm/object_full_data.h>
-#include <lib_vision/algorithm/feature_factory.h>
+#include <lib_vision/algorithm/object_feature_factory.h>
 #include <lib_vision/algorithm/performance_evaluator.h>
 
-namespace vision_filter {
-
-//==============================================================================
-// C L A S S E S
+namespace lib_vision {
 
 class HandleDetector : public Filter {
  public:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
+
+  using Ptr = std::shared_ptr<HandleDetector>;
+
   //============================================================================
   // C O N S T R U C T O R S   A N D   D E S T R U C T O R
 
   explicit HandleDetector(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        _enable("Enable", false, parameters_),
-        _debug_contour("Debug_contour", false, parameters_),
-        _look_for_rectangle("Look_for_Rectangle", false, parameters_),
-        _disable_ratio("disable_ratio_check", false, parameters_),
-        _disable_angle("disable_angle_check", false, parameters_),
-        _id("ID", "buoy", parameters_),
-        _spec_1("spec1", "red", parameters_),
-        _spec_2("spec2", "blue", parameters_),
-        _min_area("Min_area", 200, 0, 10000, parameters_),
-        _targeted_ratio("Ratio_target", 0.5f, 0.0f, 1.0f, parameters_),
+        _enable("Enable", false, &parameters_),
+        _debug_contour("Debug_contour", false, &parameters_),
+        _look_for_rectangle("Look_for_Rectangle", false, &parameters_),
+        _disable_ratio("disable_ratio_check", false, &parameters_),
+        _disable_angle("disable_angle_check", false, &parameters_),
+        _id("ID", "buoy", &parameters_),
+        _spec_1("spec1", "red", &parameters_),
+        _spec_2("spec2", "blue", &parameters_),
+        _min_area("Min_area", 200, 0, 10000, &parameters_),
+        _targeted_ratio("Ratio_target", 0.5f, 0.0f, 1.0f, &parameters_),
         _difference_from_target_ratio("Diff_from_ratio_target", 0.10f, 0.0f,
-                                      1.0f, parameters_),
-        _targeted_angle("angle_target", 0.0f, 0.0f, 90.0f, parameters_),
+                                      1.0f, &parameters_),
+        _targeted_angle("angle_target", 0.0f, 0.0f, 90.0f, &parameters_),
         _difference_from_target_angle("Diff_from_angle_target", 30.0f, 0.0f,
-                                      90.0f, parameters_),
+                                      90.0f, &parameters_),
         _feature_factory(5) {
     setName("HandleDetector");
-    _feature_factory.SetAllFeatureToCompute();
     // Little goodies for cvs
     // area_rank,length_rank,circularity,convexity,ratio,presence,percent_filled,hueMean,
   }
@@ -79,7 +92,7 @@ class HandleDetector : public Filter {
       retrieveAllContours(image, contours);
       ObjectFullData::FullObjectPtrVec objVec;
       for (int i = 0, size = contours.size(); i < size; i++) {
-        std::shared_ptr<ObjectFullData> object =
+        ObjectFullData::Ptr object =
             std::make_shared<ObjectFullData>(originalImage, image, contours[i]);
         if (object.get() == nullptr) {
           continue;
@@ -97,6 +110,7 @@ class HandleDetector : public Filter {
         //
         // RATIO
         //
+        _feature_factory.RatioFeature(object);
         if (!_disable_ratio() && (fabs(object->GetRatio() - _targeted_ratio()) >
                                   fabs(_difference_from_target_ratio()))) {
           continue;
@@ -129,22 +143,21 @@ class HandleDetector : public Filter {
       }
 
       std::sort(objVec.begin(), objVec.end(),
-                [](std::shared_ptr<ObjectFullData> a,
-                   std::shared_ptr<ObjectFullData> b)
+                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
                     -> bool { return a->GetArea() > b->GetArea(); });
 
       // Since we search only one buoy, get the biggest from sort function
       if (objVec.size() > 0) {
         Target target;
-        std::shared_ptr<ObjectFullData> object = objVec[0];
+        ObjectFullData::Ptr object = objVec[0];
         cv::Point center = object->GetCenter();
         setCameraOffset(&center, image.rows, image.cols);
-        target.setTarget(center.x, center.y, object->GetLength(),
+        target.SetTarget(center.x, center.y, object->GetLength(),
                          object->GetLength(), object->GetRotatedRect().angle);
-        target.setSpecField_1(_spec_1());
-        target.setSpecField_2(_spec_2());
+        target.SetSpecField_1(_spec_1());
+        target.SetSpecField_2(_spec_2());
         std::stringstream ss;
-        ss << _id() << target.outputString();
+        ss << _id() << target.OutputString();
         notify_str(ss.str().c_str());
         if (_debug_contour()) {
           cv::circle(_output_image, objVec[0]->GetCenter(), 3,
@@ -166,9 +179,9 @@ class HandleDetector : public Filter {
   DoubleParameter _min_area, _targeted_ratio, _difference_from_target_ratio,
       _targeted_angle, _difference_from_target_angle;
 
-  FeatureFactory _feature_factory;
+  ObjectFeatureFactory _feature_factory;
 };
 
-}  // namespace vision_filter
+}  // namespace lib_vision
 
-#endif  // VISION_FILTER_OBJECT_FINDER_H_
+#endif  // LIB_VISION_FILTERS_OBJECT_FINDER_H_
