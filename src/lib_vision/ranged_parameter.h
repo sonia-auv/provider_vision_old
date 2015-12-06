@@ -64,11 +64,14 @@ class RangedParameter : public Parameter<Tp_> {
 
   void SetMax(const Tp_ &max) { max_ = max; }
 
-  std::string GetStringValue() const override {
+  std::string ToString() const override {
     std::stringstream ss;
-    ss << std::to_string(Parameter<Tp_>::GetValue()) << Parameter<Tp_>::SEPARATOR;
-    ss << std::to_string(GetMin()) << Parameter<Tp_>::SEPARATOR;
-    ss << std::to_string(GetMax());
+    ss << Parameter<Tp_>::GetName() << Parameter<Tp_>::SEPARATOR;
+    ss << Parameter<Tp_>::GetType() << Parameter<Tp_>::SEPARATOR;
+    ss << Parameter<Tp_>::GetStringValue() << Parameter<Tp_>::SEPARATOR;
+    ss << details::StringConvertor<Tp_>::GetString(min_) << Parameter<Tp_>::SEPARATOR;
+    ss << details::StringConvertor<Tp_>::GetString(max_) << Parameter<Tp_>::SEPARATOR;
+    ss << Parameter<Tp_>::GetDescription();
     return ss.str();
   }
 

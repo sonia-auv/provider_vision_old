@@ -80,18 +80,18 @@ struct StringConvertor<bool> {
 
   static std::string GetString(const bool &value) {
     if(value) {
-      return "True";
+      return "1";
     } else {
-      return "False";
+      return "0";
     }
   }
 
   static bool GetValue(const std::string &value) {
     auto string_cpy = value;
     std::transform(string_cpy.begin(), string_cpy.end(), string_cpy.begin(), ::tolower);
-    if(string_cpy == "true") {
+    if(string_cpy == "true" || string_cpy == "1") {
       return true;
-    } else if (string_cpy == "false") {
+    } else if (string_cpy == "false" || string_cpy == "0") {
       return false;
     }
     throw std::invalid_argument("Could not convert argument to boolean");
@@ -137,7 +137,7 @@ ATLAS_INLINE Parameter<Tp_>::Parameter(
     std::vector<ParameterInterface *> *vector, const std::string &description)
     : name_(name), value_(value), description_(description) {
   if (vector != nullptr) {
-    vector->push_back(this);
+    vector->push_back(dynamic_cast<ParameterInterface *>(this));
   }
 }
 
@@ -178,8 +178,11 @@ ATLAS_INLINE std::string Parameter<Tp_>::GetName() const {
 template <class Tp_>
 ATLAS_INLINE std::string Parameter<Tp_>::ToString() const {
   std::stringstream ss;
-  ss << GetName() << SEPARATOR << GetType() << SEPARATOR << GetStringValue()
-     << SEPARATOR << GetDescription() << ";";
+  ss << GetName() << SEPARATOR;
+  ss << GetType() << SEPARATOR;
+  ss << GetStringValue() << SEPARATOR;
+  ss << SEPARATOR << SEPARATOR;
+  ss << GetDescription();
   return ss.str();
 }
 
