@@ -70,8 +70,7 @@ void FileContext::CloseMedia(const std::string &name) {
 void FileContext::StartStreamingMedia(const std::string &name) {
   auto file = GetMedia(name);
   // File might not be running (new video)
-  if( file == nullptr )
-  {
+  if (file == nullptr) {
     OpenMedia(name);
     file = GetMedia(name);
   }

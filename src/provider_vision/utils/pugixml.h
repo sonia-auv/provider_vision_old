@@ -1610,8 +1610,9 @@ typedef void (*deallocation_function)(void *ptr);
 
 // Override default memory management functions. All subsequent
 // allocations/deallocations will be performed via supplied functions.
-void PUGIXML_FUNCTION set_memory_management_functions(
-    allocation_function allocate, deallocation_function deallocate);
+void PUGIXML_FUNCTION
+set_memory_management_functions(allocation_function allocate,
+                                deallocation_function deallocate);
 
 // Get current memory management functions
 allocation_function PUGIXML_FUNCTION get_memory_allocation_function();

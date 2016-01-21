@@ -52,8 +52,9 @@ void DetectionTaskManager::StartDetectionTask(
 void DetectionTaskManager::StopDetectionTask(
     const std::string &execution_name) {
   auto detection_task = GetDetectionTask(execution_name);
-  auto it = std::find(detection_tasks_.begin(), detection_tasks_.end(), detection_task);
-  if(it != detection_tasks_.end()) {
+  auto it = std::find(detection_tasks_.begin(), detection_tasks_.end(),
+                      detection_task);
+  if (it != detection_tasks_.end()) {
     detection_tasks_.erase(it);
   } else {
     throw std::invalid_argument("This detection taks does not exist");
@@ -73,13 +74,15 @@ std::vector<std::string> DetectionTaskManager::GetAllDetectionTasksName() const
 
 //------------------------------------------------------------------------------
 //
-void DetectionTaskManager::ChangeReturnImageToFilter(const std::string &name, const size_t &index) {
+void DetectionTaskManager::ChangeReturnImageToFilter(const std::string &name,
+                                                     const size_t &index) {
   GetDetectionTask(name)->ChangeReturnImageToFilter(index);
 }
 
 //------------------------------------------------------------------------------
 //
-void DetectionTaskManager::ChangeReturnImageToFilterchain(const std::string &name) {
+void DetectionTaskManager::ChangeReturnImageToFilterchain(
+    const std::string &name) {
   GetDetectionTask(name)->ChangeReturnImageToFilterchain();
 }
 

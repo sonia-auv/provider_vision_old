@@ -50,7 +50,8 @@ VideoFile::~VideoFile() {
 //------------------------------------------------------------------------------
 //
 void VideoFile::Open() {
-  // Might be already open since we do it on construction if the path is provided
+  // Might be already open since we do it on construction if the path is
+  // provided
   if (!isOpened()) {
     LoadVideo(path_);
   }

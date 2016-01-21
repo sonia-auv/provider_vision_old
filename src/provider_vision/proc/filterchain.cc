@@ -83,15 +83,15 @@ bool Filterchain::Deserialize() {
   for (int i = 0; filter; filter = filter.next_sibling(), ++i) {
     auto attr = filter.first_attribute();
     for (; attr; attr = attr.next_attribute()) {
-      if (std::string{attr.name()} == "value" || std::string{attr.name()} == "name") {
+      if (std::string{attr.name()} == "value" ||
+          std::string{attr.name()} == "name") {
         AddFilter(attr.value());
         auto parameter = filter.first_child();
         for (; parameter; parameter = parameter.next_sibling()) {
           auto attr_param = parameter.first_attribute();
           for (; attr_param; attr_param = attr_param.next_attribute()) {
             if (std::string{attr_param.name()} == "value") {
-              SetFilterParameterValue(i, parameter.name(),
-                                      attr_param.value());
+              SetFilterParameterValue(i, parameter.name(), attr_param.value());
             }
           }
         }
@@ -194,15 +194,16 @@ void Filterchain::SetFilterParameterValue(const size_t &index,
 
 //------------------------------------------------------------------------------
 //
-std::vector<lib_vision::ParameterInterface *> Filterchain::GetFilterAllParameters(
-    const size_t &index) {
+std::vector<lib_vision::ParameterInterface *>
+Filterchain::GetFilterAllParameters(const size_t &index) {
   return GetFilter(index)->GetParameters();
 }
 
 //------------------------------------------------------------------------------
 //
 void Filterchain::AddFilter(const std::string &filter_name) {
-  auto filter = lib_vision::Filter::Ptr(lib_vision::FilterFactory::createInstance(filter_name, param_handler_));
+  auto filter = lib_vision::Filter::Ptr(
+      lib_vision::FilterFactory::createInstance(filter_name, param_handler_));
   if (filter != nullptr) {
     filters_.push_back(filter);
   } else {

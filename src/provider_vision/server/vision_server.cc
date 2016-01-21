@@ -203,8 +203,8 @@ bool VisionServer::CallbackGetFilterParam(
       detection_task_mgr_.GetFilterchainFromDetectionTask(execution_name);
 
   if (filterchain != nullptr) {
-    rep.list =
-        filterchain->GetFilterParameterValue(ExtractFilterIndexFromUIName(rqst.filter), rqst.parameter);
+    rep.list = filterchain->GetFilterParameterValue(
+        ExtractFilterIndexFromUIName(rqst.filter), rqst.parameter);
     return true;
   }
   ROS_INFO(
@@ -227,7 +227,8 @@ bool VisionServer::CallbackGetFilterAllParam(
       detection_task_mgr_.GetFilterchainFromDetectionTask(execution_name);
 
   if (filterchain != nullptr) {
-    auto parameters = filterchain->GetFilterAllParameters(ExtractFilterIndexFromUIName(rqst.filter));
+    auto parameters = filterchain->GetFilterAllParameters(
+        ExtractFilterIndexFromUIName(rqst.filter));
     std::vector<std::string> parameter_names;
     for (const auto &parameter : parameters) {
       parameter_names.push_back(parameter->ToString());
@@ -255,8 +256,8 @@ bool VisionServer::CallbackSetFilterParam(
       detection_task_mgr_.GetFilterchainFromDetectionTask(execution_name);
 
   if (filterchain != nullptr) {
-    filterchain->SetFilterParameterValue(ExtractFilterIndexFromUIName(rqst.filter), rqst.parameter,
-                                         rqst.value);
+    filterchain->SetFilterParameterValue(
+        ExtractFilterIndexFromUIName(rqst.filter), rqst.parameter, rqst.value);
     rep.success = rep.SUCCESS;
     return true;
   }
@@ -281,8 +282,9 @@ bool VisionServer::CallbackGetFilter(get_filterchain_filter::Request &rqst,
   if (filterchain != nullptr) {
     auto filters = filterchain->GetAllFilters();
     std::vector<std::string> filter_names;
-    for(int i = 0; i < filters.size(); ++i) {
-      filter_names.push_back(ConstructFilterUIName(filters.at(i)->GetName(), i));
+    for (int i = 0; i < filters.size(); ++i) {
+      filter_names.push_back(
+          ConstructFilterUIName(filters.at(i)->GetName(), i));
     }
     rep.list = BuildRosMessage(filter_names);
     return true;

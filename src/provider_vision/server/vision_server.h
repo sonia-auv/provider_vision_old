@@ -87,11 +87,13 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
   size_t ExtractFilterIndexFromUIName(const std::string &name) const;
 
   /**
-   * Given a filter, this will return the name of the filter that the vision client
+   * Given a filter, this will return the name of the filter that the vision
+   * client
    * is expecting (the name of the filter with its index of the filter in the
    * filterchain).
    */
-  std::string ConstructFilterUIName(const std::string &name, const size_t &index) const noexcept;
+  std::string ConstructFilterUIName(const std::string &name,
+                                    const size_t &index) const noexcept;
 
   /**
    * \brief Copies a filterchain which is not used by a running execution.
@@ -394,19 +396,20 @@ inline std::string VisionServer::BuildRosMessage(
 
 //------------------------------------------------------------------------------
 //
-inline size_t VisionServer::ExtractFilterIndexFromUIName(const std::string &name) const {
+inline size_t VisionServer::ExtractFilterIndexFromUIName(
+    const std::string &name) const {
   size_t pos = name.find("_");
   if (pos == std::string::npos) {
     throw std::invalid_argument("The name of the filter could not be parsed");
   }
   std::string position = name.substr(pos + 1, name.size() - 1);
   return size_t(atoi(position.c_str()));
-
 }
 
 //------------------------------------------------------------------------------
 //
-inline std::string VisionServer::ConstructFilterUIName(const std::string &name, const size_t &index) const noexcept {
+inline std::string VisionServer::ConstructFilterUIName(
+    const std::string &name, const size_t &index) const noexcept {
   return name + "_" + std::to_string(index);
 }
 
