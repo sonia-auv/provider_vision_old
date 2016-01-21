@@ -50,9 +50,8 @@ VideoFile::~VideoFile() {
 //------------------------------------------------------------------------------
 //
 void VideoFile::Open() {
-  if (isOpened()) {
-    throw std::logic_error("The video is already opened.");
-  } else {
+  // Might be already open since we do it on construction if the path is provided
+  if (!isOpened()) {
     LoadVideo(path_);
   }
 
@@ -66,9 +65,7 @@ void VideoFile::Open() {
 //------------------------------------------------------------------------------
 //
 void VideoFile::Close() {
-  if (!isOpened()) {
-    throw std::logic_error("The video is not opened.");
-  } else {
+  if (isOpened()) {
     release();
   }
 

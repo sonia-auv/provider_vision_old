@@ -48,7 +48,6 @@ void FileContext::OpenMedia(const std::string &name) {
       media_list_.push_back(std::dynamic_pointer_cast<BaseMedia>(file));
     } else if (type == MediaType::VIDEO) {
       VideoFile::Ptr file(std::make_shared<VideoFile>(name));
-      file->Open();
       media_list_.push_back(std::dynamic_pointer_cast<BaseMedia>(file));
     } else {
       throw std::invalid_argument("Not my camera type");
@@ -70,6 +69,12 @@ void FileContext::CloseMedia(const std::string &name) {
 //
 void FileContext::StartStreamingMedia(const std::string &name) {
   auto file = GetMedia(name);
+  // File might not be running (new video)
+  if( file == nullptr )
+  {
+    OpenMedia(name);
+    file = GetMedia(name);
+  }
   if (file != nullptr) {
     file->StartStreaming();
   }
