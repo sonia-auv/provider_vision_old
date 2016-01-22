@@ -17,22 +17,23 @@
 #include <string>
 
 #include <lib_atlas/ros/service_server_manager.h>
-#include <provider_vision/execute_cmd.h>
-#include <provider_vision/get_information_list.h>
-#include <provider_vision/get_media_param.h>
-#include <provider_vision/set_media_param.h>
-#include <provider_vision/copy_filterchain.h>
-#include <provider_vision/manage_filterchain.h>
-#include <provider_vision/get_filterchain_filter_param.h>
-#include <provider_vision/set_filterchain_filter_param.h>
-#include <provider_vision/get_filterchain_filter_all_param.h>
-#include <provider_vision/get_filterchain_filter.h>
-#include <provider_vision/manage_filterchain_filter.h>
-#include <provider_vision/save_filterchain.h>
-#include <provider_vision/set_filterchain_filter_order.h>
-#include <provider_vision/get_filterchain_from_execution.h>
-#include <provider_vision/get_media_from_execution.h>
-#include <provider_vision/set_filterchain_filter_observer.h>
+#include <sonia_msgs/execute_cmd.h>
+#include <sonia_msgs/get_information_list.h>
+#include <sonia_msgs/get_media_param.h>
+#include <sonia_msgs/set_media_param.h>
+#include <sonia_msgs/copy_filterchain.h>
+#include <sonia_msgs/manage_filterchain.h>
+#include <sonia_msgs/get_filterchain_filter_param.h>
+#include <sonia_msgs/set_filterchain_filter_param.h>
+#include <sonia_msgs/get_filterchain_filter_all_param.h>
+#include <sonia_msgs/get_filterchain_filter.h>
+#include <sonia_msgs/manage_filterchain_filter.h>
+#include <sonia_msgs/save_filterchain.h>
+#include <sonia_msgs/set_filterchain_filter_order.h>
+#include <sonia_msgs/get_filterchain_from_execution.h>
+#include <sonia_msgs/get_media_from_execution.h>
+#include <sonia_msgs/set_filterchain_filter_observer.h>
+
 #include "provider_vision/utils/config.h"
 #include "provider_vision/media/camera/base_media.h"
 #include "provider_vision/proc/detection_task.h"
@@ -41,7 +42,7 @@
 #include "provider_vision/server/detection_task_manager.h"
 
 namespace provider_vision {
-
+using namespace sonia_msgs;
 /**
  * Vision server is the main class of the system
  * It's job is to assemble and connect the pieces to create execution
