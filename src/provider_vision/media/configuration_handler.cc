@@ -15,12 +15,13 @@ namespace provider_vision {
 //==============================================================================
 // C O N S T A N T S   S E C T I O N
 
-static const std::string XML_CAMERA_LIST_TAG = "CameraList";
-static const std::string XML_CAMERA_TAG = "Camera";
+static const std::string XML_CAMERA_LIST_TAG = "camera_list";
+static const std::string XML_CAMERA_TAG = "camera";
 static const std::string XML_CAMERA_NAME_ATTRIBUTE = "name";
-static const std::string XML_CAMERA_GUID_ATTRIBUTE = "guid";
+static const std::string XML_CAMERA_GUID_ATTRIBUTE = "GUID";
 static const std::string XML_CAMERA_UNDISTORTION_MATRICE_NODE =
-    "UndistortionMatrice";
+    "undistordMatrix";
+static const std::string XML_CAMERA_CAMERA_ID_NODE = "cameraID";
 
 //==============================================================================
 // C / D T O R S   S E C T I O N
@@ -65,37 +66,38 @@ std::vector<CameraConfiguration> ConfigurationHandler::ParseConfiguration() {
     std::string name;
     CameraConfiguration camera_config(name);
 
-    // ATTRIBUTES
-    // Parse the attribute for the name and the GUID
-    for (auto attr = camera.first_attribute(); attr;
-         attr = attr.next_attribute()) {
-      if (XML_CAMERA_NAME_ATTRIBUTE.compare(attr.name()) == 0) {
-        name = attr.value();
-        camera_config.SetName(name);
-      }
-
-      if (XML_CAMERA_GUID_ATTRIBUTE.compare(attr.name()) == 0) {
-        std::stringstream ss;
-        ss << std::hex << attr.value();
-        uint64_t guid;
-        ss >> guid;
-        camera_config.SetGUID(guid);
-      }
-    }
-
     // NODES
     for (auto config_element = camera.first_child(); config_element;
          config_element = config_element.next_sibling()) {
-      auto attrib = config_element.first_attribute();
-
-      if (attrib.empty()) continue;
-
-      if (XML_CAMERA_UNDISTORTION_MATRICE_NODE.compare(config_element.name()) ==
+      if (XML_CAMERA_CAMERA_ID_NODE.compare(config_element.name()) ==
           0) {
+        // ATTRIBUTES
+        // Parse the attribute for the name and the GUID
+        for (auto attr = config_element.first_attribute(); attr;
+             attr = attr.next_attribute()) {
+          if (XML_CAMERA_NAME_ATTRIBUTE.compare(attr.name()) == 0) {
+            name = attr.value();
+            camera_config.SetName(name);
+          }
+
+          if (XML_CAMERA_GUID_ATTRIBUTE.compare(attr.name()) == 0) {
+            std::stringstream ss;
+            ss << std::hex << attr.value();
+            uint64_t guid;
+            ss >> guid;
+            camera_config.SetGUID(guid);
+          }
+        }
+      } else if (XML_CAMERA_UNDISTORTION_MATRICE_NODE.compare(config_element.name()) ==
+          0) {
+        auto attrib = config_element.first_attribute();
+
+        if (attrib.empty()) {
+          continue;
+        }
+
         std::string pathUndistord = kProjectPath + attrib.value();
         camera_config.SetUndistortionMatricePath(pathUndistord);
-      } else {
-        camera_config.AddConfiguration(config_element.name(), attrib.value());
       }
     }
 
