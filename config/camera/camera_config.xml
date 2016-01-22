@@ -10,6 +10,7 @@
 	</camera>
 	<camera>
 		<cameraID name="frontTest" GUID="000a4701120a888f"/>
+		<undistordMatrix path="bottom_undistord.xml"/>
 	</camera>
 	<camera>
 		<cameraID name="bottomTest" GUID="000a4701120a888e"/>
