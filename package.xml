@@ -16,5 +16,4 @@
 
   <run_depend>roscpp</run_depend>
   <run_depend>cv_bridge</run_depend>
-  <run_depend>lib_atlas</run_depend>
 </package>

@@ -40,7 +40,7 @@ find_package( OpenCV REQUIRED)
 catkin_package(
     INCLUDE_DIRS ${lib_vision_SRC_DIR}
     LIBRARIES sonia_vision
-    CATKIN_DEPENDS roscpp cv_bridge lib_atlas
+    CATKIN_DEPENDS roscpp cv_bridge
 )
 
 #===============================================================================
