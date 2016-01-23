@@ -1,0 +1,4 @@
+<launch>
+	<node pkg="provider_vision" type="provider_vision_node" name="provider_vision_node" output="log" launch-prefix="gdb -ex run --args" />
+</launch>
+
