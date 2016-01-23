@@ -54,7 +54,9 @@ void DC1394Camera::Open() {
     }
   }catch( std::exception &e)
   {
-    ROS_WARN("Issue with format 7 setting... might be able to recover.");
+    ROS_ERROR("%s", e.what());
+    ROS_ERROR("Issue with format 7 setting... cannot recover, should close"
+                  "the node and do firewire magic to reset the camera.");
   };
 
   status_ = Status::OPEN;

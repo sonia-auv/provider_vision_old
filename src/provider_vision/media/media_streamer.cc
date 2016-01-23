@@ -63,15 +63,17 @@ void MediaStreamer::StartStreaming() {
 //------------------------------------------------------------------------------
 //
 void MediaStreamer::StopStreaming() {
-      if (IsRecording()) {
-        StopRecording();
-      }
-      if (IsStreaming()) {
-    ROS_INFO("Stopping streaming on camera");
-    media_->StopStreaming();
+  if (IsRecording()) {
+    StopRecording();
   }
+  if (IsStreaming()) {
 
-
+    ROS_INFO("Stopping streaming on camera");
+    try{
+      media_->StopStreaming();
+      Stop();
+    }catch (std::exception &e){}
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -125,6 +127,7 @@ void MediaStreamer::Run() {
   timer.Start();
 
   while (!MustStop()) {
+
     if (IsStreaming()) {
       image_access_.lock();
       media_->NextImage(image_);

@@ -30,12 +30,13 @@ DetectionTaskManager::~DetectionTaskManager() {}
 
 //------------------------------------------------------------------------------
 //
-void DetectionTaskManager::StartDetectionTask(
+std::string DetectionTaskManager::StartDetectionTask(
     MediaStreamer::Ptr media_streamer, Filterchain::Ptr filterchain,
     const std::string &execution_name) {
   if (execution_name.empty()) {
     throw std::invalid_argument("The detection task name is not valid");
   }
+  // Makes sure we have no detection task of that name.
   DetectionTask::Ptr task = GetDetectionTask(execution_name);
   if (task == nullptr) {
     task = std::make_shared<DetectionTask>(media_streamer, filterchain,
@@ -45,6 +46,7 @@ void DetectionTaskManager::StartDetectionTask(
   } else {
     throw std::logic_error("This detection task already exist.");
   }
+  return task->GetDetectionTaskName();
 }
 
 //------------------------------------------------------------------------------
