@@ -1,3 +1,0 @@
-<launch>
-	<node pkg="vision_server" type="vision_server_node" name="vision_server"/>
-</launch>
