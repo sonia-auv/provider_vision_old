@@ -28,6 +28,7 @@
 
 #include <memory>
 #include <lib_vision/filter.h>
+#include <lib_vision/algorithm/target.h>
 
 namespace lib_vision {
 
@@ -43,12 +44,11 @@ class TestFilter : public Filter {
 
   explicit TestFilter(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        enable_("Enable", false, &parameters_, "Enable the filter"),
-        int_("Test_int", 2, 1, 3, &parameters_, "Test int"),
-        bool_("test_bool", false, &parameters_),
-        str_("Test_string", "teststring", &parameters_),
-        double_("test_double", 2.0f, 1, 3, &parameters_) {
+        enable_("Enable", true, &parameters_) {
     SetName("TestFilter");
+
+    target_.SetTarget(0,1,30, 50, 60, "spec1", "spec2");
+
   }
 
   virtual ~TestFilter() {}
@@ -57,44 +57,13 @@ class TestFilter : public Filter {
   // P U B L I C   M E T H O D S
 
   virtual void init() {
-    // Testing creation of global param
-    GlobalParamInteger("test_int", 3, 1, 10);
-    GlobalParamBoolean("test_bool", false);
-    GlobalParamDouble("test_double", 2.0f, 0.0f, 15.0f);
-    GlobalParamString("test_string", "string");
-    // global_param_mat("testmat", cv::Mat::zeros(100,100,CV_8UC1));
   }
 
   virtual void Execute(cv::Mat &image) {
     if (enable_()) {
-      cv::Mat imageOriginal = global_params_.getOriginalImage();
-      imageOriginal = cv::Mat::zeros(1, 1, CV_8UC1);
-      RangedParameter<int> *int_test(dynamic_cast<RangedParameter<int> *>(
-          global_params_.getParam("test_int")));
-      if (int_test != nullptr) {
-        NotifyString("RangedParameter<int> OK");
-      }
-
-      Parameter<bool> *bool_test(dynamic_cast<Parameter<bool> *>(
-          global_params_.getParam("test_bool")));
-      if (bool_test != nullptr) {
-        NotifyString("Bool OK");
-      }
-
-      RangedParameter<double> *double_test(
-          dynamic_cast<RangedParameter<double> *>(
-              global_params_.getParam("test double")));
-      if (double_test != nullptr) {
-        NotifyString("RangedParameter<double> OK");
-      }
-
-      Parameter<std::string> *string_test(
-          dynamic_cast<Parameter<std::string> *>(
-              global_params_.getParam("test_string")));
-      if (string_test != nullptr) {
-        NotifyString("String OK");
-      }
-      image = global_params_.getOriginalImage();
+        static unsigned int i = 0;
+        target_.SetCenter(++i, 1);
+        NotifyString(std::string("test:") + target_.OutputString());
     }
   }
 
@@ -103,10 +72,7 @@ class TestFilter : public Filter {
   // P R I V A T E   M E M B E R S
 
   Parameter<bool> enable_;
-  RangedParameter<int> int_;
-  Parameter<bool> bool_;
-  Parameter<std::string> str_;
-  RangedParameter<double> double_;
+  Target target_;
 };
 
 }  // namespace lib_vision
