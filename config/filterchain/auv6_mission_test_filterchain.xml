@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Filterchain>
-	<Filter_0 value="test_filter">
+	<Filter_0 value="TestFilter">
 		<Enable value="true" />
 	</Filter_0>
 </Filterchain>
