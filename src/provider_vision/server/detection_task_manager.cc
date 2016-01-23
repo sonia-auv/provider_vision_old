@@ -103,7 +103,12 @@ size_t DetectionTaskManager::GetAllDetectionTasksCount() const noexcept {
 //
 MediaStreamer::Ptr DetectionTaskManager::GetMediaStreamerFromDetectionTask(
     const std::string &name) const noexcept {
-  return GetDetectionTask(name)->GetMediaStreamer();
+  auto task = GetDetectionTask(name);
+  if( task == nullptr )
+  {
+    throw std::runtime_error("Task does not exist: " + name );
+  }
+  return task->GetMediaStreamer();
 }
 
 //------------------------------------------------------------------------------
