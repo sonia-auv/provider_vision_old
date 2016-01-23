@@ -115,13 +115,27 @@ bool VisionServer::CallbackExecutionCMD(execute_cmd::Request &rqst,
     }
   } else if (rqst.cmd == rqst.STOP) {
     try {
-      auto fc =
-          detection_task_mgr_.GetFilterchainFromDetectionTask(rqst.node_name);
+      auto media_streamer = detection_task_mgr_.GetMediaStreamerFromDetectionTask(rqst.node_name);
+      auto fc = detection_task_mgr_.GetFilterchainFromDetectionTask(rqst.node_name);
+      if( media_streamer == nullptr)
+      {
+        ROS_ERROR("Streamer does not exist, cannot close execution.");
+        return false;
+      }
+      if( fc == nullptr)
+      {
+        ROS_ERROR("Filterchain does not exist, cannot close execution.");
+        return false;
+      }
+
+      std::string media_name = media_streamer->GetMediaName();
+
       detection_task_mgr_.StopDetectionTask(rqst.node_name);
+
       filterchain_mgr_.StopFilterchain(fc);
-      // TODO jsprevost : Assert that there is no execution with this media
-      // currently running
-      media_mgr_.StopStreamingMedia(rqst.media_name);
+
+      media_mgr_.StopStreamingMedia(media_name);
+
     } catch (const std::exception &e) {
       ROS_ERROR("Closing execution error: %s", e.what());
     }

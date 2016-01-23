@@ -52,8 +52,10 @@ void DetectionTaskManager::StartDetectionTask(
 void DetectionTaskManager::StopDetectionTask(
     const std::string &execution_name) {
   auto detection_task = GetDetectionTask(execution_name);
+
   auto it = std::find(detection_tasks_.begin(), detection_tasks_.end(), detection_task);
   if(it != detection_tasks_.end()) {
+    (*it)->StopDetectionTask();
     detection_tasks_.erase(it);
   } else {
     throw std::invalid_argument("This detection taks does not exist");
@@ -106,7 +108,12 @@ MediaStreamer::Ptr DetectionTaskManager::GetMediaStreamerFromDetectionTask(
 //
 Filterchain::Ptr DetectionTaskManager::GetFilterchainFromDetectionTask(
     const std::string &name) const noexcept {
-  return GetDetectionTask(name)->GetFilterchain();
+      auto detectTsk = GetDetectionTask(name);
+      if( detectTsk == nullptr)
+      {
+        return nullptr;
+      }
+  return detectTsk->GetFilterchain();
 }
 
 //------------------------------------------------------------------------------
