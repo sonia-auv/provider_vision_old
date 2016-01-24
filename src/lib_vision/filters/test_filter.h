@@ -44,11 +44,17 @@ class TestFilter : public Filter {
 
   explicit TestFilter(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        enable_("Enable", true, &parameters_) {
+        enable_("Enable", true, &parameters_),
+        header_("Header", "test", &parameters_),
+        x_("X", 0, -512, 512, &parameters_),
+        y_("Y", 0, -512, 512, &parameters_),
+        w_("Width", 200, 0, 1024, &parameters_),
+        h_("Height", 200, 0, 1024, &parameters_),
+        angle_("Angle", 0, 0, 360, &parameters_),
+        specField1_("SpecialField_1", "sf1", &parameters_),
+        specField2_("SpecialField_2", "sf2", &parameters_)
+  {
     SetName("TestFilter");
-
-    target_.SetTarget(0,1,30, 50, 60, "spec1", "spec2");
-
   }
 
   virtual ~TestFilter() {}
@@ -61,9 +67,13 @@ class TestFilter : public Filter {
 
   virtual void Execute(cv::Mat &image) {
     if (enable_()) {
-        static unsigned int i = 0;
-        target_.SetCenter(++i, 1);
-        NotifyString(std::string("test:") + target_.OutputString());
+      target_.SetTarget(x_.GetValue(), y_.GetValue(),
+                        w_.GetValue(), h_.GetValue(),
+                        angle_.GetValue(),
+                        specField1_.GetValue(),
+                        specField2_.GetValue());
+
+      NotifyString(header_.GetValue() + ":" + target_.OutputString());
     }
   }
 
@@ -72,6 +82,9 @@ class TestFilter : public Filter {
   // P R I V A T E   M E M B E R S
 
   Parameter<bool> enable_;
+  RangedParameter<int> x_,y_,w_,h_,angle_;
+  Parameter<std::string> header_, specField1_, specField2_;
+
   Target target_;
 };
 
