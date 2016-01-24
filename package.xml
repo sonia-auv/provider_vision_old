@@ -10,8 +10,7 @@
 
   <build_depend>roscpp</build_depend>
   <build_depend>roslaunch</build_depend>
-  <build_depend>std_msgs</build_depend>
-  <build_depend>message_generation</build_depend>
+  <build_depend>sonia_msgs</build_depend>
   <build_depend>image_transport</build_depend>
   <build_depend>cv_bridge</build_depend>
   <build_depend>lib_vision</build_depend>
@@ -20,11 +19,9 @@
 
   <run_depend>roscpp</run_depend>
   <run_depend>roslaunch</run_depend>
-  <run_depend>std_msgs</run_depend>
-  <run_depend>message_runtime</run_depend>
+  <run_depend>sonia_msgs</run_depend>
   <run_depend>image_transport</run_depend>
   <run_depend>cv_bridge</run_depend>
-  <run_depend>lib_atlas</run_depend>
   <run_depend>lib_vision</run_depend>
   <run_depend>libdc1394-22-dev</run_depend>
 </package>

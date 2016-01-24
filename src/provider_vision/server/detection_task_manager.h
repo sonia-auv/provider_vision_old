@@ -40,9 +40,9 @@ class DetectionTaskManager {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  void StartDetectionTask(MediaStreamer::Ptr media_streamer,
-                          Filterchain::Ptr filterchain,
-                          const std::string &execution_name);
+  std::string StartDetectionTask(MediaStreamer::Ptr media_streamer,
+                                 Filterchain::Ptr filterchain,
+                                 const std::string &execution_name);
 
   void StopDetectionTask(const std::string &execution_name);
 

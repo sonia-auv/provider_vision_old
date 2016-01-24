@@ -30,12 +30,13 @@ DetectionTaskManager::~DetectionTaskManager() {}
 
 //------------------------------------------------------------------------------
 //
-void DetectionTaskManager::StartDetectionTask(
+std::string DetectionTaskManager::StartDetectionTask(
     MediaStreamer::Ptr media_streamer, Filterchain::Ptr filterchain,
     const std::string &execution_name) {
   if (execution_name.empty()) {
     throw std::invalid_argument("The detection task name is not valid");
   }
+  // Makes sure we have no detection task of that name.
   DetectionTask::Ptr task = GetDetectionTask(execution_name);
   if (task == nullptr) {
     task = std::make_shared<DetectionTask>(media_streamer, filterchain,
@@ -45,6 +46,7 @@ void DetectionTaskManager::StartDetectionTask(
   } else {
     throw std::logic_error("This detection task already exist.");
   }
+  return task->GetDetectionTaskName();
 }
 
 //------------------------------------------------------------------------------
@@ -52,9 +54,11 @@ void DetectionTaskManager::StartDetectionTask(
 void DetectionTaskManager::StopDetectionTask(
     const std::string &execution_name) {
   auto detection_task = GetDetectionTask(execution_name);
+
   auto it = std::find(detection_tasks_.begin(), detection_tasks_.end(),
                       detection_task);
   if (it != detection_tasks_.end()) {
+    (*it)->StopDetectionTask();
     detection_tasks_.erase(it);
   } else {
     throw std::invalid_argument("This detection taks does not exist");
@@ -102,14 +106,22 @@ size_t DetectionTaskManager::GetAllDetectionTasksCount() const noexcept {
 //
 MediaStreamer::Ptr DetectionTaskManager::GetMediaStreamerFromDetectionTask(
     const std::string &name) const noexcept {
-  return GetDetectionTask(name)->GetMediaStreamer();
+  auto task = GetDetectionTask(name);
+  if (task == nullptr) {
+    throw std::runtime_error("Task does not exist: " + name);
+  }
+  return task->GetMediaStreamer();
 }
 
 //------------------------------------------------------------------------------
 //
 Filterchain::Ptr DetectionTaskManager::GetFilterchainFromDetectionTask(
     const std::string &name) const noexcept {
-  return GetDetectionTask(name)->GetFilterchain();
+  auto detectTsk = GetDetectionTask(name);
+  if (detectTsk == nullptr) {
+    return nullptr;
+  }
+  return detectTsk->GetFilterchain();
 }
 
 //------------------------------------------------------------------------------

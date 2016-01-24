@@ -73,9 +73,10 @@ void DetectionTask::StopDetectionTask() {
   if (!IsRunning()) {
     throw std::logic_error("This detection task is not running.");
   }
+  Stop();
+  result_publisher_.shutdown();
   media_streamer_->Detach(*this);
   image_publisher_.Stop();
-  Stop();
 }
 
 //------------------------------------------------------------------------------
@@ -112,41 +113,51 @@ void DetectionTask::OnSubjectNotify(atlas::Subject<const cv::Mat &> &subject,
 //
 void DetectionTask::Run() {
   while (!MustStop()) {
-    // Prevent to process data twice for fast processing
-    if (!new_image_ready_) {
-      atlas::MilliTimer::Sleep(1);
-      continue;
-    }
-    newest_image_mutex_.lock();
-    image_being_processed_ = newest_image_.clone();
-    new_image_ready_ = false;
-    newest_image_mutex_.unlock();
+    try {
+      // Prevent to process data twice for fast processing
+      if (!new_image_ready_) {
+        atlas::MilliTimer::Sleep(1);
+        continue;
+      }
+      newest_image_mutex_.lock();
+      image_being_processed_ = newest_image_.clone();
+      new_image_ready_ = false;
+      newest_image_mutex_.unlock();
 
-    if (!returning_orinal_image_) {
-      std::string return_string;
+      if (!returning_orinal_image_) {
+        std::string return_string;
+        return_string =
+            filterchain_->ExecuteFilterChain(image_being_processed_);
 
-      return_string = filterchain_->ExecuteFilterChain(image_being_processed_);
+        // We don't want to send stuff for nothing.
+        if (!image_being_processed_.empty()) {
+          if (image_being_processed_.depth() != CV_8U) {
+            image_being_processed_.convertTo(image_being_processed_, CV_8U);
+          }
 
-      // We don't want to send stuff for nothing.
-      if (!image_being_processed_.empty()) {
-        if (image_being_processed_.depth() != CV_8U) {
-          image_being_processed_.convertTo(image_being_processed_, CV_8U);
+          if (image_being_processed_.channels() == 1) {
+            cv::cvtColor(image_being_processed_, image_being_processed_,
+                         CV_GRAY2BGR);
+          }
+          try {
+            image_publisher_.Write(image_being_processed_);
+          } catch (std::exception &e) {
+            // Sync issue... gotta go testing, will solve another time (famous
+            // last word)
+            // Throw me rocks...
+            // signed Jeremie St-Jules
+          }
         }
-
-        if (image_being_processed_.channels() == 1) {
-          cv::cvtColor(image_being_processed_, image_being_processed_,
-                       CV_GRAY2BGR);
+        if (return_string != "") {
+          std_msgs::String msg;
+          msg.data = return_string.c_str();
+          result_publisher_.publish(msg);
         }
-
+      } else {
         image_publisher_.Write(image_being_processed_);
       }
-      if (return_string != "") {
-        std_msgs::String msg;
-        msg.data = return_string.c_str();
-        result_publisher_.publish(msg);
-      }
-    } else {
-      image_publisher_.Write(image_being_processed_);
+    } catch (std::exception &e) {
+      ROS_ERROR("CATCHED ERROR IN DETEC TASK");
     }
   }
 }

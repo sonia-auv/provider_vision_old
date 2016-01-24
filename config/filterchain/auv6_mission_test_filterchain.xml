@@ -1,7 +1,15 @@
 <?xml version="1.0"?>
 <Filterchain>
-	<Filter_0 value="MissionTestFakeString">
-		<Enable value="true" />
-		<String_to_return value="buoy:10,20,30,40,50,red," />
-	</Filter_0>
+    <Filter_0 value="TestFilter">
+        <Enable value="1" />
+        <X value="0" />
+        <Y value="0" />
+        <Width value="200" />
+        <Height value="200" />
+        <Angle value="360" />
+        <Header value="test" />
+        <SpecialField_1 value="sf1" />
+        <SpecialField_2 value="sf2" />
+    </Filter_0>
+
 </Filterchain>

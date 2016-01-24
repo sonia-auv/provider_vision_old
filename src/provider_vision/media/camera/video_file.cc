@@ -82,7 +82,7 @@ void VideoFile::SetStreamingModeOn() { status_ = Status::STREAMING; }
 
 //------------------------------------------------------------------------------
 //
-void VideoFile::SetStreamingModeOff() { status_ = Status::OPEN; }
+void VideoFile::SetStreamingModeOff() { status_ = Status::CLOSE; }
 
 //------------------------------------------------------------------------------
 //

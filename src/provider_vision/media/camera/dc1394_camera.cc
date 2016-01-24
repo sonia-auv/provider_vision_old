@@ -45,12 +45,20 @@ void DC1394Camera::Open() {
 
   std::lock_guard<std::mutex> guard(cam_access_);
 
-  SetFormat7();
-  err = dc1394_capture_setup(dc1394_camera_, DMA_BUFFER,
-                             DC1394_CAPTURE_FLAGS_DEFAULT);
-  if (err != DC1394_SUCCESS) {
-    throw std::runtime_error(dc1394_error_get_string(err));
-  }
+  try {
+    SetFormat7();
+    err = dc1394_capture_setup(dc1394_camera_, DMA_BUFFER,
+                               DC1394_CAPTURE_FLAGS_DEFAULT);
+    if (err != DC1394_SUCCESS) {
+      throw std::runtime_error(dc1394_error_get_string(err));
+    }
+  } catch (std::exception &e) {
+    ROS_ERROR("%s", e.what());
+    ROS_ERROR(
+        "Issue with format 7 setting... cannot recover, should close"
+        "the node and do firewire magic to reset the camera.");
+  };
+
   status_ = Status::OPEN;
 }
 
@@ -411,7 +419,7 @@ float DC1394Camera::ConvertFramerateToFloat(uint32_t val) const {
 void DC1394Camera::SetFormat7() {
   if (dc1394_camera_ == nullptr) {
     // TODO Jérémie St-Jules: Change the exception error.
-    throw std::runtime_error("An error occurenced");
+    throw std::runtime_error("Received null pointer");
   }
 
   dc1394error_t err;
@@ -428,14 +436,14 @@ void DC1394Camera::SetFormat7() {
 
   if (err != DC1394_SUCCESS) {
     // TODO Jérémie St-Jules: Change the exception error.
-    throw std::runtime_error("An error occurenced");
+    throw std::runtime_error("Setting iso speed failed");
   }
 
   // Sets the mode to format 7
   err = dc1394_video_set_mode(dc1394_camera_, DC1394_VIDEO_MODE_FORMAT7_0);
   if (err != DC1394_SUCCESS) {
     // TODO Jérémie St-Jules: Change the exception error.
-    throw std::runtime_error("An error occurenced");
+    throw std::runtime_error("Setting format 7 failed");
   }
 
   // Sets the image width and height. Depending if Unibrain or Guppy Pro, we use
@@ -454,7 +462,7 @@ void DC1394Camera::SetFormat7() {
 
   if (err != DC1394_SUCCESS) {
     // TODO Jérémie St-Jules: Change the exception error.
-    throw std::runtime_error("An error occurenced");
+    throw std::runtime_error("Setting image size and roi failed");
   }
 }
 

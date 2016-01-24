@@ -31,7 +31,7 @@ MediaManager::MediaManager() noexcept : contexts_() {
   std::vector<CameraConfiguration> list = configHandler.ParseConfiguration();
   // Each time you have a new driver (Gige, usb, etc.) add it to
   // the list here.
-  contexts_.push_back(std::make_shared<WebcamContext>());
+  // contexts_.push_back(std::make_shared<WebcamContext>());
   contexts_.push_back(std::make_shared<DC1394Context>());
   contexts_.push_back(std::make_shared<FileContext>());
 
@@ -104,34 +104,25 @@ MediaStreamer::Ptr MediaManager::StartStreamingMedia(
 void MediaManager::StopStreamingMedia(const std::string &media) noexcept {
   MediaStreamer::Ptr streamer = GetMediaStreamer(media);
   StopStreamingMedia(streamer);
+  RemoveMediaStreamer(media);
 }
 
 //------------------------------------------------------------------------------
 //
 void MediaManager::StopStreamingMedia(
     const MediaStreamer::Ptr &streamer) noexcept {
-  assert(streamer != nullptr);
+  if (streamer == nullptr) {
+    ROS_ERROR("Trying to stop streaming media but is null");
+    return;
+  }
+  if (streamer->ObserverCount() > 1) {
+    ROS_INFO(
+        "Not stopping the media because at least another observer is using "
+        "it.");
+    return;
+  }
   if (streamer->IsStreaming()) {
     streamer->StopStreaming();
-  }
-}
-
-//------------------------------------------------------------------------------
-//
-void MediaManager::StopStreamingMediaIfNoListener(
-    const std::string &media) noexcept {
-  MediaStreamer::Ptr streamer = GetMediaStreamer(media);
-  StopStreamingMediaIfNoListener(streamer);
-}
-
-//------------------------------------------------------------------------------
-//
-void MediaManager::StopStreamingMediaIfNoListener(
-    const MediaStreamer::Ptr &streamer) noexcept {
-  assert(streamer != nullptr);
-  // Check to make sure no other task is using this media.
-  if (streamer->ObserverCount() == 0) {
-    StopStreamingMedia(streamer);
   }
 }
 

@@ -63,14 +63,16 @@ void MediaStreamer::StartStreaming() {
 //------------------------------------------------------------------------------
 //
 void MediaStreamer::StopStreaming() {
-  if (IsStreaming()) {
-    ROS_INFO_NAMED(LOOP_TAG, "Stopping streaming on camera");
-    StopRecording();
-    media_->StopStreaming();
-  }
-
   if (IsRecording()) {
     StopRecording();
+  }
+  if (IsStreaming()) {
+    ROS_INFO("Stopping streaming on camera");
+    try {
+      media_->StopStreaming();
+      Stop();
+    } catch (std::exception &e) {
+    }
   }
 }
 

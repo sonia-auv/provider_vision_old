@@ -1,9 +1,0 @@
-# service to get the value of a  parameter of a media (camera mostly)
-
-string media_name
-
-string param_name
-
----
-
-float32 value

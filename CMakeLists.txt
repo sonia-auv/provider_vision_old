@@ -32,7 +32,7 @@ set(provider_vision_SRC_DIR "src")
 # C A T K I N   C O N F I G U R A T I O N
 
 find_package(catkin REQUIRED COMPONENTS
-    std_msgs
+    sonia_msgs
     roscpp
     message_generation
     message_runtime
@@ -47,46 +47,17 @@ find_package(DC1394 REQUIRED)
 find_package(OpenCV REQUIRED)
 
 #===============================================================================
-# G E N E R A T E   M E S S A G E S   &   S E R V I C E S
-
-add_service_files(
-    DIRECTORY srv
-    FILES
-    copy_filterchain.srv
-    execute_cmd.srv
-    copy_filterchain.srv
-    get_filterchain_filter.srv
-    get_filterchain_filter_all_param.srv
-    get_filterchain_filter_param.srv
-    get_information_list.srv
-    get_media_param_list.srv
-    get_media_param.srv
-    manage_filterchain_filter.srv
-    manage_filterchain.srv
-    save_filterchain.srv
-    set_filterchain_filter_order.srv
-    set_filterchain_filter_param.srv
-    set_media_param.srv
-    get_filterchain_from_execution.srv
-    get_media_from_execution.srv
-    set_filterchain_filter_observer.srv
-)
-
-generate_messages(DEPENDENCIES std_msgs)
-
-#===============================================================================
 # C R E A T E   C A T K I N   P A C K A G E
 
 catkin_package(
     INCLUDE_DIRS ${provider_vision_SRC_DIR}
     LIBRARIES
     CATKIN_DEPENDS
-    std_msgs
+    sonia_msgs
     roscpp
     image_transport
     cv_bridge
     roslaunch
-    lib_atlas
     lib_vision
 )
 
@@ -124,7 +95,6 @@ include_directories(
 add_executable(provider_vision_node ${provider_vision_SRC_DIR}/provider_vision/main.cc
     ${provider_vision_FILES}
     )
-
 # Link all the used libraries to the previsouly created executable.
 target_link_libraries(provider_vision_node
     dc1394

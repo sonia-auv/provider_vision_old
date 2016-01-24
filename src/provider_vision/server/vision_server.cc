@@ -104,24 +104,41 @@ bool VisionServer::CallbackExecutionCMD(execute_cmd::Request &rqst,
       Filterchain::Ptr filterchain =
           filterchain_mgr_.InstanciateFilterchain(rqst.filterchain_name);
 
-      detection_task_mgr_.StartDetectionTask(media, filterchain,
-                                             rqst.node_name);
+      rep.response = detection_task_mgr_.StartDetectionTask(media, filterchain,
+                                                            rqst.node_name);
+      ROS_INFO("Starting topic: %s", rep.response.c_str());
     } catch (const std::invalid_argument &e) {
       ROS_ERROR("%s", e.what());
+      rep.response = "";
       return false;
     } catch (const std::exception &e) {
       ROS_ERROR("Starting execution error: %s", e.what());
+      rep.response = "";
       return false;
     }
   } else if (rqst.cmd == rqst.STOP) {
     try {
+      auto media_streamer =
+          detection_task_mgr_.GetMediaStreamerFromDetectionTask(rqst.node_name);
       auto fc =
           detection_task_mgr_.GetFilterchainFromDetectionTask(rqst.node_name);
-      detection_task_mgr_.StopDetectionTask(rqst.node_name);
+      if (media_streamer == nullptr) {
+        ROS_ERROR("Streamer does not exist, cannot close execution.");
+        return false;
+      }
+      if (fc == nullptr) {
+        ROS_ERROR("Filterchain does not exist, cannot close execution.");
+        return false;
+      }
+
+      std::string media_name = media_streamer->GetMediaName();
+
+      media_mgr_.StopStreamingMedia(media_name);
+
       filterchain_mgr_.StopFilterchain(fc);
-      // TODO jsprevost : Assert that there is no execution with this media
-      // currently running
-      media_mgr_.StopStreamingMedia(rqst.media_name);
+
+      detection_task_mgr_.StopDetectionTask(rqst.node_name);
+
     } catch (const std::exception &e) {
       ROS_ERROR("Closing execution error: %s", e.what());
     }
