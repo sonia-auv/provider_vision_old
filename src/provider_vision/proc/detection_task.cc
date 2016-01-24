@@ -73,9 +73,10 @@ void DetectionTask::StopDetectionTask() {
   if (!IsRunning()) {
     throw std::logic_error("This detection task is not running.");
   }
+  Stop();
+  result_publisher_.shutdown();
   media_streamer_->Detach(*this);
   image_publisher_.Stop();
-  Stop();
 }
 
 //------------------------------------------------------------------------------
