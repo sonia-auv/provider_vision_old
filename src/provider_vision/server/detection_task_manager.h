@@ -94,13 +94,13 @@ class DetectionTaskManager {
    * Get the media streamer object from the detection task.
    */
   MediaStreamer::Ptr GetMediaStreamerFromDetectionTask(
-      const std::string &name) const noexcept;
+      const std::string &name) const;
 
   /**
    * Get the filter chain object from the detection task.
    */
   Filterchain::Ptr GetFilterchainFromDetectionTask(
-      const std::string &name) const noexcept;
+      const std::string &name) const;
 
  private:
   //==========================================================================
