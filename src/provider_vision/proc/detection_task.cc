@@ -12,7 +12,8 @@
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 #include "provider_vision/proc/detection_task.h"
-
+#include "lib_vision/target.h"
+#include "sonia_msgs/VisionTarget.h"
 namespace provider_vision {
 
 //==============================================================================
@@ -38,7 +39,7 @@ DetectionTask::DetectionTask(MediaStreamer::Ptr acquisition_loop,
       close_attemps_(3) {
   assert(filterchain);
   assert(acquisition_loop);
-  result_publisher_ = ros::NodeHandle().advertise<std_msgs::String>(
+  result_publisher_ = ros::NodeHandle().advertise<sonia_msgs::VisionTarget>(
       kRosNodeName + name_ + "_result", 50);
 }
 
@@ -125,9 +126,7 @@ void DetectionTask::Run() {
       newest_image_mutex_.unlock();
 
       if (!returning_orinal_image_) {
-        std::string return_string;
-        return_string =
-            filterchain_->ExecuteFilterChain(image_being_processed_);
+          filterchain_->ExecuteFilterChain(image_being_processed_);
 
         // We don't want to send stuff for nothing.
         if (!image_being_processed_.empty()) {
@@ -148,10 +147,21 @@ void DetectionTask::Run() {
             // signed Jeremie St-Jules
           }
         }
-        if (return_string != "") {
-          std_msgs::String msg;
-          msg.data = return_string.c_str();
-          result_publisher_.publish(msg);
+        lib_vision::GlobalParamHandler::Ptr paramHandler = filterchain_->GetParameterHandler();
+        if( paramHandler )
+        {
+          lib_vision::TargetQueue targetQueue = paramHandler->getTargetQueue();
+          if (!targetQueue.empty() ) {
+            while( !targetQueue.empty() )
+            {
+              sonia_msgs::VisionTarget msg;
+              lib_vision::Target target = targetQueue.front();
+              target.SetMessage(msg);
+              result_publisher_.publish(msg);
+              targetQueue.pop();
+            }
+            assert(paramHandler->getTargetQueue().size() != 0);
+          }
         }
       } else {
         image_publisher_.Write(image_being_processed_);

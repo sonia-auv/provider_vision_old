@@ -9,10 +9,7 @@
  * found in the LICENSE file.
  */
 
-#include "provider_vision/utils/pugixml.h"
 #include "provider_vision/proc/filterchain.h"
-#include "provider_vision/utils/config.h"
-#include <ros/ros.h>
 
 namespace provider_vision {
 
@@ -103,8 +100,7 @@ bool Filterchain::Deserialize() {
 
 //------------------------------------------------------------------------------
 //
-std::string Filterchain::ExecuteFilterChain(cv::Mat &image) {
-  std::string returnString;
+void Filterchain::ExecuteFilterChain(cv::Mat &image) {
   cv::Mat imageToProcess = image.clone();
   if (!imageToProcess.empty()) {
     param_handler_.setOriginalImage(imageToProcess);
@@ -128,10 +124,7 @@ std::string Filterchain::ExecuteFilterChain(cv::Mat &image) {
       ROS_ERROR_NAMED(filterchainID.c_str(), "Error in image processing: %s",
                       e.what());
     };
-    returnString = param_handler_.getNotifyString();
-    param_handler_.clearNotifyString();
   }
-  return returnString;
 }
 
 //------------------------------------------------------------------------------
