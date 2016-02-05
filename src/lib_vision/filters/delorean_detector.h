@@ -28,7 +28,7 @@
 
 #include <memory>
 #include <lib_vision/algorithm/general_function.h>
-#include <lib_vision/algorithm/target.h>
+#include <lib_vision/target.h>
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/object_full_data.h>
 #include <lib_vision/algorithm/object_feature_factory.h>
@@ -170,16 +170,17 @@ class DeloreanDetector : public Filter {
                                center_small.x - center_big.x)) /
                   (2 * 3.1416);
         }
-        SetCameraOffset(&center_big, image.rows, image.cols);
-        target.SetTarget(center_big.x, center_big.y, object_big->GetLength(),
-                         object_big->GetLength(), float(angle));
-        std::stringstream ss;
+
         if (output_train_()) {
-          ss << "train:" << target.OutputString();
+          target.SetTarget("train",center_big.x, center_big.y, object_big->GetLength(),
+                           object_big->GetLength(), float(angle),
+          image.rows, image.cols);
         } else {
-          ss << "delorean:" << target.OutputString();
+          target.SetTarget("delorean", center_big.x, center_big.y, object_big->GetLength(),
+                           object_big->GetLength(), float(angle),
+          image.rows, image.cols);
         }
-        NotifyString(ss.str().c_str());
+        NotifyTarget(target);
         if (debug_contour_()) {
           cv::circle(output_image_, objVec_big[0]->GetCenter(), 3,
                      CV_RGB(0, 255, 0), 3);

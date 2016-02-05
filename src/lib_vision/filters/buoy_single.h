@@ -32,7 +32,7 @@
 #include <lib_vision/algorithm/object_feature_factory.h>
 #include <lib_vision/algorithm/object_full_data.h>
 #include <lib_vision/algorithm/general_function.h>
-#include <lib_vision/algorithm/target.h>
+#include <lib_vision/target.h>
 #include <lib_vision/algorithm/contour_list.h>
 
 namespace lib_vision {
@@ -165,9 +165,8 @@ class BuoySingle : public Filter {
       if (objectVec.size() != 0) {
         Target buoy;
         std::stringstream message;
-        buoy.SetTarget(objectVec[0]);
-        message << "buoy_" << color_() << ":" << buoy.OutputString();
-        NotifyString(message.str());
+        buoy.SetTarget(objectVec[0], "buoy");
+        NotifyTarget(buoy);
 
         if (debug_good_contour_()) {
           objectVec[0]->GetContourCopy().DrawContours(output_image_,

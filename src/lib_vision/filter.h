@@ -33,6 +33,7 @@
 #include <lib_vision/parameter.h>
 #include <lib_vision/ranged_parameter.h>
 #include <lib_vision/global_param_handler.h>
+#include <lib_vision/target.h>
 
 namespace lib_vision {
 
@@ -67,10 +68,8 @@ class Filter {
   void SetParameterValue(const std::string &name, std::string value);
 
   // Wrapper for a call to _globalParms
-  // NotifyString, to be put on the result topic
-  inline void NotifyString(const std::string &_notifyString);
-
-  inline const std::string GetNotifyString();
+  // NotifyTarget, to be put on the result topic
+  void NotifyTarget(const Target &target);
 
   void GlobalParamInteger(const std::string &name, const int value,
                           const int min, const int max);

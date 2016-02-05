@@ -29,7 +29,7 @@
 #include <memory>
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/general_function.h>
-#include <lib_vision/algorithm/target.h>
+#include <lib_vision/target.h>
 #include <lib_vision/algorithm/object_full_data.h>
 #include <lib_vision/algorithm/performance_evaluator.h>
 
@@ -115,12 +115,10 @@ class PipeDetector : public Filter {
         Target target;
         ObjectFullData::Ptr object = objVec[0];
         cv::Point center = object->GetCenter();
-        SetCameraOffset(&center, image.rows, image.cols);
-        target.SetTarget(center.x, center.y, object->GetLength(),
-                         object->GetLength(), object->GetRotatedRect().angle);
-        std::stringstream ss;
-        ss << "pipe:" << target.OutputString();
-        NotifyString(ss.str().c_str());
+        target.SetTarget("pipe", center.x, center.y, object->GetLength(),
+                         object->GetLength(), object->GetRotatedRect().angle,
+        image.rows, image.cols);
+        NotifyTarget(target);
         if (debug_contour_()) {
           cv::circle(output_image_, objVec[0]->GetCenter(), 3,
                      CV_RGB(0, 255, 0), 3);

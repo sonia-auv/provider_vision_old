@@ -30,7 +30,7 @@
 #include <string>
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/general_function.h>
-#include <lib_vision/algorithm/target.h>
+#include <lib_vision/target.h>
 #include <lib_vision/algorithm/object_full_data.h>
 #include <lib_vision/algorithm/object_ranker.h>
 
@@ -100,7 +100,7 @@ class TorpedoesDetector : public Filter {
         if (nb_of_element == 1) {
           ObjectFullData::Ptr obj = interior_squares[0];
           Target current_square_target;
-          current_square_target.SetTarget(obj);
+          current_square_target.SetTarget(obj, "torpedoes");
           current_square_target.SetSpecField_1("a");
           current_square_target.SetSpecField_2("small");
           target_vec.push_back(current_square_target);
@@ -124,12 +124,12 @@ class TorpedoesDetector : public Filter {
             big = interior_squares[0];
           }
           Target small_target, big_target;
-          small_target.SetTarget(small);
+          small_target.SetTarget(small, "torpedoes");
           small_target.SetSpecField_1("a");
           small_target.SetSpecField_2("small");
           target_vec.push_back(small_target);
 
-          big_target.SetTarget(big);
+          big_target.SetTarget(big, "torpedoes");
           big_target.SetSpecField_1("b");
           big_target.SetSpecField_2("big");
           target_vec.push_back(big_target);
@@ -156,7 +156,7 @@ class TorpedoesDetector : public Filter {
             //-------
             // B | D
             Target current_square_target;
-            current_square_target.SetTarget(inner_square);
+            current_square_target.SetTarget(inner_square, "torpedoes");
 
             // Big square
             float area_dist_from_bigger =
@@ -219,12 +219,9 @@ class TorpedoesDetector : public Filter {
         }
       }
 
-      std::stringstream message;
-      message << "torpedoes:";
       for (auto &target : target_vec) {
-        message << target.OutputString();
+        NotifyTarget(target);
       }
-      NotifyString(message.str());
 
       if (debug_contour_()) {
         cv::cvtColor(image, image, CV_GRAY2BGR);

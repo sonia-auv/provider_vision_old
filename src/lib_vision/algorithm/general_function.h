@@ -53,7 +53,7 @@ const float ACCURACY_TABLE[ACCURACY_TABLE_SIZE] = {
 std::vector<cv::Mat> GetColorPlanes(cv::Mat image);
 
 // Camera offset
-void SetCameraOffset(cv::Point *pt, int rows, int cols);
+void SetCameraOffset(cv::Point &pt, int rows, int cols);
 
 // Contours getter
 void RetrieveContours(cv::Mat image, contourList_t &contours);

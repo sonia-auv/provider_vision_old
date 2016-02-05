@@ -28,9 +28,11 @@
 
 #include <memory>
 #include <string>
+#include <queue>
 #include <sstream>
 #include <lib_vision/parameter.h>
 #include <lib_vision/ranged_parameter.h>
+#include <lib_vision/target.h>
 
 namespace lib_vision {
 
@@ -45,7 +47,7 @@ class GlobalParamHandler {
   // P U B L I C   C / D T O R S
 
   explicit GlobalParamHandler()
-      : _notify_string(std::string()), _params_vec(), _original_image() {}
+      : _vision_target(), _params_vec(), _original_image() {}
 
   // Since we erase everything, it is easier to delete objet first
   // then calling clear method, since erase invalidate pointer AND
@@ -69,16 +71,20 @@ class GlobalParamHandler {
   // BY THE FILTERS.
   inline void setOriginalImage(cv::Mat image) { _original_image = image; }
 
-  // Notify string
-  inline void setNotifyString(const std::string &notifyString) {
-    _notify_string += notifyString;
+  // Target related
+  inline void addTarget(const Target &target) {
+    _vision_target.push( target);
   }
 
-  inline const std::string getNotifyString() { return _notify_string; }
+  // REturns reference so we can pop when we read.
+  inline TargetQueue &getTargetQueue() {
+    return _vision_target;
+  }
 
-  inline const void clearNotifyString() {
-    _notify_string = "";
-    return;
+  inline const void clearTarget() {
+    while( !_vision_target.empty() ){
+      _vision_target.pop();
+    }
   }
 
   // Params
@@ -113,7 +119,7 @@ class GlobalParamHandler {
   static const char SEPARATOR = ';';
 
  private:
-  std::string _notify_string;
+  std::queue<Target> _vision_target;
   // Using pointer here to preserve the object if
   // the vector is moved in memory.
   std::vector<ParameterInterface *> _params_vec;

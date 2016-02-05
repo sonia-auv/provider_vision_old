@@ -28,6 +28,7 @@
 #endif
 
 #include <lib_atlas/macros.h>
+#include <lib_vision/target.h>
 
 namespace lib_vision {
 
@@ -98,14 +99,8 @@ ATLAS_INLINE void Filter::SetName(const std::string &name) { name_ = name; }
 
 //------------------------------------------------------------------------------
 //
-ATLAS_INLINE void Filter::NotifyString(const std::string &_notifyString) {
-  global_params_.setNotifyString(_notifyString);
-}
-
-//------------------------------------------------------------------------------
-//
-ATLAS_INLINE const std::string Filter::GetNotifyString() {
-  return global_params_.getNotifyString();
+ATLAS_INLINE void Filter::NotifyTarget(const Target &target) {
+  global_params_.addTarget(target);
 }
 
 //------------------------------------------------------------------------------

@@ -55,7 +55,7 @@ class MissionTestFakeString : public Filter {
 
   virtual void Execute(cv::Mat &image) {
     if (enable_()) {
-      NotifyString(_string());
+      NotifyTarget(Target());
     }
   }
 

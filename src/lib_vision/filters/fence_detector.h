@@ -30,7 +30,7 @@
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/object_full_data.h>
 #include <lib_vision/algorithm/general_function.h>
-#include <lib_vision/algorithm/target.h>
+#include <lib_vision/target.h>
 #include <lib_vision/algorithm/object_feature_factory.h>
 
 namespace lib_vision {
@@ -184,10 +184,9 @@ class FenceDetector : public Filter {
 
       Target fence;
       cv::Point center = (rect_from_hori_bar.center);
-      SetCameraOffset(&center, image.rows, image.cols);
-      fence.SetTarget(center.x, center.y, rect_from_hori_bar.size.width,
+      fence.SetTarget("fence", center.x, center.y, rect_from_hori_bar.size.width,
                       rect_from_hori_bar.size.height, rect_from_hori_bar.angle,
-                      "", "");
+                      image.rows, image.cols);
 
       int y_coord_from_bottom = CalculateYFromBottomBar(
           rect_from_hori_bar.size.height, rect_from_hori_bar.center.y);
@@ -197,7 +196,7 @@ class FenceDetector : public Filter {
         if (debug_contour_()) {
           cv::circle(output_image_, center, 5, CV_RGB(0, 255, 255), 20);
         }
-        SetCameraOffset(&center, image.rows, image.cols);
+        SetCameraOffset(center, image.rows, image.cols);
 
         fence.SetCenter(center);
 
@@ -243,7 +242,7 @@ class FenceDetector : public Filter {
           if (debug_contour_()) {
             cv::circle(output_image_, center, 5, CV_RGB(0, 255, 255), 20);
           }
-          SetCameraOffset(&center, image.rows, image.cols);
+          SetCameraOffset(center, image.rows, image.cols);
           fence.SetCenter(center);
         } else if (bar_founded == 1) {
           int y = (y_coord_from_bottom + final_vert_bar[0].y) / 2;
@@ -251,21 +250,18 @@ class FenceDetector : public Filter {
           if (debug_contour_()) {
             cv::circle(output_image_, center, 5, CV_RGB(0, 255, 255), 20);
           }
-          SetCameraOffset(&center, image.rows, image.cols);
+          SetCameraOffset(center, image.rows, image.cols);
           fence.SetCenter(center);
         } else {
           center = cv::Point(rect_from_hori_bar.center.x, y_coord_from_bottom);
           if (debug_contour_()) {
             cv::circle(output_image_, center, 5, CV_RGB(0, 255, 255), 20);
           }
-          SetCameraOffset(&center, image.rows, image.cols);
+          SetCameraOffset(center, image.rows, image.cols);
           fence.SetCenter(center);
         }
       }
-
-      std::stringstream message;
-      message << "fence_big:" << fence.OutputString();
-      NotifyString(message.str());
+      NotifyTarget(fence);
     }
     if (debug_contour_()) {
       output_image_.copyTo(image);

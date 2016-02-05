@@ -52,9 +52,9 @@ std::vector<cv::Mat> GetColorPlanes(cv::Mat image) {
 
 //------------------------------------------------------------------------------
 //
-void SetCameraOffset(cv::Point *pt, int rows, int cols) {
-  pt->x = pt->x - (cols / 2);
-  pt->y = -(pt->y - (rows / 2));
+void SetCameraOffset(cv::Point &pt, int rows, int cols) {
+  pt.x = pt.x - (cols / 2);
+  pt.y = -(pt.y - (rows / 2));
 }
 
 //------------------------------------------------------------------------------

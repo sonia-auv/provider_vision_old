@@ -28,7 +28,7 @@
 
 #include <memory>
 #include <lib_vision/filter.h>
-#include <lib_vision/algorithm/target.h>
+#include <lib_vision/target.h>
 
 namespace lib_vision {
 
@@ -67,13 +67,14 @@ class TestFilter : public Filter {
 
   virtual void Execute(cv::Mat &image) {
     if (enable_()) {
-      target_.SetTarget(x_.GetValue(), y_.GetValue(),
+      target_.SetTarget("test_filter", x_.GetValue(), y_.GetValue(),
                         w_.GetValue(), h_.GetValue(),
                         angle_.GetValue(),
+                        100, 100,
                         specField1_.GetValue(),
                         specField2_.GetValue());
 
-      NotifyString(header_.GetValue() + ":" + target_.OutputString());
+      NotifyTarget(target_);
     }
   }
 

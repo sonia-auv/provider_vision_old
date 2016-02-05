@@ -29,7 +29,7 @@
 #include <memory>
 #include <lib_vision/filter.h>
 #include <lib_vision/algorithm/general_function.h>
-#include <lib_vision/algorithm/target.h>
+#include <lib_vision/target.h>
 #include <lib_vision/algorithm/object_full_data.h>
 #include <lib_vision/algorithm/performance_evaluator.h>
 
@@ -164,13 +164,11 @@ class TrainDetector : public Filter {
         ObjectFullData::Ptr object =
             std::make_shared<ObjectFullData>(originalImage, image, obj1);
         cv::Point center = object->GetCenter();
-        SetCameraOffset(&center, image.rows, image.cols);
-        target.SetTarget(center.x, center.y, object->GetLength(),
+        target.SetTarget("train", center.x, center.y, object->GetLength(),
                          object->GetLength(),
-                         abs(object->GetRotatedRect().angle - 90));
-        std::stringstream ss;
-        ss << "train:" << target.OutputString();
-        NotifyString(ss.str().c_str());
+                         abs(object->GetRotatedRect().angle - 90),
+                         image.rows, image.cols);
+        NotifyTarget(target);
         if (debug_contour_()) {
           contourList_t tmp;
           tmp.push_back(obj1);
