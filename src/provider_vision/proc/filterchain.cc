@@ -64,7 +64,7 @@ bool Filterchain::Serialize() {
     }
     ++i;
   }
-  auto save_path = kConfigPath + name_ + kFilterchainExt;
+  auto save_path = kFilterchainPath + name_ + kFilterchainExt;
   doc.save_file(save_path.c_str());
   return true;
 }
