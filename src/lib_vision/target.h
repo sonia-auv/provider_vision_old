@@ -98,7 +98,7 @@ class Target {
   // P R I V A T E   M E M B E R S
   cv::Point center_;
 
-  cv::Size2d dimension_;
+  cv::Size_<float> dimension_;
 
   float angle_;
 
