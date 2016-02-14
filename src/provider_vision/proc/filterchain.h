@@ -13,10 +13,16 @@
 #define PROVIDER_VISION_PROC_FILTERCHAIN_H_
 
 #include <opencv2/opencv.hpp>
+#include <ros/ros.h>
+#include <queue>
+
+#include "provider_vision/utils/pugixml.h"
 #include <lib_vision/filter_factory.h>
 #include <lib_vision/global_param_handler.h>
 #include <lib_vision/filter.h>
 #include "provider_vision/utils/serializable.h"
+#include "provider_vision/utils/config.h"
+#include "lib_vision/target.h"
 
 namespace provider_vision {
 
@@ -72,7 +78,7 @@ class Filterchain : public Serializable {
    */
   bool ContainsFilter(const std::string &filter_name) const;
 
-  std::string ExecuteFilterChain(cv::Mat &image);
+  void ExecuteFilterChain(cv::Mat &image);
 
   void SetObserver(const size_t &index);
 
@@ -158,7 +164,7 @@ inline void Filterchain::SetObserver(const size_t &index) {
 //------------------------------------------------------------------------------
 //
 inline lib_vision::GlobalParamHandler::Ptr Filterchain::GetParameterHandler() {
-  return lib_vision::GlobalParamHandler::Ptr(&param_handler_);
+  return std::make_shared<lib_vision::GlobalParamHandler>(param_handler_);
 }
 
 //------------------------------------------------------------------------------
