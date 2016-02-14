@@ -49,6 +49,7 @@ void DC1394Camera::Open() {
     SetFormat7();
     err = dc1394_capture_setup(dc1394_camera_, DMA_BUFFER,
                                DC1394_CAPTURE_FLAGS_DEFAULT);
+    SetCameraParams();
     if (err != DC1394_SUCCESS) {
       throw std::runtime_error(dc1394_error_get_string(err));
     }
