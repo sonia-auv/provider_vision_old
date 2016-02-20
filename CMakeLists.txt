@@ -101,3 +101,5 @@ add_dependencies(${PROJECT_NAME}_node ${PROJECT_NAME}_generate_messages_cpp soni
 if (CATKIN_ENABLE_TESTING AND ${CMAKE_CURRENT_SOURCE_DIR}/test)
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/test)
 endif ()
+
+catkin_add_gtest(utest_vision_server test/vision_server_test.cc)

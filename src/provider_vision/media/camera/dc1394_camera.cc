@@ -252,6 +252,7 @@ void DC1394Camera::SetFeature(const Feature &feat, float value) {
       error = dc1394_feature_whitebalance_set_value(dc1394_camera_, blue, red);
       break;
     case Feature::ERROR_FEATURE:
+    default:
       break;
   }
 

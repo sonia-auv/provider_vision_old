@@ -7,185 +7,123 @@
  * Use of this source code is governed by the MIT license that can be
  * found in the LICENSE file.
  */
-
+#include <thread>
 #include <gtest/gtest.h>
 #include <opencv2/opencv.hpp>
 #include "provider_vision/utils/config.h"
 #include "provider_vision/server/media_manager.h"
-#include "provvider_vision/
+#include <sonia_msgs/execute_cmd.h>
+#include <provider_vision/server/vision_server.h>
+
+
+static const std::string node_prefix ("/provider_vision/");
+static const std::string test_dir(std::string(getenv("ROS_SONIA_WS")) + std::string("/src/provider_vision/test/"));
+class VisionServerThread
+{
+ public:
+  VisionServerThread(provider_vision::VisionServer &visionServer)
+      :stop_(false),
+       visionServer_(visionServer),
+       vision_server_thread(this->RunVisionServer)
+  {
+  }
+  void Stop(){stop_ = true;}
+ private:
+  void RunVisionServer()
+  {
+    ros::Rate loop_rate(15);
+    while(!stop_)
+    {
+      ros::spinOnce();
+      loop_rate.sleep();
+    }
+  }
+
+  bool stop_;
+  std::thread vision_server_thread;
+  provider_vision::VisionServer &visionServer_;
+};
+
 /**
- * Test class that subscribe to a topic and replace its image member with the
- * newest image sent by the ROS publisher.
+ * Test class that subscribe to a service and
+ * send command to the vision server.
  */
-class TopicListener {
+class ServiceSubscriber {
  public:
   /**
    * Constructor of the listener that takes the current node handler as well as
    * the name of the topic to subscribe to.
    */
-  explicit TopicListener(const std::string &topic_name)
-      : image_transport(*nh),
-        continue_(true) {
-    subscriber = image_transport.subscribe(
-        topic_name, 1, &TopicListener::MessageCallBack, this);
+  explicit ServiceSubscriber(const std::string &topic_name) {
+    ros::NodeHandle n;
+    client_ = n.serviceClient<sonia_msgs::execute_cmd>(topic_name);
   }
 
   /**
    * Callback that is used by ros to give us the image message.
    */
-  void MessageCallBack(const sensor_msgs::ImageConstPtr &msg) {
-    cv_bridge::CvImageConstPtr ptr =
-        cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
-    image = ptr->image;
+  bool CallServer(const sonia_msgs::execute_cmdRequest &request,
+                  sonia_msgs::execute_cmdResponse &response) {
+    return client_.call(request, response);
   }
-
-  /**
-   * Run while ROS is running
-   */
-  void Run() {
-    while(ros::ok() && continue_) {
-      ros::spinOnce();
-    }
-  }
-
-  /**
-   * Last image getter
-   */
-  const cv::Mat &GetImage() const {
-    return image;
-  }
-
-  /**
-   * Stop the execution of the Run method.
-   */
-  void Stop() noexcept {
-    continue_ = false;
-  }
-
  private:
-  cv::Mat image;
-  image_transport::ImageTransport image_transport;
-  image_transport::Subscriber subscriber;
-  std::atomic_bool continue_;
+  ros::ServiceClient client_;
 };
 
-TEST(DetectionTaskManager, start_detection) {
-provider_vision::FilterchainManager fmgr;
-auto fc = fmgr.InstanciateFilterchain("image_feed");
+TEST(VisionServer, core_test) {
 
-std::stringstream filepath;
-filepath << provider_vision::kProjectPath << "test/test_image.png";
+  provider_vision::VisionServer provider_vision;
+  VisionServerThread visionServerThread(provider_vision);
+  ServiceSubscriber serviceSubscriber("/provider_vision/execute_cmd");
 
-provider_vision::MediaManager mmgr;
-mmgr.OpenMedia(filepath.str());
-auto streamer = mmgr.StartStreamingMedia(filepath.str());
+  sonia_msgs::execute_cmdRequest request;
+  sonia_msgs::execute_cmdResponse response;
 
-provider_vision::DetectionTaskManager dmgr;
-dmgr.StartDetectionTask(streamer, fc, "test");
 
-// Checking that the detection has been created in the system.
-ASSERT_EQ(dmgr.GetAllDetectionTasksName().size(), 1);
-ASSERT_EQ(*(dmgr.GetAllDetectionTasksName().begin()), "test");
+  // Stop a non existing detection task
+  request.cmd = request.STOP;
+  request.node_name = node_prefix + "INVALID";
+  request.filterchain_name = "INVALID";
+  request.media_name = "INVALID";
 
-// Check that starting exiting detection task throws.
-ASSERT_THROW(dmgr.StartDetectionTask(nullptr, nullptr, "test"), std::logic_error);
+  serviceSubscriber.CallServer(request, response);
+  ASSERT_STREQ(response.response, "");
 
-// Check that starting exiting detection task throws.
-ASSERT_THROW(dmgr.StartDetectionTask(streamer, fc, ""), std::invalid_argument);
+  // Call a media that doesn't exist.
+  request.cmd = request.START;
+  request.node_name = node_prefix + "Testing";
+  request.filterchain_name = "camera_feed";
+  request.media_name = "INVALID";
 
-std::vector<std::string> nodes;
-ros::this_node::getAdvertisedTopics(nodes);
-std::stringstream topic_name;
-topic_name << provider_vision::kRosNodeName << "test" << "_result";
+  serviceSubscriber.CallServer(request, response);
+  ASSERT_STREQ(response.response, "");
 
-// Check that a publisher has been created for this detection task
-ASSERT_NE(std::find(nodes.begin(), nodes.end(), topic_name.str()), nodes.end());
-ASSERT_NE(std::find(nodes.begin(), nodes.end(), provider_vision::kRosNodeName + "test" + "_image"), nodes.end());
+  // Call a filterchain that doesn't exist.
+  request.filterchain_name = "INVALID";
+  request.media_name = test_dir + "test_image.png";
+  serviceSubscriber.CallServer(request, response);
+  ASSERT_STREQ(response.response, "");
 
-TopicListener listener(provider_vision::kRosNodeName + "test" + "_image");
-std::thread thread(&TopicListener::Run, &listener);
-std::this_thread::sleep_for(std::chrono::milliseconds(150));
-auto origin = cv::imread(filepath.str(), CV_LOAD_IMAGE_ANYDEPTH | CV_LOAD_IMAGE_ANYCOLOR);
+  // Create an execution that exist.
+  request.filterchain_name = "camera_feed";
+  serviceSubscriber.CallServer(request, response);
+  ASSERT_STREQ(response.response, "Testing");
 
-// Check if the image send on ROS is the same that the original one.
-// Allow some difference due to the compression.
-ASSERT_EQ(cv::mean(listener.GetImage())[0], cv::mean(origin)[0]);
-listener.Stop();
-thread.join();
-}
+  // Close the execution.
+  request.cmd = request.STOP;
+  serviceSubscriber.CallServer(request, response);
+  ASSERT_STREQ(response.response, "");
 
-TEST(DetectionTaskManager, stop_detection) {
-provider_vision::FilterchainManager fmgr;
-auto fc = fmgr.InstanciateFilterchain("image_feed");
+  // Close the execution (again)
+  serviceSubscriber.CallServer(request, response);
+  ASSERT_STREQ(response.response, "");
 
-std::stringstream filepath;
-filepath << provider_vision::kProjectPath << "test/test_image.png";
 
-provider_vision::MediaManager mmgr;
-mmgr.OpenMedia(filepath.str());
-auto streamer = mmgr.StartStreamingMedia(filepath.str());
-
-provider_vision::DetectionTaskManager dmgr;
-dmgr.StartDetectionTask(streamer, fc, "test");
-dmgr.StopDetectionTask("test");
-
-// Checking that the detection has been created in the system.
-ASSERT_EQ(dmgr.GetAllDetectionTasksName().size(), 0);
-
-// Check that detection task didn't change behavior of streamer.
-ASSERT_TRUE(streamer->IsStreaming());
-
-// Check that stoping non existing detection task throws.
-ASSERT_THROW(dmgr.StopDetectionTask("test"), std::invalid_argument);
-}
-
-TEST(DetectionTaskManager, change_observer) {
-provider_vision::FilterchainManager fmgr;
-auto fc = fmgr.InstanciateFilterchain("camera_feed");
-
-std::stringstream filepath;
-filepath << provider_vision::kProjectPath << "test/test_image.png";
-
-provider_vision::MediaManager mmgr;
-mmgr.OpenMedia(filepath.str());
-auto streamer = mmgr.StartStreamingMedia(filepath.str());
-
-provider_vision::DetectionTaskManager dmgr;
-dmgr.StartDetectionTask(streamer, fc, "test");
-
-TopicListener listener(provider_vision::kRosNodeName + "test" + "_image");
-
-std::thread thread(&TopicListener::Run, &listener);
-std::this_thread::sleep_for(std::chrono::milliseconds(150));
-
-cv::Mat first_image;
-listener.GetImage().copyTo(first_image);
-
-dmgr.ChangeReturnImageToOrigin("test");
-std::this_thread::sleep_for(std::chrono::milliseconds(150));
-
-cv::Mat second_image;
-listener.GetImage().copyTo(second_image);
-
-// Check that the observer has changed.
-ASSERT_FALSE(std::equal(first_image.begin<uchar>(), first_image.end<uchar>(), second_image.begin<uchar>()));
-
-dmgr.ChangeReturnImageToFilterchain("test");
-std::this_thread::sleep_for(std::chrono::milliseconds(150));
-
-cv::Mat third_image;
-listener.GetImage().copyTo(third_image);
-
-// Check that the observer has changed to the filterchain output
-ASSERT_TRUE(std::equal(first_image.begin<uchar>(), first_image.end<uchar>(), third_image.begin<uchar>()));
-
-listener.Stop();
-thread.join();
 }
 
 int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
   ros::init(argc, argv, "provider_vision");
-  nh = std::make_shared<ros::NodeHandle>("~");
+
   return RUN_ALL_TESTS();
 }

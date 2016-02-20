@@ -107,7 +107,7 @@ void Filterchain::ExecuteFilterChain(cv::Mat &image) {
 
     auto it = filters_.begin();
     try {
-      int index = 0;
+      size_t index = 0;
       for (; it != filters_.end(); ++it) {
         if (!imageToProcess.empty()) {
           (*it)->Execute(imageToProcess);

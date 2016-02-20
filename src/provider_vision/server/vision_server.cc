@@ -299,7 +299,7 @@ bool VisionServer::CallbackGetFilter(get_filterchain_filter::Request &rqst,
   if (filterchain != nullptr) {
     auto filters = filterchain->GetAllFilters();
     std::vector<std::string> filter_names;
-    for (int i = 0; i < filters.size(); ++i) {
+    for (size_t i = 0; i < filters.size(); ++i) {
       filter_names.push_back(
           ConstructFilterUIName(filters.at(i)->GetName(), i));
     }
