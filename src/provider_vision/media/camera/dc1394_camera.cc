@@ -49,6 +49,7 @@ void DC1394Camera::Open() {
     SetFormat7();
     err = dc1394_capture_setup(dc1394_camera_, DMA_BUFFER,
                                DC1394_CAPTURE_FLAGS_DEFAULT);
+    SetCameraParams();
     if (err != DC1394_SUCCESS) {
       throw std::runtime_error(dc1394_error_get_string(err));
     }
@@ -459,6 +460,9 @@ void DC1394Camera::SetFormat7() {
                                DC1394_USE_MAX_AVAIL,  // use max packet size
                                0, 0,                  // left, top
                                w, h);                 // width, height
+
+
+
 
   if (err != DC1394_SUCCESS) {
     // TODO Jérémie St-Jules: Change the exception error.
