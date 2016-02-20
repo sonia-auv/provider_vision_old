@@ -45,12 +45,12 @@ class TestFilter : public Filter {
   explicit TestFilter(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
         enable_("Enable", true, &parameters_),
-        header_("Header", "test", &parameters_),
         x_("X", 0, -512, 512, &parameters_),
         y_("Y", 0, -512, 512, &parameters_),
         w_("Width", 200, 0, 1024, &parameters_),
         h_("Height", 200, 0, 1024, &parameters_),
         angle_("Angle", 0, 0, 360, &parameters_),
+        header_("Header", "test", &parameters_),
         specField1_("SpecialField_1", "sf1", &parameters_),
         specField2_("SpecialField_2", "sf2", &parameters_)
   {
@@ -67,10 +67,10 @@ class TestFilter : public Filter {
 
   virtual void Execute(cv::Mat &image) {
     if (enable_()) {
-      target_.SetTarget("test_filter", x_.GetValue(), y_.GetValue(),
+      target_.SetTarget("test_filter", x_.GetValue()-1000/2, y_.GetValue(),
                         w_.GetValue(), h_.GetValue(),
                         angle_.GetValue(),
-                        100, 100,
+                        1000, -1000-(1000/2),
                         specField1_.GetValue(),
                         specField2_.GetValue());
 
