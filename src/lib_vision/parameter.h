@@ -165,9 +165,9 @@ class Parameter : public ParameterInterface {
 
   std::string name_;
 
-  std::string description_;
-
   Tp_ value_;
+
+  std::string description_;
 };
 
 }  // namespace lib_vision

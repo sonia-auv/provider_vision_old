@@ -212,7 +212,7 @@ inline void ImageAccumulatorBuffer::FillWithBlank() {
   // It is possible to call fillWithBlank when the buffer is active,
   // we must clear it before pushing back new values.
   image_vec_.clear();
-  for (int i = 0; i < buffer_size_; i++) {
+  for (size_t i = 0; i < buffer_size_; i++) {
     image_vec_.push_back(zero);
   }
 }
