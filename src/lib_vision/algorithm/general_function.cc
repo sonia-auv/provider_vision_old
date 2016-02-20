@@ -440,11 +440,11 @@ bool IsRectangle(contour_t &contour, unsigned int degreeAcuracy) {
   // Stores the lines between the points.
   std::vector<cv::Vec3f> vertices, longestVertices;
   std::vector<std::pair<unsigned int, cv::Vec3f> > sortedVertices;
-  unsigned int j, size;
+  size_t j, size;
   for (j = 0, size = contour.size(); j < size; j++) {
     // Go to next point. If over the contour size,
     // get the first one to close the contour
-    int k = j + 1;
+    size_t k = j + 1;
     if (k >= size) k = 0;
     cv::Point val = contour[k] - contour[j];
     sortedVertices.push_back(

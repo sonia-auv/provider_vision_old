@@ -114,23 +114,23 @@ class ObjectBasicData {
   const cv::Mat &GetOriginalImage();
 
  private:
-  //============================================================================
   // P R I V A T E   M E M B E R S
 
+  //============================================================================
   std::map<OBJECT_DATA, bool> is_calculated_map_;
-
-  int vote_count_;
 
   float area_, convex_hull_area_, circumference_, distance_from_center_;
 
   // Correspond to the centile rank
   float area_ranking_, length_ranking_;
+
   RotRect rect_;
   cv::Rect up_right_rect_;
   cv::Moments cv_moments_;
   std::vector<cv::Mat> planes_;
-
   cv::Mat original_image_, binary_image_;
+
+  int vote_count_;
   Contour contour_;
 };
 

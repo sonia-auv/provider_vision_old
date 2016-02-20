@@ -109,7 +109,7 @@ void ImageAccumulatorBuffer::AverageAllSameWeight(cv::Mat &resultImage) {
 
   cv::Mat adderImage =
       cv::Mat::zeros(image_size_, CV_32FC(CV_MAT_CN(image_type_)));
-  for (int i = 0; i < buffer_size_; i++) {
+  for (size_t i = 0; i < buffer_size_; i++) {
     cv::add(adderImage, image_vec_[i], adderImage);
   }
   // Divide and cast into the image type given in at construction or resizing.
@@ -122,7 +122,7 @@ void ImageAccumulatorBuffer::AverageAllSameWeight(cv::Mat &resultImage) {
 //
 void ImageAccumulatorBuffer::AverageIncrease50Percent(cv::Mat &resultImage) {
   resultImage = image_vec_[GetIndexFromOldest(0)].clone();
-  for (int i = 1; i < buffer_size_; i++) {
+  for (size_t i = 1; i < buffer_size_; i++) {
     cv::addWeighted(resultImage, 0.5, image_vec_[GetIndexFromOldest(i)], 0.5, 0,
                     resultImage);
   }
@@ -140,7 +140,7 @@ void ImageAccumulatorBuffer::AverageAccumulateWithResultingWeight(
 
   float resultingWeight = 0.50f;
   // Start at one, we already did the 0 index (newest)
-  for (int i = 1; i < buffer_size_; i++) {
+  for (size_t i = 1; i < buffer_size_; i++) {
     // Addjust the weight, we are one element older now then before,
     // so the weight of this element is half the precendent.
     resultingWeight = resultingWeight / 2;

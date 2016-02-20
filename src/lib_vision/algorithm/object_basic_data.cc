@@ -38,14 +38,14 @@ ObjectBasicData::ObjectBasicData(const cv::Mat &originalImage,
     : area_(0.0f),
       convex_hull_area_(0.0f),
       circumference_(0.0f),
+      distance_from_center_(10000.0f),
+      area_ranking_(0.0f),
+      length_ranking_(0.0f),
       planes_(NB_OF_PLANE),
       original_image_(originalImage),
       binary_image_(binaryImage),
-      contour_(contour),
-      area_ranking_(0.0f),
-      length_ranking_(0.0f),
-      distance_from_center_(10000.0f),
-      vote_count_(0) {
+      vote_count_(0),
+      contour_(contour) {
   is_calculated_map_.insert(std::pair<OBJECT_DATA, bool>(AREA, false));
   is_calculated_map_.insert(std::pair<OBJECT_DATA, bool>(CONVEX_HULL, false));
   is_calculated_map_.insert(std::pair<OBJECT_DATA, bool>(CIRCUMFERENCE, false));

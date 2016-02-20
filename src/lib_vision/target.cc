@@ -28,9 +28,12 @@ namespace lib_vision {
 
 //------------------------------------------------------------------------------
 //
-Target::Target() : header_(""),
-                   center_(0,0), dimension_(0,0), angle_(0),
-                   special_field_1_(""), special_field_2_("") {
+Target::Target() : center_(0,0),
+                   dimension_(0,0),
+                   angle_(0),
+                   header_(""),
+                   special_field_1_(""),
+                   special_field_2_("") {
 }
 
 //------------------------------------------------------------------------------

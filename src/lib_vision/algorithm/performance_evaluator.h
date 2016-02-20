@@ -64,12 +64,12 @@ class PerformanceEvaluator {
   void UpdateStartTime();
 
  private:
-  //============================================================================
   // P R I V A T E   M E M B E R S
 
-  double start_tick_count_;
-
+  //============================================================================
   double tick_frequency_;
+
+  double start_tick_count_;
 };
 
 //==============================================================================

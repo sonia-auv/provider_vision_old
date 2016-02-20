@@ -149,11 +149,6 @@ class ImageAccumulatorBuffer {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  /**
-   * Pointer to the method to use for averaging the frame
-   */
-  void (ImageAccumulatorBuffer::*average_method_)(cv::Mat &);
-
   size_t buffer_size_;
 
   double individual_weight_;
@@ -165,6 +160,11 @@ class ImageAccumulatorBuffer {
   int image_type_;
 
   cv::Size image_size_;
+
+  /**
+   * Pointer to the method to use for averaging the frame
+   */
+  void (ImageAccumulatorBuffer::*average_method_)(cv::Mat &);
 };
 
 //==============================================================================
