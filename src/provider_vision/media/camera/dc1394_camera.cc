@@ -461,6 +461,9 @@ void DC1394Camera::SetFormat7() {
                                0, 0,                  // left, top
                                w, h);                 // width, height
 
+
+
+
   if (err != DC1394_SUCCESS) {
     // TODO Jérémie St-Jules: Change the exception error.
     throw std::runtime_error("Setting image size and roi failed");
