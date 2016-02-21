@@ -77,10 +77,55 @@ class BaseCamera : public BaseMedia {
 
   virtual float GetSaturationValue() const = 0;
 
+  virtual float GetLuminance() const {}
+
+  virtual float SetGainValue() const {}
+
+  virtual float SetGammaValue() const {}
+
+  virtual float SetExposureValue() const {}
+
+  virtual float SetSaturationValue() const {}
+
+  virtual float SetLuminance() const {}
+
   //==========================================================================
   // P R O T E C T E D   M E M B E R S
 
   CameraUndistordMatrices undistord_matrix_;
+
+ private:
+
+  //==========================================================================
+  // P R I V A T E   M E M B E R S
+
+  typedef struct
+  {
+    double dState; // Last position input
+    double iState; // Integrator state
+    double iMax, iMin; // Maximum and minimum allowable integrator state
+    double iGain, // integral gain
+        pGain, // proportional gain
+        dGain; // derivative gain
+  } SPid;
+
+  //==========================================================================
+  // P R I V A T E   F U N C T I O N
+
+  double UpdatePID(SPid * pid, double error, double position)
+  {
+    double pTerm, dTerm, iTerm;
+    pTerm = pid->pGain * error;
+    // calculate the proportional term
+    // calculate the integral state with appropriate limiting
+    pid->iState += error;
+    if (pid->iState > pid->iMax) pid->iState = pid->iMax;
+    else if (pid->iState < pid->iMin) pid->iState = pid->iMin;
+    iTerm = pid->iGain * pid->iState; // calculate the integral term
+    dTerm = pid->dGain * (pid->dState - position);
+    pid->dState = position;
+    return pTerm + dTerm + iTerm;
+  }
 };
 
 //==============================================================================
