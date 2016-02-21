@@ -69,7 +69,7 @@ class BaseCamera : public BaseMedia {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void SetFeature(const Feature &feat, float value);
+  virtual void SetFeature(const Feature &feat, float value = 0);
 
   virtual float GetFeature(const Feature &feat) const;
 
@@ -79,29 +79,53 @@ class BaseCamera : public BaseMedia {
   //==========================================================================
   // P R O T E C T E D   M E T H O D S
 
+  virtual void SetGainAuto() = 0;
+
+  virtual void SetGainMan() = 0;
+
+  virtual void SetGainValue(float value) = 0;
+
   virtual float GetGainValue() const = 0;
+
+  virtual void SetGammaValue(float value) = 0;
 
   virtual float GetGammaValue() const = 0;
 
+  virtual void SetExposureValue(float value) = 0;
+
   virtual float GetExposureValue() const = 0;
 
-  virtual float SetSaturationValue(float value) = 0;
+  virtual void SetSaturationValue(float value) = 0;
+
   virtual float GetSaturationValue() const = 0;
 
-  virtual float SetShutter(float value) = 0;
-  virtual float GetShutter() const = 0;
+  virtual void SetShutterValue(float value) = 0;
 
-  virtual float GetLuminance() const = 0;
+  virtual void SetShutterAuto() = 0;
 
-  virtual float SetGainValue() const = 0;
+  virtual void SetShutterMan() = 0;
 
-  virtual float SetGammaValue() const = 0;
+  virtual float GetShutterMode() const = 0;
 
-  virtual float SetExposureValue() const = 0;
+  virtual float GetShutterValue() const = 0;
 
-  virtual float SetSaturationValue() const = 0;
+  virtual void SetFrameRateValue(float value) = 0;
 
-  virtual float SetLuminance() const = 0;
+  virtual float GetFrameRateValue() const = 0;
+
+  virtual void SetWhiteBalanceAuto() = 0;
+
+  virtual void SetWhiteBalanceMan() = 0;
+
+  virtual float GetWhiteBalanceMode() const = 0;
+
+  virtual void SetWhiteBalanceRedValue(float value) = 0;
+
+  virtual void SetWhiteBalanceBlueValue(float value) = 0;
+
+  virtual float GetWhiteBalanceRed() const = 0;
+
+  virtual float GetWhiteBalanceBlue() const = 0;
 
   //==========================================================================
   // P R O T E C T E D   M E M B E R S

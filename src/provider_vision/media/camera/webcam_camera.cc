@@ -81,21 +81,101 @@ void WebcamCamera::NextImage(cv::Mat &image) {
 
 //------------------------------------------------------------------------------
 //
-void WebcamCamera::SetFeature(const Feature &feat, float value) {
-  // For now we do not handle setting a feature on the webcam camera, it might
-  // come later.
+float WebcamCamera::GetGainValue() const {
+  throw std::runtime_error("This feature is not supported with this camera");
 }
 
 //------------------------------------------------------------------------------
 //
-float WebcamCamera::GetFeature(const Feature &feat) const { return 0.0f; }
+float WebcamCamera::GetGammaValue() const {throw std::runtime_error("This feature is not supported with this camera");}
 
-float WebcamCamera::GetGainValue() const { return 0.0f; }
+//------------------------------------------------------------------------------
+//
+float WebcamCamera::GetExposureValue() const {throw std::runtime_error("This feature is not supported with this camera");}
 
-float WebcamCamera::GetGammaValue() const { return 0.0f; }
+//------------------------------------------------------------------------------
+//
+float WebcamCamera::GetSaturationValue() const {throw std::runtime_error("This feature is not supported with this camera");}
 
-float WebcamCamera::GetExposureValue() const { return 0.0f; }
+//------------------------------------------------------------------------------
+//
+ void WebcamCamera::SetGainAuto() {throw std::runtime_error("This feature is not supported with this camera");}
 
-float WebcamCamera::GetSaturationValue() const { return 0.0f; }
+//------------------------------------------------------------------------------
+//
+ void WebcamCamera::SetGainMan() {throw std::runtime_error("This feature is not supported with this camera");}
+
+//------------------------------------------------------------------------------
+//
+ void WebcamCamera::SetGainValue(float value) {throw std::runtime_error("This feature is not supported with this camera");}
+
+//------------------------------------------------------------------------------
+//
+ void WebcamCamera::SetGammaValue(float value) {throw std::runtime_error("This feature is not supported with this camera");}
+
+//------------------------------------------------------------------------------
+//
+ void WebcamCamera::SetExposureValue(float value) {throw std::runtime_error("This feature is not supported with this camera");}
+
+//------------------------------------------------------------------------------
+//
+ void WebcamCamera::SetSaturationValue(float value) {throw std::runtime_error("This feature is not supported with this camera");}
+
+//------------------------------------------------------------------------------
+//
+ void WebcamCamera::SetShutterValue(float value) {throw std::runtime_error("This feature is not supported with this camera");}
+
+//------------------------------------------------------------------------------
+//
+ void WebcamCamera::SetShutterAuto() {throw std::runtime_error("This feature is not supported with this camera");}
+
+//------------------------------------------------------------------------------
+//
+ void WebcamCamera::SetShutterMan() {throw std::runtime_error("This feature is not supported with this camera");}
+
+//------------------------------------------------------------------------------
+//
+ float WebcamCamera::GetShutterMode() const {throw std::runtime_error("This feature is not supported with this camera");}
+
+//------------------------------------------------------------------------------
+//
+ float WebcamCamera::GetShutterValue() const {throw std::runtime_error("This feature is not supported with this camera");}
+
+//------------------------------------------------------------------------------
+//
+ void WebcamCamera::SetFrameRateValue(float value) {throw std::runtime_error("This feature is not supported with this camera");}
+
+//------------------------------------------------------------------------------
+//
+ float WebcamCamera::GetFrameRateValue() const {throw std::runtime_error("This feature is not supported with this camera");}
+
+//------------------------------------------------------------------------------
+//
+ void WebcamCamera::SetWhiteBalanceAuto() {throw std::runtime_error("This feature is not supported with this camera");}
+
+//------------------------------------------------------------------------------
+//
+ void WebcamCamera::SetWhiteBalanceMan() {throw std::runtime_error("This feature is not supported with this camera");}
+
+//------------------------------------------------------------------------------
+//
+ float WebcamCamera::GetWhiteBalanceMode() const {throw std::runtime_error("This feature is not supported with this camera");}
+
+//------------------------------------------------------------------------------
+//
+ void WebcamCamera::SetWhiteBalanceRedValue(float value) {throw std::runtime_error("This feature is not supported with this camera");}
+
+//------------------------------------------------------------------------------
+//
+ void WebcamCamera::SetWhiteBalanceBlueValue(float value) {throw std::runtime_error("This feature is not supported with this camera");}
+
+//------------------------------------------------------------------------------
+//
+ float WebcamCamera::GetWhiteBalanceRed() const {throw std::runtime_error("This feature is not supported with this camera");}
+
+//------------------------------------------------------------------------------
+//
+ float WebcamCamera::GetWhiteBalanceBlue() const {throw std::runtime_error("This feature is not supported with this camera");}
+
 
 }  // namespace provider_vision
