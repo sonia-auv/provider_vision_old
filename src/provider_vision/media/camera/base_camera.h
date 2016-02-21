@@ -49,6 +49,16 @@ class BaseCamera : public BaseMedia {
     SATURATION
   };
 
+  struct SPid
+  {
+    double dState; // Last position input
+    double iState; // Integrator state
+    double iMax, iMin; // Maximum and minimum allowable integrator state
+    double iGain, // integral gain
+        pGain, // proportional gain
+        dGain; // derivative gain
+  };
+
   //==========================================================================
   // P U B L I C   C / D T O R S
 
@@ -59,9 +69,9 @@ class BaseCamera : public BaseMedia {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void SetFeature(const Feature &feat, float value) = 0;
+  virtual void SetFeature(const Feature &feat, float value);
 
-  virtual float GetFeature(const Feature &feat) const = 0;
+  virtual float GetFeature(const Feature &feat) const;
 
   bool HasArtificialFramerate() const override;
 
@@ -75,19 +85,23 @@ class BaseCamera : public BaseMedia {
 
   virtual float GetExposureValue() const = 0;
 
+  virtual float SetSaturationValue(float value) = 0;
   virtual float GetSaturationValue() const = 0;
 
-  virtual float GetLuminance() const {}
+  virtual float SetShutter(float value) = 0;
+  virtual float GetShutter() const = 0;
 
-  virtual float SetGainValue() const {}
+  virtual float GetLuminance() const = 0;
 
-  virtual float SetGammaValue() const {}
+  virtual float SetGainValue() const = 0;
 
-  virtual float SetExposureValue() const {}
+  virtual float SetGammaValue() const = 0;
 
-  virtual float SetSaturationValue() const {}
+  virtual float SetExposureValue() const = 0;
 
-  virtual float SetLuminance() const {}
+  virtual float SetSaturationValue() const = 0;
+
+  virtual float SetLuminance() const = 0;
 
   //==========================================================================
   // P R O T E C T E D   M E M B E R S
@@ -95,37 +109,10 @@ class BaseCamera : public BaseMedia {
   CameraUndistordMatrices undistord_matrix_;
 
  private:
-
   //==========================================================================
-  // P R I V A T E   M E M B E R S
+  // P R I V A T E   M E T H O D S
 
-  typedef struct
-  {
-    double dState; // Last position input
-    double iState; // Integrator state
-    double iMax, iMin; // Maximum and minimum allowable integrator state
-    double iGain, // integral gain
-        pGain, // proportional gain
-        dGain; // derivative gain
-  } SPid;
-
-  //==========================================================================
-  // P R I V A T E   F U N C T I O N
-
-  double UpdatePID(SPid * pid, double error, double position)
-  {
-    double pTerm, dTerm, iTerm;
-    pTerm = pid->pGain * error;
-    // calculate the proportional term
-    // calculate the integral state with appropriate limiting
-    pid->iState += error;
-    if (pid->iState > pid->iMax) pid->iState = pid->iMax;
-    else if (pid->iState < pid->iMin) pid->iState = pid->iMin;
-    iTerm = pid->iGain * pid->iState; // calculate the integral term
-    dTerm = pid->dGain * (pid->dState - position);
-    pid->dState = position;
-    return pTerm + dTerm + iTerm;
-  }
+  double UpdatePID(const std::shared_ptr<SPid> &pid, double error, double position) ATLAS_NOEXCEPT;
 };
 
 //==============================================================================

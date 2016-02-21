@@ -57,10 +57,6 @@ class DC1394Camera : public BaseCamera {
 
   void NextImage(cv::Mat &img) override;
 
-  void SetFeature(const Feature &feat, float value) override;
-
-  float GetFeature(const Feature &feat) const override;
-
   // Sets to different streaming format.
   void SetFormat7();
 
