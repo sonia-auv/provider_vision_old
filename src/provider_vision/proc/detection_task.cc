@@ -126,7 +126,7 @@ void DetectionTask::Run() {
       newest_image_mutex_.unlock();
 
       if (!returning_orinal_image_) {
-          filterchain_->ExecuteFilterChain(image_being_processed_);
+        filterchain_->ExecuteFilterChain(image_being_processed_);
 
         // We don't want to send stuff for nothing.
         if (!image_being_processed_.empty()) {
@@ -147,13 +147,12 @@ void DetectionTask::Run() {
             // signed Jeremie St-Jules
           }
         }
-        lib_vision::GlobalParamHandler::Ptr paramHandler = filterchain_->GetParameterHandler();
-        if( paramHandler )
-        {
+        lib_vision::GlobalParamHandler::Ptr paramHandler =
+            filterchain_->GetParameterHandler();
+        if (paramHandler) {
           lib_vision::TargetQueue targetQueue = paramHandler->getTargetQueue();
-          if (!targetQueue.empty() ) {
-            while( !targetQueue.empty() )
-            {
+          if (!targetQueue.empty()) {
+            while (!targetQueue.empty()) {
               sonia_msgs::VisionTarget msg;
               lib_vision::Target target = targetQueue.front();
               target.SetMessage(msg);

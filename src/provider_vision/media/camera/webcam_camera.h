@@ -72,11 +72,10 @@ class WebcamCamera : public BaseCamera, private cv::VideoCapture {
    */
   void NextImage(cv::Mat &image) override;
 
-
  protected:
   float GetGainValue() const override;
   void SetGainAuto() override;
-  void SetGainMan() override;
+  void SetGainManual() override;
   void SetGainValue(float value) override;
 
   float GetGammaValue() const override;
@@ -90,7 +89,7 @@ class WebcamCamera : public BaseCamera, private cv::VideoCapture {
 
   void SetShutterValue(float value) override;
   void SetShutterAuto() override;
-  void SetShutterMan() override;
+  void SetShutterManual() override;
   float GetShutterMode() const override;
   float GetShutterValue() const override;
 
@@ -104,8 +103,6 @@ class WebcamCamera : public BaseCamera, private cv::VideoCapture {
   void SetWhiteBalanceBlueValue(float value) override;
   float GetWhiteBalanceRed() const override;
   float GetWhiteBalanceBlue() const override;
-
-
 };
 
 }  // namespace provider_vision

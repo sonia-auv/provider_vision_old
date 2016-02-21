@@ -41,49 +41,42 @@ void BaseCamera::SetFeature(const Feature &feat, float value) {
       SetShutterValue(value);
       break;
     case Feature::SHUTTER_AUTO:
-
       if (value > 0) {
         SetShutterAuto();
       } else {
-        //          //ROS_INFO_NAMED(ss.str(), "Setting shutter to manual");
-        SetShutterMan();
+        SetShutterManual();
       }
+      break;
+    case Feature::SHUTTER_MANUAL:
+      SetShutterManual();
       break;
     case Feature::GAIN_AUTO:
-
       if (value > 0) {
-        //          //ROS_INFO_NAMED(ss.str(), "Setting gain to auto");
         SetGainAuto();
       } else {
-        //          //ROS_INFO_NAMED(ss.str(), "Setting gain to manual");
-        SetGainMan();
+        SetGainManual();
       }
       break;
+    case Feature::GAIN_MANUAL:
+      SetGainManual();
+      break;
     case Feature::GAIN:
-      ////ROS_INFO_NAMED(ss.str(), "Setting gain to manual %f", value);
       SetGainValue(value);
       break;
     case Feature::FRAMERATE:
-      ////ROS_INFO_NAMED(sEXPOSUREs.str(), "Setting framerate to %f", value);
       SetFrameRateValue(value);
     case Feature::WHITE_BALANCE_AUTO:
       if (value > 0) {
-        ////ROS_INFO_NAMED(ss.str(), "Setting auto white balance to auto");
         SetWhiteBalanceAuto();
-
       } else {
-        ////ROS_INFO_NAMED(ss.str(), "Setting auto white balance to manual");
         SetWhiteBalanceMan();
       }
       break;
     case Feature::WHITE_BALANCE_BLUE:
-      ////ROS_INFO_NAMED(ss.str(), "Setting blue value to %f", value);
       SetWhiteBalanceBlueValue(value);
       break;
     case Feature::WHITE_BALANCE_RED:
-      ////ROS_INFO_NAMED(ss.str(), "Setting red value to %f", value);
       SetWhiteBalanceRedValue(value);
-
       break;
     case Feature::EXPOSURE:
       SetExposureValue(value);
@@ -98,13 +91,11 @@ void BaseCamera::SetFeature(const Feature &feat, float value) {
     default:
       break;
   }
-
 }
 
 //------------------------------------------------------------------------------
 //
 float BaseCamera::GetFeature(const Feature &feat) const {
-
   try {
     switch (feat) {
       case Feature::SHUTTER:
@@ -139,16 +130,18 @@ float BaseCamera::GetFeature(const Feature &feat) const {
 
 //------------------------------------------------------------------------------
 //
-double BaseCamera::UpdatePID(const std::shared_ptr<SPid> &pid, double error, double position) ATLAS_NOEXCEPT
-{
+double BaseCamera::UpdatePID(const std::shared_ptr<SPid> &pid, double error,
+                             double position) ATLAS_NOEXCEPT {
   double pTerm, dTerm, iTerm;
   pTerm = pid->pGain * error;
   // calculate the proportional term
   // calculate the integral state with appropriate limiting
   pid->iState += error;
-  if (pid->iState > pid->iMax) pid->iState = pid->iMax;
-  else if (pid->iState < pid->iMin) pid->iState = pid->iMin;
-  iTerm = pid->iGain * pid->iState; // calculate the integral term
+  if (pid->iState > pid->iMax)
+    pid->iState = pid->iMax;
+  else if (pid->iState < pid->iMin)
+    pid->iState = pid->iMin;
+  iTerm = pid->iGain * pid->iState;  // calculate the integral term
   dTerm = pid->dGain * (pid->dState - position);
   pid->dState = position;
   return pTerm + dTerm + iTerm;
