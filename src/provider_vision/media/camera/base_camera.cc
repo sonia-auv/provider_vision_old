@@ -35,61 +35,54 @@ BaseCamera::~BaseCamera() {}
 void BaseCamera::SetFeature(const Feature &feat, float value) {
   std::stringstream ss;
   ss << std::hex << config_.GetGUID() << " " << GetName();
-
-  switch (feat) {
-    case Feature::SHUTTER:
-      SetShutterValue(value);
-      break;
-    case Feature::SHUTTER_AUTO:
-      if (value > 0) {
+  try {
+    switch (feat) {
+      case Feature::SHUTTER:
+        SetShutterValue(value);
+        break;
+      case Feature::SHUTTER_AUTO:
         SetShutterAuto();
-      } else {
+        break;
+      case Feature::SHUTTER_MANUAL:
         SetShutterManual();
-      }
-      break;
-    case Feature::SHUTTER_MANUAL:
-      SetShutterManual();
-      break;
-    case Feature::GAIN_AUTO:
-      if (value > 0) {
+        break;
+      case Feature::GAIN_AUTO:
         SetGainAuto();
-      } else {
+        break;
+      case Feature::GAIN_MANUAL:
         SetGainManual();
-      }
-      break;
-    case Feature::GAIN_MANUAL:
-      SetGainManual();
-      break;
-    case Feature::GAIN:
-      SetGainValue(value);
-      break;
-    case Feature::FRAMERATE:
-      SetFrameRateValue(value);
-    case Feature::WHITE_BALANCE_AUTO:
-      if (value > 0) {
+        break;
+      case Feature::GAIN:
+        SetGainValue(value);
+        break;
+      case Feature::FRAMERATE:
+        SetFrameRateValue(value);
+      case Feature::WHITE_BALANCE_AUTO:
         SetWhiteBalanceAuto();
-      } else {
-        SetWhiteBalanceMan();
-      }
-      break;
-    case Feature::WHITE_BALANCE_BLUE:
-      SetWhiteBalanceBlueValue(value);
-      break;
-    case Feature::WHITE_BALANCE_RED:
-      SetWhiteBalanceRedValue(value);
-      break;
-    case Feature::EXPOSURE:
-      SetExposureValue(value);
-      break;
-    case Feature::GAMMA:
-      SetGammaValue(value);
-      break;
-    case Feature::SATURATION:
-      SetSaturationValue(value);
-      break;
-    case Feature::ERROR_FEATURE:
-    default:
-      break;
+        break;
+      case Feature::WHITE_BALANCE_MANUAL:
+        SetWhiteBalanceManual();
+        break;
+      case Feature::WHITE_BALANCE_BLUE:
+        SetWhiteBalanceBlueValue(value);
+        break;
+      case Feature::WHITE_BALANCE_RED:
+        SetWhiteBalanceRedValue(value);
+        break;
+      case Feature::EXPOSURE:
+        SetExposureValue(value);
+        break;
+      case Feature::GAMMA:
+        SetGammaValue(value);
+        break;
+      case Feature::SATURATION:
+        SetSaturationValue(value);
+        break;
+      case Feature::ERROR_FEATURE:
+        break;
+    }
+  } catch (const std::runtime_error &e) {
+    ROS_ERROR(e.what());
   }
 }
 
@@ -102,16 +95,18 @@ float BaseCamera::GetFeature(const Feature &feat) const {
         return GetShutterValue();
       case Feature::SHUTTER_AUTO:
         return GetShutterMode();
+      case Feature::SHUTTER_MANUAL:
+        return (static_cast<int>(GetShutterMode()) + 1) % 2;
       case Feature::FRAMERATE:
         return GetFrameRateValue();
       case Feature::WHITE_BALANCE_AUTO:
         return GetWhiteBalanceMode();
+      case Feature::WHITE_BALANCE_MANUAL:
+        return (static_cast<int>(GetWhiteBalanceMode()) + 1) % 2;
       case Feature::WHITE_BALANCE_BLUE:
         return GetWhiteBalanceBlue();
       case Feature::WHITE_BALANCE_RED:
         return GetWhiteBalanceRed();
-      case Feature::ERROR_FEATURE:
-        break;
       case Feature::GAIN:
         return GetGainValue();
       case Feature::GAMMA:
@@ -120,11 +115,13 @@ float BaseCamera::GetFeature(const Feature &feat) const {
         return GetExposureValue();
       case Feature::SATURATION:
         return GetSaturationValue();
+      case Feature::ERROR_FEATURE:
       default:
-        break;
+        return -1.0f;
     }
   } catch (const std::runtime_error &e) {
     ROS_ERROR(e.what());
+    return -1.0f;
   }
 }
 

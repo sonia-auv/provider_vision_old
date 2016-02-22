@@ -189,7 +189,7 @@ void WebcamCamera::SetWhiteBalanceAuto() {
 
 //------------------------------------------------------------------------------
 //
-void WebcamCamera::SetWhiteBalanceMan() {
+void WebcamCamera::SetWhiteBalanceManual() {
   throw std::runtime_error("This feature is not supported with this camera");
 }
 

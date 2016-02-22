@@ -43,6 +43,7 @@ class BaseCamera : public BaseMedia {
     GAIN_MANUAL,
     GAIN,
     WHITE_BALANCE_AUTO,
+    WHITE_BALANCE_MANUAL,
     WHITE_BALANCE_RED,
     WHITE_BALANCE_BLUE,
     FRAMERATE,
@@ -104,7 +105,7 @@ class BaseCamera : public BaseMedia {
   virtual float GetFrameRateValue() const = 0;
 
   virtual void SetWhiteBalanceAuto() = 0;
-  virtual void SetWhiteBalanceMan() = 0;
+  virtual void SetWhiteBalanceManual() = 0;
   virtual float GetWhiteBalanceMode() const = 0;
   virtual void SetWhiteBalanceRedValue(float value) = 0;
   virtual void SetWhiteBalanceBlueValue(float value) = 0;

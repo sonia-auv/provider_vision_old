@@ -434,7 +434,7 @@ void DC1394Camera::SetWhiteBalanceAuto() {
 
 //------------------------------------------------------------------------------
 //
-void DC1394Camera::SetWhiteBalanceMan() {
+void DC1394Camera::SetWhiteBalanceManual() {
   std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
   error = dc1394_feature_set_mode(dc1394_camera_, DC1394_FEATURE_WHITE_BALANCE,
@@ -687,30 +687,30 @@ void DC1394Camera::SetCameraParams() {
   }
   // We have a guppy
   if (std::string(dc1394_camera_->vendor).compare(std::string("AVT")) == 0) {
-    SetFeature(Feature::GAIN_AUTO, 0.0f);
+    SetFeature(Feature::GAIN_MANUAL);
     atlas::MilliTimer::Sleep(100);
     SetFeature(Feature::GAIN, 420.0f);
     atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::SHUTTER_AUTO, 0.0f);
+    SetFeature(Feature::SHUTTER_MANUAL);
     atlas::MilliTimer::Sleep(100);
     SetFeature(Feature::SHUTTER, 32.0f);
     atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::WHITE_BALANCE_AUTO, 0.0f);
+    SetFeature(Feature::WHITE_BALANCE_MANUAL);
     atlas::MilliTimer::Sleep(100);
     SetFeature(Feature::WHITE_BALANCE_BLUE, 381.0f);
     atlas::MilliTimer::Sleep(100);
     SetFeature(Feature::WHITE_BALANCE_RED, 568.0f);
     atlas::MilliTimer::Sleep(100);
   } else {
-    SetFeature(Feature::GAIN_AUTO, 0.0f);
+    SetFeature(Feature::GAIN_MANUAL);
     atlas::MilliTimer::Sleep(100);
     SetFeature(Feature::GAIN, 350.0f);
     atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::SHUTTER_AUTO, 0.0f);
+    SetFeature(Feature::SHUTTER_MANUAL);
     atlas::MilliTimer::Sleep(100);
     SetFeature(Feature::SHUTTER, 500.0f);
     atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::WHITE_BALANCE_AUTO, 0.0f);
+    SetFeature(Feature::WHITE_BALANCE_MANUAL);
     atlas::MilliTimer::Sleep(100);
     SetFeature(Feature::WHITE_BALANCE_BLUE, 412.0f);
     atlas::MilliTimer::Sleep(100);

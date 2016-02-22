@@ -99,7 +99,7 @@ class DC1394Camera : public BaseCamera {
   float GetFrameRateValue() const override;
 
   void SetWhiteBalanceAuto() override;
-  void SetWhiteBalanceMan() override;
+  void SetWhiteBalanceManual() override;
   float GetWhiteBalanceMode() const override;
   void SetWhiteBalanceRedValue(float value) override;
   void SetWhiteBalanceBlueValue(float value) override;
