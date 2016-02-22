@@ -160,6 +160,7 @@ void DC1394Camera::NextImage(cv::Mat &img) {
     status_ = Status::ERROR;
     throw std::runtime_error("The media is not accessible");
   }
+
   if (img.empty() || img.size().height == 0 || img.size().height == 0) {
     throw std::runtime_error(
         "The image is empty, there is a problem with the media");
@@ -168,108 +169,15 @@ void DC1394Camera::NextImage(cv::Mat &img) {
 
 //------------------------------------------------------------------------------
 //
-void DC1394Camera::SetFeature(const Feature &feat, float value) {
-  std::lock_guard<std::mutex> guard(cam_access_);
-  dc1394error_t error;
-  uint32_t blue, red;
-
-  std::stringstream ss;
-  ss << std::hex << config_.GetGUID() << " " << GetName();
-
-  switch (feat) {
-    case Feature::SHUTTER:
-      //        //ROS_INFO_NAMED(ss.str(), "Setting shutter to %f", value);
-      error = dc1394_feature_set_value(dc1394_camera_, DC1394_FEATURE_SHUTTER,
-                                       value);
-      break;
-    case Feature::SHUTTER_AUTO:
-
-      if (value > 0) {
-        //          //ROS_INFO_NAMED(ss.str(), "Setting shutter to auto");
-        error = dc1394_feature_set_mode(dc1394_camera_, DC1394_FEATURE_SHUTTER,
-                                        DC1394_FEATURE_MODE_AUTO);
-      } else {
-        //          //ROS_INFO_NAMED(ss.str(), "Setting shutter to manual");
-        error = dc1394_feature_set_mode(dc1394_camera_, DC1394_FEATURE_SHUTTER,
-                                        DC1394_FEATURE_MODE_MANUAL);
-      }
-      break;
-    case Feature::GAIN_AUTO:
-
-      if (value > 0) {
-        //          //ROS_INFO_NAMED(ss.str(), "Setting gain to auto");
-        error = dc1394_feature_set_mode(dc1394_camera_, DC1394_FEATURE_GAIN,
-                                        DC1394_FEATURE_MODE_AUTO);
-      } else {
-        //          //ROS_INFO_NAMED(ss.str(), "Setting gain to manual");
-        error = dc1394_feature_set_mode(dc1394_camera_, DC1394_FEATURE_GAIN,
-                                        DC1394_FEATURE_MODE_MANUAL);
-      }
-      break;
-    case Feature::GAIN:
-      ////ROS_INFO_NAMED(ss.str(), "Setting gain to manual %f", value);
-      error =
-          dc1394_feature_set_value(dc1394_camera_, DC1394_FEATURE_GAIN, value);
-      break;
-    case Feature::FRAMERATE:
-      ////ROS_INFO_NAMED(ss.str(), "Setting framerate to %f", value);
-      error =
-          dc1394_feature_set_value(dc1394_camera_, DC1394_FEATURE_FRAME_RATE,
-                                   ConvertFramerateToEnum(value));
-      uint32_t test;
-      error = dc1394_feature_get_value(dc1394_camera_,
-                                       DC1394_FEATURE_FRAME_RATE, &test);
-      std::cout << "settting to : " << value << " got "
-                << ConvertFramerateToEnum(test) << std::endl;
-      break;
-    case Feature::WHITE_BALANCE_AUTO:
-      if (value > 0) {
-        ////ROS_INFO_NAMED(ss.str(), "Setting auto white balance to auto");
-        error = dc1394_feature_set_mode(dc1394_camera_,
-                                        DC1394_FEATURE_WHITE_BALANCE,
-                                        DC1394_FEATURE_MODE_AUTO);
-      } else {
-        ////ROS_INFO_NAMED(ss.str(), "Setting auto white balance to manual");
-        error = dc1394_feature_set_mode(dc1394_camera_,
-                                        DC1394_FEATURE_WHITE_BALANCE,
-                                        DC1394_FEATURE_MODE_MANUAL);
-      }
-      break;
-    case Feature::WHITE_BALANCE_BLUE:
-      ////ROS_INFO_NAMED(ss.str(), "Setting blue value to %f", value);
-      error =
-          dc1394_feature_whitebalance_get_value(dc1394_camera_, &blue, &red);
-      if (error != DC1394_SUCCESS) break;
-      blue = static_cast<uint32_t>(value);
-      error = dc1394_feature_whitebalance_set_value(dc1394_camera_, blue, red);
-      break;
-    case Feature::WHITE_BALANCE_RED:
-      ////ROS_INFO_NAMED(ss.str(), "Setting red value to %f", value);
-      error =
-          dc1394_feature_whitebalance_get_value(dc1394_camera_, &blue, &red);
-      if (error != DC1394_SUCCESS) break;
-      red = static_cast<uint32_t>(value);
-      error = dc1394_feature_whitebalance_set_value(dc1394_camera_, blue, red);
-      break;
-    case Feature::ERROR_FEATURE:
-    default:
-      break;
-  }
-
-  if (error != DC1394_SUCCESS) {
-    throw std::runtime_error("The media is not accessible");
-  }
-}
-
-//------------------------------------------------------------------------------
-//
 float DC1394Camera::GetGainValue() const {
+  std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
   uint32_t value;
   error = dc1394_feature_get_value(dc1394_camera_, DC1394_FEATURE_GAIN, &value);
 
   if (error != DC1394_SUCCESS) {
-    return -1.0f;
+    throw std::runtime_error("Canno't get the gain value on DC1394 Camera" +
+                             static_cast<int>(error));
   }
 
   return static_cast<float>(value);
@@ -278,13 +186,16 @@ float DC1394Camera::GetGainValue() const {
 //------------------------------------------------------------------------------
 //
 float DC1394Camera::GetGammaValue() const {
+  std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
+
   uint32_t value;
   error =
       dc1394_feature_get_value(dc1394_camera_, DC1394_FEATURE_GAMMA, &value);
 
   if (error != DC1394_SUCCESS) {
-    return -1.0f;
+    throw std::runtime_error("Canno't get the gamma value on DC1394 Camera" +
+                             static_cast<int>(error));
   }
 
   return static_cast<float>(value);
@@ -293,13 +204,15 @@ float DC1394Camera::GetGammaValue() const {
 //------------------------------------------------------------------------------
 //
 float DC1394Camera::GetExposureValue() const {
+  std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
   uint32_t value;
   error =
       dc1394_feature_get_value(dc1394_camera_, DC1394_FEATURE_EXPOSURE, &value);
 
   if (error != DC1394_SUCCESS) {
-    return -1.0f;
+    throw std::runtime_error("Canno't get the exposure value on DC1394 Camera" +
+                             static_cast<int>(error));
   }
 
   return static_cast<float>(value);
@@ -308,13 +221,16 @@ float DC1394Camera::GetExposureValue() const {
 //------------------------------------------------------------------------------
 //
 float DC1394Camera::GetSaturationValue() const {
+  std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
   uint32_t value;
   error = dc1394_feature_get_value(dc1394_camera_, DC1394_FEATURE_SATURATION,
                                    &value);
 
   if (error != DC1394_SUCCESS) {
-    return -1.0f;
+    throw std::runtime_error(
+        "Canno't get the saturation value on DC1394 Camera" +
+        static_cast<int>(error));
   }
 
   return static_cast<float>(value);
@@ -322,70 +238,312 @@ float DC1394Camera::GetSaturationValue() const {
 
 //------------------------------------------------------------------------------
 //
-float DC1394Camera::GetFeature(const Feature &feat) const {
+void DC1394Camera::SetGainAuto() {
   std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
-  uint32_t blue, red;
-  dc1394feature_mode_t mode;
-  uint32_t value;
-  float return_val;
-
-  switch (feat) {
-    case Feature::SHUTTER:
-      error = dc1394_feature_get_value(dc1394_camera_, DC1394_FEATURE_SHUTTER,
-                                       &value);
-      break;
-    case Feature::SHUTTER_AUTO:
-      error = dc1394_feature_get_mode(dc1394_camera_, DC1394_FEATURE_SHUTTER,
-                                      &mode);
-      if (mode == DC1394_FEATURE_MODE_MANUAL)
-        value = 0;
-      else if (mode == DC1394_FEATURE_MODE_AUTO)
-        value = 1;
-      break;
-    case Feature::FRAMERATE:
-      error = dc1394_feature_get_value(dc1394_camera_,
-                                       DC1394_FEATURE_FRAME_RATE, &value);
-      return_val = ConvertFramerateToFloat(static_cast<unsigned int>(value));
-      value = static_cast<uint32_t>(return_val);
-      break;
-    case Feature::WHITE_BALANCE_AUTO:
-      error = dc1394_feature_get_mode(dc1394_camera_,
-                                      DC1394_FEATURE_WHITE_BALANCE, &mode);
-      if (mode == DC1394_FEATURE_MODE_MANUAL)
-        value = 0;
-      else if (mode == DC1394_FEATURE_MODE_AUTO)
-        value = 1;
-      break;
-    case Feature::WHITE_BALANCE_BLUE:
-      error =
-          dc1394_feature_whitebalance_get_value(dc1394_camera_, &blue, &red);
-      value = blue;
-      break;
-    case Feature::WHITE_BALANCE_RED:
-      error =
-          dc1394_feature_whitebalance_get_value(dc1394_camera_, &blue, &red);
-      value = red;
-      break;
-    case Feature::ERROR_FEATURE:
-      break;
-    case Feature::GAIN:
-      return GetGainValue();
-    case Feature::GAMMA:
-      return GetGammaValue();
-    case Feature::EXPOSURE:
-      return GetExposureValue();
-    case Feature::SATURATION:
-      return GetSaturationValue();
-    default:
-      break;
-  }
+  error = dc1394_feature_set_mode(dc1394_camera_, DC1394_FEATURE_GAIN,
+                                  DC1394_FEATURE_MODE_AUTO);
 
   if (error != DC1394_SUCCESS) {
-    return -1.0f;
+    throw std::runtime_error(
+        "Canno't set the gain in automatic on DC1394 Camera" +
+        static_cast<int>(error));
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+void DC1394Camera::SetGainManual() {
+  std::lock_guard<std::mutex> guard(cam_access_);
+  dc1394error_t error;
+  error = dc1394_feature_set_mode(dc1394_camera_, DC1394_FEATURE_GAIN,
+                                  DC1394_FEATURE_MODE_MANUAL);
+
+  if (error != DC1394_SUCCESS) {
+    throw std::runtime_error("Canno't set the Gain in manual on DC1394 Camera" +
+                             static_cast<int>(error));
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+void DC1394Camera::SetGainValue(float value) {
+  std::lock_guard<std::mutex> guard(cam_access_);
+  dc1394error_t error;
+  error = dc1394_feature_set_value(dc1394_camera_, DC1394_FEATURE_GAIN, value);
+
+  if (error != DC1394_SUCCESS) {
+    throw std::runtime_error("Canno't set the gain on DC1394 Camera" +
+                             static_cast<int>(error));
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+void DC1394Camera::SetGammaValue(float value) {
+  std::lock_guard<std::mutex> guard(cam_access_);
+  dc1394error_t error;
+  error = dc1394_feature_set_value(dc1394_camera_, DC1394_FEATURE_GAMMA, value);
+
+  if (error != DC1394_SUCCESS) {
+    throw std::runtime_error("Canno't set the gamma on DC1394 Camera" +
+                             static_cast<int>(error));
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+void DC1394Camera::SetExposureValue(float value) {
+  std::lock_guard<std::mutex> guard(cam_access_);
+  dc1394error_t error;
+  error =
+      dc1394_feature_set_value(dc1394_camera_, DC1394_FEATURE_EXPOSURE, value);
+
+  if (error != DC1394_SUCCESS) {
+    throw std::runtime_error("Canno't set the exposure on DC1394 Camera" +
+                             static_cast<int>(error));
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+void DC1394Camera::SetSaturationValue(float value) {
+  std::lock_guard<std::mutex> guard(cam_access_);
+  dc1394error_t error;
+  error = dc1394_feature_set_value(dc1394_camera_, DC1394_FEATURE_SATURATION,
+                                   value);
+
+  if (error != DC1394_SUCCESS) {
+    throw std::runtime_error("Canno't set the saturation on DC1394 Camera" +
+                             static_cast<int>(error));
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+void DC1394Camera::SetShutterValue(float value) {
+  std::lock_guard<std::mutex> guard(cam_access_);
+  dc1394error_t error;
+  error =
+      dc1394_feature_set_value(dc1394_camera_, DC1394_FEATURE_SHUTTER, value);
+
+  if (error != DC1394_SUCCESS) {
+    throw std::runtime_error("Canno't set the shutter on DC1394 Camera" +
+                             static_cast<int>(error));
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+void DC1394Camera::SetShutterAuto() {
+  std::lock_guard<std::mutex> guard(cam_access_);
+  dc1394error_t error;
+  error = dc1394_feature_set_mode(dc1394_camera_, DC1394_FEATURE_SHUTTER,
+                                  DC1394_FEATURE_MODE_AUTO);
+
+  if (error != DC1394_SUCCESS) {
+    throw std::runtime_error(
+        "Canno't set the shutter in automatic on DC1394 Camera" +
+        static_cast<int>(error));
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+void DC1394Camera::SetShutterManual() {
+  std::lock_guard<std::mutex> guard(cam_access_);
+  dc1394error_t error;
+  error = dc1394_feature_set_mode(dc1394_camera_, DC1394_FEATURE_SHUTTER,
+                                  DC1394_FEATURE_MODE_MANUAL);
+
+  if (error != DC1394_SUCCESS) {
+    throw std::runtime_error(
+        "Canno't set the shutter in manual on DC1394 Camera" +
+        static_cast<int>(error));
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+void DC1394Camera::SetFrameRateValue(float value) {
+  std::lock_guard<std::mutex> guard(cam_access_);
+  dc1394error_t error;
+  error = dc1394_feature_set_value(dc1394_camera_, DC1394_FEATURE_FRAME_RATE,
+                                   ConvertFramerateToEnum(value));
+
+  uint32_t test;
+  error = dc1394_feature_get_value(dc1394_camera_, DC1394_FEATURE_FRAME_RATE,
+                                   &test);
+  std::cout << "settting to : " << value << " got "
+            << ConvertFramerateToEnum(test) << std::endl;
+  if (error != DC1394_SUCCESS) {
+    throw std::runtime_error("Canno't set the frame rate on DC1394 Camera" +
+                             static_cast<int>(error));
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+float DC1394Camera::GetShutterValue() const {
+  std::lock_guard<std::mutex> guard(cam_access_);
+  dc1394error_t error;
+  uint32_t value;
+  error =
+      dc1394_feature_get_value(dc1394_camera_, DC1394_FEATURE_SHUTTER, &value);
+
+  if (error != DC1394_SUCCESS) {
+    throw std::runtime_error("Canno't get the shutter value on DC1394 Camera" +
+                             static_cast<int>(error));
   }
 
   return static_cast<float>(value);
+}
+
+//------------------------------------------------------------------------------
+//
+float DC1394Camera::GetFrameRateValue() const {
+  std::lock_guard<std::mutex> guard(cam_access_);
+  dc1394error_t error;
+  uint32_t value;
+  error = dc1394_feature_get_value(dc1394_camera_, DC1394_FEATURE_FRAME_RATE,
+                                   &value);
+
+  if (error != DC1394_SUCCESS) {
+    throw std::runtime_error(
+        "Canno't get the frame rate value on DC1394 Camera" +
+        static_cast<int>(error));
+  }
+
+  return static_cast<float>(value);
+}
+
+//------------------------------------------------------------------------------
+//
+void DC1394Camera::SetWhiteBalanceAuto() {
+  std::lock_guard<std::mutex> guard(cam_access_);
+  dc1394error_t error;
+  error = dc1394_feature_set_mode(dc1394_camera_, DC1394_FEATURE_WHITE_BALANCE,
+                                  DC1394_FEATURE_MODE_AUTO);
+
+  if (error != DC1394_SUCCESS) {
+    throw std::runtime_error(
+        "Canno't set the white balance in automatic on DC1394 Camera" +
+        static_cast<int>(error));
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+void DC1394Camera::SetWhiteBalanceManual() {
+  std::lock_guard<std::mutex> guard(cam_access_);
+  dc1394error_t error;
+  error = dc1394_feature_set_mode(dc1394_camera_, DC1394_FEATURE_WHITE_BALANCE,
+                                  DC1394_FEATURE_MODE_MANUAL);
+
+  if (error != DC1394_SUCCESS) {
+    throw std::runtime_error(
+        "Canno't set the white balance in manual on DC1394 Camera" +
+        static_cast<int>(error));
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+float DC1394Camera::GetWhiteBalanceMode() const {
+  std::lock_guard<std::mutex> guard(cam_access_);
+  dc1394error_t error;
+  dc1394feature_mode_t mode;
+  error = dc1394_feature_get_mode(dc1394_camera_, DC1394_FEATURE_WHITE_BALANCE,
+                                  &mode);
+
+  if (error != DC1394_SUCCESS) {
+    throw std::runtime_error(
+        "Canno't get the white balance mode on DC1394 Camera" +
+        static_cast<int>(error));
+  }
+
+  if (mode == DC1394_FEATURE_MODE_MANUAL)
+    return 0.0f;
+  else if (mode == DC1394_FEATURE_MODE_AUTO)
+    return 1.0f;
+  else
+    throw std::runtime_error(
+        "Canno't get the white balance mode on DC1394 Camera");
+}
+
+//------------------------------------------------------------------------------
+//
+float DC1394Camera::GetWhiteBalanceRed() const {
+  std::lock_guard<std::mutex> guard(cam_access_);
+  dc1394error_t error;
+  uint32_t blue, red;
+  error = dc1394_feature_whitebalance_get_value(dc1394_camera_, &blue, &red);
+
+  if (error != DC1394_SUCCESS) {
+    throw std::runtime_error(
+        "Canno't get the white balance mode on DC1394 Camera" +
+        static_cast<int>(error));
+  }
+
+  return static_cast<float>(red);
+}
+
+//------------------------------------------------------------------------------
+//
+void DC1394Camera::SetWhiteBalanceRedValue(float value) {
+  std::lock_guard<std::mutex> guard(cam_access_);
+  dc1394error_t error;
+  try {
+    float blue = GetWhiteBalanceBlue();
+    error = dc1394_feature_whitebalance_set_value(dc1394_camera_,
+                                                  static_cast<uint32_t>(blue),
+                                                  static_cast<uint32_t>(value));
+  } catch (const std::runtime_error &e) {
+    throw;
+  }
+
+  if (error != DC1394_SUCCESS) {
+    throw std::runtime_error(
+        "Canno't set the white balance red values on DC1394 Camera" +
+        static_cast<int>(error));
+  }
+}
+
+void DC1394Camera::SetWhiteBalanceBlueValue(float value) {
+  std::lock_guard<std::mutex> guard(cam_access_);
+  dc1394error_t error;
+  try {
+    float red = GetWhiteBalanceBlue();
+    error = dc1394_feature_whitebalance_set_value(dc1394_camera_,
+                                                  static_cast<uint32_t>(value),
+                                                  static_cast<uint32_t>(red));
+  } catch (const std::runtime_error &e) {
+    throw;
+  }
+
+  if (error != DC1394_SUCCESS) {
+    throw std::runtime_error(
+        "Canno't set the white balance red values on DC1394 Camera" +
+        static_cast<int>(error));
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+float DC1394Camera::GetWhiteBalanceBlue() const {
+  std::lock_guard<std::mutex> guard(cam_access_);
+  dc1394error_t error;
+  uint32_t blue, red;
+  error = dc1394_feature_whitebalance_get_value(dc1394_camera_, &blue, &red);
+  ;
+
+  if (error != DC1394_SUCCESS) {
+    throw std::runtime_error(
+        "Canno't get the white balance blue value on DC1394 Camera" +
+        static_cast<int>(error));
+  }
+
+  return static_cast<float>(blue);
 }
 
 //------------------------------------------------------------------------------
@@ -400,6 +558,29 @@ uint32_t DC1394Camera::ConvertFramerateToEnum(float val) const {
     return_val = DC1394_FRAMERATE_7_5;
   }
   return return_val;
+}
+
+//------------------------------------------------------------------------------
+//
+float DC1394Camera::GetShutterMode() const {
+  dc1394error_t error;
+  dc1394feature_mode_t mode;
+  error =
+      dc1394_feature_get_mode(dc1394_camera_, DC1394_FEATURE_SHUTTER, &mode);
+
+  if (error != DC1394_SUCCESS) {
+    throw std::runtime_error(
+        "Canno't get the white balance blue value on DC1394 Camera" +
+        static_cast<int>(error));
+  }
+
+  if (mode == DC1394_FEATURE_MODE_MANUAL)
+    return 0.0f;
+  else if (mode == DC1394_FEATURE_MODE_AUTO)
+    return 1.0f;
+  else
+    throw std::runtime_error(
+        "Canno't get the white balance blue value on DC1394 Camera");
 }
 
 //------------------------------------------------------------------------------
@@ -462,9 +643,6 @@ void DC1394Camera::SetFormat7() {
                                0, 0,                  // left, top
                                w, h);                 // width, height
 
-
-
-
   if (err != DC1394_SUCCESS) {
     // TODO Jérémie St-Jules: Change the exception error.
     throw std::runtime_error("Setting image size and roi failed");
@@ -509,30 +687,30 @@ void DC1394Camera::SetCameraParams() {
   }
   // We have a guppy
   if (std::string(dc1394_camera_->vendor).compare(std::string("AVT")) == 0) {
-    SetFeature(Feature::GAIN_AUTO, 0.0f);
+    SetFeature(Feature::GAIN_MANUAL);
     atlas::MilliTimer::Sleep(100);
     SetFeature(Feature::GAIN, 420.0f);
     atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::SHUTTER_AUTO, 0.0f);
+    SetFeature(Feature::SHUTTER_MANUAL);
     atlas::MilliTimer::Sleep(100);
     SetFeature(Feature::SHUTTER, 32.0f);
     atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::WHITE_BALANCE_AUTO, 0.0f);
+    SetFeature(Feature::WHITE_BALANCE_MANUAL);
     atlas::MilliTimer::Sleep(100);
     SetFeature(Feature::WHITE_BALANCE_BLUE, 381.0f);
     atlas::MilliTimer::Sleep(100);
     SetFeature(Feature::WHITE_BALANCE_RED, 568.0f);
     atlas::MilliTimer::Sleep(100);
   } else {
-    SetFeature(Feature::GAIN_AUTO, 0.0f);
+    SetFeature(Feature::GAIN_MANUAL);
     atlas::MilliTimer::Sleep(100);
     SetFeature(Feature::GAIN, 350.0f);
     atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::SHUTTER_AUTO, 0.0f);
+    SetFeature(Feature::SHUTTER_MANUAL);
     atlas::MilliTimer::Sleep(100);
     SetFeature(Feature::SHUTTER, 500.0f);
     atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::WHITE_BALANCE_AUTO, 0.0f);
+    SetFeature(Feature::WHITE_BALANCE_MANUAL);
     atlas::MilliTimer::Sleep(100);
     SetFeature(Feature::WHITE_BALANCE_BLUE, 412.0f);
     atlas::MilliTimer::Sleep(100);

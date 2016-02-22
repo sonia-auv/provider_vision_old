@@ -57,10 +57,6 @@ class DC1394Camera : public BaseCamera {
 
   void NextImage(cv::Mat &img) override;
 
-  void SetFeature(const Feature &feat, float value) override;
-
-  float GetFeature(const Feature &feat) const override;
-
   // Sets to different streaming format.
   void SetFormat7();
 
@@ -80,12 +76,35 @@ class DC1394Camera : public BaseCamera {
 
  protected:
   float GetGainValue() const override;
+  void SetGainAuto() override;
+  void SetGainManual() override;
+  void SetGainValue(float value) override;
 
   float GetGammaValue() const override;
+  void SetGammaValue(float value) override;
 
   float GetExposureValue() const override;
+  void SetExposureValue(float value) override;
 
   float GetSaturationValue() const override;
+  void SetSaturationValue(float value) override;
+
+  void SetShutterValue(float value) override;
+  void SetShutterAuto() override;
+  void SetShutterManual() override;
+  float GetShutterMode() const override;
+  float GetShutterValue() const override;
+
+  void SetFrameRateValue(float value) override;
+  float GetFrameRateValue() const override;
+
+  void SetWhiteBalanceAuto() override;
+  void SetWhiteBalanceManual() override;
+  float GetWhiteBalanceMode() const override;
+  void SetWhiteBalanceRedValue(float value) override;
+  void SetWhiteBalanceBlueValue(float value) override;
+  float GetWhiteBalanceRed() const override;
+  float GetWhiteBalanceBlue() const override;
 
  private:
   //==========================================================================

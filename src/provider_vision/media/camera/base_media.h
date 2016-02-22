@@ -176,7 +176,7 @@ inline void BaseMedia::StartStreaming() {
     Open();
     SetStreamingModeOn();
   } else if (GetStatus() == Status::STREAMING) {
-    //throw std::logic_error("The media is already streaming");
+    // throw std::logic_error("The media is already streaming");
   } else {
     throw std::runtime_error(
         "The media is on an unstable status. Cannot stream.");

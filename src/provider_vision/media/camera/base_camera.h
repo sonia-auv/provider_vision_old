@@ -37,16 +37,28 @@ class BaseCamera : public BaseMedia {
   enum class Feature {
     ERROR_FEATURE,
     SHUTTER_AUTO,
+    SHUTTER_MANUAL,
     SHUTTER,
     GAIN_AUTO,
+    GAIN_MANUAL,
     GAIN,
     WHITE_BALANCE_AUTO,
+    WHITE_BALANCE_MANUAL,
     WHITE_BALANCE_RED,
     WHITE_BALANCE_BLUE,
     FRAMERATE,
     GAMMA,
     EXPOSURE,
     SATURATION
+  };
+
+  struct SPid {
+    double dState;      // Last position input
+    double iState;      // Integrator state
+    double iMax, iMin;  // Maximum and minimum allowable integrator state
+    double iGain,       // integral gain
+        pGain,          // proportional gain
+        dGain;          // derivative gain
   };
 
   //==========================================================================
@@ -59,9 +71,9 @@ class BaseCamera : public BaseMedia {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void SetFeature(const Feature &feat, float value) = 0;
+  virtual void SetFeature(const Feature &feat, float value = 0);
 
-  virtual float GetFeature(const Feature &feat) const = 0;
+  virtual float GetFeature(const Feature &feat) const;
 
   bool HasArtificialFramerate() const override;
 
@@ -70,17 +82,47 @@ class BaseCamera : public BaseMedia {
   // P R O T E C T E D   M E T H O D S
 
   virtual float GetGainValue() const = 0;
+  virtual void SetGainAuto() = 0;
+  virtual void SetGainManual() = 0;
+  virtual void SetGainValue(float value) = 0;
 
   virtual float GetGammaValue() const = 0;
+  virtual void SetGammaValue(float value) = 0;
 
   virtual float GetExposureValue() const = 0;
+  virtual void SetExposureValue(float value) = 0;
 
   virtual float GetSaturationValue() const = 0;
+  virtual void SetSaturationValue(float value) = 0;
+
+  virtual void SetShutterValue(float value) = 0;
+  virtual void SetShutterAuto() = 0;
+  virtual void SetShutterManual() = 0;
+  virtual float GetShutterMode() const = 0;
+  virtual float GetShutterValue() const = 0;
+
+  virtual void SetFrameRateValue(float value) = 0;
+  virtual float GetFrameRateValue() const = 0;
+
+  virtual void SetWhiteBalanceAuto() = 0;
+  virtual void SetWhiteBalanceManual() = 0;
+  virtual float GetWhiteBalanceMode() const = 0;
+  virtual void SetWhiteBalanceRedValue(float value) = 0;
+  virtual void SetWhiteBalanceBlueValue(float value) = 0;
+  virtual float GetWhiteBalanceRed() const = 0;
+  virtual float GetWhiteBalanceBlue() const = 0;
 
   //==========================================================================
   // P R O T E C T E D   M E M B E R S
 
   CameraUndistordMatrices undistord_matrix_;
+
+ private:
+  //==========================================================================
+  // P R I V A T E   M E T H O D S
+
+  double UpdatePID(const std::shared_ptr<SPid> &pid, double error,
+                   double position) ATLAS_NOEXCEPT;
 };
 
 //==============================================================================
