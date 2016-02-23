@@ -33,11 +33,13 @@ DetectionTaskManager::~DetectionTaskManager() {}
 std::string DetectionTaskManager::StartDetectionTask(
     MediaStreamer::Ptr media_streamer, Filterchain::Ptr filterchain,
     const std::string &execution_name) {
+
   if (execution_name.empty()) {
     throw std::invalid_argument("The detection task name is not valid");
   }
   // Makes sure we have no detection task of that name.
   DetectionTask::Ptr task = GetDetectionTask(execution_name);
+
   if (task == nullptr) {
     task = std::make_shared<DetectionTask>(media_streamer, filterchain,
                                            execution_name);
@@ -46,6 +48,7 @@ std::string DetectionTaskManager::StartDetectionTask(
   } else {
     throw std::logic_error("This detection task already exist.");
   }
+  ROS_INFO("DetectionTask is ready.");
   return task->GetDetectionTaskName();
 }
 
@@ -60,6 +63,7 @@ void DetectionTaskManager::StopDetectionTask(
   if (it != detection_tasks_.end()) {
     (*it)->StopDetectionTask();
     detection_tasks_.erase(it);
+    ROS_INFO("Detection task is stopped.");
   } else {
     throw std::invalid_argument("This detection taks does not exist");
   }
@@ -129,7 +133,7 @@ Filterchain::Ptr DetectionTaskManager::GetFilterchainFromDetectionTask(
 DetectionTask::Ptr DetectionTaskManager::GetDetectionTask(
     const std::string &execution_name) const {
   for (const auto &task : detection_tasks_) {
-    if (task->GetDetectionTaskName() == execution_name) {
+    if (task->GetDetectionTaskName().compare(execution_name) == 0 ) {
       return task;
     }
   }

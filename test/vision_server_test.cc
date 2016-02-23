@@ -16,33 +16,20 @@
 #include <provider_vision/server/vision_server.h>
 
 
-static const std::string node_prefix ("/provider_vision/");
-static const std::string test_dir(std::string(getenv("ROS_SONIA_WS")) + std::string("/src/provider_vision/test/"));
-class VisionServerThread
-{
- public:
-  VisionServerThread(provider_vision::VisionServer &visionServer)
-      :stop_(false),
-       visionServer_(visionServer),
-       vision_server_thread(this->RunVisionServer)
-  {
-  }
-  void Stop(){stop_ = true;}
- private:
-  void RunVisionServer()
-  {
-    ros::Rate loop_rate(15);
-    while(!stop_)
-    {
-      ros::spinOnce();
-      loop_rate.sleep();
-    }
-  }
+static const std::string node_prefix("/provider_vision/");
+static const std::string test_dir(std::string(getenv("ROS_SONIA_WS"))
+                                      + std::string("/src/provider_vision/test/"));
 
-  bool stop_;
-  std::thread vision_server_thread;
-  provider_vision::VisionServer &visionServer_;
-};
+static bool stop_thread = false;
+
+void RunVisionServer() {
+  ros::Rate loop_rate(15);
+  while (!stop_thread) {
+    ros::spinOnce();
+    loop_rate.sleep();
+  }
+}
+
 
 /**
  * Test class that subscribe to a service and
@@ -73,7 +60,8 @@ class ServiceSubscriber {
 TEST(VisionServer, core_test) {
 
   provider_vision::VisionServer provider_vision;
-  VisionServerThread visionServerThread(provider_vision);
+  std::thread vision_server_thread(RunVisionServer);
+
   ServiceSubscriber serviceSubscriber("/provider_vision/execute_cmd");
 
   sonia_msgs::execute_cmdRequest request;
@@ -87,7 +75,7 @@ TEST(VisionServer, core_test) {
   request.media_name = "INVALID";
 
   serviceSubscriber.CallServer(request, response);
-  ASSERT_STREQ(response.response, "");
+  ASSERT_TRUE(response.response.compare("") == 0);
 
   // Call a media that doesn't exist.
   request.cmd = request.START;
@@ -96,28 +84,30 @@ TEST(VisionServer, core_test) {
   request.media_name = "INVALID";
 
   serviceSubscriber.CallServer(request, response);
-  ASSERT_STREQ(response.response, "");
+  ASSERT_TRUE(response.response.compare("") == 0);
 
   // Call a filterchain that doesn't exist.
   request.filterchain_name = "INVALID";
   request.media_name = test_dir + "test_image.png";
   serviceSubscriber.CallServer(request, response);
-  ASSERT_STREQ(response.response, "");
+  ASSERT_TRUE(response.response.compare("") == 0);
 
   // Create an execution that exist.
   request.filterchain_name = "camera_feed";
   serviceSubscriber.CallServer(request, response);
-  ASSERT_STREQ(response.response, "Testing");
+  ASSERT_TRUE(response.response.compare(node_prefix + "Testing") == 0);
 
   // Close the execution.
   request.cmd = request.STOP;
   serviceSubscriber.CallServer(request, response);
-  ASSERT_STREQ(response.response, "");
+  ASSERT_TRUE(response.response.compare("") == 0);
 
   // Close the execution (again)
   serviceSubscriber.CallServer(request, response);
-  ASSERT_STREQ(response.response, "");
+  ASSERT_TRUE(response.response.compare("") == 0);
 
+  stop_thread = true;
+  vision_server_thread.join();
 
 }
 

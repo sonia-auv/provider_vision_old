@@ -75,7 +75,9 @@ void MediaManager::CloseMedia(const std::string &media_name) {
 //
 MediaStreamer::Ptr MediaManager::StartStreamingMedia(
     const std::string &media_name) {
+
   MediaStreamer::Ptr streamer(nullptr);
+
   if (IsMediaStreaming(media_name)) {
     streamer = GetMediaStreamer(media_name);
   } else {
@@ -96,6 +98,7 @@ MediaStreamer::Ptr MediaManager::StartStreamingMedia(
       throw std::runtime_error("Camera failed to be created");
     }
   }
+  ROS_INFO("Media is ready.");
   return streamer;
 }
 
@@ -105,6 +108,7 @@ void MediaManager::StopStreamingMedia(const std::string &media) noexcept {
   MediaStreamer::Ptr streamer = GetMediaStreamer(media);
   StopStreamingMedia(streamer);
   RemoveMediaStreamer(media);
+  ROS_INFO("Media is stopped.");
 }
 
 //------------------------------------------------------------------------------

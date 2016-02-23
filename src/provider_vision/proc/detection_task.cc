@@ -64,7 +64,7 @@ void DetectionTask::StartDetectionTask() {
   Start();
   image_publisher_.Start();
   media_streamer_->Attach(*this);
-  ROS_INFO_NAMED(EXEC_TAG, "Starting detection task ");
+  ROS_INFO("Starting detection task %s", this->name_.c_str());
 }
 
 //------------------------------------------------------------------------------
