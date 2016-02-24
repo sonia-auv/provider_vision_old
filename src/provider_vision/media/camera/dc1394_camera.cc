@@ -49,7 +49,6 @@ void DC1394Camera::Open() {
     SetFormat7();
     err = dc1394_capture_setup(dc1394_camera_, DMA_BUFFER,
                                DC1394_CAPTURE_FLAGS_DEFAULT);
-    SetCameraParams();
     if (err != DC1394_SUCCESS) {
       throw std::runtime_error(dc1394_error_get_string(err));
     }
@@ -95,7 +94,6 @@ void DC1394Camera::SetStreamingModeOn() {
     status_ = Status::ERROR;
   }
   cam_access_.unlock();
-  SetCameraParams();
 
   status_ = Status::STREAMING;
 }
@@ -491,10 +489,10 @@ float DC1394Camera::GetWhiteBalanceRed() const {
 //------------------------------------------------------------------------------
 //
 void DC1394Camera::SetWhiteBalanceRedValue(float value) {
-  std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
   try {
     float blue = GetWhiteBalanceBlue();
+    std::lock_guard<std::mutex> guard(cam_access_);
     error = dc1394_feature_whitebalance_set_value(dc1394_camera_,
                                                   static_cast<uint32_t>(blue),
                                                   static_cast<uint32_t>(value));
@@ -510,10 +508,11 @@ void DC1394Camera::SetWhiteBalanceRedValue(float value) {
 }
 
 void DC1394Camera::SetWhiteBalanceBlueValue(float value) {
-  std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
   try {
     float red = GetWhiteBalanceBlue();
+    std::lock_guard<std::mutex> guard(cam_access_);
+
     error = dc1394_feature_whitebalance_set_value(dc1394_camera_,
                                                   static_cast<uint32_t>(value),
                                                   static_cast<uint32_t>(red));

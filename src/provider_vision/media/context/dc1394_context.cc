@@ -66,6 +66,7 @@ void DC1394Context::InitContext(
             new DC1394Camera(camera_dc, cam_config));
 
         cam->Open();
+        cam->SetCameraParams();
         media_list_.push_back(cam);
       }
     }
