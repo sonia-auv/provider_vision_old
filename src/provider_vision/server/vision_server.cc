@@ -99,6 +99,7 @@ bool VisionServer::CallbackExecutionCMD(execute_cmd::Request &rqst,
   if (rqst.cmd == rqst.START) {
     try {
 
+      ROS_INFO(" ");
       ROS_INFO("--- Starting Execution ---");
       ROS_INFO("Node: %s, Filterchain: %s, Media: %s",
                rqst.node_name.c_str(),
@@ -124,6 +125,7 @@ bool VisionServer::CallbackExecutionCMD(execute_cmd::Request &rqst,
   {
     try {
 
+      ROS_INFO(" ");
       ROS_INFO("--- Stoping Execution ---");
       ROS_INFO("Node: %s, Filterchain: %s, Media: %s",
                rqst.node_name.c_str(),
