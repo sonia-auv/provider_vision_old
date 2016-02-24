@@ -82,7 +82,7 @@ void BaseCamera::SetFeature(const Feature &feat, float value) {
         break;
     }
   } catch (const std::runtime_error &e) {
-    ROS_ERROR(e.what());
+    ROS_ERROR("%s",e.what());
   }
 }
 
@@ -120,7 +120,7 @@ float BaseCamera::GetFeature(const Feature &feat) const {
         return -1.0f;
     }
   } catch (const std::runtime_error &e) {
-    ROS_ERROR(e.what());
+    ROS_ERROR("%s",e.what());
     return -1.0f;
   }
 }
