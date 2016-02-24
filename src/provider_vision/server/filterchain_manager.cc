@@ -92,6 +92,7 @@ Filterchain::Ptr FilterchainManager::InstanciateFilterchain(
     Filterchain::Ptr filterchain =
         std::make_shared<Filterchain>(filterchainName);
     running_filterchains_.push_back(filterchain);
+    ROS_INFO("Filterchain is ready.");
     return filterchain;
   }
   throw std::invalid_argument("Could not find the given filterchain");
@@ -103,6 +104,7 @@ void FilterchainManager::StopFilterchain(const Filterchain::Ptr &filterchain) {
   auto instance = std::find(running_filterchains_.begin(),
                             running_filterchains_.end(), filterchain);
   running_filterchains_.erase(instance);
+  ROS_INFO("Filterchain is stopped.");
 }
 
 }  // namespace provider_vision

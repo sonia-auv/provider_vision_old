@@ -102,4 +102,11 @@ if (CATKIN_ENABLE_TESTING AND ${CMAKE_CURRENT_SOURCE_DIR}/test)
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/test)
 endif ()
 
-catkin_add_gtest(utest_vision_server test/vision_server_test.cc)
+catkin_add_gtest(utest_vision_server test/vision_server_test.cc  ${provider_vision_FILES})
+target_link_libraries(utest_vision_server
+        dc1394
+        ${catkin_LIBRARIES}
+        ${lib_atlas_LIBRARIES}
+        ${lib_vision_LIBRARIES}
+        ${OpenCV_LIBRARIES}
+)
