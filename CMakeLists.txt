@@ -15,7 +15,7 @@ project(provider_vision)
 if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug CACHE STRING
       "Choose the type of build: None Debug Release RelWithDebInfo MinSizeRel."
-      FORCE)
+       FORCE)
 endif (NOT CMAKE_BUILD_TYPE)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++11 -Wall")
@@ -39,7 +39,6 @@ find_package(catkin REQUIRED COMPONENTS
     cv_bridge
     roslaunch
     lib_atlas
-    lib_vision
     sonia_msgs
     )
 
@@ -57,7 +56,6 @@ catkin_package(
     cv_bridge
     roslaunch
     lib_atlas
-    lib_vision
     sonia_msgs
 )
 
@@ -78,7 +76,6 @@ include_directories(
     ${catkin_INCLUDE_DIRS}
     ${provider_vision_SRC_DIR}
     ${lib_atlas_INCLUDE_DIRS}
-    ${lib_vision_INCLUDE_DIRS}
     ${OpenCV_INCLUDE_DIRS}
 )
 
@@ -90,10 +87,10 @@ target_link_libraries(provider_vision_node
     dc1394
     ${catkin_LIBRARIES}
     ${lib_atlas_LIBRARIES}
-    ${lib_vision_LIBRARIES}
     ${OpenCV_LIBRARIES}
     )
 add_dependencies(${PROJECT_NAME}_node ${PROJECT_NAME}_generate_messages_cpp sonia_msgs_generate_messages_cpp)
+
 
 #==========================================================================
 # U N I T   T E S T S
@@ -101,12 +98,3 @@ add_dependencies(${PROJECT_NAME}_node ${PROJECT_NAME}_generate_messages_cpp soni
 if (CATKIN_ENABLE_TESTING AND ${CMAKE_CURRENT_SOURCE_DIR}/test)
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/test)
 endif ()
-
-catkin_add_gtest(utest_vision_server test/vision_server_test.cc  ${provider_vision_FILES})
-target_link_libraries(utest_vision_server
-        dc1394
-        ${catkin_LIBRARIES}
-        ${lib_atlas_LIBRARIES}
-        ${lib_vision_LIBRARIES}
-        ${OpenCV_LIBRARIES}
-)

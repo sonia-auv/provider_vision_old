@@ -11,9 +11,10 @@
 
 #include <ros/ros.h>
 #include <std_msgs/String.h>
-#include "provider_vision/proc/detection_task.h"
-#include "lib_vision/target.h"
-#include "sonia_msgs/VisionTarget.h"
+#include <sonia_msgs/VisionTarget.h>
+#include "provider_vision/server/detection_task.h"
+#include "provider_vision/server/target.h"
+
 namespace provider_vision {
 
 //==============================================================================
@@ -147,14 +148,14 @@ void DetectionTask::Run() {
             // signed Jeremie St-Jules
           }
         }
-        lib_vision::GlobalParamHandler::Ptr paramHandler =
+        provider_vision::GlobalParamHandler::Ptr paramHandler =
             filterchain_->GetParameterHandler();
         if (paramHandler) {
-          lib_vision::TargetQueue targetQueue = paramHandler->getTargetQueue();
+          provider_vision::TargetQueue targetQueue = paramHandler->getTargetQueue();
           if (!targetQueue.empty()) {
             while (!targetQueue.empty()) {
               sonia_msgs::VisionTarget msg;
-              lib_vision::Target target = targetQueue.front();
+              provider_vision::Target target = targetQueue.front();
               target.SetMessage(msg);
               result_publisher_.publish(msg);
               targetQueue.pop();

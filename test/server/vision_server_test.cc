@@ -88,7 +88,7 @@ TEST(VisionServer, core_test) {
 
   // Call a filterchain that doesn't exist.
   request.filterchain_name = "INVALID";
-  request.media_name = test_dir + "test_image.png";
+  request.media_name = test_dir + "img/test_image.png";
   serviceSubscriber.CallServer(request, response);
   ASSERT_TRUE(response.response.compare("") == 0);
 

@@ -17,9 +17,9 @@
 #include <vector>
 #include <string>
 #include <lib_atlas/ros/service_server_manager.h>
-#include <lib_vision/filter.h>
+#include <provider_vision/filters/filter.h>
 #include "provider_vision/utils/config.h"
-#include "provider_vision/proc/filterchain.h"
+#include "provider_vision/server/filterchain.h"
 
 namespace provider_vision {
 

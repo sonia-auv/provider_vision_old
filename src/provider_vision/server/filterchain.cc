@@ -9,7 +9,7 @@
  * found in the LICENSE file.
  */
 
-#include "provider_vision/proc/filterchain.h"
+#include "provider_vision/server/filterchain.h"
 
 namespace provider_vision {
 
@@ -187,7 +187,7 @@ void Filterchain::SetFilterParameterValue(const size_t &index,
 
 //------------------------------------------------------------------------------
 //
-std::vector<lib_vision::ParameterInterface *>
+std::vector<provider_vision::ParameterInterface *>
 Filterchain::GetFilterAllParameters(const size_t &index) {
   return GetFilter(index)->GetParameters();
 }
@@ -195,8 +195,8 @@ Filterchain::GetFilterAllParameters(const size_t &index) {
 //------------------------------------------------------------------------------
 //
 void Filterchain::AddFilter(const std::string &filter_name) {
-  auto filter = lib_vision::Filter::Ptr(
-      lib_vision::FilterFactory::createInstance(filter_name, param_handler_));
+  auto filter = provider_vision::Filter::Ptr(
+      provider_vision::FilterFactory::createInstance(filter_name, param_handler_));
   if (filter != nullptr) {
     filters_.push_back(filter);
   } else {

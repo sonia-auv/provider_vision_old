@@ -120,6 +120,9 @@ local.properties
 # External tool builders
 .externalToolBuilders/
 
+# Locally stored "Eclipse launch configurations"
+*.launch
+
 # CDT-specific
 .cproject
 
@@ -156,3 +159,4 @@ build/
 devel/
 /src/CMakeLists.txt
 test/*.xml
+crashlytics-build.properties

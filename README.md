@@ -7,13 +7,13 @@
 ## Prerequisites
 This software is developed using ROS and some of its dependencies.
 It has been tested on a Ubuntu 14.04 OS with ROS indigo distribution.
-The provider vision package also depends on other SONIA packages such as lib_atlas and lib_vision_sample.
+The provider vision package also depends on other SONIA packages such as lib_atlas and provider_vision_sample.
 In order to build and run this software, you will need these packages:
 - Ubuntu 14.04
 - ROS Indigo
 - OpenCV 2.4.10
 - lib_atlas
-- lib_vision_sample
+- provider_vision_sample
 
 ## Installation
 
@@ -39,7 +39,7 @@ In order to build and run this software, you will need these packages:
     mkdir -p ~/catkin_ws/src # Create workspace.
     cd ~/catkin_ws/src
     git clone https://github.com/sonia-auv/lib_atlas.git
-    git clone https://github.com/sonia-auv/lib_vision_sample.git
+    git clone https://github.com/sonia-auv/provider_vision_sample.git
     git clone https://github.com/sonia-auv/provider_vision.git
     catkin_init_workspace
     cd ~/catkin_ws/

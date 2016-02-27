@@ -172,7 +172,7 @@ bool provider_vision::VisionServer::CallbackInfoListCMD(
   } else if (rqst.cmd == rqst.FILTERCHAIN) {
     rep.list = BuildRosMessage(filterchain_mgr_.GetAllFilterchainName());
   } else if (rqst.cmd == rqst.FILTERS) {
-    rep.list = lib_vision::FilterFactory::GetFilterList();
+    rep.list = provider_vision::FilterFactory::GetFilterList();
   } else if (rqst.cmd == rqst.MEDIA) {
     rep.list = BuildRosMessage(media_mgr_.GetAllMediasName());
   }

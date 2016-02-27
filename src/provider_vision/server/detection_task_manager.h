@@ -18,8 +18,8 @@
 #include <memory>
 #include <mutex>
 #include <vector>
-#include "provider_vision/proc/detection_task.h"
-#include "provider_vision/proc/filterchain.h"
+#include "provider_vision/server/detection_task.h"
+#include "provider_vision/server/filterchain.h"
 
 namespace provider_vision {
 

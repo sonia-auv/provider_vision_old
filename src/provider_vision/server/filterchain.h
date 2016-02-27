@@ -17,12 +17,12 @@
 #include <queue>
 
 #include "provider_vision/utils/pugixml.h"
-#include <lib_vision/filter_factory.h>
-#include <lib_vision/global_param_handler.h>
-#include <lib_vision/filter.h>
+#include <provider_vision/filters/filter.h>
+#include <provider_vision/server/filter_factory.h>
+#include <provider_vision/server/global_param_handler.h>
+#include "provider_vision/server/target.h"
 #include "provider_vision/utils/serializable.h"
 #include "provider_vision/utils/config.h"
-#include "lib_vision/target.h"
 
 namespace provider_vision {
 
@@ -63,12 +63,12 @@ class Filterchain : public Serializable {
 
   bool Deserialize() override;
 
-  lib_vision::Filter::Ptr GetFilter(const size_t &index) const;
+  provider_vision::Filter::Ptr GetFilter(const size_t &index) const;
 
-  std::vector<lib_vision::Filter::Ptr> GetFiltersWithName(
+  std::vector<provider_vision::Filter::Ptr> GetFiltersWithName(
       const std::string &filter_name) const;
 
-  std::vector<lib_vision::Filter::Ptr> GetAllFilters() const;
+  std::vector<provider_vision::Filter::Ptr> GetAllFilters() const;
 
   /**
    * Check if there is a filter with the same name than the given parameter.
@@ -97,10 +97,10 @@ class Filterchain : public Serializable {
                                const std::string &param_name,
                                const std::string &param_value);
 
-  std::vector<lib_vision::ParameterInterface *> GetFilterAllParameters(
+  std::vector<provider_vision::ParameterInterface *> GetFilterAllParameters(
       const size_t &index);
 
-  lib_vision::GlobalParamHandler::Ptr GetParameterHandler();
+  provider_vision::GlobalParamHandler::Ptr GetParameterHandler();
 
  private:
   //==========================================================================
@@ -108,9 +108,9 @@ class Filterchain : public Serializable {
 
   std::string name_;
 
-  lib_vision::GlobalParamHandler param_handler_;
+  provider_vision::GlobalParamHandler param_handler_;
 
-  std::vector<lib_vision::Filter::Ptr> filters_;
+  std::vector<provider_vision::Filter::Ptr> filters_;
 
   size_t observer_index_;
 };
@@ -120,16 +120,16 @@ class Filterchain : public Serializable {
 
 //------------------------------------------------------------------------------
 //
-inline lib_vision::Filter::Ptr Filterchain::GetFilter(
+inline provider_vision::Filter::Ptr Filterchain::GetFilter(
     const size_t &index) const {
   return filters_.at(index);
 }
 
 //------------------------------------------------------------------------------
 //
-inline std::vector<lib_vision::Filter::Ptr> Filterchain::GetFiltersWithName(
+inline std::vector<provider_vision::Filter::Ptr> Filterchain::GetFiltersWithName(
     const std::string &filter_name) const {
-  std::vector<lib_vision::Filter::Ptr> filters;
+  std::vector<provider_vision::Filter::Ptr> filters;
   for (const auto &filter : filters_) {
     if (filter->GetName() == filter_name) {
       filters.push_back(filter);
@@ -140,7 +140,7 @@ inline std::vector<lib_vision::Filter::Ptr> Filterchain::GetFiltersWithName(
 
 //------------------------------------------------------------------------------
 //
-inline std::vector<lib_vision::Filter::Ptr> Filterchain::GetAllFilters() const {
+inline std::vector<provider_vision::Filter::Ptr> Filterchain::GetAllFilters() const {
   return filters_;
 }
 
@@ -163,8 +163,8 @@ inline void Filterchain::SetObserver(const size_t &index) {
 
 //------------------------------------------------------------------------------
 //
-inline lib_vision::GlobalParamHandler::Ptr Filterchain::GetParameterHandler() {
-  return std::make_shared<lib_vision::GlobalParamHandler>(param_handler_);
+inline provider_vision::GlobalParamHandler::Ptr Filterchain::GetParameterHandler() {
+  return std::make_shared<provider_vision::GlobalParamHandler>(param_handler_);
 }
 
 //------------------------------------------------------------------------------

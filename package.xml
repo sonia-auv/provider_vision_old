@@ -4,6 +4,7 @@
   <version>0.0.0</version>
   <description>The vision_server package</description>
   <maintainer email="jeremie.st.jules.prevost@gmail.com">jeremie</maintainer>
+
   <license>GPLv3</license>
 
   <buildtool_depend>catkin</buildtool_depend>
@@ -15,7 +16,6 @@
   <build_depend>image_transport</build_depend>
   <build_depend>cv_bridge</build_depend>
   <build_depend>libdc1394-22-dev</build_depend>
-  <build_depend>lib_vision</build_depend>
   <build_depend>lib_atlas</build_depend>
   <build_depend>sonia_msgs</build_depend>
 
@@ -26,7 +26,6 @@
   <run_depend>image_transport</run_depend>
   <run_depend>cv_bridge</run_depend>
   <run_depend>libdc1394-22-dev</run_depend>
-  <run_depend>lib_vision</run_depend>
   <run_depend>lib_atlas</run_depend>
   <run_depend>sonia_msgs</run_depend>
 </package>

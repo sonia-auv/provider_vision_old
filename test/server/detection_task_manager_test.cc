@@ -82,7 +82,7 @@ TEST(DetectionTaskManager, start_detection) {
   auto fc = fmgr.InstanciateFilterchain("image_feed");
 
   std::stringstream filepath;
-  filepath << provider_vision::kProjectPath << "test/test_image.png";
+  filepath << provider_vision::kProjectPath << "test/img/test_image.png";
 
   provider_vision::MediaManager mmgr;
   mmgr.OpenMedia(filepath.str());
@@ -127,7 +127,7 @@ TEST(DetectionTaskManager, stop_detection) {
   auto fc = fmgr.InstanciateFilterchain("image_feed");
 
   std::stringstream filepath;
-  filepath << provider_vision::kProjectPath << "test/test_image.png";
+  filepath << provider_vision::kProjectPath << "test/img/test_image.png";
 
   provider_vision::MediaManager mmgr;
   mmgr.OpenMedia(filepath.str());
@@ -152,7 +152,7 @@ TEST(DetectionTaskManager, change_observer) {
   auto fc = fmgr.InstanciateFilterchain("camera_feed");
 
   std::stringstream filepath;
-  filepath << provider_vision::kProjectPath << "test/test_image.png";
+  filepath << provider_vision::kProjectPath << "test/img/test_image.png";
 
   provider_vision::MediaManager mmgr;
   mmgr.OpenMedia(filepath.str());

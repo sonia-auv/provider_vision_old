@@ -95,7 +95,7 @@ TEST(MediaManagerTest, image) {
   // If not, just do nothing.
   std::vector<std::string> names = mmng.GetAllMediasName();
 
-  std::string file_path(provider_vision::kProjectPath + "test/test_image.png");
+  std::string file_path(provider_vision::kProjectPath + "test/img/test_image.png");
   auto size_init = mmng.GetAllMediasCount();
   auto size_after = mmng.GetAllMediasCount();
 
