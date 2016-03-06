@@ -52,8 +52,7 @@ class TestFilter : public Filter {
         angle_("Angle", 0, 0, 360, &parameters_),
         header_("Header", "test", &parameters_),
         specField1_("SpecialField_1", "sf1", &parameters_),
-        specField2_("SpecialField_2", "sf2", &parameters_)
-  {
+        specField2_("SpecialField_2", "sf2", &parameters_) {
     SetName("TestFilter");
   }
 
@@ -62,16 +61,13 @@ class TestFilter : public Filter {
   //============================================================================
   // P U B L I C   M E T H O D S
 
-  virtual void init() {
-  }
+  virtual void init() {}
 
   virtual void Execute(cv::Mat &image) {
     if (enable_()) {
-      target_.SetTarget("test_filter", x_.GetValue()-1000/2, y_.GetValue(),
-                        w_.GetValue(), h_.GetValue(),
-                        angle_.GetValue(),
-                        1000, -1000-(1000/2),
-                        specField1_.GetValue(),
+      target_.SetTarget("test_filter", x_.GetValue() - 1000 / 2, y_.GetValue(),
+                        w_.GetValue(), h_.GetValue(), angle_.GetValue(), 1000,
+                        -1000 - (1000 / 2), specField1_.GetValue(),
                         specField2_.GetValue());
 
       NotifyTarget(target_);
@@ -83,7 +79,7 @@ class TestFilter : public Filter {
   // P R I V A T E   M E M B E R S
 
   Parameter<bool> enable_;
-  RangedParameter<int> x_,y_,w_,h_,angle_;
+  RangedParameter<int> x_, y_, w_, h_, angle_;
   Parameter<std::string> header_, specField1_, specField2_;
 
   Target target_;

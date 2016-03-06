@@ -31,7 +31,7 @@ class MediaManager {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  MediaManager() noexcept;
+  explicit MediaManager(const ros::NodeHandle &nh) noexcept;
 
   ~MediaManager() noexcept;
 
@@ -131,6 +131,8 @@ class MediaManager {
 
   //==========================================================================
   // P R I V A T E   M E M B E R S
+
+  ros::NodeHandle nh_;
 
   std::vector<BaseContext::Ptr> contexts_;
 

@@ -153,7 +153,7 @@ class HandleDetector : public Filter {
         cv::Point center = object->GetCenter();
         target.SetTarget(id_(), center.x, center.y, object->GetLength(),
                          object->GetLength(), object->GetRotatedRect().angle,
-        image.rows, image.cols);
+                         image.rows, image.cols);
         target.SetSpecField_1(spec_1_());
         target.SetSpecField_2(spec_2_());
         NotifyTarget(target);

@@ -19,7 +19,7 @@ namespace provider_vision {
 //------------------------------------------------------------------------------
 //
 BaseCamera::BaseCamera(const CameraConfiguration &configuration)
-    : BaseMedia(configuration) {
+    : BaseMedia(configuration.name_), config_(configuration) {
   undistord_matrix_.InitMatrices(config_.GetUndistortionMatricePath());
 }
 
@@ -34,7 +34,7 @@ BaseCamera::~BaseCamera() {}
 //
 void BaseCamera::SetFeature(const Feature &feat, float value) {
   std::stringstream ss;
-  ss << std::hex << config_.GetGUID() << " " << GetName();
+  ss << std::hex << config_.guid_ << " " << GetName();
   try {
     switch (feat) {
       case Feature::SHUTTER:
@@ -82,7 +82,7 @@ void BaseCamera::SetFeature(const Feature &feat, float value) {
         break;
     }
   } catch (const std::runtime_error &e) {
-    ROS_ERROR("%s",e.what());
+    ROS_ERROR("%s", e.what());
   }
 }
 
@@ -120,7 +120,7 @@ float BaseCamera::GetFeature(const Feature &feat) const {
         return -1.0f;
     }
   } catch (const std::runtime_error &e) {
-    ROS_ERROR("%s",e.what());
+    ROS_ERROR("%s", e.what());
     return -1.0f;
   }
 }

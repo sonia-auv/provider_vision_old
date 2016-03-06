@@ -20,9 +20,13 @@ namespace provider_vision {
 
 //------------------------------------------------------------------------------
 //
-DC1394Context::DC1394Context() noexcept : BaseContext(),
-                                          DRIVER_TAG("[DC1394 Driver]"),
-                                          driver_(nullptr) {}
+DC1394Context::DC1394Context(
+    const std::vector<CameraConfiguration> &configurations) noexcept
+    : BaseContext(),
+      DRIVER_TAG("[DC1394 Driver]"),
+      driver_(nullptr) {
+  InitContext(configurations);
+}
 
 //------------------------------------------------------------------------------
 //
@@ -34,7 +38,7 @@ DC1394Context::~DC1394Context() {}
 //------------------------------------------------------------------------------
 //
 void DC1394Context::InitContext(
-    const std::vector<CameraConfiguration> &cam_configuration_lists) {
+    const std::vector<CameraConfiguration> &configurations) {
   driver_ = dc1394_new();
   ROS_INFO_NAMED(DRIVER_TAG, "Initializing DC1394 driver");
 
@@ -55,8 +59,8 @@ void DC1394Context::InitContext(
 
   dc1394camera_t *camera_dc;
   for (uint i = 0; i < list->num; i++) {
-    for (auto const &cam_config : cam_configuration_lists) {
-      if (cam_config.GetGUID() == list->ids[i].guid) {
+    for (auto const &cam_config : configurations) {
+      if (cam_config.guid_ == list->ids[i].guid) {
         camera_dc = dc1394_camera_new(driver_, list->ids[i].guid);
         if (camera_dc == nullptr) {
           throw std::runtime_error("Error creating the DC1394 camera");

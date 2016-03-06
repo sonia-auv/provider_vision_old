@@ -151,7 +151,8 @@ void DetectionTask::Run() {
         provider_vision::GlobalParamHandler::Ptr paramHandler =
             filterchain_->GetParameterHandler();
         if (paramHandler) {
-          provider_vision::TargetQueue targetQueue = paramHandler->getTargetQueue();
+          provider_vision::TargetQueue targetQueue =
+              paramHandler->getTargetQueue();
           if (!targetQueue.empty()) {
             while (!targetQueue.empty()) {
               sonia_msgs::VisionTarget msg;

@@ -35,8 +35,6 @@ class VideoFile : public BaseMedia, private cv::VideoCapture {
 
   explicit VideoFile(const std::string &path_to_file, bool looping = true);
 
-  VideoFile();
-
   virtual ~VideoFile();
 
   //==========================================================================

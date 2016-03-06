@@ -13,62 +13,73 @@
 
 #include <map>
 #include <memory>
+#include <vector>
+#include <lib_atlas/macros.h>
+#include <ros/node_handle.h>
 
 namespace provider_vision {
 
 class CameraConfiguration {
  public:
-  //==========================================================================
+  //============================================================================
   // T Y P E D E F   A N D   E N U M
 
   using Ptr = std::shared_ptr<CameraConfiguration>;
+  using ConstPtr = std::shared_ptr<const CameraConfiguration>;
+  using PtrList = std::vector<CameraConfiguration::Ptr>;
+  using ConstPtrList = std::vector<CameraConfiguration::ConstPtr>;
 
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  explicit CameraConfiguration(const std::string &name);
+  explicit CameraConfiguration(const ros::NodeHandle &nh,
+                               const std::string &name) ATLAS_NOEXCEPT;
 
-  virtual ~CameraConfiguration();
+  /**
+   * We want to define copy constructor here for optimization purpose.
+   * Do not copy the members if is a rvalue.
+   */
+  explicit CameraConfiguration(const CameraConfiguration &rhs) ATLAS_NOEXCEPT;
+  explicit CameraConfiguration(CameraConfiguration &&rhs) ATLAS_NOEXCEPT;
+
+  virtual ~CameraConfiguration() ATLAS_NOEXCEPT;
+
+  //==========================================================================
+  // P U B L I C   M E M B E R S
+
+  int guid_;
+  std::string name_;
+  float framerate_;
+  bool gain_manual_;
+  bool shutter_manual_;
+  bool white_balance_manual_;
+  float gain_;
+  float shutter_;
+  float gamma_;
+  float exposure_;
+  float white_balance_blue_;
+  float white_balance_red_;
 
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  uint64_t GetGUID() const;
+  std::string GetUndistortionMatricePath() const ATLAS_NOEXCEPT;
 
-  const std::string &GetName() const;
-
-  std::string GetUndistortionMatricePath() const;
-
-  void SetGUID(uint64_t guid);
-
-  void SetName(const std::string &name);
-
-  void SetUndistortionMatricePath(const std::string path);
-
-  float GetFloat(const std::string &config_name) const;
-
-  int GetInteger(const std::string &config_name) const;
-
-  bool GetBoolean(const std::string &config_name) const;
-
-  std::string GetString(const std::string &config_name) const;
-
-  void AddConfiguration(const std::string &config_name,
-                        const std::string &value);
-
-  const std::string &GetParam(const std::string &config_name) const;
-
-  const std::map<std::string, std::string> &GetConfigurations() const;
+  void SetUndistortionMatricePath(const std::string path) ATLAS_NOEXCEPT;
 
  private:
+  //============================================================================
+  // P R I V A T E   M E T H O D S
+
+  void DeserializeConfiguration(const std::string &name) ATLAS_NOEXCEPT;
+
+  template <typename Tp_>
+  void FindParameter(const std::string &str, Tp_ &p) ATLAS_NOEXCEPT;
+
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
-  std::map<std::string, std::string> configuration_;
-
-  uint64_t guid_;
-
-  std::string name_;
+  ros::NodeHandle nh_;
 
   std::string undistortion_matrice_path_;
 };
@@ -78,89 +89,16 @@ class CameraConfiguration {
 
 //-----------------------------------------------------------------------------
 //
-inline void CameraConfiguration::AddConfiguration(
-    const std::string &config_name, const std::string &value) {
-  configuration_.insert(
-      std::pair<std::string, std::string>(config_name, value));
-}
-
-//-----------------------------------------------------------------------------
-//
-inline const std::map<std::string, std::string> &
-CameraConfiguration::GetConfigurations() const {
-  return configuration_;
-}
-
-//-----------------------------------------------------------------------------
-//
-inline void CameraConfiguration::SetGUID(uint64_t guid) { guid_ = guid; }
-
-//-----------------------------------------------------------------------------
-//
-inline uint64_t CameraConfiguration::GetGUID() const { return guid_; }
-
-//-----------------------------------------------------------------------------
-//
-inline void CameraConfiguration::SetName(const std::string &name) {
-  name_ = name;
-}
-
-//-----------------------------------------------------------------------------
-//
-inline const std::string &CameraConfiguration::GetName() const { return name_; }
-
-//-----------------------------------------------------------------------------
-//
 inline void CameraConfiguration::SetUndistortionMatricePath(
-    const std::string path) {
+    const std::string path) ATLAS_NOEXCEPT {
   undistortion_matrice_path_ = path;
 }
 
 //-----------------------------------------------------------------------------
 //
-inline std::string CameraConfiguration::GetUndistortionMatricePath() const {
+inline std::string CameraConfiguration::GetUndistortionMatricePath() const
+    ATLAS_NOEXCEPT {
   return undistortion_matrice_path_;
-}
-
-//-----------------------------------------------------------------------------
-//
-inline const std::string &CameraConfiguration::GetParam(
-    const std::string &config_name) const {
-  auto config = configuration_.find(config_name);
-  if (config == configuration_.end()) {
-    throw std::invalid_argument("Param not found");
-  }
-  return config->second;
-}
-
-//-----------------------------------------------------------------------------
-//
-inline float CameraConfiguration::GetFloat(
-    const std::string &config_name) const {
-  return atof(GetParam(config_name).c_str());
-}
-
-//-----------------------------------------------------------------------------
-//
-inline int CameraConfiguration::GetInteger(
-    const std::string &config_name) const {
-  return atoi(GetParam(config_name).c_str());
-}
-
-//-----------------------------------------------------------------------------
-//
-inline bool CameraConfiguration::GetBoolean(
-    const std::string &config_name) const {
-  bool ret_val = false;
-  if (GetParam(config_name).compare("True") == 0) ret_val = true;
-  return ret_val;
-}
-
-//-----------------------------------------------------------------------------
-//
-inline std::string CameraConfiguration::GetString(
-    const std::string &config_name) const {
-  return GetParam(config_name);
 }
 
 }  // namespace provider_vision

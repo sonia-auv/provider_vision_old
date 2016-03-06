@@ -72,17 +72,13 @@ class GlobalParamHandler {
   inline void setOriginalImage(cv::Mat image) { _original_image = image; }
 
   // Target related
-  inline void addTarget(const Target &target) {
-    _vision_target.push( target);
-  }
+  inline void addTarget(const Target &target) { _vision_target.push(target); }
 
   // REturns reference so we can pop when we read.
-  inline TargetQueue &getTargetQueue() {
-    return _vision_target;
-  }
+  inline TargetQueue &getTargetQueue() { return _vision_target; }
 
   inline const void clearTarget() {
-    while( !_vision_target.empty() ){
+    while (!_vision_target.empty()) {
       _vision_target.pop();
     }
   }

@@ -115,6 +115,8 @@ class BaseCamera : public BaseMedia {
   //==========================================================================
   // P R O T E C T E D   M E M B E R S
 
+  CameraConfiguration config_;
+
   CameraUndistordMatrices undistord_matrix_;
 
  private:

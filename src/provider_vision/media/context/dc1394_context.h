@@ -41,15 +41,13 @@ class DC1394Context : public BaseContext {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  DC1394Context() noexcept;
+  explicit DC1394Context(
+      const std::vector<CameraConfiguration> &configurations) noexcept;
 
   virtual ~DC1394Context() noexcept;
 
   //==========================================================================
   // P U B L I C   M E T H O D S
-
-  void InitContext(
-      const std::vector<CameraConfiguration> &cam_configuration_lists) override;
 
   void CloseContext() override;
 
@@ -76,6 +74,8 @@ class DC1394Context : public BaseContext {
  private:
   //==========================================================================
   // P R I V A T E   M E T H O D S
+
+  void InitContext(const std::vector<CameraConfiguration> &configurations);
 
   DC1394Camera::Ptr GetDC1394Camera(const std::string &name) const;
 

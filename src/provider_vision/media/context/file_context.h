@@ -54,9 +54,6 @@ class FileContext : public BaseContext {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  void InitContext(
-      const std::vector<CameraConfiguration> &cam_configuration_lists) override;
-
   void CloseContext() override;
 
   void OpenMedia(const std::string &name) override;

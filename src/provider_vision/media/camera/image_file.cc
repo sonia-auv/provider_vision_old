@@ -20,7 +20,7 @@ namespace provider_vision {
 //------------------------------------------------------------------------------
 //
 ImageFile::ImageFile(const std::string &path_to_file) noexcept
-    : BaseMedia(CameraConfiguration(path_to_file)),
+    : BaseMedia(path_to_file),
       path_(path_to_file) {}
 
 //------------------------------------------------------------------------------

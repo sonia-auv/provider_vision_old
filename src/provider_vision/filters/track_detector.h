@@ -160,7 +160,7 @@ class TrackDetector : public Filter {
         cv::Point center = object->GetCenter();
         target.SetTarget("track", center.x, center.y, object->GetLength(),
                          object->GetLength(), object->GetRotatedRect().angle,
-        image.rows, image.cols);
+                         image.rows, image.cols);
         NotifyTarget(target);
         if (debug_contour_()) {
           cv::circle(output_image_, objVec[0]->GetCenter(), 3,

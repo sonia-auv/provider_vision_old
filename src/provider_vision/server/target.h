@@ -47,9 +47,8 @@ class Target {
   // P U B L I C   C / D T O R S
 
   Target();
-  Target(const std::string &header,
-         int x, int y, float width, float height, float angle,
-         int image_height, int image_width,
+  Target(const std::string &header, int x, int y, float width, float height,
+         float angle, int image_height, int image_width,
          const std::string &spec_field_1 = "",
          const std::string &spec_field_2 = "");
 
@@ -59,9 +58,8 @@ class Target {
   // P U B L I C   M E T H O D S
 
   // Setting target will use offseted center.
-  void SetTarget(const std::string &header,
-                 int x, int y, float width, float height, float angle,
-                 int image_height, int image_width,
+  void SetTarget(const std::string &header, int x, int y, float width,
+                 float height, float angle, int image_height, int image_width,
                  const std::string &spec_field_1 = "",
                  const std::string &spec_field_2 = "");
 
@@ -91,7 +89,7 @@ class Target {
 
   std::string GetSpecField_2();
 
-  void SetMessage( sonia_msgs::VisionTarget &msg);
+  void SetMessage(sonia_msgs::VisionTarget &msg);
 
  private:
   //============================================================================
@@ -108,21 +106,18 @@ class Target {
   std::string special_field_2_;
 };
 
-
 typedef std::queue<Target> TargetQueue;
-
 
 //==============================================================================
 // I N L I N E   F U N C T I O N S   D E F I N I T I O N S
 
 //------------------------------------------------------------------------------
 //
-inline void Target::SetTarget(const std::string &header,
-                              int x, int y, float width, float height, float angle,
+inline void Target::SetTarget(const std::string &header, int x, int y,
+                              float width, float height, float angle,
                               int image_height, int image_width,
-                      const std::string &spec_field_1,
-                      const std::string &spec_field_2)
-{
+                              const std::string &spec_field_1,
+                              const std::string &spec_field_2) {
   header_ = header;
   center_.x = x;
   center_.y = y;
@@ -136,26 +131,23 @@ inline void Target::SetTarget(const std::string &header,
 
 //------------------------------------------------------------------------------
 //
-inline void Target::SetTarget(ObjectFullData::Ptr obj, const std::string &header,
+inline void Target::SetTarget(ObjectFullData::Ptr obj,
+                              const std::string &header,
                               const std::string &spec_field_1,
-                              const std::string &spec_field_2)
-{
+                              const std::string &spec_field_2) {
   header_ = header;
   center_ = obj->GetCenter();
   dimension_ = obj->GetRotatedRect().size;
   angle_ = obj->GetAngle();
   special_field_1_ = spec_field_1;
   special_field_2_ = spec_field_2;
-  SetCameraOffset(center_, obj->GetImageSize().height, obj->GetImageSize().width);
+  SetCameraOffset(center_, obj->GetImageSize().height,
+                  obj->GetImageSize().width);
 }
-
 
 //------------------------------------------------------------------------------
 //
-inline void Target::SetHeader(const std::string &header)
-{
-  header_ = header;
-}
+inline void Target::SetHeader(const std::string &header) { header_ = header; }
 
 //------------------------------------------------------------------------------
 //
@@ -213,8 +205,7 @@ inline std::string Target::GetSpecField_2() { return special_field_2_; }
 
 //------------------------------------------------------------------------------
 //
-inline void Target::SetMessage( sonia_msgs::VisionTarget &msg)
-{
+inline void Target::SetMessage(sonia_msgs::VisionTarget &msg) {
   msg.header = header_;
   msg.x = center_.x;
   msg.y = center_.y;

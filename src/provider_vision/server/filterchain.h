@@ -127,8 +127,8 @@ inline provider_vision::Filter::Ptr Filterchain::GetFilter(
 
 //------------------------------------------------------------------------------
 //
-inline std::vector<provider_vision::Filter::Ptr> Filterchain::GetFiltersWithName(
-    const std::string &filter_name) const {
+inline std::vector<provider_vision::Filter::Ptr>
+Filterchain::GetFiltersWithName(const std::string &filter_name) const {
   std::vector<provider_vision::Filter::Ptr> filters;
   for (const auto &filter : filters_) {
     if (filter->GetName() == filter_name) {
@@ -140,7 +140,8 @@ inline std::vector<provider_vision::Filter::Ptr> Filterchain::GetFiltersWithName
 
 //------------------------------------------------------------------------------
 //
-inline std::vector<provider_vision::Filter::Ptr> Filterchain::GetAllFilters() const {
+inline std::vector<provider_vision::Filter::Ptr> Filterchain::GetAllFilters()
+    const {
   return filters_;
 }
 
@@ -163,7 +164,8 @@ inline void Filterchain::SetObserver(const size_t &index) {
 
 //------------------------------------------------------------------------------
 //
-inline provider_vision::GlobalParamHandler::Ptr Filterchain::GetParameterHandler() {
+inline provider_vision::GlobalParamHandler::Ptr
+Filterchain::GetParameterHandler() {
   return std::make_shared<provider_vision::GlobalParamHandler>(param_handler_);
 }
 

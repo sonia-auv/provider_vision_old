@@ -17,10 +17,10 @@
 //
 int main(int argc, char **argv) {
   ros::init(argc, argv, "provider_vision");
-  ros::NodeHandle nh;
+  ros::NodeHandle nh("~");
   ros::Rate loop_rate(15);
 
-  provider_vision::VisionServer provider_vision{};
+  provider_vision::VisionServer pv(nh);
 
   while (ros::ok()) {
     ros::spinOnce();

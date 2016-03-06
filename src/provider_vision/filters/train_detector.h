@@ -166,8 +166,8 @@ class TrainDetector : public Filter {
         cv::Point center = object->GetCenter();
         target.SetTarget("train", center.x, center.y, object->GetLength(),
                          object->GetLength(),
-                         abs(object->GetRotatedRect().angle - 90),
-                         image.rows, image.cols);
+                         abs(object->GetRotatedRect().angle - 90), image.rows,
+                         image.cols);
         NotifyTarget(target);
         if (debug_contour_()) {
           contourList_t tmp;

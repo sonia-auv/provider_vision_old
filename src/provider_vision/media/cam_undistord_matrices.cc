@@ -8,7 +8,6 @@
  * found in the LICENSE file.
  */
 
-#include <provider_vision/media/configuration_handler.h>
 #include "provider_vision/media/cam_undistord_matrices.h"
 
 namespace provider_vision {

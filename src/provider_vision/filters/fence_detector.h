@@ -184,7 +184,8 @@ class FenceDetector : public Filter {
 
       Target fence;
       cv::Point center = (rect_from_hori_bar.center);
-      fence.SetTarget("fence", center.x, center.y, rect_from_hori_bar.size.width,
+      fence.SetTarget("fence", center.x, center.y,
+                      rect_from_hori_bar.size.width,
                       rect_from_hori_bar.size.height, rect_from_hori_bar.angle,
                       image.rows, image.cols);
 

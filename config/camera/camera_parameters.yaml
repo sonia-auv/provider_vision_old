@@ -1,0 +1,42 @@
+# File containing all the initial camera parameters for the default camera.
+
+# Parameters for the Front Guppy Camera
+/provider_vision/camera_parameters/front_guppy/name: "Front Guppy"
+/provider_vision/camera_parameters/front_guppy/guid: a4701120a8890
+/provider_vision/camera_parameters/front_guppy/framerate: 0
+/provider_vision/camera_parameters/front_guppy/gain_manual: true
+/provider_vision/camera_parameters/front_guppy/shutter_manual: true
+/provider_vision/camera_parameters/front_guppy/white_balance_manual: true
+/provider_vision/camera_parameters/front_guppy/gain: 420.0
+/provider_vision/camera_parameters/front_guppy/shutter: 32.0
+/provider_vision/camera_parameters/front_guppy/gamma: 0
+/provider_vision/camera_parameters/front_guppy/exposure: 0
+/provider_vision/camera_parameters/front_guppy/white_balance_red: 568.0
+/provider_vision/camera_parameters/front_guppy/white_balance_blue: 381.0
+
+# Parameters for the Bottom Guppy Camera
+/provider_vision/camera_parameters/bottom_guppy/name: "Bottom Guppy"
+/provider_vision/camera_parameters/bottom_guppy/guid: 2892819690326160d
+/provider_vision/camera_parameters/bottom_guppy/framerate: 0
+/provider_vision/camera_parameters/bottom_guppy/gain_manual: true
+/provider_vision/camera_parameters/bottom_guppy/shutter_manual: true
+/provider_vision/camera_parameters/bottom_guppy/white_balance_manual: true
+/provider_vision/camera_parameters/bottom_guppy/gain: 420.0
+/provider_vision/camera_parameters/bottom_guppy/shutter: 32.0
+/provider_vision/camera_parameters/bottom_guppy/gamma: 0
+/provider_vision/camera_parameters/bottom_guppy/exposure: 0
+/provider_vision/camera_parameters/bottom_guppy/white_balance_red: 568.0
+/provider_vision/camera_parameters/bottom_guppy/white_balance_blue: 381.0
+
+# Parameters for the all other camera (default configurations)
+/provider_vision/camera_parameters/default/name: "Default Camera"
+/provider_vision/camera_parameters/default/framerate: 0
+/provider_vision/camera_parameters/default/gain_manual: true
+/provider_vision/camera_parameters/default/shutter_manual: true
+/provider_vision/camera_parameters/default/white_balance_manual: true
+/provider_vision/camera_parameters/default/gain: 350.0
+/provider_vision/camera_parameters/default/shutter: 500.0
+/provider_vision/camera_parameters/default/gamma: 0
+/provider_vision/camera_parameters/default/exposure: 0
+/provider_vision/camera_parameters/default/white_balance_red: 511.0
+/provider_vision/camera_parameters/default/white_balance_blue: 412.0

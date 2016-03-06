@@ -172,13 +172,13 @@ class DeloreanDetector : public Filter {
         }
 
         if (output_train_()) {
-          target.SetTarget("train",center_big.x, center_big.y, object_big->GetLength(),
-                           object_big->GetLength(), float(angle),
-          image.rows, image.cols);
+          target.SetTarget("train", center_big.x, center_big.y,
+                           object_big->GetLength(), object_big->GetLength(),
+                           float(angle), image.rows, image.cols);
         } else {
-          target.SetTarget("delorean", center_big.x, center_big.y, object_big->GetLength(),
-                           object_big->GetLength(), float(angle),
-          image.rows, image.cols);
+          target.SetTarget("delorean", center_big.x, center_big.y,
+                           object_big->GetLength(), object_big->GetLength(),
+                           float(angle), image.rows, image.cols);
         }
         NotifyTarget(target);
         if (debug_contour_()) {

@@ -14,7 +14,6 @@
 #include <mutex>
 #include <memory>
 #include <lib_atlas/pattern/runnable.h>
-#include <provider_vision/media/configuration_handler.h>
 #include "provider_vision/media/camera/base_media.h"
 #include "provider_vision/media/camera/base_camera.h"
 
@@ -40,13 +39,6 @@ class BaseContext : public atlas::Runnable {
 
   //==========================================================================
   // P U B L I C   M E T H O D S
-
-  /**
-   * Method to Init and close a driver contains step needed by driver to have
-   * a functioning environnement.
-   */
-  virtual void InitContext(
-      const std::vector<CameraConfiguration> &cam_configuration_lists) = 0;
 
   virtual void CloseContext() = 0;
 
