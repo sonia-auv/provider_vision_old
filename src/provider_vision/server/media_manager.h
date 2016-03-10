@@ -11,10 +11,10 @@
 #ifndef PROVIDER_VISION_SERVER_MEDIA_MANAGER_H_
 #define PROVIDER_VISION_SERVER_MEDIA_MANAGER_H_
 
-#include <memory>
-#include <vector>
-#include <string>
 #include <provider_vision/media/camera/base_media.h>
+#include <memory>
+#include <string>
+#include <vector>
 #include "provider_vision/media/camera/base_camera.h"
 #include "provider_vision/media/context/base_context.h"
 #include "provider_vision/media/media_streamer.h"
@@ -31,7 +31,7 @@ class MediaManager {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  MediaManager() noexcept;
+  explicit MediaManager(const ros::NodeHandle &nh) noexcept;
 
   ~MediaManager() noexcept;
 
@@ -131,6 +131,8 @@ class MediaManager {
 
   //==========================================================================
   // P R I V A T E   M E M B E R S
+
+  ros::NodeHandle nh_;
 
   std::vector<BaseContext::Ptr> contexts_;
 

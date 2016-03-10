@@ -8,9 +8,9 @@
  * found in the LICENSE file.
  */
 
+#include "provider_vision/media/camera/video_file.h"
 #include <string>
 #include <vector>
-#include "provider_vision/media/camera/video_file.h"
 
 namespace provider_vision {
 
@@ -20,21 +20,13 @@ namespace provider_vision {
 //------------------------------------------------------------------------------
 //
 VideoFile::VideoFile(const std::string &path_to_file, bool looping)
-    : BaseMedia(CameraConfiguration(path_to_file)),
+    : BaseMedia(path_to_file),
       VideoCapture(path_to_file),
       current_image_(),
       path_(path_to_file),
       looping_(looping) {
   LoadVideo(path_);
 }
-
-//------------------------------------------------------------------------------
-//
-VideoFile::VideoFile()
-    : BaseMedia(CameraConfiguration("NO_PATH")),
-      current_image_(),
-      path_(std::string("")),
-      looping_(true) {}
 
 //------------------------------------------------------------------------------
 //
@@ -83,12 +75,6 @@ void VideoFile::SetStreamingModeOn() { status_ = Status::STREAMING; }
 //------------------------------------------------------------------------------
 //
 void VideoFile::SetStreamingModeOff() { status_ = Status::CLOSE; }
-
-//------------------------------------------------------------------------------
-//
-void VideoFile::SetPathToVideo(const std::string &full_path) {
-  path_ = full_path;
-}
 
 //------------------------------------------------------------------------------
 //

@@ -12,32 +12,32 @@
 #ifndef PROVIDER_VISION_SERVER_VISION_SERVER_H_
 #define PROVIDER_VISION_SERVER_VISION_SERVER_H_
 
-#include <memory>
-#include <vector>
-#include <string>
 #include <lib_atlas/ros/service_server_manager.h>
-#include <sonia_msgs/execute_cmd.h>
-#include <sonia_msgs/get_information_list.h>
-#include <sonia_msgs/get_media_param.h>
-#include <sonia_msgs/set_media_param.h>
 #include <sonia_msgs/copy_filterchain.h>
-#include <sonia_msgs/manage_filterchain.h>
-#include <sonia_msgs/get_filterchain_filter_param.h>
-#include <sonia_msgs/set_filterchain_filter_param.h>
-#include <sonia_msgs/get_filterchain_filter_all_param.h>
+#include <sonia_msgs/execute_cmd.h>
 #include <sonia_msgs/get_filterchain_filter.h>
+#include <sonia_msgs/get_filterchain_filter_all_param.h>
+#include <sonia_msgs/get_filterchain_filter_param.h>
+#include <sonia_msgs/get_filterchain_from_execution.h>
+#include <sonia_msgs/get_information_list.h>
+#include <sonia_msgs/get_media_from_execution.h>
+#include <sonia_msgs/get_media_param.h>
+#include <sonia_msgs/manage_filterchain.h>
 #include <sonia_msgs/manage_filterchain_filter.h>
 #include <sonia_msgs/save_filterchain.h>
-#include <sonia_msgs/set_filterchain_filter_order.h>
-#include <sonia_msgs/get_filterchain_from_execution.h>
-#include <sonia_msgs/get_media_from_execution.h>
 #include <sonia_msgs/set_filterchain_filter_observer.h>
-#include "provider_vision/utils/config.h"
+#include <sonia_msgs/set_filterchain_filter_order.h>
+#include <sonia_msgs/set_filterchain_filter_param.h>
+#include <sonia_msgs/set_media_param.h>
+#include <memory>
+#include <string>
+#include <vector>
 #include "provider_vision/media/camera/base_media.h"
 #include "provider_vision/server/detection_task.h"
-#include "provider_vision/server/media_manager.h"
-#include "provider_vision/server/filterchain_manager.h"
 #include "provider_vision/server/detection_task_manager.h"
+#include "provider_vision/server/filterchain_manager.h"
+#include "provider_vision/server/media_manager.h"
+#include "provider_vision/utils/config.h"
 
 namespace provider_vision {
 
@@ -64,7 +64,7 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
   //============================================================================
   // P U B L I C   C / D T O R S
 
-  explicit VisionServer();
+  explicit VisionServer(const ros::NodeHandle &nh);
 
   ~VisionServer();
 
@@ -371,7 +371,7 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    * This is mainly for performance purpose as we could also recreate a
    * ros::NodeHandle on the different instance of the objects.
    */
-  ros::NodeHandle node_handle_;
+  ros::NodeHandle nh_;
 
   MediaManager media_mgr_;
 

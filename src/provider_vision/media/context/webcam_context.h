@@ -12,8 +12,8 @@
 #define PROVIDER_VISION_MEDIA_CONTEXT_WEBCAM_CONTEXT_H_
 
 #include <opencv2/opencv.hpp>
-#include "provider_vision/media/context/base_context.h"
 #include "provider_vision/media/camera/webcam_camera.h"
+#include "provider_vision/media/context/base_context.h"
 #include "provider_vision/utils/config.h"
 
 namespace provider_vision {
@@ -43,12 +43,15 @@ class WebcamContext : public BaseContext {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  void InitContext(
-      const std::vector<CameraConfiguration> &cam_configuration_lists) override;
-
   void CloseContext() override;
 
   void OpenMedia(const std::string &name) override;
+
+  void SetFeature(BaseCamera::Feature feat, const std::string &name,
+                  float val) override;
+
+  void GetFeature(BaseCamera::Feature feat, const std::string &name,
+                  float &val) const override;
 
   void CloseMedia(const std::string &name) override;
 
@@ -59,12 +62,6 @@ class WebcamContext : public BaseContext {
   std::vector<BaseMedia::Ptr> GetMediaList() const override;
 
   BaseMedia::Ptr GetMedia(const std::string &name) const override;
-
-  void SetFeature(BaseCamera::Feature feat, const std::string &name,
-                  float val) override;
-
-  void GetFeature(BaseCamera::Feature feat, const std::string &name,
-                  float &val) const override;
 
   bool IsMyCamera(std::string &nameMedia) const;
 

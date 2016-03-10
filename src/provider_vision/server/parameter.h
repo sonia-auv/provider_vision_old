@@ -26,14 +26,14 @@
 #ifndef PROVIDER_VISION_FILTER_PARAMETER_H_
 #define PROVIDER_VISION_FILTER_PARAMETER_H_
 
-#include <memory>
-#include <string>
-#include <cstdlib>
-#include <string>
-#include <vector>
-#include <sstream>
 #include <lib_atlas/macros.h>
 #include <provider_vision/server/parameter_interface.h>
+#include <cstdlib>
+#include <memory>
+#include <sstream>
+#include <string>
+#include <string>
+#include <vector>
 
 namespace provider_vision {
 

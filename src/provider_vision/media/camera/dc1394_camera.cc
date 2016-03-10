@@ -8,9 +8,9 @@
  * found in the LICENSE file.
  */
 
-#include <string>
-#include <ros/ros.h>
 #include "provider_vision/media/camera/dc1394_camera.h"
+#include <ros/ros.h>
+#include <string>
 
 namespace provider_vision {
 
@@ -23,8 +23,7 @@ const std::string DC1394Camera::CAM_TAG = "[DC1394 Camera]";
 //
 DC1394Camera::DC1394Camera(dc1394camera_t *camera,
                            const CameraConfiguration &config)
-    : BaseCamera(config),
-      dc1394_camera_(camera) {}
+    : BaseCamera(config), dc1394_camera_(camera) {}
 
 //------------------------------------------------------------------------------
 //
@@ -209,7 +208,7 @@ float DC1394Camera::GetExposureValue() const {
 
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error("Canno't get the exposure value on DC1394 Camera" +
-        std::to_string(static_cast<int>(error)));
+                             std::to_string(static_cast<int>(error)));
   }
 
   return static_cast<float>(value);
@@ -227,7 +226,7 @@ float DC1394Camera::GetSaturationValue() const {
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error(
         "Canno't get the saturation value on DC1394 Camera" +
-            std::to_string(static_cast<int>(error)));
+        std::to_string(static_cast<int>(error)));
   }
 
   return static_cast<float>(value);
@@ -244,7 +243,7 @@ void DC1394Camera::SetGainAuto() {
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error(
         "Canno't set the gain in automatic on DC1394 Camera" +
-            std::to_string(static_cast<int>(error)));
+        std::to_string(static_cast<int>(error)));
   }
 }
 
@@ -258,7 +257,7 @@ void DC1394Camera::SetGainManual() {
 
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error("Canno't set the Gain in manual on DC1394 Camera" +
-        std::to_string(static_cast<int>(error)));
+                             std::to_string(static_cast<int>(error)));
   }
 }
 
@@ -284,7 +283,7 @@ void DC1394Camera::SetGammaValue(float value) {
 
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error("Canno't set the gamma on DC1394 Camera" +
-        std::to_string(static_cast<int>(error)));
+                             std::to_string(static_cast<int>(error)));
   }
 }
 
@@ -298,7 +297,7 @@ void DC1394Camera::SetExposureValue(float value) {
 
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error("Canno't set the exposure on DC1394 Camera" +
-        std::to_string(static_cast<int>(error)));
+                             std::to_string(static_cast<int>(error)));
   }
 }
 

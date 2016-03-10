@@ -12,8 +12,8 @@
 #define PROVIDER_VISION_MEDIA_UNDISTORD_MATRICES_H_
 
 #include <memory>
-#include <string>
 #include <opencv2/opencv.hpp>
+#include <string>
 #include "lib_atlas/macros.h"
 
 namespace provider_vision {

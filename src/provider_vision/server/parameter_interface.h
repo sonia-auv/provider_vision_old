@@ -26,12 +26,12 @@
 #ifndef PROVIDER_VISION_PARAMETER_INTERFACE_H_
 #define PROVIDER_VISION_PARAMETER_INTERFACE_H_
 
-#include <memory>
-#include <string>
-#include <cstdlib>
-#include <string>
-#include <sstream>
 #include <lib_atlas/macros.h>
+#include <cstdlib>
+#include <memory>
+#include <sstream>
+#include <string>
+#include <string>
 
 namespace provider_vision {
 

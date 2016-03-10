@@ -33,7 +33,6 @@ DetectionTaskManager::~DetectionTaskManager() {}
 std::string DetectionTaskManager::StartDetectionTask(
     MediaStreamer::Ptr media_streamer, Filterchain::Ptr filterchain,
     const std::string &execution_name) {
-
   if (execution_name.empty()) {
     throw std::invalid_argument("The detection task name is not valid");
   }
@@ -133,7 +132,7 @@ Filterchain::Ptr DetectionTaskManager::GetFilterchainFromDetectionTask(
 DetectionTask::Ptr DetectionTaskManager::GetDetectionTask(
     const std::string &execution_name) const {
   for (const auto &task : detection_tasks_) {
-    if (task->GetDetectionTaskName().compare(execution_name) == 0 ) {
+    if (task->GetDetectionTaskName().compare(execution_name) == 0) {
       return task;
     }
   }

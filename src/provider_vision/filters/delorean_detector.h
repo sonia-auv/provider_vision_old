@@ -26,12 +26,12 @@
 #ifndef PROVIDER_VISION_FILTERS_DELOREAN_DETECTOR_H_
 #define PROVIDER_VISION_FILTERS_DELOREAN_DETECTOR_H_
 
-#include <memory>
 #include <provider_vision/algorithm/general_function.h>
-#include <provider_vision/server/target.h>
-#include <provider_vision/filters/filter.h>
-#include <provider_vision/algorithm/object_full_data.h>
 #include <provider_vision/algorithm/object_feature_factory.h>
+#include <provider_vision/algorithm/object_full_data.h>
+#include <provider_vision/filters/filter.h>
+#include <provider_vision/server/target.h>
+#include <memory>
 
 namespace provider_vision {
 
@@ -147,11 +147,13 @@ class DeloreanDetector : public Filter {
       }
 
       std::sort(objVec_big.begin(), objVec_big.end(),
-                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
-                    -> bool { return a->GetArea() > b->GetArea(); });
+                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
+                  return a->GetArea() > b->GetArea();
+                });
       std::sort(objVec_small.begin(), objVec_small.end(),
-                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
-                    -> bool { return a->GetArea() > b->GetArea(); });
+                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
+                  return a->GetArea() > b->GetArea();
+                });
 
       if (objVec_big.size() > 0) {
         Target target;
@@ -172,13 +174,13 @@ class DeloreanDetector : public Filter {
         }
 
         if (output_train_()) {
-          target.SetTarget("train",center_big.x, center_big.y, object_big->GetLength(),
-                           object_big->GetLength(), float(angle),
-          image.rows, image.cols);
+          target.SetTarget("train", center_big.x, center_big.y,
+                           object_big->GetLength(), object_big->GetLength(),
+                           float(angle), image.rows, image.cols);
         } else {
-          target.SetTarget("delorean", center_big.x, center_big.y, object_big->GetLength(),
-                           object_big->GetLength(), float(angle),
-          image.rows, image.cols);
+          target.SetTarget("delorean", center_big.x, center_big.y,
+                           object_big->GetLength(), object_big->GetLength(),
+                           float(angle), image.rows, image.cols);
         }
         NotifyTarget(target);
         if (debug_contour_()) {

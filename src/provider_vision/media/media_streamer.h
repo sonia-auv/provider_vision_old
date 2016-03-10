@@ -11,14 +11,14 @@
 #ifndef PROVIDER_VISION_MEDIA_MEDIA_STREAMER_H_
 #define PROVIDER_VISION_MEDIA_MEDIA_STREAMER_H_
 
-#include <mutex>
-#include <string>
-#include <ros/ros.h>
-#include <opencv2/opencv.hpp>
-#include <lib_atlas/sys/timer.h>
-#include <lib_atlas/sys/fsinfo.h>
-#include <lib_atlas/pattern/subject.h>
 #include <lib_atlas/pattern/runnable.h>
+#include <lib_atlas/pattern/subject.h>
+#include <lib_atlas/sys/fsinfo.h>
+#include <lib_atlas/sys/timer.h>
+#include <ros/ros.h>
+#include <mutex>
+#include <opencv2/opencv.hpp>
+#include <string>
 #include "provider_vision/media/camera/base_media.h"
 
 namespace provider_vision {

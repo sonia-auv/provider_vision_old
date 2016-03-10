@@ -11,12 +11,12 @@
 #ifndef PROVIDER_VISION_MEDIA_CONTEXT_DC1394_CONTEXT_H_
 #define PROVIDER_VISION_MEDIA_CONTEXT_DC1394_CONTEXT_H_
 
-#include <inttypes.h>
 #include <dc1394/dc1394.h>
-#include "provider_vision/utils/config.h"
+#include <inttypes.h>
 #include "provider_vision/media/camera/base_media.h"
-#include "provider_vision/media/context/base_context.h"
 #include "provider_vision/media/camera/dc1394_camera.h"
+#include "provider_vision/media/context/base_context.h"
+#include "provider_vision/utils/config.h"
 
 namespace provider_vision {
 
@@ -41,15 +41,13 @@ class DC1394Context : public BaseContext {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  DC1394Context() noexcept;
+  explicit DC1394Context(
+      const std::vector<CameraConfiguration> &configurations) noexcept;
 
   virtual ~DC1394Context() noexcept;
 
   //==========================================================================
   // P U B L I C   M E T H O D S
-
-  void InitContext(
-      const std::vector<CameraConfiguration> &cam_configuration_lists) override;
 
   void CloseContext() override;
 
@@ -76,6 +74,8 @@ class DC1394Context : public BaseContext {
  private:
   //==========================================================================
   // P R I V A T E   M E T H O D S
+
+  void InitContext(const std::vector<CameraConfiguration> &configurations);
 
   DC1394Camera::Ptr GetDC1394Camera(const std::string &name) const;
 

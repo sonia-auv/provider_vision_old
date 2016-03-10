@@ -11,16 +11,16 @@
 #ifndef PROVIDER_VISION_MEDIA_CAMERA_DC1394_CAMERA_H_
 #define PROVIDER_VISION_MEDIA_CAMERA_DC1394_CAMERA_H_
 
-#include <mutex>
-#include <memory>
-#include <string>
-#include <opencv2/opencv.hpp>
-#include <sensor_msgs/image_encodings.h>
 #include <dc1394/dc1394.h>
 #include <lib_atlas/sys/timer.h>
+#include <sensor_msgs/image_encodings.h>
+#include <memory>
+#include <mutex>
+#include <opencv2/opencv.hpp>
+#include <string>
+#include "provider_vision/media/camera/base_camera.h"
 #include "provider_vision/media/camera/base_media.h"
 #include "provider_vision/media/context/base_context.h"
-#include "provider_vision/media/camera/base_camera.h"
 
 namespace provider_vision {
 

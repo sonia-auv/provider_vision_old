@@ -11,11 +11,11 @@
 #ifndef PROVIDER_VISION_MEDIA_CONTEXT_FILE_CONTEXT_H_
 #define PROVIDER_VISION_MEDIA_CONTEXT_FILE_CONTEXT_H_
 
+#include <opencv2/opencv.hpp>
 #include <string>
 #include <vector>
-#include <opencv2/opencv.hpp>
-#include "provider_vision/media/camera/video_file.h"
 #include "provider_vision/media/camera/image_file.h"
+#include "provider_vision/media/camera/video_file.h"
 #include "provider_vision/media/context/base_context.h"
 #include "provider_vision/utils/config.h"
 
@@ -53,9 +53,6 @@ class FileContext : public BaseContext {
 
   //==========================================================================
   // P U B L I C   M E T H O D S
-
-  void InitContext(
-      const std::vector<CameraConfiguration> &cam_configuration_lists) override;
 
   void CloseContext() override;
 

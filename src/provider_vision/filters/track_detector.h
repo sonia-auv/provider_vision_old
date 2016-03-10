@@ -26,14 +26,14 @@
 #ifndef PROVIDER_VISION_FILTERS_TRACK_DETECTOR_H_
 #define PROVIDER_VISION_FILTERS_TRACK_DETECTOR_H_
 
-#include <vector>
-#include <memory>
-#include <provider_vision/filters/filter.h>
 #include <provider_vision/algorithm/general_function.h>
-#include <provider_vision/server/target.h>
-#include <provider_vision/algorithm/object_full_data.h>
 #include <provider_vision/algorithm/object_feature_factory.h>
+#include <provider_vision/algorithm/object_full_data.h>
 #include <provider_vision/algorithm/type_and_const.h>
+#include <provider_vision/filters/filter.h>
+#include <provider_vision/server/target.h>
+#include <memory>
+#include <vector>
 
 namespace provider_vision {
 
@@ -103,8 +103,9 @@ class TrackDetector : public Filter {
       }
 
       std::sort(objVec.begin(), objVec.end(),
-                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
-                    -> bool { return a->GetArea() > b->GetArea(); });
+                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
+                  return a->GetArea() > b->GetArea();
+                });
 
       // Get all the square contours.
       contourList_t squareContour;
@@ -150,8 +151,9 @@ class TrackDetector : public Filter {
       }
       std::sort(contour_vote.begin(), contour_vote.end(),
                 [](const std::pair<ObjectFullData::Ptr, int> &a,
-                   const std::pair<ObjectFullData::Ptr, int> &b)
-                    -> bool { return a.second > b.second; });
+                   const std::pair<ObjectFullData::Ptr, int> &b) -> bool {
+                  return a.second > b.second;
+                });
 
       // Since we search only one buoy, get the biggest from sort function
       if (contour_vote.size() > 0) {
@@ -160,7 +162,7 @@ class TrackDetector : public Filter {
         cv::Point center = object->GetCenter();
         target.SetTarget("track", center.x, center.y, object->GetLength(),
                          object->GetLength(), object->GetRotatedRect().angle,
-        image.rows, image.cols);
+                         image.rows, image.cols);
         NotifyTarget(target);
         if (debug_contour_()) {
           cv::circle(output_image_, objVec[0]->GetCenter(), 3,

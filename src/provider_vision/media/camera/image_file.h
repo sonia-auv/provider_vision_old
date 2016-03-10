@@ -12,11 +12,11 @@
 #define PROVIDER_VISION_MEDIA_CAMERA_IMAGE_FILE_H_
 
 #include <memory>
-#include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
-#include "provider_vision/utils/config.h"
+#include <opencv2/opencv.hpp>
 #include "provider_vision/media/camera/base_media.h"
+#include "provider_vision/utils/config.h"
 
 namespace provider_vision {
 

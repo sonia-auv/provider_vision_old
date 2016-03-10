@@ -11,9 +11,9 @@
 #ifndef PROVIDER_VISION_MEDIA_CAMERA_BASE_MEDIA_H_
 #define PROVIDER_VISION_MEDIA_CAMERA_BASE_MEDIA_H_
 
+#include <provider_vision/media/camera_configuration.h>
 #include <memory>
 #include <opencv2/core/core.hpp>
-#include <provider_vision/media/camera_configuration.h>
 #include "provider_vision/utils/config.h"
 
 namespace provider_vision {
@@ -34,8 +34,8 @@ class BaseMedia {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  explicit BaseMedia(const CameraConfiguration &config)
-      : config_(config), status_(Status::CLOSE) {}
+  explicit BaseMedia(const std::string &name)
+      : status_(Status::CLOSE), name_(name) {}
 
   virtual ~BaseMedia() = default;
 
@@ -85,11 +85,6 @@ class BaseMedia {
    */
   virtual bool HasArtificialFramerate() const;
 
-  /**
-   * Return the CameraID, the general identifier for a BaseMedia in the system.
-   */
-  virtual const CameraConfiguration &GetCameraConfiguration() const;
-
   const std::string &GetName() const;
 
   bool IsOpened() const;
@@ -115,9 +110,9 @@ class BaseMedia {
   //==========================================================================
   // P R O T E C T E D   M E M B E R S
 
-  CameraConfiguration config_;
-
   Status status_;
+
+  std::string name_;
 };
 
 //==============================================================================
@@ -143,15 +138,7 @@ inline bool BaseMedia::HasArtificialFramerate() const { return true; }
 
 //------------------------------------------------------------------------------
 //
-inline const CameraConfiguration &BaseMedia::GetCameraConfiguration() const {
-  return config_;
-}
-
-//------------------------------------------------------------------------------
-//
-inline const std::string &BaseMedia::GetName() const {
-  return config_.GetName();
-}
+inline const std::string &BaseMedia::GetName() const { return name_; }
 
 //------------------------------------------------------------------------------
 //

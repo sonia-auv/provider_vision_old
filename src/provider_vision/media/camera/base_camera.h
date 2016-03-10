@@ -12,9 +12,9 @@
 #define PROVIDER_VISION_MEDIA_CAMERA_BASE_CAMERA_H_
 
 #include <memory>
-#include "provider_vision/utils/config.h"
-#include "provider_vision/media/camera/base_media.h"
 #include "provider_vision/media/cam_undistord_matrices.h"
+#include "provider_vision/media/camera/base_media.h"
+#include "provider_vision/utils/config.h"
 
 namespace provider_vision {
 
@@ -114,6 +114,8 @@ class BaseCamera : public BaseMedia {
 
   //==========================================================================
   // P R O T E C T E D   M E M B E R S
+
+  CameraConfiguration config_;
 
   CameraUndistordMatrices undistord_matrix_;
 

@@ -26,14 +26,14 @@
 #ifndef PROVIDER_VISION_FILTERS_OBJECT_CALCULATOR_H_
 #define PROVIDER_VISION_FILTERS_OBJECT_CALCULATOR_H_
 
+#include <provider_vision/algorithm/general_function.h>
+#include <provider_vision/algorithm/object_feature_factory.h>
+#include <provider_vision/algorithm/object_full_data.h>
+#include <provider_vision/algorithm/performance_evaluator.h>
+#include <provider_vision/filters/filter.h>
+#include <provider_vision/server/target.h>
 #include <memory>
 #include <string>
-#include <provider_vision/filters/filter.h>
-#include <provider_vision/algorithm/general_function.h>
-#include <provider_vision/server/target.h>
-#include <provider_vision/algorithm/object_full_data.h>
-#include <provider_vision/algorithm/object_feature_factory.h>
-#include <provider_vision/algorithm/performance_evaluator.h>
 
 namespace provider_vision {
 

@@ -8,9 +8,9 @@
  * found in the LICENSE file.
  */
 
+#include "provider_vision/media/camera/image_file.h"
 #include <string>
 #include <vector>
-#include "provider_vision/media/camera/image_file.h"
 
 namespace provider_vision {
 
@@ -20,7 +20,7 @@ namespace provider_vision {
 //------------------------------------------------------------------------------
 //
 ImageFile::ImageFile(const std::string &path_to_file) noexcept
-    : BaseMedia(CameraConfiguration(path_to_file)),
+    : BaseMedia(path_to_file),
       path_(path_to_file) {}
 
 //------------------------------------------------------------------------------

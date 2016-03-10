@@ -26,13 +26,13 @@
 #ifndef PROVIDER_VISION_FILTERS_OBJECT_FINDER_H_
 #define PROVIDER_VISION_FILTERS_OBJECT_FINDER_H_
 
-#include <memory>
-#include <provider_vision/filters/filter.h>
 #include <provider_vision/algorithm/general_function.h>
-#include <provider_vision/server/target.h>
-#include <provider_vision/algorithm/object_full_data.h>
 #include <provider_vision/algorithm/object_feature_factory.h>
+#include <provider_vision/algorithm/object_full_data.h>
 #include <provider_vision/algorithm/performance_evaluator.h>
+#include <provider_vision/filters/filter.h>
+#include <provider_vision/server/target.h>
+#include <memory>
 
 namespace provider_vision {
 
@@ -241,8 +241,9 @@ class ObjectFinder : public Filter {
         if (vote_higher_()) {
           std::sort(
               objVec.begin(), objVec.end(),
-              [this](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
-                  -> bool { return a->GetCenter().y < b->GetCenter().y; });
+              [this](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
+                return a->GetCenter().y < b->GetCenter().y;
+              });
           objVec[0]->IncrementVote();
 
           cv::circle(output_image_, cv::Point(objVec[0]->GetCenter().x,
@@ -252,8 +253,9 @@ class ObjectFinder : public Filter {
         }
 
         std::sort(objVec.begin(), objVec.end(),
-                  [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
-                      -> bool { return a->GetArea() > b->GetArea(); });
+                  [](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
+                    return a->GetArea() > b->GetArea();
+                  });
 
         objVec[0]->IncrementVote();
         cv::circle(output_image_, cv::Point(objVec[0]->GetCenter().x,
@@ -263,8 +265,9 @@ class ObjectFinder : public Filter {
       }
 
       std::sort(objVec.begin(), objVec.end(),
-                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
-                    -> bool { return a->GetVoteCount() > b->GetVoteCount(); });
+                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
+                  return a->GetVoteCount() > b->GetVoteCount();
+                });
 
       if (objVec.size() > 0) {
         Target target;
@@ -272,7 +275,7 @@ class ObjectFinder : public Filter {
         cv::Point center = object->GetCenter();
         target.SetTarget(id_(), center.x, center.y, object->GetLength(),
                          object->GetLength(), object->GetRotatedRect().angle,
-        image.rows, image.cols);
+                         image.rows, image.cols);
         target.SetSpecField_1(spec_1_());
         target.SetSpecField_2(spec_2_());
         NotifyTarget(target);

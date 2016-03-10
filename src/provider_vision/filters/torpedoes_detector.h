@@ -26,13 +26,13 @@
 #ifndef PROVIDER_VISION_FILTERS_TORPEDOES_DETECTOR_H_
 #define PROVIDER_VISION_FILTERS_TORPEDOES_DETECTOR_H_
 
-#include <memory>
-#include <string>
-#include <provider_vision/filters/filter.h>
 #include <provider_vision/algorithm/general_function.h>
-#include <provider_vision/server/target.h>
 #include <provider_vision/algorithm/object_full_data.h>
 #include <provider_vision/algorithm/object_ranker.h>
+#include <provider_vision/filters/filter.h>
+#include <provider_vision/server/target.h>
+#include <memory>
+#include <string>
 
 namespace provider_vision {
 
@@ -246,8 +246,9 @@ class TorpedoesDetector : public Filter {
     }
 
     std::sort(object_data.begin(), object_data.end(),
-              [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
-                  -> bool { return a->GetArea() > b->GetArea(); });
+              [](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
+                return a->GetArea() > b->GetArea();
+              });
 
     if (object_data.size() > 4) {
       object_data.erase(object_data.begin() + 4, object_data.end());
@@ -290,8 +291,9 @@ class TorpedoesDetector : public Filter {
 
     std::sort(contour_vote.begin(), contour_vote.end(),
               [](const std::pair<ObjectFullData::Ptr, int> &a,
-                 const std::pair<ObjectFullData::Ptr, int> &b)
-                  -> bool { return a.second > b.second; });
+                 const std::pair<ObjectFullData::Ptr, int> &b) -> bool {
+                return a.second > b.second;
+              });
 
     if (contour_vote.size() != 0) {
       big_square = contour_vote[0].first;

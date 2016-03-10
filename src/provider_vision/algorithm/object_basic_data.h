@@ -26,10 +26,10 @@
 #ifndef PROVIDER_VISION_ALGORITHM_OBJECT_BASIC_DATA_H_
 #define PROVIDER_VISION_ALGORITHM_OBJECT_BASIC_DATA_H_
 
-#include <memory>
 #include <assert.h>
 #include <provider_vision/algorithm/rot_rect.h>
 #include <provider_vision/algorithm/type_and_const.h>
+#include <memory>
 #include "provider_vision/algorithm/contour.h"
 
 namespace provider_vision {

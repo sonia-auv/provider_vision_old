@@ -26,10 +26,10 @@
 #ifndef PROVIDER_VISION_ALGORITHM_OBJECT_FEATURE_H_
 #define PROVIDER_VISION_ALGORITHM_OBJECT_FEATURE_H_
 
-#include <vector>
+#include <stdlib.h>
 #include <memory>
 #include <string>
-#include <stdlib.h>
+#include <vector>
 
 #include "provider_vision/algorithm/type_and_const.h"
 

@@ -14,8 +14,8 @@
 #include <memory>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
-#include "provider_vision/utils/config.h"
 #include "provider_vision/media/camera/base_media.h"
+#include "provider_vision/utils/config.h"
 
 namespace provider_vision {
 
@@ -34,8 +34,6 @@ class VideoFile : public BaseMedia, private cv::VideoCapture {
   // P U B L I C   C / D T O R S
 
   explicit VideoFile(const std::string &path_to_file, bool looping = true);
-
-  VideoFile();
 
   virtual ~VideoFile();
 

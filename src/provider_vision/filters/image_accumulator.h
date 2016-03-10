@@ -26,10 +26,10 @@
 #ifndef PROVIDER_VISION_FILTERS_IMAGE_ACCUMULATOR_H_
 #define PROVIDER_VISION_FILTERS_IMAGE_ACCUMULATOR_H_
 
-#include <memory>
-#include <provider_vision/filters/filter.h>
 #include <provider_vision/algorithm/image_accumulator_buffer.h>
 #include <provider_vision/algorithm/performance_evaluator.h>
+#include <provider_vision/filters/filter.h>
+#include <memory>
 
 namespace provider_vision {
 

@@ -10,9 +10,9 @@
  * found in the LICENSE file.
  */
 
+#include "provider_vision/server/filterchain_manager.h"
 #include <dirent.h>
 #include <provider_vision/utils/pugixml.h>
-#include "provider_vision/server/filterchain_manager.h"
 
 namespace provider_vision {
 

@@ -4,5 +4,7 @@
 	    type="provider_vision_node"
 	    output="log"
 	    launch-prefix="gdb -ex run --args" />
-</launch>
 
+  <rosparam command="load" file="$(find provider_vision)/config/camera_parameters.yaml"/>
+  <rosparam command="load" file="$(find provider_vision)/config/provider_media_conf.yaml"/>
+</launch>

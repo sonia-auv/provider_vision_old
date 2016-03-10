@@ -12,17 +12,17 @@
 #ifndef PROVIDER_VISION_PROC_FILTERCHAIN_H_
 #define PROVIDER_VISION_PROC_FILTERCHAIN_H_
 
-#include <opencv2/opencv.hpp>
 #include <ros/ros.h>
+#include <opencv2/opencv.hpp>
 #include <queue>
 
-#include "provider_vision/utils/pugixml.h"
 #include <provider_vision/filters/filter.h>
 #include <provider_vision/server/filter_factory.h>
 #include <provider_vision/server/global_param_handler.h>
 #include "provider_vision/server/target.h"
-#include "provider_vision/utils/serializable.h"
 #include "provider_vision/utils/config.h"
+#include "provider_vision/utils/pugixml.h"
+#include "provider_vision/utils/serializable.h"
 
 namespace provider_vision {
 
@@ -127,8 +127,8 @@ inline provider_vision::Filter::Ptr Filterchain::GetFilter(
 
 //------------------------------------------------------------------------------
 //
-inline std::vector<provider_vision::Filter::Ptr> Filterchain::GetFiltersWithName(
-    const std::string &filter_name) const {
+inline std::vector<provider_vision::Filter::Ptr>
+Filterchain::GetFiltersWithName(const std::string &filter_name) const {
   std::vector<provider_vision::Filter::Ptr> filters;
   for (const auto &filter : filters_) {
     if (filter->GetName() == filter_name) {
@@ -140,7 +140,8 @@ inline std::vector<provider_vision::Filter::Ptr> Filterchain::GetFiltersWithName
 
 //------------------------------------------------------------------------------
 //
-inline std::vector<provider_vision::Filter::Ptr> Filterchain::GetAllFilters() const {
+inline std::vector<provider_vision::Filter::Ptr> Filterchain::GetAllFilters()
+    const {
   return filters_;
 }
 
@@ -163,7 +164,8 @@ inline void Filterchain::SetObserver(const size_t &index) {
 
 //------------------------------------------------------------------------------
 //
-inline provider_vision::GlobalParamHandler::Ptr Filterchain::GetParameterHandler() {
+inline provider_vision::GlobalParamHandler::Ptr
+Filterchain::GetParameterHandler() {
   return std::make_shared<provider_vision::GlobalParamHandler>(param_handler_);
 }
 

@@ -26,12 +26,12 @@
 #ifndef PROVIDER_VISION_FILTERS_TRAIN_DETECTOR_H_
 #define PROVIDER_VISION_FILTERS_TRAIN_DETECTOR_H_
 
-#include <memory>
-#include <provider_vision/filters/filter.h>
 #include <provider_vision/algorithm/general_function.h>
-#include <provider_vision/server/target.h>
 #include <provider_vision/algorithm/object_full_data.h>
 #include <provider_vision/algorithm/performance_evaluator.h>
+#include <provider_vision/filters/filter.h>
+#include <provider_vision/server/target.h>
+#include <memory>
 
 namespace provider_vision {
 

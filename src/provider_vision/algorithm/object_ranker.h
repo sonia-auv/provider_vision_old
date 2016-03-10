@@ -26,8 +26,8 @@
 #ifndef PROVIDER_VISION_ALGORITHM_OBJECT_RANKER_H_
 #define PROVIDER_VISION_ALGORITHM_OBJECT_RANKER_H_
 
-#include <memory>
 #include <provider_vision/algorithm/object_full_data.h>
+#include <memory>
 
 namespace provider_vision {
 

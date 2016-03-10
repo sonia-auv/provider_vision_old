@@ -37,8 +37,8 @@
 // Include STL headers
 #ifndef PUGIXML_NO_STL
 
-#include <iterator>
 #include <iosfwd>
+#include <iterator>
 #include <string>
 
 #endif
@@ -97,7 +97,8 @@ typedef PUGIXML_CHAR char_t;
 // String type used for operations that work with STL string; depends on
 // PUGIXML_WCHAR_MODE
 typedef std::basic_string<PUGIXML_CHAR, std::char_traits<PUGIXML_CHAR>,
-                          std::allocator<PUGIXML_CHAR> > string_t;
+                          std::allocator<PUGIXML_CHAR> >
+    string_t;
 #endif
 }
 
@@ -1610,9 +1611,8 @@ typedef void (*deallocation_function)(void *ptr);
 
 // Override default memory management functions. All subsequent
 // allocations/deallocations will be performed via supplied functions.
-void PUGIXML_FUNCTION
-set_memory_management_functions(allocation_function allocate,
-                                deallocation_function deallocate);
+void PUGIXML_FUNCTION set_memory_management_functions(
+    allocation_function allocate, deallocation_function deallocate);
 
 // Get current memory management functions
 allocation_function PUGIXML_FUNCTION get_memory_allocation_function();

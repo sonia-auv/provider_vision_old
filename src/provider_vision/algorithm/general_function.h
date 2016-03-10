@@ -26,10 +26,10 @@
 #ifndef PROVIDER_VISION_ALGORITHM_GENERAL_FUNCTION_H_
 #define PROVIDER_VISION_ALGORITHM_GENERAL_FUNCTION_H_
 
+#include <provider_vision/algorithm/rot_rect.h>
+#include <provider_vision/algorithm/type_and_const.h>
 #include <memory>
 #include <opencv2/opencv.hpp>
-#include <provider_vision/algorithm/type_and_const.h>
-#include <provider_vision/algorithm/rot_rect.h>
 
 namespace provider_vision {
 

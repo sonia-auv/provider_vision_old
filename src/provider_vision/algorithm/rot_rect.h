@@ -26,10 +26,10 @@
 #ifndef PROVIDER_VISION_ALGORITHM_ROT_RECT_H_
 #define PROVIDER_VISION_ALGORITHM_ROT_RECT_H_
 
-#include <memory>
 #include <math.h>
-#include <opencv2/opencv.hpp>
+#include <memory>
 #include <opencv2/core/core.hpp>
+#include <opencv2/opencv.hpp>
 
 namespace provider_vision {
 

@@ -9,10 +9,10 @@
  * found in the LICENSE file.
  */
 
-#include <ros/ros.h>
-#include <std_msgs/String.h>
-#include <sonia_msgs/VisionTarget.h>
 #include "provider_vision/server/detection_task.h"
+#include <ros/ros.h>
+#include <sonia_msgs/VisionTarget.h>
+#include <std_msgs/String.h>
 #include "provider_vision/server/target.h"
 
 namespace provider_vision {
@@ -150,7 +150,8 @@ void DetectionTask::Run() {
         provider_vision::GlobalParamHandler::Ptr paramHandler =
             filterchain_->GetParameterHandler();
         if (paramHandler) {
-          provider_vision::TargetQueue targetQueue = paramHandler->getTargetQueue();
+          provider_vision::TargetQueue targetQueue =
+              paramHandler->getTargetQueue();
           if (!targetQueue.empty()) {
             while (!targetQueue.empty()) {
               sonia_msgs::VisionTarget msg;

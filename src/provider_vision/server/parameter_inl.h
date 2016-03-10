@@ -27,12 +27,12 @@
 #error This file may only be included from parameter.h
 #endif
 
-#include <string>
-#include <cstdlib>
 #include <cxxabi.h>
-#include <opencv/cv.h>
-#include <vector>
 #include <lib_atlas/macros.h>
+#include <opencv/cv.h>
+#include <cstdlib>
+#include <string>
+#include <vector>
 
 namespace provider_vision {
 

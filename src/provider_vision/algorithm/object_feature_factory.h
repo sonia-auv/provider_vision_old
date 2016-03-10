@@ -26,12 +26,12 @@
 #ifndef PROVIDER_VISION_ALGORITHM_OBJECT_FEATURE_FACTORY_H_
 #define PROVIDER_VISION_ALGORITHM_OBJECT_FEATURE_FACTORY_H_
 
-#include <vector>
 #include <map>
 #include <memory>
-#include "provider_vision/algorithm/object_full_data.h"
-#include "provider_vision/algorithm/object_frame_memory.h"
+#include <vector>
 #include "provider_vision/algorithm/object_feature.h"
+#include "provider_vision/algorithm/object_frame_memory.h"
+#include "provider_vision/algorithm/object_full_data.h"
 
 namespace provider_vision {
 

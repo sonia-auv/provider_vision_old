@@ -26,12 +26,12 @@
 #ifndef PROVIDER_VISION_ALGORITHM_OBJECT_FULL_DATA_H_
 #define PROVIDER_VISION_ALGORITHM_OBJECT_FULL_DATA_H_
 
-#include <vector>
+#include <provider_vision/algorithm/object_basic_data.h>
+#include <provider_vision/algorithm/object_ranking_data.h>
+#include <provider_vision/algorithm/object_tracking_data.h>
 #include <memory>
 #include <opencv2/opencv.hpp>
-#include <provider_vision/algorithm/object_basic_data.h>
-#include <provider_vision/algorithm/object_tracking_data.h>
-#include <provider_vision/algorithm/object_ranking_data.h>
+#include <vector>
 #include "provider_vision/algorithm/object_feature.h"
 
 namespace provider_vision {

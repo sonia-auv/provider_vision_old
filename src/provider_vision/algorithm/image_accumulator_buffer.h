@@ -26,9 +26,9 @@
 #ifndef PROVIDER_VISION_ALGORITHM_IMAGE_ACCUMULATOR_BUFFER_H_
 #define PROVIDER_VISION_ALGORITHM_IMAGE_ACCUMULATOR_BUFFER_H_
 
-#include <memory>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <memory>
 #include <opencv2/opencv.hpp>
 
 namespace provider_vision {

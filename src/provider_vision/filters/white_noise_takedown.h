@@ -26,8 +26,8 @@
 #ifndef PROVIDER_VISION_FILTERS_WHITE_NOISE_TAKEDOWN_H_
 #define PROVIDER_VISION_FILTERS_WHITE_NOISE_TAKEDOWN_H_
 
-#include <memory>
 #include <provider_vision/filters/filter.h>
+#include <memory>
 
 namespace provider_vision {
 

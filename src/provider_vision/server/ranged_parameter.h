@@ -26,11 +26,11 @@
 #ifndef PROVIDER_VISION_RANGED_PARAMETER_H_
 #define PROVIDER_VISION_RANGED_PARAMETER_H_
 
-#include <string>
-#include <vector>
-#include <iostream>
 #include <lib_atlas/macros.h>
 #include <provider_vision/server/parameter.h>
+#include <iostream>
+#include <string>
+#include <vector>
 
 namespace provider_vision {
 

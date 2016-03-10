@@ -196,7 +196,8 @@ Filterchain::GetFilterAllParameters(const size_t &index) {
 //
 void Filterchain::AddFilter(const std::string &filter_name) {
   auto filter = provider_vision::Filter::Ptr(
-      provider_vision::FilterFactory::createInstance(filter_name, param_handler_));
+      provider_vision::FilterFactory::createInstance(filter_name,
+                                                     param_handler_));
   if (filter != nullptr) {
     filters_.push_back(filter);
   } else {

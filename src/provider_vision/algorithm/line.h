@@ -26,9 +26,9 @@
 #ifndef PROVIDER_VISION_ALGORITHM_LINE_H_
 #define PROVIDER_VISION_ALGORITHM_LINE_H_
 
-#include <memory>
 #include <math.h>
 #include <stdlib.h>
+#include <memory>
 #include <opencv2/core/core.hpp>
 
 namespace provider_vision {

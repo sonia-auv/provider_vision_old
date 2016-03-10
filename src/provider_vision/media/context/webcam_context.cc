@@ -8,9 +8,9 @@
  * found in the LICENSE file.
  */
 
+#include "provider_vision/media/context/webcam_context.h"
 #include <string>
 #include <vector>
-#include "provider_vision/media/context/webcam_context.h"
 
 namespace provider_vision {
 
@@ -34,12 +34,17 @@ WebcamContext::~WebcamContext() noexcept {}
 
 //------------------------------------------------------------------------------
 //
-void WebcamContext::InitContext(
-    const std::vector<CameraConfiguration> &cam_configuration_lists) {}
+void WebcamContext::CloseContext() {}
 
 //------------------------------------------------------------------------------
 //
-void WebcamContext::CloseContext() {}
+void WebcamContext::SetFeature(BaseCamera::Feature feat,
+                               const std::string &name, float val) {}
+
+//------------------------------------------------------------------------------
+//
+void WebcamContext::GetFeature(BaseCamera::Feature feat,
+                               const std::string &name, float &val) const {}
 
 //------------------------------------------------------------------------------
 //
@@ -86,24 +91,6 @@ BaseMedia::Ptr WebcamContext::GetMedia(const std::string &name) const {
     return webcam_;
   } else {
     return nullptr;
-  }
-}
-
-//------------------------------------------------------------------------------
-//
-void WebcamContext::SetFeature(BaseCamera::Feature feat,
-                               const std::string &name, float val) {
-  if (WEBCAM_NAME.compare(name) == 0) {
-    webcam_->SetFeature(feat, val);
-  }
-}
-
-//------------------------------------------------------------------------------
-//
-void WebcamContext::GetFeature(BaseCamera::Feature feat,
-                               const std::string &name, float &val) const {
-  if (WEBCAM_NAME.compare(name) == 0) {
-    val = webcam_->GetFeature(feat);
   }
 }
 

@@ -14,9 +14,9 @@
 #ifndef PROVIDER_VISION_SERVER_DETECTION_TASK_MANAGER_H_
 #define PROVIDER_VISION_SERVER_DETECTION_TASK_MANAGER_H_
 
-#include <string>
 #include <memory>
 #include <mutex>
+#include <string>
 #include <vector>
 #include "provider_vision/server/detection_task.h"
 #include "provider_vision/server/filterchain.h"

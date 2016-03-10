@@ -26,12 +26,12 @@
 #ifndef PROVIDER_VISION_FILTERS_FENCE_DETECTOR_H_
 #define PROVIDER_VISION_FILTERS_FENCE_DETECTOR_H_
 
-#include <memory>
-#include <provider_vision/filters/filter.h>
-#include <provider_vision/algorithm/object_full_data.h>
 #include <provider_vision/algorithm/general_function.h>
-#include <provider_vision/server/target.h>
 #include <provider_vision/algorithm/object_feature_factory.h>
+#include <provider_vision/algorithm/object_full_data.h>
+#include <provider_vision/filters/filter.h>
+#include <provider_vision/server/target.h>
+#include <memory>
 
 namespace provider_vision {
 
@@ -184,7 +184,8 @@ class FenceDetector : public Filter {
 
       Target fence;
       cv::Point center = (rect_from_hori_bar.center);
-      fence.SetTarget("fence", center.x, center.y, rect_from_hori_bar.size.width,
+      fence.SetTarget("fence", center.x, center.y,
+                      rect_from_hori_bar.size.width,
                       rect_from_hori_bar.size.height, rect_from_hori_bar.angle,
                       image.rows, image.cols);
 

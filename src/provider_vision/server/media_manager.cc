@@ -8,14 +8,14 @@
  * found in the LICENSE file.
  */
 
+#include "provider_vision/server/media_manager.h"
 #include <stdexcept>
 #include <vector>
-#include "ros/console.h"
-#include "provider_vision/utils/config.h"
-#include "provider_vision/server/media_manager.h"
 #include "provider_vision/media/context/dc1394_context.h"
-#include "provider_vision/media/context/webcam_context.h"
 #include "provider_vision/media/context/file_context.h"
+#include "provider_vision/media/context/webcam_context.h"
+#include "provider_vision/utils/config.h"
+#include "ros/console.h"
 
 namespace provider_vision {
 
@@ -24,20 +24,26 @@ namespace provider_vision {
 
 //------------------------------------------------------------------------------
 //
-MediaManager::MediaManager() noexcept : contexts_() {
-  std::stringstream ss;
-  ss << kConfigPath << "camera/camera_config.xml";
-  ConfigurationHandler configHandler(ss.str());
-  std::vector<CameraConfiguration> list = configHandler.ParseConfiguration();
-  // Each time you have a new driver (Gige, usb, etc.) add it to
-  // the list here.
-  // contexts_.push_back(std::make_shared<WebcamContext>());
-  contexts_.push_back(std::make_shared<DC1394Context>());
-  contexts_.push_back(std::make_shared<FileContext>());
-
-  for (auto &elem : contexts_) {
-    elem->InitContext(list);
+MediaManager::MediaManager(const ros::NodeHandle &nh) noexcept : contexts_() {
+  // Creating the Webcam context
+  auto active_webcam = false;
+  nh_.getParam("/provider_vision/active_webcam", active_webcam);
+  if (active_webcam) {
+    contexts_.push_back(std::make_shared<WebcamContext>());
   }
+
+  // Creating the DC1394 context
+  std::vector<std::string> camera_names = {"front_guppy", "bottom_guppy"};
+  nh_.getParam("/provider_vision/active_dc1394", camera_names);
+  if (!camera_names.empty()) {
+    std::vector<CameraConfiguration> configurations;
+    for (const auto &camera : camera_names) {
+      configurations.push_back(CameraConfiguration(nh_, camera));
+    }
+    contexts_.push_back(std::make_shared<DC1394Context>(configurations));
+  }
+
+  contexts_.push_back(std::make_shared<FileContext>());
 }
 
 //------------------------------------------------------------------------------
@@ -75,7 +81,6 @@ void MediaManager::CloseMedia(const std::string &media_name) {
 //
 MediaStreamer::Ptr MediaManager::StartStreamingMedia(
     const std::string &media_name) {
-
   MediaStreamer::Ptr streamer(nullptr);
 
   if (IsMediaStreaming(media_name)) {

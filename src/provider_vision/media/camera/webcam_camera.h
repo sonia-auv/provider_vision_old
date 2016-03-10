@@ -13,8 +13,8 @@
 
 #include <memory>
 #include <opencv2/opencv.hpp>
-#include "provider_vision/utils/config.h"
 #include "provider_vision/media/camera/base_camera.h"
+#include "provider_vision/utils/config.h"
 
 namespace provider_vision {
 
@@ -23,7 +23,7 @@ namespace provider_vision {
  * For now it consider that the default camera is a webcam.
  * There is no other check than that. It is useful for debugging the server.
  */
-class WebcamCamera : public BaseCamera, private cv::VideoCapture {
+class WebcamCamera : public BaseMedia, private cv::VideoCapture {
  public:
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
@@ -71,38 +71,6 @@ class WebcamCamera : public BaseCamera, private cv::VideoCapture {
    * Method override from Media
    */
   void NextImage(cv::Mat &image) override;
-
- protected:
-  float GetGainValue() const override;
-  void SetGainAuto() override;
-  void SetGainManual() override;
-  void SetGainValue(float value) override;
-
-  float GetGammaValue() const override;
-  void SetGammaValue(float value) override;
-
-  float GetExposureValue() const override;
-  void SetExposureValue(float value) override;
-
-  float GetSaturationValue() const override;
-  void SetSaturationValue(float value) override;
-
-  void SetShutterValue(float value) override;
-  void SetShutterAuto() override;
-  void SetShutterManual() override;
-  float GetShutterMode() const override;
-  float GetShutterValue() const override;
-
-  void SetFrameRateValue(float value) override;
-  float GetFrameRateValue() const override;
-
-  void SetWhiteBalanceAuto() override;
-  void SetWhiteBalanceManual() override;
-  float GetWhiteBalanceMode() const override;
-  void SetWhiteBalanceRedValue(float value) override;
-  void SetWhiteBalanceBlueValue(float value) override;
-  float GetWhiteBalanceRed() const override;
-  float GetWhiteBalanceBlue() const override;
 };
 
 }  // namespace provider_vision

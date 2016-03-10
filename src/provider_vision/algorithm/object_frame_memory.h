@@ -26,10 +26,10 @@
 #ifndef PROVIDER_VISION_ALGORITHM_OBJECT_FRAME_MEMORY_H_
 #define PROVIDER_VISION_ALGORITHM_OBJECT_FRAME_MEMORY_H_
 
+#include <provider_vision/algorithm/general_function.h>
+#include <provider_vision/algorithm/object_full_data.h>
 #include <memory>
 #include <vector>
-#include <provider_vision/algorithm/object_full_data.h>
-#include <provider_vision/algorithm/general_function.h>
 
 namespace provider_vision {
 

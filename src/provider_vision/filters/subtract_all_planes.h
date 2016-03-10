@@ -26,9 +26,9 @@
 #ifndef PROVIDER_VISION_FILTERS_SUBTRACT_ALL_PLANES_H_
 #define PROVIDER_VISION_FILTERS_SUBTRACT_ALL_PLANES_H_
 
-#include <memory>
-#include <provider_vision/filters/filter.h>
 #include <provider_vision/algorithm/general_function.h>
+#include <provider_vision/filters/filter.h>
+#include <memory>
 
 namespace provider_vision {
 

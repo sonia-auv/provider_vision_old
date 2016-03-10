@@ -23,8 +23,8 @@
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tuple>
 #include <provider_vision/algorithm/general_function.h>
+#include <tuple>
 
 namespace provider_vision {
 

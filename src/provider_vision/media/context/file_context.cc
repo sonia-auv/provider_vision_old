@@ -28,11 +28,6 @@ FileContext::~FileContext() {}
 
 //------------------------------------------------------------------------------
 //
-void FileContext::InitContext(
-    const std::vector<CameraConfiguration> &cam_configuration_lists) {}
-
-//------------------------------------------------------------------------------
-//
 void FileContext::CloseContext() { media_list_.clear(); }
 
 //------------------------------------------------------------------------------

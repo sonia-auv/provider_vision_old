@@ -13,13 +13,13 @@
 #ifndef PROVIDER_VISION_SERVER_FILTERCHAIN_MANAGER_H_
 #define PROVIDER_VISION_SERVER_FILTERCHAIN_MANAGER_H_
 
-#include <functional>
-#include <vector>
-#include <string>
 #include <lib_atlas/ros/service_server_manager.h>
 #include <provider_vision/filters/filter.h>
-#include "provider_vision/utils/config.h"
+#include <functional>
+#include <string>
+#include <vector>
 #include "provider_vision/server/filterchain.h"
+#include "provider_vision/utils/config.h"
 
 namespace provider_vision {
 

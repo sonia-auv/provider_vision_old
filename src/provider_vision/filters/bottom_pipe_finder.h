@@ -26,14 +26,14 @@
 #ifndef PROVIDER_VISION_FILTERS_BOTTOM_PIPE_FINDER_H_
 #define PROVIDER_VISION_FILTERS_BOTTOM_PIPE_FINDER_H_
 
-#include <memory>
-#include <provider_vision/filters/filter.h>
-#include <provider_vision/algorithm/object_feature.h>
 #include <provider_vision/algorithm/general_function.h>
-#include <provider_vision/server/target.h>
-#include <provider_vision/algorithm/object_full_data.h>
+#include <provider_vision/algorithm/object_feature.h>
 #include <provider_vision/algorithm/object_feature_factory.h>
+#include <provider_vision/algorithm/object_full_data.h>
 #include <provider_vision/algorithm/performance_evaluator.h>
+#include <provider_vision/filters/filter.h>
+#include <provider_vision/server/target.h>
+#include <memory>
 
 namespace provider_vision {
 
@@ -143,8 +143,9 @@ class ObjectFinder : public Filter {
       }
 
       std::sort(objVec.begin(), objVec.end(),
-                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
-                    -> bool { return a->GetArea() > b->GetArea(); });
+                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
+                  return a->GetArea() > b->GetArea();
+                });
 
       // Since we search only one buoy, get the biggest from sort function
       if (objVec.size() > 0) {
