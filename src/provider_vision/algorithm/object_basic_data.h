@@ -119,10 +119,7 @@ class ObjectBasicData {
   //============================================================================
   std::map<OBJECT_DATA, bool> is_calculated_map_;
 
-  float area_, convex_hull_area_, circumference_, distance_from_center_;
-
-  // Correspond to the centile rank
-  float area_ranking_, length_ranking_;
+  float area_, convex_hull_area_, circumference_;
 
   RotRect rect_;
   cv::Rect up_right_rect_;

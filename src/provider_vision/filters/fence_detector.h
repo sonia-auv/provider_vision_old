@@ -306,9 +306,9 @@ class FenceDetector : public Filter {
 
   inline bool IsSplitBar(ObjectFullData::Ptr ref, ObjectFullData::Ptr &comp) {
     float ratio_diff =
-        abs(comp->GetRatio() - ref->GetRatio()) / ref->GetRatio();
+        std::abs(comp->GetRatio() - ref->GetRatio()) / ref->GetRatio();
     float y_diff =
-        abs(comp->GetCenter().y - ref->GetCenter().y) / ref->GetCenter().y;
+        std::abs(comp->GetCenter().y - ref->GetCenter().y) / ref->GetCenter().y;
 
     bool ratio_ok = ratio_diff < 0.1;
     bool y_diff_ok = y_diff < 0.1;

@@ -130,7 +130,7 @@ void Filterchain::ExecuteFilterChain(cv::Mat &image) {
 //------------------------------------------------------------------------------
 //
 void Filterchain::RemoveFilter(const size_t &index) {
-  if (index <= filters_.size() && index >= 0) {
+  if (index <= filters_.size()) {
     auto it = filters_.begin() + index;
     filters_.erase(it);
   }
@@ -139,7 +139,7 @@ void Filterchain::RemoveFilter(const size_t &index) {
 //------------------------------------------------------------------------------
 //
 void Filterchain::MoveFilterDown(const size_t &index) {
-  if ((index < (filters_.size() - 1)) && (index >= 0)) {
+  if (index < (filters_.size() - 1)) {
     auto itFilter = filters_.begin();
     std::advance(itFilter, index);
 

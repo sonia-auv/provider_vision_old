@@ -36,8 +36,7 @@ DetectionTask::DetectionTask(MediaStreamer::Ptr acquisition_loop,
       media_streamer_(acquisition_loop),
       filterchain_(filterchain),
       new_image_ready_(false),
-      returning_orinal_image_(false),
-      close_attemps_(3) {
+      returning_orinal_image_(false) {
   assert(filterchain);
   assert(acquisition_loop);
   result_publisher_ = ros::NodeHandle().advertise<sonia_msgs::VisionTarget>(

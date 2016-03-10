@@ -24,8 +24,7 @@ const std::string DC1394Camera::CAM_TAG = "[DC1394 Camera]";
 DC1394Camera::DC1394Camera(dc1394camera_t *camera,
                            const CameraConfiguration &config)
     : BaseCamera(config),
-      dc1394_camera_(camera),
-      video_mode_(DC1394_VIDEO_MODE_800x600_YUV422) {}
+      dc1394_camera_(camera) {}
 
 //------------------------------------------------------------------------------
 //
@@ -175,7 +174,7 @@ float DC1394Camera::GetGainValue() const {
 
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error("Canno't get the gain value on DC1394 Camera" +
-                             static_cast<int>(error));
+                             std::to_string(static_cast<int>(error)));
   }
 
   return static_cast<float>(value);
@@ -193,7 +192,7 @@ float DC1394Camera::GetGammaValue() const {
 
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error("Canno't get the gamma value on DC1394 Camera" +
-                             static_cast<int>(error));
+                             std::to_string(static_cast<int>(error)));
   }
 
   return static_cast<float>(value);
@@ -210,7 +209,7 @@ float DC1394Camera::GetExposureValue() const {
 
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error("Canno't get the exposure value on DC1394 Camera" +
-                             static_cast<int>(error));
+        std::to_string(static_cast<int>(error)));
   }
 
   return static_cast<float>(value);
@@ -228,7 +227,7 @@ float DC1394Camera::GetSaturationValue() const {
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error(
         "Canno't get the saturation value on DC1394 Camera" +
-        static_cast<int>(error));
+            std::to_string(static_cast<int>(error)));
   }
 
   return static_cast<float>(value);
@@ -245,7 +244,7 @@ void DC1394Camera::SetGainAuto() {
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error(
         "Canno't set the gain in automatic on DC1394 Camera" +
-        static_cast<int>(error));
+            std::to_string(static_cast<int>(error)));
   }
 }
 
@@ -259,7 +258,7 @@ void DC1394Camera::SetGainManual() {
 
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error("Canno't set the Gain in manual on DC1394 Camera" +
-                             static_cast<int>(error));
+        std::to_string(static_cast<int>(error)));
   }
 }
 
@@ -272,7 +271,7 @@ void DC1394Camera::SetGainValue(float value) {
 
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error("Canno't set the gain on DC1394 Camera" +
-                             static_cast<int>(error));
+                             std::to_string(static_cast<int>(error)));
   }
 }
 
@@ -285,7 +284,7 @@ void DC1394Camera::SetGammaValue(float value) {
 
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error("Canno't set the gamma on DC1394 Camera" +
-                             static_cast<int>(error));
+        std::to_string(static_cast<int>(error)));
   }
 }
 
@@ -299,7 +298,7 @@ void DC1394Camera::SetExposureValue(float value) {
 
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error("Canno't set the exposure on DC1394 Camera" +
-                             static_cast<int>(error));
+        std::to_string(static_cast<int>(error)));
   }
 }
 
@@ -313,7 +312,7 @@ void DC1394Camera::SetSaturationValue(float value) {
 
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error("Canno't set the saturation on DC1394 Camera" +
-                             static_cast<int>(error));
+                             std::to_string(static_cast<int>(error)));
   }
 }
 
@@ -327,7 +326,7 @@ void DC1394Camera::SetShutterValue(float value) {
 
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error("Canno't set the shutter on DC1394 Camera" +
-                             static_cast<int>(error));
+                             std::to_string(static_cast<int>(error)));
   }
 }
 
@@ -342,7 +341,7 @@ void DC1394Camera::SetShutterAuto() {
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error(
         "Canno't set the shutter in automatic on DC1394 Camera" +
-        static_cast<int>(error));
+        std::to_string(static_cast<int>(error)));
   }
 }
 
@@ -357,7 +356,7 @@ void DC1394Camera::SetShutterManual() {
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error(
         "Canno't set the shutter in manual on DC1394 Camera" +
-        static_cast<int>(error));
+        std::to_string(static_cast<int>(error)));
   }
 }
 
@@ -376,7 +375,7 @@ void DC1394Camera::SetFrameRateValue(float value) {
             << ConvertFramerateToEnum(test) << std::endl;
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error("Canno't set the frame rate on DC1394 Camera" +
-                             static_cast<int>(error));
+                             std::to_string(static_cast<int>(error)));
   }
 }
 
@@ -391,7 +390,7 @@ float DC1394Camera::GetShutterValue() const {
 
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error("Canno't get the shutter value on DC1394 Camera" +
-                             static_cast<int>(error));
+                             std::to_string(static_cast<int>(error)));
   }
 
   return static_cast<float>(value);
@@ -409,7 +408,7 @@ float DC1394Camera::GetFrameRateValue() const {
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error(
         "Canno't get the frame rate value on DC1394 Camera" +
-        static_cast<int>(error));
+        std::to_string(static_cast<int>(error)));
   }
 
   return static_cast<float>(value);
@@ -426,7 +425,7 @@ void DC1394Camera::SetWhiteBalanceAuto() {
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error(
         "Canno't set the white balance in automatic on DC1394 Camera" +
-        static_cast<int>(error));
+        std::to_string(static_cast<int>(error)));
   }
 }
 
@@ -441,7 +440,7 @@ void DC1394Camera::SetWhiteBalanceManual() {
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error(
         "Canno't set the white balance in manual on DC1394 Camera" +
-        static_cast<int>(error));
+        std::to_string(static_cast<int>(error)));
   }
 }
 
@@ -457,7 +456,7 @@ float DC1394Camera::GetWhiteBalanceMode() const {
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error(
         "Canno't get the white balance mode on DC1394 Camera" +
-        static_cast<int>(error));
+        std::to_string(static_cast<int>(error)));
   }
 
   if (mode == DC1394_FEATURE_MODE_MANUAL)
@@ -480,7 +479,7 @@ float DC1394Camera::GetWhiteBalanceRed() const {
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error(
         "Canno't get the white balance mode on DC1394 Camera" +
-        static_cast<int>(error));
+        std::to_string(static_cast<int>(error)));
   }
 
   return static_cast<float>(red);
@@ -503,7 +502,7 @@ void DC1394Camera::SetWhiteBalanceRedValue(float value) {
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error(
         "Canno't set the white balance red values on DC1394 Camera" +
-        static_cast<int>(error));
+        std::to_string(static_cast<int>(error)));
   }
 }
 
@@ -523,7 +522,7 @@ void DC1394Camera::SetWhiteBalanceBlueValue(float value) {
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error(
         "Canno't set the white balance red values on DC1394 Camera" +
-        static_cast<int>(error));
+        std::to_string(static_cast<int>(error)));
   }
 }
 
@@ -539,7 +538,7 @@ float DC1394Camera::GetWhiteBalanceBlue() const {
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error(
         "Canno't get the white balance blue value on DC1394 Camera" +
-        static_cast<int>(error));
+        std::to_string(static_cast<int>(error)));
   }
 
   return static_cast<float>(blue);
@@ -570,7 +569,7 @@ float DC1394Camera::GetShutterMode() const {
   if (error != DC1394_SUCCESS) {
     throw std::runtime_error(
         "Canno't get the white balance blue value on DC1394 Camera" +
-        static_cast<int>(error));
+        std::to_string(static_cast<int>(error)));
   }
 
   if (mode == DC1394_FEATURE_MODE_MANUAL)

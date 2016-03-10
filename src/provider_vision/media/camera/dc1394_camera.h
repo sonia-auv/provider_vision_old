@@ -125,8 +125,6 @@ class DC1394Camera : public BaseCamera {
 
   dc1394camera_t *dc1394_camera_;
 
-  dc1394video_mode_t video_mode_;
-
   atlas::MilliTimer acquisition_timer_;
 };
 

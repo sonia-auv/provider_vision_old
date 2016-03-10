@@ -124,7 +124,7 @@ bool RotRect::operator==(const RotRect &rotRect) {
   if (rotRect.size != size) {
     result = false;
   }
-  if (abs(rotRect.angle - rotRect.angle) > 0.5) {
+  if (std::abs(rotRect.angle - rotRect.angle) > 0.5) {
     result = false;
   }
   return result;

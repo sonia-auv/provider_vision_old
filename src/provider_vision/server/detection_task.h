@@ -153,8 +153,6 @@ class DetectionTask : private atlas::Runnable,
   bool new_image_ready_;
 
   bool returning_orinal_image_;
-
-  int close_attemps_;
 };
 
 //==============================================================================

@@ -27,6 +27,7 @@
 #define PROVIDER_VISION_FILTERS_OBJECT_CALCULATOR_H_
 
 #include <memory>
+#include <string>
 #include <provider_vision/filters/filter.h>
 #include <provider_vision/algorithm/general_function.h>
 #include <provider_vision/server/target.h>
@@ -48,7 +49,6 @@ class ObjectFeatureCalculator : public Filter {
 
   explicit ObjectFeatureCalculator(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
-        recording_frame_index_(0),
         enable_("Enable", false, &parameters_),
         debug_contour_("Debug_contour", false, &parameters_),
         toggle_recording_("toggle_recording", false, &parameters_),
@@ -129,8 +129,6 @@ class ObjectFeatureCalculator : public Filter {
   // P R I V A T E   M E M B E R S
 
   cv::Mat output_image_;
-
-  unsigned int recording_frame_index_;
 
   Parameter<bool> enable_, debug_contour_, toggle_recording_;
   Parameter<std::string> id_, spec_1_, spec_2_, output_folder_;

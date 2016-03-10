@@ -12,7 +12,9 @@
 #define PROVIDER_VISION_MEDIA_CAMERA_CONFIGURATION_H_
 
 #include <map>
+#include <string>
 #include <memory>
+#include <stdlib.h>
 
 namespace provider_vision {
 
