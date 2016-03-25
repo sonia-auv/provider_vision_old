@@ -161,6 +161,8 @@ void DC1394Camera::NextImage(cv::Mat &img) {
     throw std::runtime_error(
         "The image is empty, there is a problem with the media");
   }
+
+  Calibrate();
 }
 
 //------------------------------------------------------------------------------

@@ -138,7 +138,6 @@ class BaseCamera : public BaseMedia {
 
   CameraUndistordMatrices undistord_matrix_;
 
-
   std::shared_ptr<SPid> gammaPid_, gainPid_, exposurePid_, saturationPid_;
 
  private:

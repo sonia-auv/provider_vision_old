@@ -166,7 +166,7 @@ float BaseCamera::GetFeature(const Feature &feat) const {
 //
 
 void BaseCamera::Calibrate() {
-  //Parametre a placer ds yaml plus tard
+  // Parametre a placer ds yaml plus tard
   const float limitGain = 100.f;
   const float limitExposure = 100.f;
   const float msvUniform = 2.5f;
@@ -174,52 +174,51 @@ void BaseCamera::Calibrate() {
   cv::Mat img, l_hist, s_hist, luvImg, hsvImg;
   NextImage(img);
 
-  cv::cvtColor(img,luvImg,CV_RGB2Luv);
+  cv::cvtColor(img, luvImg, CV_RGB2Luv);
 
   std::vector<cv::Mat> luv_planes, hsv_planes;
-  cv::split(luvImg,luv_planes);
+  cv::split(luvImg, luv_planes);
 
   int histSize = 256;
-  float range[] = {0,256};
-  const float* histRange = {range};
+  float range[] = {0, 256};
+  const float *histRange = {range};
 
   bool uniform = true, accumulate = false;
 
-  cv::calcHist(&luv_planes[0],1,0,cv::Mat(),l_hist,1,&histSize,&histRange,
-               uniform,accumulate);
+  cv::calcHist(&luv_planes[0], 1, 0, cv::Mat(), l_hist, 1, &histSize,
+               &histRange, uniform, accumulate);
 
-  float msv = MSV(l_hist,5);
+  float msv = MSV(l_hist, 5);
 
   if (msv != msvUniform) {
-    if(GetExposureValue() > limitExposure && GetGainValue() > limitGain){
+    if (GetExposureValue() > limitExposure && GetGainValue() > limitGain) {
       double error = fabs(GetGammaValue() - current_features_.gamma);
-      current_features_.gamma = UpdatePID(gammaPid_,error,GetGammaValue());
+      current_features_.gamma = UpdatePID(gammaPid_, error, GetGammaValue());
       SetGammaValue(current_features_.gamma);
-    }
-    else if (GetGainValue() > limitGain){
+    } else if (GetGainValue() > limitGain) {
       double error = fabs(GetExposureValue() - current_features_.exposure);
-      current_features_.exposure = UpdatePID(exposurePid_,error,GetExposureValue());
+      current_features_.exposure =
+          UpdatePID(exposurePid_, error, GetExposureValue());
       SetExposureValue(current_features_.exposure);
-    }
-    else{
+    } else {
       double error = fabs(GetGainValue() - current_features_.gain);
-      current_features_.gain = UpdatePID(gainPid_,error,GetGainValue());
+      current_features_.gain = UpdatePID(gainPid_, error, GetGainValue());
       SetGainValue(current_features_.gain);
     }
   }
-  if (msv > 2 && msv < 3){
+  if (msv > 2 && msv < 3) {
     cv::cvtColor(img, hsvImg, CV_RGB2HSV_FULL);
-    cv::split(hsvImg,hsv_planes);
-    cv::calcHist(&hsv_planes[1],1,0,cv::Mat(),s_hist,1,&histSize,&histRange,
-                uniform,accumulate);
+    cv::split(hsvImg, hsv_planes);
+    cv::calcHist(&hsv_planes[1], 1, 0, cv::Mat(), s_hist, 1, &histSize,
+                 &histRange, uniform, accumulate);
 
-    msv = MSV(s_hist,5);
-    if(msv != msvUniform){
+    msv = MSV(s_hist, 5);
+    if (msv != msvUniform) {
       double error = fabs(GetSaturationValue() - current_features_.saturation);
-      current_features_.saturation = UpdatePID(saturationPid_,error,GetSaturationValue());
+      current_features_.saturation =
+          UpdatePID(saturationPid_, error, GetSaturationValue());
       SetSaturationValue(current_features_.saturation);
     }
-
   }
 }
 
@@ -228,15 +227,15 @@ void BaseCamera::Calibrate() {
 
 float BaseCamera::MSV(const cv::Mat &img, int nbrRegion) {
   float num = 0.f, deno = 0.f;
-  int inter = std::ceil(256/nbrRegion);
+  int inter = std::ceil(256 / nbrRegion);
   for (int j = 0; j < nbrRegion; ++j) {
-    for (int i = j*inter; i < (j+1)*inter ; ++i) {
+    for (int i = j * inter; i < (j + 1) * inter; ++i) {
       deno += img.at<float>(i);
       num += img.at<float>(i);
     }
-    num *= (j+1);
+    num *= (j + 1);
   }
-  return num/deno;
+  return num / deno;
 }
 
 //------------------------------------------------------------------------------
