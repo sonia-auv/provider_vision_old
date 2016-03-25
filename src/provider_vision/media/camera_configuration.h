@@ -61,6 +61,7 @@ class CameraConfiguration {
   float exposure_;
   float white_balance_blue_;
   float white_balance_red_;
+  float saturation_;
 
   //==========================================================================
   // P U B L I C   M E T H O D S

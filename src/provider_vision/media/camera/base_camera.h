@@ -61,6 +61,19 @@ class BaseCamera : public BaseMedia {
         dGain;          // derivative gain
   };
 
+  /**
+   * This structure is only used for the calibration
+   * It represent all the features of the camera
+   * This is going to be compared with the real values
+   * of the features to calculate the error
+   */
+  struct FeatureValues {
+    double gain;
+    double gamma;
+    double exposure;
+    double saturation;
+  };
+
   //==========================================================================
   // P U B L I C   C / D T O R S
 
@@ -121,7 +134,12 @@ class BaseCamera : public BaseMedia {
 
   CameraConfiguration config_;
 
+  FeatureValues current_features_;
+
   CameraUndistordMatrices undistord_matrix_;
+
+
+  std::shared_ptr<SPid> gammaPid_, gainPid_, exposurePid_, saturationPid_;
 
  private:
   //==========================================================================

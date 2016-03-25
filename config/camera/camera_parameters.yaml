@@ -13,6 +13,8 @@
 /provider_vision/camera_parameters/front_guppy/exposure: 0
 /provider_vision/camera_parameters/front_guppy/white_balance_red: 568.0
 /provider_vision/camera_parameters/front_guppy/white_balance_blue: 381.0
+/provider_vision/camera_parameters/front_guppy/saturation: 0
+
 
 # Parameters for the Bottom Guppy Camera
 /provider_vision/camera_parameters/bottom_guppy/name: "Bottom Guppy"
@@ -27,6 +29,7 @@
 /provider_vision/camera_parameters/bottom_guppy/exposure: 0
 /provider_vision/camera_parameters/bottom_guppy/white_balance_red: 568.0
 /provider_vision/camera_parameters/bottom_guppy/white_balance_blue: 381.0
+/provider_vision/camera_parameters/bottom_guppy/saturation: 0
 
 # Parameters for the all other camera (default configurations)
 /provider_vision/camera_parameters/default/name: "Default Camera"

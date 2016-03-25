@@ -21,6 +21,43 @@ namespace provider_vision {
 BaseCamera::BaseCamera(const CameraConfiguration &configuration)
     : BaseMedia(configuration.name_), config_(configuration) {
   undistord_matrix_.InitMatrices(config_.GetUndistortionMatricePath());
+
+  current_features_.exposure = configuration.exposure_;
+  current_features_.gain = configuration.gain_;
+  current_features_.gamma = configuration.gamma_;
+  current_features_.saturation = configuration.saturation_;
+
+  gammaPid_->dState = configuration.gamma_;
+  gammaPid_->iState = 0.0;
+  gammaPid_->iMin = 1.0;
+  gammaPid_->iMax = 2000;
+  gammaPid_->iGain = 0.01;
+  gammaPid_->pGain = 2;
+  gammaPid_->dGain = 25;
+
+  gainPid_->dState = configuration.gain_;
+  gainPid_->iState = 0.0;
+  gainPid_->iMin = 1.0;
+  gainPid_->iMax = 2000;
+  gainPid_->iGain = 0.01;
+  gainPid_->pGain = 2;
+  gainPid_->dGain = 25;
+
+  exposurePid_->dState = configuration.exposure_;
+  exposurePid_->iState = 0.0;
+  exposurePid_->iMin = 1.0;
+  exposurePid_->iMax = 2000;
+  exposurePid_->iGain = 0.01;
+  exposurePid_->pGain = 2;
+  exposurePid_->dGain = 25;
+
+  saturationPid_->dState = configuration.saturation_;
+  saturationPid_->iState = 0.0;
+  saturationPid_->iMin = 1.0;
+  saturationPid_->iMax = 2000;
+  saturationPid_->iGain = 0.01;
+  saturationPid_->pGain = 2;
+  saturationPid_->dGain = 25;
 }
 
 //------------------------------------------------------------------------------
@@ -128,17 +165,19 @@ float BaseCamera::GetFeature(const Feature &feat) const {
 //------------------------------------------------------------------------------
 //
 
-void BaseCamera::Calibrate(){
-  //Parametre a placer ds yml plus tard
+void BaseCamera::Calibrate() {
+  //Parametre a placer ds yaml plus tard
   const float limitGain = 100.f;
   const float limitExposure = 100.f;
   const float msvUniform = 2.5f;
 
-  cv::Mat img, l_hist;
+  cv::Mat img, l_hist, s_hist, luvImg, hsvImg;
   NextImage(img);
 
-  std::vector<cv::Mat> luv_planes;
-  cv::split(img,luv_planes);
+  cv::cvtColor(img,luvImg,CV_RGB2Luv);
+
+  std::vector<cv::Mat> luv_planes, hsv_planes;
+  cv::split(luvImg,luv_planes);
 
   int histSize = 256;
   float range[] = {0,256};
@@ -151,7 +190,35 @@ void BaseCamera::Calibrate(){
 
   float msv = MSV(l_hist,5);
 
-  if (msv != msvUniform){
+  if (msv != msvUniform) {
+    if(GetExposureValue() > limitExposure && GetGainValue() > limitGain){
+      double error = fabs(GetGammaValue() - current_features_.gamma);
+      current_features_.gamma = UpdatePID(gammaPid_,error,GetGammaValue());
+      SetGammaValue(current_features_.gamma);
+    }
+    else if (GetGainValue() > limitGain){
+      double error = fabs(GetExposureValue() - current_features_.exposure);
+      current_features_.exposure = UpdatePID(exposurePid_,error,GetExposureValue());
+      SetExposureValue(current_features_.exposure);
+    }
+    else{
+      double error = fabs(GetGainValue() - current_features_.gain);
+      current_features_.gain = UpdatePID(gainPid_,error,GetGainValue());
+      SetGainValue(current_features_.gain);
+    }
+  }
+  if (msv > 2 && msv < 3){
+    cv::cvtColor(img, hsvImg, CV_RGB2HSV_FULL);
+    cv::split(hsvImg,hsv_planes);
+    cv::calcHist(&hsv_planes[1],1,0,cv::Mat(),s_hist,1,&histSize,&histRange,
+                uniform,accumulate);
+
+    msv = MSV(s_hist,5);
+    if(msv != msvUniform){
+      double error = fabs(GetSaturationValue() - current_features_.saturation);
+      current_features_.saturation = UpdatePID(saturationPid_,error,GetSaturationValue());
+      SetSaturationValue(current_features_.saturation);
+    }
 
   }
 }
