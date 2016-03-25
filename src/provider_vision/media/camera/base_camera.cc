@@ -127,6 +127,53 @@ float BaseCamera::GetFeature(const Feature &feat) const {
 
 //------------------------------------------------------------------------------
 //
+
+void BaseCamera::Calibrate(){
+  //Parametre a placer ds yml plus tard
+  const float limitGain = 100.f;
+  const float limitExposure = 100.f;
+  const float msvUniform = 2.5f;
+
+  cv::Mat img, l_hist;
+  NextImage(img);
+
+  std::vector<cv::Mat> luv_planes;
+  cv::split(img,luv_planes);
+
+  int histSize = 256;
+  float range[] = {0,256};
+  const float* histRange = {range};
+
+  bool uniform = true, accumulate = false;
+
+  cv::calcHist(&luv_planes[0],1,0,cv::Mat(),l_hist,1,&histSize,&histRange,
+               uniform,accumulate);
+
+  float msv = MSV(l_hist,5);
+
+  if (msv != msvUniform){
+
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+
+float BaseCamera::MSV(const cv::Mat &img, int nbrRegion) {
+  float num = 0.f, deno = 0.f;
+  int inter = std::ceil(256/nbrRegion);
+  for (int j = 0; j < nbrRegion; ++j) {
+    for (int i = j*inter; i < (j+1)*inter ; ++i) {
+      deno += img.at<float>(i);
+      num += img.at<float>(i);
+    }
+    num *= (j+1);
+  }
+  return num/deno;
+}
+
+//------------------------------------------------------------------------------
+//
 double BaseCamera::UpdatePID(const std::shared_ptr<SPid> &pid, double error,
                              double position) ATLAS_NOEXCEPT {
   double pTerm, dTerm, iTerm;
