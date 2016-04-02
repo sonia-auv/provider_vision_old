@@ -49,7 +49,7 @@ class CameraConfiguration {
   //==========================================================================
   // P U B L I C   M E M B E R S
 
-  int guid_;
+  uint64_t guid_;
   std::string name_;
   float framerate_;
   bool gain_manual_;

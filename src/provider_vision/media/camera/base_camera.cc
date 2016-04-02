@@ -27,37 +27,37 @@ BaseCamera::BaseCamera(const CameraConfiguration &configuration)
   current_features_.gamma = configuration.gamma_;
   current_features_.saturation = configuration.saturation_;
 
-  gammaPid_->dState = configuration.gamma_;
-  gammaPid_->iState = 0.0;
-  gammaPid_->iMin = 1.0;
-  gammaPid_->iMax = 2000;
-  gammaPid_->iGain = 0.01;
-  gammaPid_->pGain = 2;
-  gammaPid_->dGain = 25;
+  gammaPid_.dState = configuration.gamma_;
+  gammaPid_.iState = 0.0;
+  gammaPid_.iMin = 1.0;
+  gammaPid_.iMax = 2000;
+  gammaPid_.iGain = 0.01;
+  gammaPid_.pGain = 2;
+  gammaPid_.dGain = 25;
 
-  gainPid_->dState = configuration.gain_;
-  gainPid_->iState = 0.0;
-  gainPid_->iMin = 1.0;
-  gainPid_->iMax = 2000;
-  gainPid_->iGain = 0.01;
-  gainPid_->pGain = 2;
-  gainPid_->dGain = 25;
+  gainPid_.dState = configuration.gain_;
+  gainPid_.iState = 0.0;
+  gainPid_.iMin = 1.0;
+  gainPid_.iMax = 2000;
+  gainPid_.iGain = 0.01;
+  gainPid_.pGain = 2;
+  gainPid_.dGain = 25;
 
-  exposurePid_->dState = configuration.exposure_;
-  exposurePid_->iState = 0.0;
-  exposurePid_->iMin = 1.0;
-  exposurePid_->iMax = 2000;
-  exposurePid_->iGain = 0.01;
-  exposurePid_->pGain = 2;
-  exposurePid_->dGain = 25;
+  exposurePid_.dState = configuration.exposure_;
+  exposurePid_.iState = 0.0;
+  exposurePid_.iMin = 1.0;
+  exposurePid_.iMax = 2000;
+  exposurePid_.iGain = 0.01;
+  exposurePid_.pGain = 2;
+  exposurePid_.dGain = 25;
 
-  saturationPid_->dState = configuration.saturation_;
-  saturationPid_->iState = 0.0;
-  saturationPid_->iMin = 1.0;
-  saturationPid_->iMax = 2000;
-  saturationPid_->iGain = 0.01;
-  saturationPid_->pGain = 2;
-  saturationPid_->dGain = 25;
+  saturationPid_.dState = configuration.saturation_;
+  saturationPid_.iState = 0.0;
+  saturationPid_.iMin = 1.0;
+  saturationPid_.iMax = 2000;
+  saturationPid_.iGain = 0.01;
+  saturationPid_.pGain = 2;
+  saturationPid_.dGain = 25;
 }
 
 //------------------------------------------------------------------------------
@@ -240,20 +240,20 @@ float BaseCamera::MSV(const cv::Mat &img, int nbrRegion) {
 
 //------------------------------------------------------------------------------
 //
-double BaseCamera::UpdatePID(const std::shared_ptr<SPid> &pid, double error,
+double BaseCamera::UpdatePID(SPid &pid, double error,
                              double position) ATLAS_NOEXCEPT {
   double pTerm, dTerm, iTerm;
-  pTerm = pid->pGain * error;
+  pTerm = pid.pGain * error;
   // calculate the proportional term
   // calculate the integral state with appropriate limiting
-  pid->iState += error;
-  if (pid->iState > pid->iMax)
-    pid->iState = pid->iMax;
-  else if (pid->iState < pid->iMin)
-    pid->iState = pid->iMin;
-  iTerm = pid->iGain * pid->iState;  // calculate the integral term
-  dTerm = pid->dGain * (pid->dState - position);
-  pid->dState = position;
+  pid.iState += error;
+  if (pid.iState > pid.iMax)
+    pid.iState = pid.iMax;
+  else if (pid.iState < pid.iMin)
+    pid.iState = pid.iMin;
+  iTerm = pid.iGain * pid.iState;  // calculate the integral term
+  dTerm = pid.dGain * (pid.dState - position);
+  pid.dState = position;
   return pTerm + dTerm + iTerm;
 }
 

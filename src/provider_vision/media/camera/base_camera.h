@@ -138,14 +138,13 @@ class BaseCamera : public BaseMedia {
 
   CameraUndistordMatrices undistord_matrix_;
 
-  std::shared_ptr<SPid> gammaPid_, gainPid_, exposurePid_, saturationPid_;
+  SPid gammaPid_, gainPid_, exposurePid_, saturationPid_;
 
  private:
   //==========================================================================
   // P R I V A T E   M E T H O D S
 
-  double UpdatePID(const std::shared_ptr<SPid> &pid, double error,
-                   double position) ATLAS_NOEXCEPT;
+  double UpdatePID(SPid &pid, double error, double position) ATLAS_NOEXCEPT;
 };
 
 //==============================================================================

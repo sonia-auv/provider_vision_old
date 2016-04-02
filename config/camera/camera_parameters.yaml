@@ -2,7 +2,7 @@
 
 # Parameters for the Front Guppy Camera
 /provider_vision/camera_parameters/front_guppy/name: "Front Guppy"
-/provider_vision/camera_parameters/front_guppy/guid: a4701120a8890
+/provider_vision/camera_parameters/front_guppy/guid: ""
 /provider_vision/camera_parameters/front_guppy/framerate: 0
 /provider_vision/camera_parameters/front_guppy/gain_manual: true
 /provider_vision/camera_parameters/front_guppy/shutter_manual: true
@@ -18,7 +18,7 @@
 
 # Parameters for the Bottom Guppy Camera
 /provider_vision/camera_parameters/bottom_guppy/name: "Bottom Guppy"
-/provider_vision/camera_parameters/bottom_guppy/guid: 2892819690326160d
+/provider_vision/camera_parameters/bottom_guppy/guid: "582164340023517285"
 /provider_vision/camera_parameters/bottom_guppy/framerate: 0
 /provider_vision/camera_parameters/bottom_guppy/gain_manual: true
 /provider_vision/camera_parameters/bottom_guppy/shutter_manual: true

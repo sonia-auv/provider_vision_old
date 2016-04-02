@@ -8,6 +8,7 @@
  * found in the LICENSE file.
  */
 
+#include <boost/lexical_cast.hpp>
 #include <provider_vision/media/camera_configuration.h>
 #include "provider_vision/utils/pugixml.h"
 
@@ -75,7 +76,13 @@ CameraConfiguration::~CameraConfiguration() ATLAS_NOEXCEPT {}
 //
 void CameraConfiguration::DeserializeConfiguration(const std::string &name)
     ATLAS_NOEXCEPT {
-  FindParameter("/camera_parameters/" + name + "/guid", guid_);
+  std::string guid_str = "";
+  FindParameter("/camera_parameters/" + name + "/guid", guid_str);
+
+  if (guid_str != "") {
+    guid_ = std::stoull(guid_str);
+  }
+
   FindParameter("/camera_parameters/" + name + "/name", name_);
   FindParameter("/camera_parameters/" + name + "/framerate", framerate_);
   FindParameter("/camera_parameters/" + name + "/gain_manual", gain_manual_);
