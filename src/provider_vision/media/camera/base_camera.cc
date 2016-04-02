@@ -172,7 +172,6 @@ void BaseCamera::Calibrate() {
   const float msvUniform = 2.5f;
 
   cv::Mat img, l_hist, s_hist, luvImg, hsvImg;
-  NextImage(img);
 
   cv::cvtColor(img, luvImg, CV_RGB2Luv);
 

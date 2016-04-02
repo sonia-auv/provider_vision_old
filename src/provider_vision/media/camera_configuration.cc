@@ -17,7 +17,7 @@ namespace provider_vision {
 CameraConfiguration::CameraConfiguration(const ros::NodeHandle &nh,
                                          const std::string &name) ATLAS_NOEXCEPT
     : guid_(0),
-      name_("Default Camera"),
+      name_(name),
       framerate_(0),
       gain_manual_(true),
       shutter_manual_(true),
@@ -98,6 +98,8 @@ void CameraConfiguration::DeserializeConfiguration(const std::string &name)
                 white_balance_blue_);
   FindParameter("/camera_parameters/" + name + "/white_balance_red",
                 white_balance_red_);
+  FindParameter("/camera_parameters/" + name + "/saturation",
+                saturation_);
 }
 
 //------------------------------------------------------------------------------
