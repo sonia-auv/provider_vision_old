@@ -165,13 +165,13 @@ float BaseCamera::GetFeature(const Feature &feat) const {
 //------------------------------------------------------------------------------
 //
 
-void BaseCamera::Calibrate() {
+void BaseCamera::Calibrate(cv::Mat const &img) {
   // Parametre a placer ds yaml plus tard
   const float limitGain = 100.f;
   const float limitExposure = 100.f;
   const float msvUniform = 2.5f;
 
-  cv::Mat img, l_hist, s_hist, luvImg, hsvImg;
+  cv::Mat l_hist, s_hist, luvImg, hsvImg;
 
   cv::cvtColor(img, luvImg, CV_RGB2Luv);
 
@@ -188,7 +188,7 @@ void BaseCamera::Calibrate() {
                &histRange, uniform, accumulate);
 
   float msv = MSV(l_hist, 5);
-
+try{
   if (msv != msvUniform) {
     if (GetExposureValue() > limitExposure && GetGainValue() > limitGain) {
       double error = fabs(GetGammaValue() - current_features_.gamma);
@@ -219,6 +219,10 @@ void BaseCamera::Calibrate() {
       SetSaturationValue(current_features_.saturation);
     }
   }
+}catch(std::exception &e)
+{
+ROS_ERROR("Error in calibrate camera: %s.\n", e.what());
+}
 }
 
 //------------------------------------------------------------------------------

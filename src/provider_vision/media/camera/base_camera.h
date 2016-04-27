@@ -125,7 +125,7 @@ class BaseCamera : public BaseMedia {
   virtual float GetWhiteBalanceRed() const = 0;
   virtual float GetWhiteBalanceBlue() const = 0;
 
-  void Calibrate();
+  void Calibrate(cv::Mat const &img);
 
   float MSV(const cv::Mat &img, int nbrRegion);
 

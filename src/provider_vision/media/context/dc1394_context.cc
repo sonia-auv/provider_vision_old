@@ -56,7 +56,7 @@ void DC1394Context::InitContext(
     ROS_WARN_NAMED(DRIVER_TAG, "No camera found.");
     return;
   }
-
+ROS_INFO_NAMED(DRIVER_TAG, "%d DC1394 camera found", list->num);
   dc1394camera_t *camera_dc;
   for (uint i = 0; i < list->num; i++) {
     for (auto const &cam_config : configurations) {

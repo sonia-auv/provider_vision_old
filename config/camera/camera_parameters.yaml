@@ -2,7 +2,7 @@
 
 # Parameters for the Front Guppy Camera
 /provider_vision/camera_parameters/front_guppy/name: "Front Guppy"
-/provider_vision/camera_parameters/front_guppy/guid: ""
+/provider_vision/camera_parameters/front_guppy/guid: "2892819690326160"
 /provider_vision/camera_parameters/front_guppy/framerate: 0
 /provider_vision/camera_parameters/front_guppy/gain_manual: true
 /provider_vision/camera_parameters/front_guppy/shutter_manual: true
