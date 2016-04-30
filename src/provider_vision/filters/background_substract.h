@@ -36,7 +36,7 @@ namespace provider_vision {
 // This is a program to execute image filter other than erode, dilate and
 // morphologicalEx. Those are more blur function than pixelizer
 // settings are for the differents type of filters, and does not apply to all
-class BackgroundSubstract: public Filter {
+class BackgroundSubstract : public Filter {
  public:
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
@@ -51,7 +51,7 @@ class BackgroundSubstract: public Filter {
         enable_("Enable", false, &parameters_),
         show_blurred_("Show_blurred", false, &parameters_),
         blur_size_("Blur_size", 255, 0, 1000, &parameters_),
-        sigma_("Sigma", 10, 0, 100, &parameters_){
+        sigma_("Sigma", 10, 0, 100, &parameters_) {
     SetName("BackgroundSubstract");
   }
 
@@ -68,21 +68,20 @@ class BackgroundSubstract: public Filter {
       cv::Mat g = channels[1];
       cv::Mat r = channels[2];
       cv::Mat blurB, blurG, blurR;
-      cv::blur(b, blurB,cv::Size(blur_size_.GetValue(),blur_size_.GetValue()));
-      cv::blur(g, blurG,cv::Size(blur_size_.GetValue(),blur_size_.GetValue()));
-      cv::blur(r, blurR,cv::Size(blur_size_.GetValue(),blur_size_.GetValue()));
-//      cv::GaussianBlur(b, blurB,cv::Size(blur_size_.GetValue(),blur_size_.GetValue()),sigma_.GetValue());
-//      cv::GaussianBlur(g, blurG,cv::Size(blur_size_.GetValue(),blur_size_.GetValue()),sigma_.GetValue());
-//      cv::GaussianBlur(r, blurR,cv::Size(blur_size_.GetValue(),blur_size_.GetValue()),sigma_.GetValue());
-      if (show_blurred_()){
+      cv::blur(b, blurB,
+               cv::Size(blur_size_.GetValue(), blur_size_.GetValue()));
+      cv::blur(g, blurG,
+               cv::Size(blur_size_.GetValue(), blur_size_.GetValue()));
+      cv::blur(r, blurR,
+               cv::Size(blur_size_.GetValue(), blur_size_.GetValue()));
+      if (show_blurred_()) {
         b = blurB;
         g = blurG;
         r = blurR;
-      }
-      else {
-        b = b-blurB;
-        g = g-blurG;
-        r = r-blurR;
+      } else {
+        b = b - blurB;
+        g = g - blurG;
+        r = r - blurR;
       }
       channels[0] = b;
       channels[1] = g;
@@ -95,7 +94,7 @@ class BackgroundSubstract: public Filter {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  Parameter<bool> enable_,show_blurred_;
+  Parameter<bool> enable_, show_blurred_;
   RangedParameter<int> blur_size_, sigma_;
 };
 
