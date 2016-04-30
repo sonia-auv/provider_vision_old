@@ -99,6 +99,8 @@ Filter *FilterFactory::createInstance(const std::string &name,
     return new WhiteNoiseTakedown(globalParams);
   } else if (name == "BilateralFilter") {
     return new BilateralFilter(globalParams);
+  } else if (name == "BackgroundSubstract") {
+    return new BackgroundSubstract(globalParams);
   } else {
     return nullptr;
   }
@@ -112,7 +114,7 @@ std::string FilterFactory::GetFilterList() {
          "TrainDetector;ObjectFinder;PipeDetector;TrackDetector;Sobel;"
          "DeloreanDetector;SubmarineFrameMasker;InRange;ConvexHull;"
          "TorpedoesDetector;Laplacian;Canny;HoughLine;AdaptiveThreshold;"
-         "HandleDetector;WhiteNoiseTakedown;BilateralFilter;";
+         "HandleDetector;WhiteNoiseTakedown;BilateralFilter;BackgroundSubstract";
 }
 
 }  // namespace provider_vision

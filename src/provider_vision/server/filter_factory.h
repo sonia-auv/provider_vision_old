@@ -61,6 +61,7 @@
 #include <provider_vision/filters/track_detector.h>
 #include <provider_vision/filters/train_detector.h>
 #include <provider_vision/filters/white_noise_takedown.h>
+#include <provider_vision/filters/background_substract.h>
 #include <memory>
 #include <string>
 
