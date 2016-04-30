@@ -51,17 +51,17 @@ class CameraConfiguration {
 
   uint64_t guid_;
   std::string name_;
-  float framerate_;
+  double framerate_;
   bool gain_manual_;
   bool shutter_manual_;
   bool white_balance_manual_;
-  float gain_;
-  float shutter_;
-  float gamma_;
-  float exposure_;
-  float white_balance_blue_;
-  float white_balance_red_;
-  float saturation_;
+  double gain_;
+  double shutter_;
+  double gamma_;
+  double exposure_;
+  double white_balance_blue_;
+  double white_balance_red_;
+  double saturation_;
 
   //==========================================================================
   // P U B L I C   M E T H O D S
