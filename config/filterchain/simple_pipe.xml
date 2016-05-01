@@ -8,6 +8,12 @@
 		<enable value="0" />
 		<Rotation_type value="3" />
 	</Filter>
+	<Filter name="BackgroundSubstract">
+		<Enable value="1" />
+		<Show_blurred value="0" />
+		<Blur_size value="255" />
+		<Sigma value="10" />
+	</Filter>
 	<Filter name="SubtractAllPlanes">
 		<enable value="1" />
 		<Plane_1 value="4" />
@@ -22,22 +28,29 @@
 	</Filter>
 	<Filter name="Blurr">
 		<Enable value="1" />
-		<Type value="3" />
+		<Type value="1" />
 		<Kernel_size value="2" />
 	</Filter>
 	<Filter name="StatsThreshold">
-		<Enable value="0" />
-		<Min_thresh value="0" />
+		<Enable value="1" />
+		<Min_thresh value="20" />
 		<Mean_multiplier value="1.000000" />
 		<Standard_deviation_multiplier value="1.000000" />
 	</Filter>
 	<Filter name="Threshold">
-		<Enable value="1" />
-		<Threshold_type value="0" />
+		<Enable value="0" />
+		<Threshold_type value="5" />
 		<Max_value value="20" />
 	</Filter>
-	<Filter name="Erode">
+	<Filter name="Morphology">
 		<Enable value="1" />
+		<Morphology_type value="4" />
+		<Kernel_type value="0" />
+		<Iteration value="1" />
+		<Kernel_size value="5" />
+	</Filter>
+	<Filter name="Erode">
+		<Enable value="0" />
 		<Square_kernel value="1" />
 		<Kernel_type value="1" />
 		<Width value="1" />
@@ -45,7 +58,7 @@
 		<Iteration value="1" />
 	</Filter>
 	<Filter name="Dilate">
-		<Enable value="1" />
+		<Enable value="0" />
 		<Square_kernel value="1" />
 		<Kernel_type value="0" />
 		<Width value="1" />
@@ -56,6 +69,6 @@
 		<Enable value="1" />
 		<Debug_contour value="1" />
 		<Look_for_Rectangle value="0" />
-		<Min_area value="200.000000" />
+		<Min_area value="100.000000" />
 	</Filter>
 </Filterchain>
