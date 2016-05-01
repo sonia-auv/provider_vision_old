@@ -114,7 +114,8 @@ std::string FilterFactory::GetFilterList() {
          "TrainDetector;ObjectFinder;PipeDetector;TrackDetector;Sobel;"
          "DeloreanDetector;SubmarineFrameMasker;InRange;ConvexHull;"
          "TorpedoesDetector;Laplacian;Canny;HoughLine;AdaptiveThreshold;"
-         "HandleDetector;WhiteNoiseTakedown;BilateralFilter;BackgroundSubstract";
+         "HandleDetector;WhiteNoiseTakedown;BilateralFilter;"
+         "BackgroundSubstract";
 }
 
 }  // namespace provider_vision

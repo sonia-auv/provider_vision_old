@@ -87,7 +87,7 @@ VisionServer::VisionServer(const ros::NodeHandle &nh)
 
 //------------------------------------------------------------------------------
 //
-VisionServer::~VisionServer() { }
+VisionServer::~VisionServer() {}
 
 //==============================================================================
 // M E T H O D   S E C T I O N
@@ -234,7 +234,7 @@ bool VisionServer::CallbackGetFilterParam(
   }
   ROS_INFO(
       "DetectionTask %s does not exist or does not use this "
-          "filterchain: %s on get filter's param request.",
+      "filterchain: %s on get filter's param request.",
       execution_name.c_str(), filterchain_name.c_str());
   return false;
 }
@@ -263,7 +263,7 @@ bool VisionServer::CallbackGetFilterAllParam(
   }
   ROS_INFO(
       "DetectionTask %s does not exist or does not use this "
-          "filterchain: %s on get filter's param request.",
+      "filterchain: %s on get filter's param request.",
       execution_name.c_str(), filterchain_name.c_str());
   return false;
 }
@@ -288,7 +288,7 @@ bool VisionServer::CallbackSetFilterParam(
   }
   ROS_INFO(
       "DetectionTask %s does not exist or does not use this "
-          "filterchain: %s on get filter's param request.",
+      "filterchain: %s on get filter's param request.",
       execution_name.c_str(), filterchain_name.c_str());
   return false;
 }
@@ -316,11 +316,11 @@ bool VisionServer::CallbackGetFilter(get_filterchain_filter::Request &rqst,
   }
 
   std::string log_txt = "DetectionTask " + execution_name +
-      " does not exist or does not use this filterchain: " +
-      filterchain_name + " on get filter's param request.";
+                        " does not exist or does not use this filterchain: " +
+                        filterchain_name + " on get filter's param request.";
   ROS_INFO(
       "DetectionTask %s does not exist or does not use this "
-          "filterchain: %s on get filter's param request.",
+      "filterchain: %s on get filter's param request.",
       execution_name.c_str(), filterchain_name.c_str());
   return false;
 }
@@ -344,7 +344,7 @@ bool VisionServer::CallbackSetObserver(
   rep.result = rep.FAIL;
   ROS_INFO(
       "DetectionTask %s does not exist or does not use this "
-          "filterchain: %s on get filters request",
+      "filterchain: %s on get filters request",
       rqst.execution.c_str(), rqst.filterchain.c_str());
   return false;
 }
@@ -437,7 +437,7 @@ bool VisionServer::CallbackGetFcFromExec(
   }
   ROS_INFO(
       "DetectionTask %s does not exist or does not use this filterchain "
-          "on get filters request.",
+      "on get filters request.",
       execution_name.c_str());
   return false;
 }

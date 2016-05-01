@@ -119,16 +119,15 @@ void DC1394Camera::NextImage(cv::Mat &img) {
   dc1394video_frame_t *frame = nullptr;
   dc1394error_t error;
 
-
   timer_access_.lock();
   acquisition_timer_.Sleep(3);
   acquisition_timer_.Start();
   timer_access_.unlock();
-  
-cam_access_.lock();
-error = dc1394_capture_dequeue(dc1394_camera_, DC1394_CAPTURE_POLICY_WAIT,
+
+  cam_access_.lock();
+  error = dc1394_capture_dequeue(dc1394_camera_, DC1394_CAPTURE_POLICY_WAIT,
                                  &frame);
-cam_access_.unlock();
+  cam_access_.unlock();
   timer_access_.lock();
   atlas::MilliTimer::Sleep(3);
   timer_access_.unlock();
@@ -151,10 +150,10 @@ cam_access_.unlock();
   }
 
   // Clean, prepare for new frame.
-cam_access_.lock();  
-error = dc1394_capture_enqueue(dc1394_camera_, frame);
-cam_access_.unlock();  
-if (error != DC1394_SUCCESS) {
+  cam_access_.lock();
+  error = dc1394_capture_enqueue(dc1394_camera_, frame);
+  cam_access_.unlock();
+  if (error != DC1394_SUCCESS) {
     status_ = Status::ERROR;
     throw std::runtime_error("The media is not accessible");
   }
@@ -164,7 +163,7 @@ if (error != DC1394_SUCCESS) {
         "The image is empty, there is a problem with the media");
   }
 
-  //Calibrate(img);
+  // Calibrate(img);
 }
 
 //------------------------------------------------------------------------------

@@ -17,8 +17,8 @@ namespace provider_vision {
 
 //------------------------------------------------------------------------------
 //
-WebcamCamera::WebcamCamera() noexcept : BaseMedia("Webcam"),
-                                        cv::VideoCapture() {
+WebcamCamera::WebcamCamera() noexcept
+    : BaseMedia("Webcam"), cv::VideoCapture() {
   if (isOpened()) {
     status_ = Status::OPEN;
   }
@@ -27,8 +27,7 @@ WebcamCamera::WebcamCamera() noexcept : BaseMedia("Webcam"),
 //------------------------------------------------------------------------------
 //
 WebcamCamera::WebcamCamera(int webcamIdx) noexcept
-    : BaseMedia("Webcam"),
-      cv::VideoCapture(webcamIdx) {
+    : BaseMedia("Webcam"), cv::VideoCapture(webcamIdx) {
   if (isOpened()) {
     status_ = Status::OPEN;
   }
