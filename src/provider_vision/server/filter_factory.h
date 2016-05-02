@@ -27,6 +27,7 @@
 #define PROVIDER_VISION_FILTER_FACTORY_H_
 
 #include <provider_vision/filters/adaptive_threshold.h>
+#include <provider_vision/filters/background_substract.h>
 #include <provider_vision/filters/bilateral_filter.h>
 #include <provider_vision/filters/blurr.h>
 #include <provider_vision/filters/buoy_single.h>
@@ -61,7 +62,6 @@
 #include <provider_vision/filters/track_detector.h>
 #include <provider_vision/filters/train_detector.h>
 #include <provider_vision/filters/white_noise_takedown.h>
-#include <provider_vision/filters/background_substract.h>
 #include <memory>
 #include <string>
 

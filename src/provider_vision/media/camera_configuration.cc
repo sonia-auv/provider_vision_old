@@ -8,8 +8,8 @@
  * found in the LICENSE file.
  */
 
-#include <boost/lexical_cast.hpp>
 #include <provider_vision/media/camera_configuration.h>
+#include <boost/lexical_cast.hpp>
 #include "provider_vision/utils/pugixml.h"
 
 namespace provider_vision {
@@ -98,8 +98,7 @@ void CameraConfiguration::DeserializeConfiguration(const std::string &name)
                 white_balance_blue_);
   FindParameter("/camera_parameters/" + name + "/white_balance_red",
                 white_balance_red_);
-  FindParameter("/camera_parameters/" + name + "/saturation",
-                saturation_);
+  FindParameter("/camera_parameters/" + name + "/saturation", saturation_);
 }
 
 //------------------------------------------------------------------------------

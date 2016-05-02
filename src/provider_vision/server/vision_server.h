@@ -12,7 +12,6 @@
 #ifndef PROVIDER_VISION_SERVER_VISION_SERVER_H_
 #define PROVIDER_VISION_SERVER_VISION_SERVER_H_
 
-#include <lib_atlas/ros/service_server_manager.h>
 #include <sonia_msgs/copy_filterchain.h>
 #include <sonia_msgs/execute_cmd.h>
 #include <sonia_msgs/get_filterchain_filter.h>
@@ -30,6 +29,7 @@
 #include <sonia_msgs/set_filterchain_filter_param.h>
 #include <sonia_msgs/set_media_param.h>
 #include <memory>
+#include <string>
 #include <string>
 #include <vector>
 #include "provider_vision/media/camera/base_media.h"

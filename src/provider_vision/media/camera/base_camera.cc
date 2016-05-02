@@ -188,41 +188,41 @@ void BaseCamera::Calibrate(cv::Mat const &img) {
                &histRange, uniform, accumulate);
 
   float msv = MSV(l_hist, 5);
-try{
-  if (msv != msvUniform) {
-    if (GetExposureValue() > limitExposure && GetGainValue() > limitGain) {
-      double error = fabs(GetGammaValue() - current_features_.gamma);
-      current_features_.gamma = UpdatePID(gammaPid_, error, GetGammaValue());
-      SetGammaValue(current_features_.gamma);
-    } else if (GetGainValue() > limitGain) {
-      double error = fabs(GetExposureValue() - current_features_.exposure);
-      current_features_.exposure =
-          UpdatePID(exposurePid_, error, GetExposureValue());
-      SetExposureValue(current_features_.exposure);
-    } else {
-      double error = fabs(GetGainValue() - current_features_.gain);
-      current_features_.gain = UpdatePID(gainPid_, error, GetGainValue());
-      SetGainValue(current_features_.gain);
-    }
-  }
-  if (msv > 2 && msv < 3) {
-    cv::cvtColor(img, hsvImg, CV_RGB2HSV_FULL);
-    cv::split(hsvImg, hsv_planes);
-    cv::calcHist(&hsv_planes[1], 1, 0, cv::Mat(), s_hist, 1, &histSize,
-                 &histRange, uniform, accumulate);
-
-    msv = MSV(s_hist, 5);
+  try {
     if (msv != msvUniform) {
-      double error = fabs(GetSaturationValue() - current_features_.saturation);
-      current_features_.saturation =
-          UpdatePID(saturationPid_, error, GetSaturationValue());
-      SetSaturationValue(current_features_.saturation);
+      if (GetExposureValue() > limitExposure && GetGainValue() > limitGain) {
+        double error = fabs(GetGammaValue() - current_features_.gamma);
+        current_features_.gamma = UpdatePID(gammaPid_, error, GetGammaValue());
+        SetGammaValue(current_features_.gamma);
+      } else if (GetGainValue() > limitGain) {
+        double error = fabs(GetExposureValue() - current_features_.exposure);
+        current_features_.exposure =
+            UpdatePID(exposurePid_, error, GetExposureValue());
+        SetExposureValue(current_features_.exposure);
+      } else {
+        double error = fabs(GetGainValue() - current_features_.gain);
+        current_features_.gain = UpdatePID(gainPid_, error, GetGainValue());
+        SetGainValue(current_features_.gain);
+      }
     }
+    if (msv > 2 && msv < 3) {
+      cv::cvtColor(img, hsvImg, CV_RGB2HSV_FULL);
+      cv::split(hsvImg, hsv_planes);
+      cv::calcHist(&hsv_planes[1], 1, 0, cv::Mat(), s_hist, 1, &histSize,
+                   &histRange, uniform, accumulate);
+
+      msv = MSV(s_hist, 5);
+      if (msv != msvUniform) {
+        double error =
+            fabs(GetSaturationValue() - current_features_.saturation);
+        current_features_.saturation =
+            UpdatePID(saturationPid_, error, GetSaturationValue());
+        SetSaturationValue(current_features_.saturation);
+      }
+    }
+  } catch (std::exception &e) {
+    ROS_ERROR("Error in calibrate camera: %s.\n", e.what());
   }
-}catch(std::exception &e)
-{
-ROS_ERROR("Error in calibrate camera: %s.\n", e.what());
-}
 }
 
 //------------------------------------------------------------------------------
