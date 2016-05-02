@@ -154,5 +154,7 @@ TEST(MediaManagerTest, image) {
 
 int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
+  ros::init(argc, argv, "provider_vision");
+  nh = std::make_shared<ros::NodeHandle>("~");
   return RUN_ALL_TESTS();
 }

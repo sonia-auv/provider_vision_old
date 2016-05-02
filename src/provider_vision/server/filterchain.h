@@ -20,13 +20,10 @@
 #include <provider_vision/server/filter_factory.h>
 #include <provider_vision/server/global_param_handler.h>
 #include "provider_vision/server/target.h"
-#include "provider_vision/utils/config.h"
-#include "provider_vision/utils/pugixml.h"
-#include "provider_vision/utils/serializable.h"
 
 namespace provider_vision {
 
-class Filterchain : public Serializable {
+class Filterchain {
  public:
   //==========================================================================
   // T Y P E D E F   A N D   E N U M

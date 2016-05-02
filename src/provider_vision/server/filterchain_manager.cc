@@ -12,7 +12,6 @@
 
 #include "provider_vision/server/filterchain_manager.h"
 #include <dirent.h>
-#include <provider_vision/utils/pugixml.h>
 
 namespace provider_vision {
 
@@ -89,7 +88,7 @@ bool FilterchainManager::FilterchainExists(const std::string &filterchain) {
 Filterchain::Ptr FilterchainManager::InstanciateFilterchain(
     const std::string &filterchainName) {
   if (FilterchainExists(filterchainName)) {
-    Filterchain::Ptr filterchain =
+    auto filterchain =
         std::make_shared<Filterchain>(filterchainName);
     running_filterchains_.push_back(filterchain);
     ROS_INFO("Filterchain is ready.");
@@ -100,11 +99,34 @@ Filterchain::Ptr FilterchainManager::InstanciateFilterchain(
 
 //------------------------------------------------------------------------------
 //
+const std::vector<Filterchain::Ptr> &FilterchainManager::InstanciateAllFilterchains() {
+  for(const auto &filterchain : GetAllFilterchainName()) {
+    InstanciateFilterchain(filterchain);
+  }
+  return GetRunningFilterchains();
+}
+
+//------------------------------------------------------------------------------
+//
 void FilterchainManager::StopFilterchain(const Filterchain::Ptr &filterchain) {
   auto instance = std::find(running_filterchains_.begin(),
                             running_filterchains_.end(), filterchain);
   running_filterchains_.erase(instance);
   ROS_INFO("Filterchain is stopped.");
+}
+
+
+//------------------------------------------------------------------------------
+//
+std::string FilterchainManager::GetFilterchainPath(
+    const std::string &filterchain) const {
+  return kConfigPath + filterchain + kFilterchainExt;
+}
+
+//------------------------------------------------------------------------------
+//
+const std::vector<Filterchain::Ptr> &FilterchainManager::GetRunningFilterchains() const {
+  return running_filterchains_;
 }
 
 }  // namespace provider_vision

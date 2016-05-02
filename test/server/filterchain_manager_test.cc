@@ -10,10 +10,23 @@
 
 #include <gtest/gtest.h>
 #include <opencv2/opencv.hpp>
-#include "provider_vision/utils/config.h"
-#include "provider_vision/server/media_manager.h"
+#include "provider_vision/server/filterchain_manager.h"
+
+ros::NodeHandle *nhp;
+
+TEST(FeatureFactory, AllTest) {
+  provider_vision::FilterchainManager fcmgr;
+  auto filterchain = fcmgr.InstanciateFilterchain("object_feature_output");
+  filterchain->Serialize();
+//  for(auto &filterchain : filterchains) {
+//    filterchain->Serialize();
+//  }
+}
 
 int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
+  ros::init(argc, argv, "provider_vision");
+  ros::NodeHandle nh{"~"};
+  nhp = &nh;
   return RUN_ALL_TESTS();
 }

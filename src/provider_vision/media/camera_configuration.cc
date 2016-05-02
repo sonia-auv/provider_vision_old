@@ -10,7 +10,6 @@
 
 #include <provider_vision/media/camera_configuration.h>
 #include <boost/lexical_cast.hpp>
-#include "provider_vision/utils/pugixml.h"
 
 namespace provider_vision {
 

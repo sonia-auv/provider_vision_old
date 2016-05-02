@@ -10,6 +10,8 @@
  */
 
 #include "provider_vision/server/filterchain.h"
+#include <yaml-cpp/yaml.h>
+#include <fstream>
 
 namespace provider_vision {
 
@@ -19,7 +21,7 @@ namespace provider_vision {
 //------------------------------------------------------------------------------
 //
 Filterchain::Filterchain(const std::string &name)
-    : Serializable(kConfigPath + "filterchain/" + name + kFilterchainExt),
+    : Serializable(kConfigPath + "filterchain/" + name + ".yaml"),
       name_(name),
       param_handler_(),
       observer_index_(0) {
@@ -45,56 +47,61 @@ Filterchain::~Filterchain() {}
 //------------------------------------------------------------------------------
 //
 bool Filterchain::Serialize() {
-  pugi::xml_document doc;
-  auto node = doc.append_child("Filterchain");
-  auto i = 0;
+  YAML::Node node;
+  node["name"] = GetName();
+  int i{0};
   for (auto &filter : filters_) {
-    auto node_name = std::string{"Filter"};
-    auto filter_node = node.append_child(node_name.c_str());
-    auto filter_attr = filter_node.append_attribute("name");
-    filter_attr.set_value(filter->GetName().c_str());
-    for (const auto parameter : filter->GetParameters()) {
-      auto parameter_node =
-          filter_node.append_child(parameter->GetName().c_str());
-      auto param_attr = parameter_node.append_attribute("value");
-      param_attr.set_value(parameter->GetStringValue().c_str());
+    YAML::Node filter_node;
+    filter_node["name"] = filter->GetName();
+    filter_node["id"] = i;
+
+    auto parameters = filter->GetParameters();
+    for (const auto &parameter : parameters) {
+      YAML::Node param_node;
+      param_node["name"] = parameter->GetName();
+      param_node["type"] = parameter->GetType();
+      param_node["value"] = parameter->GetStringValue();
+      filter_node["parameters"].push_back(param_node);
     }
+
+    node["filters"].push_back(filter_node);
     ++i;
   }
-  auto save_path = kFilterchainPath + name_ + kFilterchainExt;
-  doc.save_file(save_path.c_str());
+
+  auto filepath = kFilterchainPath + GetName() + ".yaml";
+  std::ofstream fout(filepath);
+  fout << node;
   return true;
 }
 
 //------------------------------------------------------------------------------
 //
 bool Filterchain::Deserialize() {
-  pugi::xml_document doc;
-  pugi::xml_parse_result result = doc.load_file(filepath_.c_str());
-  if (!result) {
-    throw std::runtime_error("Error parsing file");
-  }
-  pugi::xml_node node = doc.child("Filterchain");
+  YAML::Node node = YAML::LoadFile(filepath_);
 
-  auto filter = node.first_child();
-  for (int i = 0; filter; filter = filter.next_sibling(), ++i) {
-    auto attr = filter.first_attribute();
-    for (; attr; attr = attr.next_attribute()) {
-      if (std::string{attr.name()} == "value" ||
-          std::string{attr.name()} == "name") {
-        AddFilter(attr.value());
-        auto parameter = filter.first_child();
-        for (; parameter; parameter = parameter.next_sibling()) {
-          auto attr_param = parameter.first_attribute();
-          for (; attr_param; attr_param = attr_param.next_attribute()) {
-            if (std::string{attr_param.name()} == "value") {
-              SetFilterParameterValue(i, parameter.name(), attr_param.value());
-            }
-          }
-        }
-      }
+  if (node["name"]) {
+    SetName(node["name"].as<std::string>());
+  }
+
+  auto filters = node["filters"];
+  assert(filters.Type() == YAML::NodeType::Sequence);
+
+  for (std::size_t i = 0; i < filters.size(); i++) {
+    auto filter_node = filters[i];
+    AddFilter(filter_node["name"].as<std::string>());
+
+    auto parameters = filter_node["parameters"];
+    assert(parameters.Type() == YAML::NodeType::Sequence);
+
+    for (std::size_t j = 0; j < parameters.size(); j++) {
+      auto param_node = parameters[j];
+
+      auto param_name = param_node["name"].as<std::string>();
+      auto param_value = param_node["value"].as<std::string>();
+      SetFilterParameterValue(j, param_name, param_value);
     }
   }
+
   return true;
 }
 
