@@ -33,7 +33,7 @@ BaseCamera::BaseCamera(const CameraConfiguration &configuration)
   gammaPid_.iMax = 2000;
   gammaPid_.iGain = 0.01;
   gammaPid_.pGain = 2;
-  gammaPid_.dGain = 25;
+  gammaPid_.dGain = 5;
 
   gainPid_.dState = configuration.gain_;
   gainPid_.iState = 0.0;
@@ -41,7 +41,7 @@ BaseCamera::BaseCamera(const CameraConfiguration &configuration)
   gainPid_.iMax = 2000;
   gainPid_.iGain = 0.01;
   gainPid_.pGain = 2;
-  gainPid_.dGain = 25;
+  gainPid_.dGain = 5;
 
   exposurePid_.dState = configuration.exposure_;
   exposurePid_.iState = 0.0;
@@ -49,7 +49,7 @@ BaseCamera::BaseCamera(const CameraConfiguration &configuration)
   exposurePid_.iMax = 2000;
   exposurePid_.iGain = 0.01;
   exposurePid_.pGain = 2;
-  exposurePid_.dGain = 25;
+  exposurePid_.dGain = 5;
 
   saturationPid_.dState = configuration.saturation_;
   saturationPid_.iState = 0.0;
@@ -57,7 +57,7 @@ BaseCamera::BaseCamera(const CameraConfiguration &configuration)
   saturationPid_.iMax = 2000;
   saturationPid_.iGain = 0.01;
   saturationPid_.pGain = 2;
-  saturationPid_.dGain = 25;
+  saturationPid_.dGain = 5;
 }
 
 //------------------------------------------------------------------------------
@@ -167,8 +167,8 @@ float BaseCamera::GetFeature(const Feature &feat) const {
 
 void BaseCamera::Calibrate(cv::Mat const &img) {
   // Parametre a placer ds yaml plus tard
-  const float limitGain = 100.f;
-  const float limitExposure = 100.f;
+  const float limitGain = 480.f;
+  const float limitExposure = 80.f;
   const float msvUniform = 2.5f;
 
   cv::Mat l_hist, s_hist, luvImg, hsvImg;
@@ -220,7 +220,7 @@ void BaseCamera::Calibrate(cv::Mat const &img) {
         SetSaturationValue(current_features_.saturation);
       }
     }
-  } catch (std::exception &e) {
+  } catch (const std::exception &e) {
     ROS_ERROR("Error in calibrate camera: %s.\n", e.what());
   }
 }
@@ -245,7 +245,7 @@ float BaseCamera::MSV(const cv::Mat &img, int nbrRegion) {
 //
 double BaseCamera::UpdatePID(SPid &pid, double error,
                              double position) ATLAS_NOEXCEPT {
-  double pTerm, dTerm, iTerm;
+  double pTerm = 0, dTerm = 0, iTerm = 0;
   pTerm = pid.pGain * error;
   // calculate the proportional term
   // calculate the integral state with appropriate limiting
@@ -255,7 +255,7 @@ double BaseCamera::UpdatePID(SPid &pid, double error,
   else if (pid.iState < pid.iMin)
     pid.iState = pid.iMin;
   iTerm = pid.iGain * pid.iState;  // calculate the integral term
-  dTerm = pid.dGain * (pid.dState - position);
+  dTerm = pid.dGain * fabs(pid.dState - position);
   pid.dState = position;
   return pTerm + dTerm + iTerm;
 }

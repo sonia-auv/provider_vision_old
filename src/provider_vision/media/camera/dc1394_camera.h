@@ -126,6 +126,8 @@ class DC1394Camera : public BaseCamera {
   dc1394camera_t *dc1394_camera_;
 
   atlas::MilliTimer acquisition_timer_;
+
+  uint16_t calibrate_count_;
 };
 
 //==============================================================================

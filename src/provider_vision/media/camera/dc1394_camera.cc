@@ -23,7 +23,7 @@ const std::string DC1394Camera::CAM_TAG = "[DC1394 Camera]";
 //
 DC1394Camera::DC1394Camera(dc1394camera_t *camera,
                            const CameraConfiguration &config)
-    : BaseCamera(config), dc1394_camera_(camera) {}
+    : BaseCamera(config), dc1394_camera_(camera), calibrate_count_(0) {}
 
 //------------------------------------------------------------------------------
 //
@@ -163,7 +163,10 @@ void DC1394Camera::NextImage(cv::Mat &img) {
         "The image is empty, there is a problem with the media");
   }
 
-  // Calibrate(img);
+  if(calibrate_count_ == 10) {
+    Calibrate(img);
+    calibrate_count_ = 0;
+  }
 }
 
 //------------------------------------------------------------------------------
