@@ -23,7 +23,7 @@
 /provider_vision/camera_parameters/bottom_guppy/gain_manual: true
 /provider_vision/camera_parameters/bottom_guppy/shutter_manual: true
 /provider_vision/camera_parameters/bottom_guppy/white_balance_manual: true
-/provider_vision/camera_parameters/bottom_guppy/gain: 500.0
+/provider_vision/camera_parameters/bottom_guppy/gain: 1.0
 /provider_vision/camera_parameters/bottom_guppy/shutter: 32.0
 /provider_vision/camera_parameters/bottom_guppy/gamma: 0
 /provider_vision/camera_parameters/bottom_guppy/exposure: 95
