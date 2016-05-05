@@ -49,30 +49,42 @@ Filterchain::~Filterchain() {}
 //------------------------------------------------------------------------------
 //
 bool Filterchain::Serialize() {
-  YAML::Node node;
-  node["name"] = GetName();
-  int i{0};
-  for (auto &filter : filters_) {
-    YAML::Node filter_node;
-    filter_node["name"] = filter->GetName();
-    filter_node["id"] = i;
+  YAML::Emitter out;
+  out << YAML::BeginMap;
+  out << YAML::Key << "name";
+  out << YAML::Value << GetName();
 
-    auto parameters = filter->GetParameters();
-    for (const auto &parameter : parameters) {
-      YAML::Node param_node;
-      param_node["name"] = parameter->GetName();
-      param_node["type"] = parameter->GetType();
-      param_node["value"] = parameter->GetStringValue();
-      filter_node["parameters"].push_back(param_node);
+  if(filters_.size() > 0) {
+    out << YAML::Key << "filters";
+    out << YAML::Value << YAML::BeginSeq;
+    for (auto &filter : filters_) {
+      out << YAML::BeginMap;
+      out << YAML::Key << "name";
+      out << YAML::Value << filter->GetName();
+
+      auto parameters = filter->GetParameters();
+      if(parameters.size() > 0) {
+        out << YAML::Key << "parameters";
+        out << YAML::Value << YAML::BeginSeq;
+        for (const auto &parameter : parameters) {
+          out << YAML::BeginMap;
+          out << YAML::Key << "name";
+          out << YAML::Value << parameter->GetName();
+          out << YAML::Key << "value";
+          out << YAML::Value << parameter->GetStringValue();
+          out << YAML::EndMap;
+        }
+        out << YAML::EndSeq;
+      }
+      out << YAML::EndMap;
     }
-
-    node["filters"].push_back(filter_node);
-    ++i;
+    out << YAML::EndSeq;
   }
+  out << YAML::EndMap;
 
   auto filepath = kFilterchainPath + GetName() + kFilterchainExt;
   std::ofstream fout(filepath);
-  fout << node;
+  fout << out.c_str();
   return true;
 }
 
@@ -80,6 +92,7 @@ bool Filterchain::Serialize() {
 //
 bool Filterchain::Deserialize() {
   YAML::Node node = YAML::LoadFile(filepath_);
+  YAML::Emitter emitter;
 
   if (node["name"]) {
     SetName(node["name"].as<std::string>());

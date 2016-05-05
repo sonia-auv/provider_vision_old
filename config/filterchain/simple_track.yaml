@@ -1,305 +1,204 @@
+name: simple_track
 filters:
   - name: Rotate
     parameters:
-      - type: Boolean
-        name: enable
+      - name: enable
         value: 0
-      - type: Integer
+      - name: Rotation_type
         value: 0
-        name: Rotation_type
-    id: 0
-  - id: 1
-    name: SubtractAllPlanes
+  - name: SubtractAllPlanes
     parameters:
-      - value: 0
-        name: enable
-        type: Boolean
-      - type: Integer
-        name: Plane_1
-        value: 1
-      - value: 1
-        name: Plane_2
-        type: Integer
-      - type: Integer
-        value: 1
-        name: Plane_3
-      - type: Boolean
+      - name: enable
         value: 0
-        name: Invert_plane_1
+      - name: Plane_1
+        value: 1
+      - name: Plane_2
+        value: 1
+      - name: Plane_3
+        value: 1
+      - name: Invert_plane_1
+        value: 0
       - name: Invert_plane_2
         value: 0
-        type: Boolean
       - name: Invert_plane_3
-        type: Boolean
         value: 0
-      - value: 1.000000
-        type: Double
-        name: Weight_Plane_1
+      - name: Weight_Plane_1
+        value: 1.000000
       - name: Weight_Plane_2
         value: 1.000000
-        type: Double
-      - value: 1.000000
-        name: Weight_Plane_3
-        type: Double
+      - name: Weight_Plane_3
+        value: 1.000000
   - name: Blurr
-    id: 2
     parameters:
-      - value: 0
-        type: Boolean
-        name: Enable
-      - value: 2
-        type: Integer
-        name: Type
-      - type: Integer
+      - name: Enable
+        value: 0
+      - name: Type
+        value: 2
+      - name: Kernel_size
         value: 1
-        name: Kernel_size
   - name: Sobel
     parameters:
       - name: Enable
-        type: Boolean
         value: 0
       - name: Convert_to_uchar
         value: 1
-        type: Boolean
-      - value: 0
-        type: Boolean
-        name: use_pixel_intensity_correction
+      - name: use_pixel_intensity_correction
+        value: 0
       - name: Delta
         value: 0.000000
-        type: Double
-      - value: 1.000000
-        name: Scale
-        type: Double
-      - type: Double
+      - name: Scale
         value: 1.000000
-        name: pixel_correction_power
+      - name: pixel_correction_power
+        value: 1.000000
       - name: Size
-        type: Integer
         value: 2
-    id: 3
-  - id: 4
-    parameters:
-      - type: Boolean
-        name: Enable
-        value: 0
-      - type: Boolean
-        value: 1
-        name: Convert_to_uchar
-      - value: 0
-        type: Boolean
-        name: use_pixel_intensity_correction
-      - value: 0.000000
-        type: Double
-        name: Delta
-      - type: Double
-        value: 1.000000
-        name: Scale
-      - value: 1.000000
-        name: pixel_correction_power
-        type: Double
-    name: Scharr
-  - parameters:
-      - type: Boolean
-        value: 0
-        name: Enable
-      - name: Morphology_type
-        type: Integer
-        value: 0
-      - type: Integer
-        name: Kernel_type
-        value: 0
-      - type: Integer
-        value: 1
-        name: Iteration
-      - value: 1
-        type: Integer
-        name: Kernel_size
-    name: Morphology
-    id: 5
-  - id: 6
-    name: StatsThreshold
-    parameters:
-      - type: Boolean
-        value: 0
-        name: Enable
-      - value: 0
-        name: Min_thresh
-        type: Integer
-      - value: 1.000000
-        type: Double
-        name: Mean_multiplier
-      - value: 1.000000
-        name: Standard_deviation_multiplier
-        type: Double
-  - id: 7
-    name: Threshold
-    parameters:
-      - value: 0
-        type: Boolean
-        name: Enable
-      - name: Threshold_type
-        value: 1
-        type: Integer
-      - value: 100
-        name: Max_value
-        type: Integer
-  - parameters:
-      - type: Boolean
-        value: 0
-        name: Enable
-      - value: 1
-        type: Boolean
-        name: Square_kernel
-      - value: 0
-        type: Integer
-        name: Kernel_type
-      - type: Integer
-        name: Width
-        value: 1
-      - type: Integer
-        name: Height
-        value: 1
-      - type: Integer
-        value: 1
-        name: Iteration
-    name: Erode
-    id: 8
-  - id: 9
-    parameters:
-      - value: 0
-        type: Boolean
-        name: Enable
-      - name: Square_kernel
-        type: Boolean
-        value: 1
-      - value: 0
-        type: Integer
-        name: Kernel_type
-      - type: Integer
-        name: Width
-        value: 1
-      - name: Height
-        value: 1
-        type: Integer
-      - type: Integer
-        name: Iteration
-        value: 1
-    name: Dilate
-  - parameters:
-      - type: Boolean
-        value: 0
-        name: Enable
-      - value: 0
-        type: Integer
-        name: Mode
-      - name: Method
-        value: 0
-        type: Integer
-    id: 10
-    name: ConvexHull
-  - id: 11
+  - name: Scharr
     parameters:
       - name: Enable
-        type: Boolean
         value: 0
-      - type: Boolean
-        name: Square_kernel
+      - name: Convert_to_uchar
+        value: 1
+      - name: use_pixel_intensity_correction
+        value: 0
+      - name: Delta
+        value: 0.000000
+      - name: Scale
+        value: 1.000000
+      - name: pixel_correction_power
+        value: 1.000000
+  - name: Morphology
+    parameters:
+      - name: Enable
+        value: 0
+      - name: Morphology_type
+        value: 0
+      - name: Kernel_type
+        value: 0
+      - name: Iteration
+        value: 1
+      - name: Kernel_size
+        value: 1
+  - name: StatsThreshold
+    parameters:
+      - name: Enable
+        value: 0
+      - name: Min_thresh
+        value: 0
+      - name: Mean_multiplier
+        value: 1.000000
+      - name: Standard_deviation_multiplier
+        value: 1.000000
+  - name: Threshold
+    parameters:
+      - name: Enable
+        value: 0
+      - name: Threshold_type
+        value: 1
+      - name: Max_value
+        value: 100
+  - name: Erode
+    parameters:
+      - name: Enable
+        value: 0
+      - name: Square_kernel
         value: 1
       - name: Kernel_type
         value: 0
-        type: Integer
-      - value: 1
-        name: Width
-        type: Integer
+      - name: Width
+        value: 1
       - name: Height
-        type: Integer
         value: 1
       - name: Iteration
-        type: Integer
         value: 1
-    name: Erode
+  - name: Dilate
+    parameters:
+      - name: Enable
+        value: 0
+      - name: Square_kernel
+        value: 1
+      - name: Kernel_type
+        value: 0
+      - name: Width
+        value: 1
+      - name: Height
+        value: 1
+      - name: Iteration
+        value: 1
+  - name: ConvexHull
+    parameters:
+      - name: Enable
+        value: 0
+      - name: Mode
+        value: 0
+      - name: Method
+        value: 0
+  - name: Erode
+    parameters:
+      - name: Enable
+        value: 0
+      - name: Square_kernel
+        value: 1
+      - name: Kernel_type
+        value: 0
+      - name: Width
+        value: 1
+      - name: Height
+        value: 1
+      - name: Iteration
+        value: 1
   - name: TrackDetector
-    id: 12
     parameters:
-      - type: Boolean
+      - name: Enable
         value: 0
-        name: Enable
-      - type: Boolean
-        name: Debug_contour
+      - name: Debug_contour
         value: 0
-      - type: Double
+      - name: Min_area
         value: 200.000000
-        name: Min_area
-      - value: 0.500000
-        type: Double
-        name: Ratio_target
-      - value: 0.100000
-        type: Double
-        name: Diff_from_ratio_target
-  - id: 13
+      - name: Ratio_target
+        value: 0.500000
+      - name: Diff_from_ratio_target
+        value: 0.100000
+  - name: ObjectFinder
     parameters:
-      - type: Boolean
+      - name: Enable
         value: 0
-        name: Enable
-      - type: Boolean
-        name: Debug_contour
+      - name: Debug_contour
         value: 0
-      - type: Boolean
+      - name: Look_for_Rectangle
         value: 0
-        name: Look_for_Rectangle
-      - type: Boolean
-        name: disable_ratio_check
+      - name: disable_ratio_check
         value: 0
-      - value: 0
-        type: Boolean
-        name: disable_angle_check
+      - name: disable_angle_check
+        value: 0
       - name: Use_convex_hull
         value: 0
-        type: Boolean
-      - value: 0
-        name: Vote_most_centered
-        type: Boolean
-      - type: Boolean
+      - name: Vote_most_centered
         value: 0
-        name: Vote_most_upright
+      - name: Vote_most_upright
+        value: 0
       - name: Vote_less_diff_from_target_ratio
-        type: Boolean
         value: 0
-      - value: 0
-        name: Vote_length
-        type: Boolean
+      - name: Vote_length
+        value: 0
       - name: Vote_higher
-        type: Boolean
         value: 0
       - name: ID
-        type: String
         value: buoy
       - name: spec1
-        type: String
         value: red
       - name: spec2
-        type: String
         value: blue
       - name: Min_area
-        type: Double
         value: 200.000000
-      - value: 0.500000
-        name: Ratio_target
-        type: Double
+      - name: Ratio_target
+        value: 0.500000
       - name: Diff_from_ratio_target
-        type: Double
         value: 0.100000
       - name: angle_target
-        type: Double
         value: 0.000000
       - name: Diff_from_angle_target
-        type: Double
         value: 30.000000
       - name: Min_percent_filled
-        type: Double
         value: 50.000000
       - name: Contour_retreval
-        type: Integer
         value: 0
-    name: ObjectFinder
-name: simple_track

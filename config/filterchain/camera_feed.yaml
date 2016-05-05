@@ -1,11 +1,8 @@
 name: camera_feed
 filters:
-  - id: 0
-    name: Rotate
+  - name: Rotate
     parameters:
-      - value: 0
-        name: enable
-        type: Boolean
+      - name: enable
+        value: 0
       - name: Rotation_type
-        type: Integer
         value: 0

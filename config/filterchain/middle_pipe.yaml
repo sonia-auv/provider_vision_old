@@ -1,170 +1,114 @@
 name: middle_pipe
 filters:
-  - id: 0
-    name: Blurr
+  - name: Blurr
     parameters:
-      - type: Boolean
-        name: Enable
+      - name: Enable
         value: 0
-      - value: 2
-        type: Integer
-        name: Type
-      - type: Integer
-        name: Kernel_size
+      - name: Type
+        value: 2
+      - name: Kernel_size
         value: 1
-  - id: 1
-    name: InRange
+  - name: InRange
     parameters:
-      - value: 0
-        type: Boolean
-        name: Enable
-      - type: Integer
-        name: HSVLowH
+      - name: Enable
         value: 0
-      - value: 255
-        name: HSVHighH
-        type: Integer
-      - type: Integer
-        name: HSVLowS
+      - name: HSVLowH
         value: 0
-      - value: 255
-        name: HSVHighS
-        type: Integer
-      - type: Integer
-        name: HSVLowV
-        value: 0
-      - type: Integer
-        name: HSVHighV
+      - name: HSVHighH
         value: 255
-      - type: Integer
+      - name: HSVLowS
         value: 0
-        name: LUVlowL
-      - type: Integer
+      - name: HSVHighS
         value: 255
-        name: LUVhighL
+      - name: HSVLowV
+        value: 0
+      - name: HSVHighV
+        value: 255
+      - name: LUVlowL
+        value: 0
+      - name: LUVhighL
+        value: 255
       - name: LUVlowU
         value: 0
-        type: Integer
       - name: LUVhighU
-        type: Integer
         value: 255
-      - value: 0
-        name: LUVlowV
-        type: Integer
-      - name: LUVhighV
-        type: Integer
-        value: 255
-  - parameters:
-      - value: 0
-        type: Boolean
-        name: Enable
-      - name: Morphology_type
-        type: Integer
+      - name: LUVlowV
         value: 0
-      - value: 0
-        name: Kernel_type
-        type: Integer
+      - name: LUVhighV
+        value: 255
+  - name: Morphology
+    parameters:
+      - name: Enable
+        value: 0
+      - name: Morphology_type
+        value: 0
+      - name: Kernel_type
+        value: 0
       - name: Iteration
-        type: Integer
         value: 1
       - name: Kernel_size
-        type: Integer
         value: 1
-    name: Morphology
-    id: 2
   - name: Morphology
-    id: 3
     parameters:
-      - type: Boolean
-        name: Enable
+      - name: Enable
         value: 0
-      - type: Integer
+      - name: Morphology_type
         value: 0
-        name: Morphology_type
-      - value: 0
-        type: Integer
-        name: Kernel_type
+      - name: Kernel_type
+        value: 0
       - name: Iteration
-        type: Integer
         value: 1
-      - value: 1
-        name: Kernel_size
-        type: Integer
+      - name: Kernel_size
+        value: 1
   - name: ConvexHull
     parameters:
-      - type: Boolean
-        value: 0
-        name: Enable
-      - name: Mode
-        type: Integer
-        value: 0
-      - type: Integer
-        value: 0
-        name: Method
-    id: 4
-  - parameters:
       - name: Enable
-        type: Boolean
+        value: 0
+      - name: Mode
+        value: 0
+      - name: Method
+        value: 0
+  - name: ObjectFinder
+    parameters:
+      - name: Enable
         value: 0
       - name: Debug_contour
-        type: Boolean
         value: 0
       - name: Look_for_Rectangle
-        type: Boolean
         value: 0
       - name: disable_ratio_check
-        type: Boolean
         value: 0
-      - value: 0
-        type: Boolean
-        name: disable_angle_check
-      - value: 0
-        name: Use_convex_hull
-        type: Boolean
-      - type: Boolean
+      - name: disable_angle_check
         value: 0
-        name: Vote_most_centered
+      - name: Use_convex_hull
+        value: 0
+      - name: Vote_most_centered
+        value: 0
       - name: Vote_most_upright
-        type: Boolean
         value: 0
       - name: Vote_less_diff_from_target_ratio
-        type: Boolean
         value: 0
-      - type: Boolean
+      - name: Vote_length
         value: 0
-        name: Vote_length
       - name: Vote_higher
-        type: Boolean
         value: 0
       - name: ID
         value: buoy
-        type: String
       - name: spec1
-        type: String
         value: red
-      - type: String
-        name: spec2
+      - name: spec2
         value: blue
       - name: Min_area
         value: 200.000000
-        type: Double
       - name: Ratio_target
-        type: Double
         value: 0.500000
       - name: Diff_from_ratio_target
-        type: Double
         value: 0.100000
       - name: angle_target
-        type: Double
         value: 0.000000
       - name: Diff_from_angle_target
-        type: Double
         value: 30.000000
       - name: Min_percent_filled
-        type: Double
         value: 50.000000
-      - value: 0
-        name: Contour_retreval
-        type: Integer
-    name: ObjectFinder
-    id: 5
+      - name: Contour_retreval
+        value: 0
