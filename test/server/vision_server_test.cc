@@ -15,6 +15,7 @@
 #include <sonia_msgs/execute_cmd.h>
 #include <provider_vision/server/vision_server.h>
 
+ros::NodeHandle *nhp;
 
 static const std::string node_prefix("/provider_vision/");
 static const std::string test_dir(std::string(getenv("ROS_SONIA_WS"))
@@ -59,7 +60,7 @@ class ServiceSubscriber {
 
 TEST(VisionServer, core_test) {
 
-  provider_vision::VisionServer provider_vision;
+  provider_vision::VisionServer provider_vision(*nhp);
   std::thread vision_server_thread(RunVisionServer);
 
   ServiceSubscriber serviceSubscriber("/provider_vision/execute_cmd");
@@ -114,6 +115,6 @@ TEST(VisionServer, core_test) {
 int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
   ros::init(argc, argv, "provider_vision");
-
+  nhp = new ros::NodeHandle{"~"};
   return RUN_ALL_TESTS();
 }

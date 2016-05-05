@@ -14,6 +14,8 @@
 #include "provider_vision/config.h"
 #include "provider_vision/server/media_manager.h"
 
+ros::NodeHandle *nhp;
+
 /**
  * Observer class that will store the image object from the media streamer
  * whenever it send a notification.
@@ -32,7 +34,7 @@ class ImageObserver : public atlas::Observer<const cv::Mat &> {
 };
 
 TEST(MediaManagerTest, webcam) {
-  provider_vision::MediaManager mmng;
+  provider_vision::MediaManager mmng(*nhp);
 
   // Assert that there is a webcam object in the system.
   // If not, just do nothing.
@@ -89,7 +91,7 @@ TEST(MediaManagerTest, webcam) {
 }
 
 TEST(MediaManagerTest, image) {
-  provider_vision::MediaManager mmng;
+  provider_vision::MediaManager mmng(*nhp);
 
   // Assert that there is a webcam object in the system.
   // If not, just do nothing.
@@ -155,6 +157,6 @@ TEST(MediaManagerTest, image) {
 int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
   ros::init(argc, argv, "provider_vision");
-  nh = std::make_shared<ros::NodeHandle>("~");
+  nhp = new ros::NodeHandle{"~"};
   return RUN_ALL_TESTS();
 }

@@ -194,7 +194,6 @@ TEST(DetectionTaskManager, change_observer) {
 int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
   ros::init(argc, argv, "provider_vision");
-  ros::NodeHandle nh{"~"};
-  nhp = &nh;
+  nhp = new ros::NodeHandle{"~"};
   return RUN_ALL_TESTS();
 }

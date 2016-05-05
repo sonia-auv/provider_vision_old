@@ -5,15 +5,6 @@
 # Use of this source code is governed by the MIT license that can be
 # found in the LICENSE file.
 
-catkin_add_gtest(configuration_handler_test server/configuration_handler_test.cc ${provider_vision_FILES})
-target_link_libraries(configuration_handler_test
-    dc1394
-    ${catkin_LIBRARIES}
-    ${lib_atlas_LIBRARIES}
-    ${provider_vision_LIBRARIES}
-    ${OpenCV_LIBRARIES}
-    yaml-cpp)
-
 catkin_add_gtest(media_manager_test server/media_manager_test.cc ${provider_vision_FILES})
 target_link_libraries(media_manager_test
     dc1394
