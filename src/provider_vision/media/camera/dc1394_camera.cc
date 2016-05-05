@@ -165,7 +165,7 @@ void DC1394Camera::NextImage(cv::Mat &img) {
 
   ++calibrate_count_;
 
-  if(calibrate_count_ == 10) {
+  if (calibrate_count_ == 10) {
     Calibrate(img);
     calibrate_count_ = 0;
   }
