@@ -28,6 +28,7 @@ CameraConfiguration::CameraConfiguration(const ros::NodeHandle &nh,
       exposure_(0),
       white_balance_blue_(511.0),
       white_balance_red_(412.0),
+      saturation_(0),
       nh_(nh) {
   DeserializeConfiguration(name);
 }
@@ -48,6 +49,7 @@ CameraConfiguration::CameraConfiguration(const CameraConfiguration &rhs)
   exposure_ = rhs.exposure_;
   white_balance_blue_ = rhs.white_balance_blue_;
   white_balance_red_ = rhs.white_balance_red_;
+  saturation_ = rhs.saturation_;
   nh_ = rhs.nh_;
 }
 
@@ -67,6 +69,7 @@ CameraConfiguration::CameraConfiguration(CameraConfiguration &&rhs)
   exposure_ = rhs.exposure_;
   white_balance_blue_ = rhs.white_balance_blue_;
   white_balance_red_ = rhs.white_balance_red_;
+  saturation_ = rhs.saturation_;
   nh_ = rhs.nh_;
 }
 
