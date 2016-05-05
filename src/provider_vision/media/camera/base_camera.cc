@@ -191,12 +191,12 @@ void BaseCamera::Calibrate(cv::Mat const &img) {
   try {
     ROS_INFO_STREAM("MSV: " << msv);
     if (msv != msvUniform) {
-      if (GetExposureValue() < limitExposure && GetGainValue() < limitGain) {
+      if (GetExposureValue() > limitExposure && GetGainValue() > limitGain) {
         double error = fabs(GetGammaValue() - current_features_.gamma);
         current_features_.gamma = UpdatePID(gammaPid_, error, GetGammaValue());
         SetGammaValue(current_features_.gamma);
         ROS_INFO_STREAM("Gamma: " << current_features_.gamma);
-      } else if (GetGainValue() < limitGain) {
+      } else if (GetGainValue() > limitGain) {
         double error = fabs(GetExposureValue() - current_features_.exposure);
         current_features_.exposure =
             UpdatePID(exposurePid_, error, GetExposureValue());
