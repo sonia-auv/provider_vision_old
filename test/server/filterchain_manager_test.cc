@@ -16,11 +16,10 @@ ros::NodeHandle *nhp;
 
 TEST(FeatureFactory, AllTest) {
   provider_vision::FilterchainManager fcmgr;
-  auto filterchain = fcmgr.InstanciateFilterchain("object_feature_output");
+  auto filterchains = fcmgr.InstanciateAllFilterchains();
+  for(auto &filterchain : filterchains) {
   filterchain->Serialize();
-//  for(auto &filterchain : filterchains) {
-//    filterchain->Serialize();
-//  }
+  }
 }
 
 int main(int argc, char **argv) {

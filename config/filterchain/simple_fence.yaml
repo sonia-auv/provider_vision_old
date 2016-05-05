@@ -1,0 +1,221 @@
+name: simple_fence
+filters:
+  - parameters:
+      - name: Enable
+        value: 0
+        type: Boolean
+      - value: 2
+        type: Integer
+        name: Type
+      - name: Kernel_size
+        value: 1
+        type: Integer
+    name: Blurr
+    id: 0
+  - name: SubtractAllPlanes
+    id: 1
+    parameters:
+      - value: 0
+        type: Boolean
+        name: enable
+      - value: 1
+        type: Integer
+        name: Plane_1
+      - name: Plane_2
+        value: 1
+        type: Integer
+      - value: 1
+        name: Plane_3
+        type: Integer
+      - type: Boolean
+        value: 0
+        name: Invert_plane_1
+      - type: Boolean
+        name: Invert_plane_2
+        value: 0
+      - name: Invert_plane_3
+        value: 0
+        type: Boolean
+      - name: Weight_Plane_1
+        value: 1.000000
+        type: Double
+      - value: 1.000000
+        type: Double
+        name: Weight_Plane_2
+      - name: Weight_Plane_3
+        type: Double
+        value: 1.000000
+  - parameters:
+      - name: Enable
+        value: 0
+        type: Boolean
+      - type: Integer
+        name: HSVLowH
+        value: 0
+      - value: 255
+        name: HSVHighH
+        type: Integer
+      - type: Integer
+        name: HSVLowS
+        value: 0
+      - type: Integer
+        value: 255
+        name: HSVHighS
+      - name: HSVLowV
+        type: Integer
+        value: 0
+      - type: Integer
+        value: 255
+        name: HSVHighV
+      - type: Integer
+        value: 0
+        name: LUVlowL
+      - name: LUVhighL
+        type: Integer
+        value: 255
+      - value: 0
+        name: LUVlowU
+        type: Integer
+      - name: LUVhighU
+        type: Integer
+        value: 255
+      - type: Integer
+        value: 0
+        name: LUVlowV
+      - name: LUVhighV
+        type: Integer
+        value: 255
+    id: 2
+    name: InRange
+  - parameters:
+      - value: 0
+        name: Enable
+        type: Boolean
+      - name: Threshold_type
+        type: Integer
+        value: 1
+      - value: 100
+        name: Max_value
+        type: Integer
+    id: 3
+    name: Threshold
+  - parameters:
+      - value: 0
+        name: Enable
+        type: Boolean
+      - type: Boolean
+        name: Square_kernel
+        value: 1
+      - type: Integer
+        name: Kernel_type
+        value: 0
+      - name: Width
+        type: Integer
+        value: 1
+      - value: 1
+        name: Height
+        type: Integer
+      - type: Integer
+        value: 1
+        name: Iteration
+    id: 4
+    name: Erode
+  - name: Dilate
+    id: 5
+    parameters:
+      - type: Boolean
+        value: 0
+        name: Enable
+      - value: 1
+        name: Square_kernel
+        type: Boolean
+      - type: Integer
+        name: Kernel_type
+        value: 0
+      - name: Width
+        type: Integer
+        value: 1
+      - name: Height
+        type: Integer
+        value: 1
+      - name: Iteration
+        type: Integer
+        value: 1
+  - parameters:
+      - type: Boolean
+        value: 0
+        name: Enable
+      - name: Mode
+        value: 0
+        type: Integer
+      - value: 0
+        name: Method
+        type: Integer
+    id: 6
+    name: ConvexHull
+  - name: ObjectFinder
+    id: 7
+    parameters:
+      - name: Enable
+        value: 0
+        type: Boolean
+      - value: 0
+        type: Boolean
+        name: Debug_contour
+      - type: Boolean
+        value: 0
+        name: Look_for_Rectangle
+      - value: 0
+        type: Boolean
+        name: disable_ratio_check
+      - type: Boolean
+        value: 0
+        name: disable_angle_check
+      - value: 0
+        type: Boolean
+        name: Use_convex_hull
+      - value: 0
+        name: Vote_most_centered
+        type: Boolean
+      - name: Vote_most_upright
+        type: Boolean
+        value: 0
+      - value: 0
+        type: Boolean
+        name: Vote_less_diff_from_target_ratio
+      - name: Vote_length
+        type: Boolean
+        value: 0
+      - name: Vote_higher
+        type: Boolean
+        value: 0
+      - type: String
+        name: ID
+        value: buoy
+      - value: red
+        name: spec1
+        type: String
+      - type: String
+        name: spec2
+        value: blue
+      - type: Double
+        value: 200.000000
+        name: Min_area
+      - value: 0.500000
+        type: Double
+        name: Ratio_target
+      - type: Double
+        value: 0.100000
+        name: Diff_from_ratio_target
+      - type: Double
+        name: angle_target
+        value: 0.000000
+      - value: 30.000000
+        name: Diff_from_angle_target
+        type: Double
+      - value: 50.000000
+        type: Double
+        name: Min_percent_filled
+      - value: 0
+        name: Contour_retreval
+        type: Integer

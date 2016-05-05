@@ -1,0 +1,281 @@
+filters:
+  - name: Rotate
+    id: 0
+    parameters:
+      - value: 0
+        name: enable
+        type: Boolean
+      - value: 0
+        name: Rotation_type
+        type: Integer
+  - name: Dilate
+    id: 1
+    parameters:
+      - type: Boolean
+        name: Enable
+        value: 0
+      - value: 1
+        name: Square_kernel
+        type: Boolean
+      - type: Integer
+        name: Kernel_type
+        value: 0
+      - value: 1
+        type: Integer
+        name: Width
+      - type: Integer
+        value: 1
+        name: Height
+      - name: Iteration
+        type: Integer
+        value: 1
+  - parameters:
+      - value: 0
+        name: Enable
+        type: Boolean
+      - name: Morphology_type
+        value: 0
+        type: Integer
+      - value: 0
+        type: Integer
+        name: Kernel_type
+      - value: 1
+        name: Iteration
+        type: Integer
+      - value: 1
+        type: Integer
+        name: Kernel_size
+    id: 2
+    name: Morphology
+  - parameters:
+      - name: enable
+        value: 0
+        type: Boolean
+      - type: Integer
+        name: Plane_1
+        value: 1
+      - name: Plane_2
+        type: Integer
+        value: 1
+      - type: Integer
+        name: Plane_3
+        value: 1
+      - name: Invert_plane_1
+        type: Boolean
+        value: 0
+      - value: 0
+        name: Invert_plane_2
+        type: Boolean
+      - name: Invert_plane_3
+        type: Boolean
+        value: 0
+      - value: 1.000000
+        type: Double
+        name: Weight_Plane_1
+      - value: 1.000000
+        type: Double
+        name: Weight_Plane_2
+      - value: 1.000000
+        name: Weight_Plane_3
+        type: Double
+    name: SubtractAllPlanes
+    id: 3
+  - name: Blurr
+    id: 4
+    parameters:
+      - name: Enable
+        value: 0
+        type: Boolean
+      - name: Type
+        type: Integer
+        value: 2
+      - value: 1
+        name: Kernel_size
+        type: Integer
+  - parameters:
+      - type: Boolean
+        name: Enable
+        value: 0
+      - type: Boolean
+        name: Convert_to_uchar
+        value: 1
+      - value: 0
+        type: Boolean
+        name: use_pixel_intensity_correction
+      - value: 0.000000
+        type: Double
+        name: Delta
+      - type: Double
+        name: Scale
+        value: 1.000000
+      - value: 1.000000
+        type: Double
+        name: pixel_correction_power
+      - name: Size
+        type: Integer
+        value: 2
+    name: Sobel
+    id: 5
+  - name: ScharrAdding
+    id: 6
+    parameters:
+      - name: Enable
+        type: Boolean
+        value: 0
+      - type: Boolean
+        name: Run_small_image
+        value: 1
+      - value: 0
+        type: Boolean
+        name: Convert_to_uchar
+      - type: Double
+        value: 0.000000
+        name: Delta
+      - value: 1.000000
+        name: Scale
+        type: Double
+      - name: Mean_multiplier
+        value: 1.000000
+        type: Double
+      - value: 0
+        type: Boolean
+        name: Blue
+      - type: Boolean
+        name: Green
+        value: 0
+      - type: Boolean
+        value: 0
+        name: Red
+      - type: Boolean
+        value: 0
+        name: Hue
+      - type: Boolean
+        value: 0
+        name: Saturation
+      - value: 0
+        name: Intensity
+        type: Boolean
+      - name: Gray
+        type: Boolean
+        value: 0
+  - name: Morphology
+    id: 7
+    parameters:
+      - value: 0
+        type: Boolean
+        name: Enable
+      - name: Morphology_type
+        value: 0
+        type: Integer
+      - name: Kernel_type
+        value: 0
+        type: Integer
+      - value: 1
+        type: Integer
+        name: Iteration
+      - type: Integer
+        value: 1
+        name: Kernel_size
+  - parameters:
+      - value: 0
+        type: Boolean
+        name: Enable
+      - type: Integer
+        value: 0
+        name: Min_thresh
+      - value: 1.000000
+        name: Mean_multiplier
+        type: Double
+      - name: Standard_deviation_multiplier
+        type: Double
+        value: 1.000000
+    name: StatsThreshold
+    id: 8
+  - id: 9
+    name: Threshold
+    parameters:
+      - type: Boolean
+        name: Enable
+        value: 0
+      - value: 1
+        name: Threshold_type
+        type: Integer
+      - type: Integer
+        value: 100
+        name: Max_value
+  - name: Erode
+    id: 10
+    parameters:
+      - value: 0
+        type: Boolean
+        name: Enable
+      - name: Square_kernel
+        type: Boolean
+        value: 1
+      - type: Integer
+        value: 0
+        name: Kernel_type
+      - name: Width
+        type: Integer
+        value: 1
+      - type: Integer
+        value: 1
+        name: Height
+      - value: 1
+        name: Iteration
+        type: Integer
+  - parameters:
+      - type: Boolean
+        value: 0
+        name: Enable
+      - type: Boolean
+        value: 1
+        name: Square_kernel
+      - name: Kernel_type
+        type: Integer
+        value: 0
+      - name: Width
+        value: 1
+        type: Integer
+      - name: Height
+        value: 1
+        type: Integer
+      - value: 1
+        type: Integer
+        name: Iteration
+    id: 11
+    name: Dilate
+  - name: SubmarineFrameMasker
+    id: 12
+    parameters:
+      - name: Enable
+        type: Boolean
+        value: 0
+      - type: Integer
+        name: Rotation_type
+        value: 0
+  - name: DeloreanDetector
+    id: 13
+    parameters:
+      - name: Enable
+        type: Boolean
+        value: 0
+      - name: Debug_contour
+        value: 0
+        type: Boolean
+      - type: Boolean
+        name: Output_train
+        value: 0
+      - name: Min_area
+        value: 200.000000
+        type: Double
+      - type: Double
+        value: 0.500000
+        name: Ratio_target_big
+      - value: 0.500000
+        type: Double
+        name: Ratio_target_small
+      - type: Double
+        value: 0.100000
+        name: Diff_from_ratio_target
+name: simple_delorean_far_bache

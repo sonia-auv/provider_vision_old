@@ -1,0 +1,212 @@
+name: simple_delorean
+filters:
+  - parameters:
+      - type: Boolean
+        name: enable
+        value: 0
+      - name: Rotation_type
+        type: Integer
+        value: 0
+    id: 0
+    name: Rotate
+  - id: 1
+    parameters:
+      - type: Boolean
+        value: 0
+        name: enable
+      - name: Rotation_type
+        value: 0
+        type: Integer
+    name: Rotate
+  - id: 2
+    name: Dilate
+    parameters:
+      - name: Enable
+        value: 0
+        type: Boolean
+      - type: Boolean
+        name: Square_kernel
+        value: 1
+      - value: 0
+        type: Integer
+        name: Kernel_type
+      - value: 1
+        type: Integer
+        name: Width
+      - value: 1
+        type: Integer
+        name: Height
+      - value: 1
+        name: Iteration
+        type: Integer
+  - name: SubtractAllPlanes
+    id: 3
+    parameters:
+      - type: Boolean
+        value: 0
+        name: enable
+      - type: Integer
+        name: Plane_1
+        value: 1
+      - name: Plane_2
+        type: Integer
+        value: 1
+      - value: 1
+        type: Integer
+        name: Plane_3
+      - name: Invert_plane_1
+        value: 0
+        type: Boolean
+      - type: Boolean
+        name: Invert_plane_2
+        value: 0
+      - name: Invert_plane_3
+        value: 0
+        type: Boolean
+      - type: Double
+        name: Weight_Plane_1
+        value: 1.000000
+      - name: Weight_Plane_2
+        type: Double
+        value: 1.000000
+      - value: 1.000000
+        type: Double
+        name: Weight_Plane_3
+  - id: 4
+    parameters:
+      - name: Enable
+        value: 0
+        type: Boolean
+      - value: 2
+        name: Type
+        type: Integer
+      - type: Integer
+        value: 1
+        name: Kernel_size
+    name: Blurr
+  - name: Sobel
+    parameters:
+      - type: Boolean
+        value: 0
+        name: Enable
+      - name: Convert_to_uchar
+        type: Boolean
+        value: 1
+      - value: 0
+        type: Boolean
+        name: use_pixel_intensity_correction
+      - type: Double
+        name: Delta
+        value: 0.000000
+      - type: Double
+        name: Scale
+        value: 1.000000
+      - name: pixel_correction_power
+        value: 1.000000
+        type: Double
+      - name: Size
+        value: 2
+        type: Integer
+    id: 5
+  - parameters:
+      - name: Enable
+        value: 0
+        type: Boolean
+      - name: Min_thresh
+        type: Integer
+        value: 0
+      - type: Double
+        name: Mean_multiplier
+        value: 1.000000
+      - type: Double
+        value: 1.000000
+        name: Standard_deviation_multiplier
+    name: StatsThreshold
+    id: 6
+  - name: Threshold
+    parameters:
+      - value: 0
+        type: Boolean
+        name: Enable
+      - value: 1
+        type: Integer
+        name: Threshold_type
+      - name: Max_value
+        type: Integer
+        value: 100
+    id: 7
+  - id: 8
+    parameters:
+      - type: Boolean
+        value: 0
+        name: Enable
+      - value: 1
+        name: Square_kernel
+        type: Boolean
+      - type: Integer
+        name: Kernel_type
+        value: 0
+      - name: Width
+        value: 1
+        type: Integer
+      - type: Integer
+        value: 1
+        name: Height
+      - type: Integer
+        value: 1
+        name: Iteration
+    name: Erode
+  - parameters:
+      - value: 0
+        name: Enable
+        type: Boolean
+      - name: Square_kernel
+        value: 1
+        type: Boolean
+      - type: Integer
+        name: Kernel_type
+        value: 0
+      - type: Integer
+        value: 1
+        name: Width
+      - name: Height
+        type: Integer
+        value: 1
+      - name: Iteration
+        type: Integer
+        value: 1
+    name: Dilate
+    id: 9
+  - id: 10
+    name: SubmarineFrameMasker
+    parameters:
+      - type: Boolean
+        name: Enable
+        value: 0
+      - value: 0
+        name: Rotation_type
+        type: Integer
+  - parameters:
+      - name: Enable
+        type: Boolean
+        value: 0
+      - value: 0
+        name: Debug_contour
+        type: Boolean
+      - value: 0
+        type: Boolean
+        name: Output_train
+      - name: Min_area
+        value: 200.000000
+        type: Double
+      - type: Double
+        name: Ratio_target_big
+        value: 0.500000
+      - name: Ratio_target_small
+        type: Double
+        value: 0.500000
+      - name: Diff_from_ratio_target
+        type: Double
+        value: 0.100000
+    id: 11
+    name: DeloreanDetector

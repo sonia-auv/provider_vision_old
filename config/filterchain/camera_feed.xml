@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<Filterchain>
-	<Filter_0 value="Rotate">
-		<enable value="1" />
-		<Rotation_type value="3" />
-	</Filter_0>
-</Filterchain>

@@ -1,0 +1,242 @@
+filters:
+  - parameters:
+      - type: Boolean
+        value: 0
+        name: Enable
+      - value: 3
+        type: Integer
+        name: NB_of_images
+      - name: Method_to_use
+        value: 1
+        type: Integer
+    id: 0
+    name: ImageAccumulator
+  - parameters:
+      - name: enable
+        type: Boolean
+        value: 0
+      - value: 1
+        type: Integer
+        name: Plane_1
+      - value: 1
+        name: Plane_2
+        type: Integer
+      - type: Integer
+        name: Plane_3
+        value: 1
+      - name: Invert_plane_1
+        value: 0
+        type: Boolean
+      - value: 0
+        type: Boolean
+        name: Invert_plane_2
+      - type: Boolean
+        value: 0
+        name: Invert_plane_3
+      - name: Weight_Plane_1
+        type: Double
+        value: 1.000000
+      - name: Weight_Plane_2
+        value: 1.000000
+        type: Double
+      - name: Weight_Plane_3
+        type: Double
+        value: 1.000000
+    id: 1
+    name: SubtractAllPlanes
+  - name: Blurr
+    parameters:
+      - type: Boolean
+        name: Enable
+        value: 0
+      - value: 2
+        type: Integer
+        name: Type
+      - type: Integer
+        value: 1
+        name: Kernel_size
+    id: 2
+  - name: Sobel
+    id: 3
+    parameters:
+      - value: 0
+        name: Enable
+        type: Boolean
+      - value: 1
+        type: Boolean
+        name: Convert_to_uchar
+      - value: 0
+        type: Boolean
+        name: use_pixel_intensity_correction
+      - value: 0.000000
+        type: Double
+        name: Delta
+      - name: Scale
+        type: Double
+        value: 1.000000
+      - value: 1.000000
+        type: Double
+        name: pixel_correction_power
+      - name: Size
+        value: 2
+        type: Integer
+  - parameters:
+      - name: Enable
+        type: Boolean
+        value: 0
+      - value: 0
+        name: Min_thresh
+        type: Integer
+      - value: 1.000000
+        type: Double
+        name: Mean_multiplier
+      - name: Standard_deviation_multiplier
+        type: Double
+        value: 1.000000
+    name: StatsThreshold
+    id: 4
+  - id: 5
+    parameters:
+      - name: Enable
+        type: Boolean
+        value: 0
+      - name: Square_kernel
+        type: Boolean
+        value: 1
+      - value: 0
+        name: Kernel_type
+        type: Integer
+      - name: Width
+        type: Integer
+        value: 1
+      - value: 1
+        name: Height
+        type: Integer
+      - name: Iteration
+        value: 1
+        type: Integer
+    name: Erode
+  - id: 6
+    parameters:
+      - type: Boolean
+        value: 0
+        name: Enable
+      - name: Square_kernel
+        type: Boolean
+        value: 1
+      - name: Kernel_type
+        type: Integer
+        value: 0
+      - type: Integer
+        name: Width
+        value: 1
+      - value: 1
+        name: Height
+        type: Integer
+      - value: 1
+        type: Integer
+        name: Iteration
+    name: Dilate
+  - id: 7
+    name: Morphology
+    parameters:
+      - name: Enable
+        value: 0
+        type: Boolean
+      - value: 0
+        type: Integer
+        name: Morphology_type
+      - value: 0
+        type: Integer
+        name: Kernel_type
+      - type: Integer
+        value: 1
+        name: Iteration
+      - value: 1
+        type: Integer
+        name: Kernel_size
+  - id: 8
+    parameters:
+      - name: Enable
+        value: 0
+        type: Boolean
+      - type: Integer
+        name: Morphology_type
+        value: 0
+      - name: Kernel_type
+        type: Integer
+        value: 0
+      - type: Integer
+        value: 1
+        name: Iteration
+      - name: Kernel_size
+        value: 1
+        type: Integer
+    name: Morphology
+  - name: ObjectFinder
+    id: 9
+    parameters:
+      - value: 0
+        type: Boolean
+        name: Enable
+      - value: 0
+        name: Debug_contour
+        type: Boolean
+      - value: 0
+        type: Boolean
+        name: Look_for_Rectangle
+      - type: Boolean
+        value: 0
+        name: disable_ratio_check
+      - value: 0
+        type: Boolean
+        name: disable_angle_check
+      - type: Boolean
+        name: Use_convex_hull
+        value: 0
+      - name: Vote_most_centered
+        value: 0
+        type: Boolean
+      - name: Vote_most_upright
+        value: 0
+        type: Boolean
+      - name: Vote_less_diff_from_target_ratio
+        value: 0
+        type: Boolean
+      - type: Boolean
+        name: Vote_length
+        value: 0
+      - type: Boolean
+        name: Vote_higher
+        value: 0
+      - value: buoy
+        name: ID
+        type: String
+      - value: red
+        name: spec1
+        type: String
+      - type: String
+        value: blue
+        name: spec2
+      - type: Double
+        value: 200.000000
+        name: Min_area
+      - value: 0.500000
+        type: Double
+        name: Ratio_target
+      - name: Diff_from_ratio_target
+        type: Double
+        value: 0.100000
+      - value: 0.000000
+        name: angle_target
+        type: Double
+      - type: Double
+        name: Diff_from_angle_target
+        value: 30.000000
+      - name: Min_percent_filled
+        type: Double
+        value: 50.000000
+      - value: 0
+        type: Integer
+        name: Contour_retreval
+name: torpedoes_big

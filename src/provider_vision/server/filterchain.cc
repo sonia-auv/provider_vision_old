@@ -84,6 +84,7 @@ bool Filterchain::Deserialize() {
     SetName(node["name"].as<std::string>());
   }
 
+  if (node["filters"]) {
   auto filters = node["filters"];
   assert(filters.Type() == YAML::NodeType::Sequence);
 
@@ -91,6 +92,7 @@ bool Filterchain::Deserialize() {
     auto filter_node = filters[i];
     AddFilter(filter_node["name"].as<std::string>());
 
+      if (node["parameters"]) {
     auto parameters = filter_node["parameters"];
     assert(parameters.Type() == YAML::NodeType::Sequence);
 
@@ -102,7 +104,8 @@ bool Filterchain::Deserialize() {
       SetFilterParameterValue(i, param_name, param_value);
     }
   }
-
+    }
+  }
   return true;
 }
 

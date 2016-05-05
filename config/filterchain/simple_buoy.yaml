@@ -1,0 +1,170 @@
+name: simple_buoy
+filters:
+  - id: 0
+    parameters:
+      - name: enable
+        type: Boolean
+        value: 0
+      - name: Rotation_type
+        type: Integer
+        value: 0
+    name: Rotate
+  - parameters:
+      - name: enable
+        value: 0
+        type: Boolean
+      - type: Integer
+        value: 0
+        name: Rotation_type
+    name: Rotate
+    id: 1
+  - name: SubtractAllPlanes
+    parameters:
+      - name: enable
+        type: Boolean
+        value: 0
+      - value: 1
+        name: Plane_1
+        type: Integer
+      - value: 1
+        name: Plane_2
+        type: Integer
+      - value: 1
+        type: Integer
+        name: Plane_3
+      - name: Invert_plane_1
+        value: 0
+        type: Boolean
+      - type: Boolean
+        value: 0
+        name: Invert_plane_2
+      - value: 0
+        name: Invert_plane_3
+        type: Boolean
+      - value: 1.000000
+        type: Double
+        name: Weight_Plane_1
+      - type: Double
+        name: Weight_Plane_2
+        value: 1.000000
+      - type: Double
+        name: Weight_Plane_3
+        value: 1.000000
+    id: 2
+  - id: 3
+    name: Blurr
+    parameters:
+      - name: Enable
+        type: Boolean
+        value: 0
+      - name: Type
+        value: 2
+        type: Integer
+      - name: Kernel_size
+        type: Integer
+        value: 1
+  - id: 4
+    name: StatsThreshold
+    parameters:
+      - type: Boolean
+        value: 0
+        name: Enable
+      - value: 0
+        type: Integer
+        name: Min_thresh
+      - type: Double
+        value: 1.000000
+        name: Mean_multiplier
+      - value: 1.000000
+        type: Double
+        name: Standard_deviation_multiplier
+  - id: 5
+    name: Threshold
+    parameters:
+      - type: Boolean
+        name: Enable
+        value: 0
+      - name: Threshold_type
+        type: Integer
+        value: 1
+      - name: Max_value
+        type: Integer
+        value: 100
+  - parameters:
+      - type: Boolean
+        name: Enable
+        value: 0
+      - type: Boolean
+        value: 1
+        name: Square_kernel
+      - value: 0
+        name: Kernel_type
+        type: Integer
+      - name: Width
+        type: Integer
+        value: 1
+      - value: 1
+        name: Height
+        type: Integer
+      - value: 1
+        name: Iteration
+        type: Integer
+    name: Dilate
+    id: 6
+  - name: Erode
+    id: 7
+    parameters:
+      - value: 0
+        type: Boolean
+        name: Enable
+      - value: 1
+        type: Boolean
+        name: Square_kernel
+      - name: Kernel_type
+        type: Integer
+        value: 0
+      - type: Integer
+        value: 1
+        name: Width
+      - value: 1
+        name: Height
+        type: Integer
+      - value: 1
+        name: Iteration
+        type: Integer
+  - name: BuoySingle
+    id: 8
+    parameters:
+      - name: Enable
+        value: 0
+        type: Boolean
+      - type: Boolean
+        value: 0
+        name: Debug_contour
+      - name: Eliminate_same_x
+        value: 0
+        type: Boolean
+      - name: Detect_red
+        type: Boolean
+        value: 0
+      - name: Buoy
+        type: String
+        value: red
+      - value: 200.000000
+        name: Min_area
+        type: Double
+      - value: 50.000000
+        name: Max_ratio
+        type: Double
+      - type: Double
+        value: 50.000000
+        name: Min_percent
+      - value: 50.000000
+        name: Min_x_difference
+        type: Double
+      - type: Double
+        value: 50.000000
+        name: Ratio_for_angle_check
+      - value: 50.000000
+        type: Double
+        name: horizontal_max_angle

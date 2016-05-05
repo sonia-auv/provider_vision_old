@@ -1,0 +1,257 @@
+filters:
+  - id: 0
+    parameters:
+      - value: 0
+        name: Enable
+        type: Boolean
+      - name: NB_of_images
+        type: Integer
+        value: 3
+      - name: Method_to_use
+        type: Integer
+        value: 1
+    name: ImageAccumulator
+  - id: 1
+    parameters:
+      - name: enable
+        value: 0
+        type: Boolean
+      - type: Integer
+        name: Plane_1
+        value: 1
+      - type: Integer
+        value: 1
+        name: Plane_2
+      - name: Plane_3
+        value: 1
+        type: Integer
+      - type: Boolean
+        value: 0
+        name: Invert_plane_1
+      - value: 0
+        name: Invert_plane_2
+        type: Boolean
+      - type: Boolean
+        name: Invert_plane_3
+        value: 0
+      - name: Weight_Plane_1
+        type: Double
+        value: 1.000000
+      - value: 1.000000
+        name: Weight_Plane_2
+        type: Double
+      - value: 1.000000
+        name: Weight_Plane_3
+        type: Double
+    name: SubtractAllPlanes
+  - name: WhiteNoiseTakedown
+    id: 2
+    parameters:
+      - value: 0
+        name: Enable
+        type: Boolean
+      - name: LowB
+        value: 0
+        type: Integer
+      - type: Integer
+        value: 0
+        name: HighB
+      - value: 0
+        name: LowG
+        type: Integer
+      - value: 0
+        type: Integer
+        name: HighG
+      - name: LowR
+        value: 0
+        type: Integer
+      - type: Integer
+        name: HighR
+        value: 0
+      - type: Integer
+        name: Channel_view
+        value: 0
+  - name: Blurr
+    id: 3
+    parameters:
+      - value: 0
+        type: Boolean
+        name: Enable
+      - type: Integer
+        value: 2
+        name: Type
+      - name: Kernel_size
+        value: 1
+        type: Integer
+  - id: 4
+    parameters:
+      - type: Boolean
+        name: Enable
+        value: 0
+      - value: 0
+        type: Integer
+        name: Min_thresh
+      - value: 1.000000
+        type: Double
+        name: Mean_multiplier
+      - type: Double
+        name: Standard_deviation_multiplier
+        value: 1.000000
+    name: StatsThreshold
+  - id: 5
+    name: Threshold
+    parameters:
+      - type: Boolean
+        value: 0
+        name: Enable
+      - value: 1
+        type: Integer
+        name: Threshold_type
+      - value: 100
+        type: Integer
+        name: Max_value
+  - parameters:
+      - type: Boolean
+        value: 0
+        name: Enable
+      - type: Boolean
+        name: Square_kernel
+        value: 1
+      - value: 0
+        type: Integer
+        name: Kernel_type
+      - value: 1
+        name: Width
+        type: Integer
+      - value: 1
+        name: Height
+        type: Integer
+      - value: 1
+        name: Iteration
+        type: Integer
+    id: 6
+    name: Dilate
+  - id: 7
+    name: Erode
+    parameters:
+      - type: Boolean
+        value: 0
+        name: Enable
+      - name: Square_kernel
+        value: 1
+        type: Boolean
+      - value: 0
+        name: Kernel_type
+        type: Integer
+      - type: Integer
+        value: 1
+        name: Width
+      - type: Integer
+        value: 1
+        name: Height
+      - name: Iteration
+        value: 1
+        type: Integer
+  - name: BuoySingle
+    parameters:
+      - value: 0
+        name: Enable
+        type: Boolean
+      - type: Boolean
+        name: Debug_contour
+        value: 0
+      - value: 0
+        type: Boolean
+        name: Eliminate_same_x
+      - name: Detect_red
+        value: 0
+        type: Boolean
+      - type: String
+        value: red
+        name: Buoy
+      - value: 200.000000
+        name: Min_area
+        type: Double
+      - name: Max_ratio
+        type: Double
+        value: 50.000000
+      - name: Min_percent
+        type: Double
+        value: 50.000000
+      - name: Min_x_difference
+        type: Double
+        value: 50.000000
+      - type: Double
+        name: Ratio_for_angle_check
+        value: 50.000000
+      - name: horizontal_max_angle
+        type: Double
+        value: 50.000000
+    id: 8
+  - parameters:
+      - name: Enable
+        value: 0
+        type: Boolean
+      - name: Debug_contour
+        value: 0
+        type: Boolean
+      - type: Boolean
+        value: 0
+        name: Look_for_Rectangle
+      - value: 0
+        name: disable_ratio_check
+        type: Boolean
+      - type: Boolean
+        name: disable_angle_check
+        value: 0
+      - name: Use_convex_hull
+        type: Boolean
+        value: 0
+      - value: 0
+        name: Vote_most_centered
+        type: Boolean
+      - value: 0
+        name: Vote_most_upright
+        type: Boolean
+      - type: Boolean
+        name: Vote_less_diff_from_target_ratio
+        value: 0
+      - value: 0
+        name: Vote_length
+        type: Boolean
+      - name: Vote_higher
+        value: 0
+        type: Boolean
+      - name: ID
+        value: buoy
+        type: String
+      - value: red
+        name: spec1
+        type: String
+      - type: String
+        name: spec2
+        value: blue
+      - type: Double
+        name: Min_area
+        value: 200.000000
+      - value: 0.500000
+        type: Double
+        name: Ratio_target
+      - type: Double
+        name: Diff_from_ratio_target
+        value: 0.100000
+      - value: 0.000000
+        type: Double
+        name: angle_target
+      - name: Diff_from_angle_target
+        type: Double
+        value: 30.000000
+      - name: Min_percent_filled
+        value: 50.000000
+        type: Double
+      - value: 0
+        name: Contour_retreval
+        type: Integer
+    id: 9
+    name: ObjectFinder
+name: simple_buoy_red
