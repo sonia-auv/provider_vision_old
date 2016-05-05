@@ -10,9 +10,9 @@
  */
 
 #include "provider_vision/server/filterchain.h"
-#include "provider_vision/config.h"
 #include <yaml-cpp/yaml.h>
 #include <fstream>
+#include "provider_vision/config.h"
 
 namespace provider_vision {
 
@@ -33,7 +33,8 @@ Filterchain::Filterchain(const std::string &name)
 //------------------------------------------------------------------------------
 //
 Filterchain::Filterchain(const Filterchain &filterchain)
-    : filepath_(kFilterchainPath + filterchain.name_ + "_copy" + kFilterchainExt),
+    : filepath_(kFilterchainPath + filterchain.name_ + "_copy" +
+                kFilterchainExt),
       name_(filterchain.name_ + "_copy"),
       param_handler_(filterchain.param_handler_),
       observer_index_(filterchain.observer_index_) {}
@@ -85,25 +86,25 @@ bool Filterchain::Deserialize() {
   }
 
   if (node["filters"]) {
-  auto filters = node["filters"];
-  assert(filters.Type() == YAML::NodeType::Sequence);
+    auto filters = node["filters"];
+    assert(filters.Type() == YAML::NodeType::Sequence);
 
-  for (std::size_t i = 0; i < filters.size(); i++) {
-    auto filter_node = filters[i];
-    AddFilter(filter_node["name"].as<std::string>());
+    for (std::size_t i = 0; i < filters.size(); i++) {
+      auto filter_node = filters[i];
+      AddFilter(filter_node["name"].as<std::string>());
 
       if (node["parameters"]) {
-    auto parameters = filter_node["parameters"];
-    assert(parameters.Type() == YAML::NodeType::Sequence);
+        auto parameters = filter_node["parameters"];
+        assert(parameters.Type() == YAML::NodeType::Sequence);
 
-    for (std::size_t j = 0; j < parameters.size(); j++) {
-      auto param_node = parameters[j];
+        for (std::size_t j = 0; j < parameters.size(); j++) {
+          auto param_node = parameters[j];
 
-      auto param_name = param_node["name"].as<std::string>();
-      auto param_value = param_node["value"].as<std::string>();
-      SetFilterParameterValue(i, param_name, param_value);
-    }
-  }
+          auto param_name = param_node["name"].as<std::string>();
+          auto param_value = param_node["value"].as<std::string>();
+          SetFilterParameterValue(i, param_name, param_value);
+        }
+      }
     }
   }
   return true;

@@ -10,8 +10,8 @@
  */
 
 #include <lib_atlas/ros/service_server_manager.h>
-#include "provider_vision/server/vision_server.h"
 #include <ros/ros.h>
+#include "provider_vision/server/vision_server.h"
 
 //------------------------------------------------------------------------------
 //

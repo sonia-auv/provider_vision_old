@@ -269,7 +269,7 @@ class TorpedoesDetector : public Filter {
                     const ObjectFullData::FullObjectPtrVec &inside_squares) {
     ContourList contours(in, ContourList::OUTER);
 
-    std::vector<std::pair<ObjectFullData::Ptr, int> > contour_vote;
+    std::vector<std::pair<ObjectFullData::Ptr, int>> contour_vote;
 
     cv::Mat original(global_params_.getOriginalImage());
     for (const auto &contour : contours.GetAsPoint()) {

@@ -11,8 +11,8 @@
  */
 
 #include "provider_vision/server/filterchain_manager.h"
-#include <yaml-cpp/yaml.h>
 #include <dirent.h>
+#include <yaml-cpp/yaml.h>
 #include <fstream>
 
 namespace provider_vision {
@@ -92,8 +92,7 @@ bool FilterchainManager::FilterchainExists(const std::string &filterchain) {
 Filterchain::Ptr FilterchainManager::InstanciateFilterchain(
     const std::string &filterchainName) {
   if (FilterchainExists(filterchainName)) {
-    auto filterchain =
-        std::make_shared<Filterchain>(filterchainName);
+    auto filterchain = std::make_shared<Filterchain>(filterchainName);
     running_filterchains_.push_back(filterchain);
     ROS_INFO("Filterchain is ready.");
     return filterchain;
@@ -103,8 +102,9 @@ Filterchain::Ptr FilterchainManager::InstanciateFilterchain(
 
 //------------------------------------------------------------------------------
 //
-const std::vector<Filterchain::Ptr> &FilterchainManager::InstanciateAllFilterchains() {
-  for(const auto &filterchain : GetAllFilterchainName()) {
+const std::vector<Filterchain::Ptr>
+    &FilterchainManager::InstanciateAllFilterchains() {
+  for (const auto &filterchain : GetAllFilterchainName()) {
     InstanciateFilterchain(filterchain);
   }
   return GetRunningFilterchains();
@@ -119,7 +119,6 @@ void FilterchainManager::StopFilterchain(const Filterchain::Ptr &filterchain) {
   ROS_INFO("Filterchain is stopped.");
 }
 
-
 //------------------------------------------------------------------------------
 //
 std::string FilterchainManager::GetFilterchainPath(
@@ -129,7 +128,8 @@ std::string FilterchainManager::GetFilterchainPath(
 
 //------------------------------------------------------------------------------
 //
-const std::vector<Filterchain::Ptr> &FilterchainManager::GetRunningFilterchains() const {
+const std::vector<Filterchain::Ptr>
+    &FilterchainManager::GetRunningFilterchains() const {
   return running_filterchains_;
 }
 
