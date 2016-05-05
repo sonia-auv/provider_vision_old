@@ -229,14 +229,14 @@ void BaseCamera::Calibrate(cv::Mat const &img) {
 //
 
 float BaseCamera::MSV(const cv::Mat &img, int nbrRegion) {
-  float num = 0.f, deno = 0.f;
+  float num = 0.f, deno = 0.f, num_buff = 0.f;
   int inter = std::ceil(256 / nbrRegion);
   for (int j = 0; j < nbrRegion; ++j) {
     for (int i = j * inter; i < (j + 1) * inter; ++i) {
       deno += img.at<float>(i);
-      num += img.at<float>(i);
+      num_buff += img.at<float>(i);
     }
-    num *= (j + 1);
+    num = num_buff * (j + 1);
   }
   return num / deno;
 }
