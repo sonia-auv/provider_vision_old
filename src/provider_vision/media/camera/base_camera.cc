@@ -237,10 +237,12 @@ float BaseCamera::MSV(const cv::Mat &img, int nbrRegion) {
   float num = 0.f, deno = 0.f;
   int inter = std::ceil(256 / nbrRegion);
   for (int j = 0; j < nbrRegion; ++j) {
+    float num_buff = 0.f;
     for (int i = j * inter; i < (j + 1) * inter; ++i) {
       deno += img.at<float>(i);
+      num_buff += img.at<float>(i);
     }
-    num += deno * (j + 1);
+    num += num_buff * (j + 1);
   }
   return num / deno;
 }
