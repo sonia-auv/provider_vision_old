@@ -30,18 +30,18 @@ BaseCamera::BaseCamera(const CameraConfiguration &configuration)
   gammaPid_.dState = configuration.gamma_;
   gammaPid_.iState = 0.0;
   gammaPid_.iMin = 1.0;
-  gammaPid_.iMax = 2000;
-  gammaPid_.iGain = 0.01;
-  gammaPid_.pGain = 2;
-  gammaPid_.dGain = 5;
+  gammaPid_.iMax = 20;
+  gammaPid_.iGain = 1;
+  gammaPid_.pGain = 0.5;
+  gammaPid_.dGain = 0.75;
 
   gainPid_.dState = configuration.gain_;
   gainPid_.iState = 0.0;
   gainPid_.iMin = 1.0;
-  gainPid_.iMax = 2000;
-  gainPid_.iGain = 0.01;
-  gainPid_.pGain = 2;
-  gainPid_.dGain = 5;
+  gainPid_.iMax = 200;
+  gainPid_.iGain = 1;
+  gainPid_.pGain = 0.5;
+  gainPid_.dGain = 0.75;
 
   exposurePid_.dState = configuration.exposure_;
   exposurePid_.iState = 0.0;
@@ -189,20 +189,24 @@ void BaseCamera::Calibrate(cv::Mat const &img) {
 
   float msv = MSV(l_hist, 5);
   try {
+    ROS_INFO_STREAM("MSV: " << msv);
     if (msv != msvUniform) {
-      if (GetExposureValue() > limitExposure && GetGainValue() > limitGain) {
+      if (GetExposureValue() < limitExposure && GetGainValue() < limitGain) {
         double error = fabs(GetGammaValue() - current_features_.gamma);
         current_features_.gamma = UpdatePID(gammaPid_, error, GetGammaValue());
         SetGammaValue(current_features_.gamma);
-      } else if (GetGainValue() > limitGain) {
+        ROS_INFO_STREAM("Gamma: " << current_features_.gamma);
+      } else if (GetGainValue() < limitGain) {
         double error = fabs(GetExposureValue() - current_features_.exposure);
         current_features_.exposure =
             UpdatePID(exposurePid_, error, GetExposureValue());
         SetExposureValue(current_features_.exposure);
+        ROS_INFO_STREAM("Exposure: " << current_features_.exposure);
       } else {
         double error = fabs(GetGainValue() - current_features_.gain);
         current_features_.gain = UpdatePID(gainPid_, error, GetGainValue());
         SetGainValue(current_features_.gain);
+        ROS_INFO_STREAM("Gain: " << current_features_.gain);
       }
     }
     if (msv > 2 && msv < 3) {
@@ -218,6 +222,7 @@ void BaseCamera::Calibrate(cv::Mat const &img) {
         current_features_.saturation =
             UpdatePID(saturationPid_, error, GetSaturationValue());
         SetSaturationValue(current_features_.saturation);
+        ROS_INFO_STREAM("Saturation: " << current_features_.saturation);
       }
     }
   } catch (const std::exception &e) {
@@ -229,14 +234,13 @@ void BaseCamera::Calibrate(cv::Mat const &img) {
 //
 
 float BaseCamera::MSV(const cv::Mat &img, int nbrRegion) {
-  float num = 0.f, deno = 0.f, num_buff = 0.f;
+  float num = 0.f, deno = 0.f;
   int inter = std::ceil(256 / nbrRegion);
   for (int j = 0; j < nbrRegion; ++j) {
     for (int i = j * inter; i < (j + 1) * inter; ++i) {
       deno += img.at<float>(i);
-      num_buff += img.at<float>(i);
     }
-    num = num_buff * (j + 1);
+    num += deno * (j + 1);
   }
   return num / deno;
 }
