@@ -163,6 +163,8 @@ void DC1394Camera::NextImage(cv::Mat &img) {
         "The image is empty, there is a problem with the media");
   }
 
+  ++calibrate_count_;
+
   if(calibrate_count_ == 10) {
     Calibrate(img);
     calibrate_count_ = 0;
