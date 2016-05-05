@@ -10,7 +10,7 @@
 #include <thread>
 #include <gtest/gtest.h>
 #include <opencv2/opencv.hpp>
-#include "provider_vision/utils/config.h"
+#include "provider_vision/config.h"
 #include "provider_vision/server/media_manager.h"
 #include <sonia_msgs/execute_cmd.h>
 #include <provider_vision/server/vision_server.h>

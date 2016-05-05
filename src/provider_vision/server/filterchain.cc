@@ -10,6 +10,7 @@
  */
 
 #include "provider_vision/server/filterchain.h"
+#include "provider_vision/config.h"
 #include <yaml-cpp/yaml.h>
 #include <fstream>
 
@@ -21,7 +22,7 @@ namespace provider_vision {
 //------------------------------------------------------------------------------
 //
 Filterchain::Filterchain(const std::string &name)
-    : Serializable(kConfigPath + "filterchain/" + name + ".yaml"),
+    : filepath_(kFilterchainPath + name + kFilterchainExt),
       name_(name),
       param_handler_(),
       observer_index_(0) {
@@ -32,7 +33,7 @@ Filterchain::Filterchain(const std::string &name)
 //------------------------------------------------------------------------------
 //
 Filterchain::Filterchain(const Filterchain &filterchain)
-    : Serializable(kConfigPath + filterchain.name_ + "_copy" + kFilterchainExt),
+    : filepath_(kFilterchainPath + filterchain.name_ + "_copy" + kFilterchainExt),
       name_(filterchain.name_ + "_copy"),
       param_handler_(filterchain.param_handler_),
       observer_index_(filterchain.observer_index_) {}
@@ -68,7 +69,7 @@ bool Filterchain::Serialize() {
     ++i;
   }
 
-  auto filepath = kFilterchainPath + GetName() + ".yaml";
+  auto filepath = kFilterchainPath + GetName() + kFilterchainExt;
   std::ofstream fout(filepath);
   fout << node;
   return true;
@@ -98,7 +99,7 @@ bool Filterchain::Deserialize() {
 
       auto param_name = param_node["name"].as<std::string>();
       auto param_value = param_node["value"].as<std::string>();
-      SetFilterParameterValue(j, param_name, param_value);
+      SetFilterParameterValue(i, param_name, param_value);
     }
   }
 

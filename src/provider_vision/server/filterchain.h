@@ -56,9 +56,9 @@ class Filterchain {
    */
   void SetName(const std::string &name);
 
-  bool Serialize() override;
+  bool Serialize();
 
-  bool Deserialize() override;
+  bool Deserialize();
 
   provider_vision::Filter::Ptr GetFilter(const size_t &index) const;
 
@@ -102,6 +102,8 @@ class Filterchain {
  private:
   //==========================================================================
   // P R I V A T E   M E M B E R S
+
+  std::string filepath_;
 
   std::string name_;
 

@@ -14,7 +14,7 @@
 #include <ros/this_node.h>
 #include <image_transport/image_transport.h>
 #include <sensor_msgs/image_encodings.h>
-#include "provider_vision/utils/config.h"
+#include "provider_vision/config.h"
 #include "provider_vision/server/detection_task_manager.h"
 #include "provider_vision/server/media_manager.h"
 #include "provider_vision/server/filterchain_manager.h"

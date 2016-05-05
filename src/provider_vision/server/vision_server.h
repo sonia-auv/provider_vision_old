@@ -37,7 +37,7 @@
 #include "provider_vision/server/detection_task_manager.h"
 #include "provider_vision/server/filterchain_manager.h"
 #include "provider_vision/server/media_manager.h"
-#include "provider_vision/utils/config.h"
+#include "provider_vision/config.h"
 
 namespace provider_vision {
 

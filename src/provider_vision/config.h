@@ -27,7 +27,7 @@ const std::string kFilterchainPath = kConfigPath + "/filterchain/";
 
 const std::string kCameraConfigPath = kConfigPath + "/camera/";
 
-const std::string kFilterchainExt = ".xml";
+const std::string kFilterchainExt = ".yaml";
 
 };  // namespace provider_vision
 

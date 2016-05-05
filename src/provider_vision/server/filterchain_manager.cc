@@ -11,7 +11,9 @@
  */
 
 #include "provider_vision/server/filterchain_manager.h"
+#include <yaml-cpp/yaml.h>
 #include <dirent.h>
+#include <fstream>
 
 namespace provider_vision {
 
@@ -59,10 +61,12 @@ std::vector<std::string> FilterchainManager::GetAllFilterchainName() const
 //
 void FilterchainManager::CreateFilterchain(const std::string &filterchain) {
   if (!FilterchainExists(filterchain)) {
-    pugi::xml_document doc;
-    doc.append_child("Filterchain");
-    auto save_path = kConfigPath + filterchain + kFilterchainExt;
-    doc.save_file(save_path.c_str());
+    YAML::Node node;
+    node["name"] = filterchain;
+
+    auto filepath = kFilterchainPath + filterchain + kFilterchainExt;
+    std::ofstream fout(filepath);
+    fout << node;
   }
 }
 

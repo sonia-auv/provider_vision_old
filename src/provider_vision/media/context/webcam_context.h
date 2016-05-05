@@ -14,7 +14,7 @@
 #include <opencv2/opencv.hpp>
 #include "provider_vision/media/camera/webcam_camera.h"
 #include "provider_vision/media/context/base_context.h"
-#include "provider_vision/utils/config.h"
+#include "provider_vision/config.h"
 
 namespace provider_vision {
 

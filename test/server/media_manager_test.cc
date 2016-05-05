@@ -11,7 +11,7 @@
 #include <gtest/gtest.h>
 #include <opencv2/opencv.hpp>
 #include <lib_atlas/sys/timer.h>
-#include "provider_vision/utils/config.h"
+#include "provider_vision/config.h"
 #include "provider_vision/server/media_manager.h"
 
 /**

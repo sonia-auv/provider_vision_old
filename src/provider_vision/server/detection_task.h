@@ -19,7 +19,7 @@
 #include "provider_vision/media/camera/base_media.h"
 #include "provider_vision/media/media_streamer.h"
 #include "provider_vision/server/filterchain.h"
-#include "provider_vision/utils/config.h"
+#include "provider_vision/config.h"
 
 namespace provider_vision {
 

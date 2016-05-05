@@ -19,7 +19,7 @@
 #include <string>
 #include <vector>
 #include "provider_vision/server/filterchain.h"
-#include "provider_vision/utils/config.h"
+#include "provider_vision/config.h"
 
 namespace provider_vision {
 

@@ -14,7 +14,7 @@
 #include <provider_vision/media/camera_configuration.h>
 #include <memory>
 #include <opencv2/core/core.hpp>
-#include "provider_vision/utils/config.h"
+#include "provider_vision/config.h"
 
 namespace provider_vision {
 

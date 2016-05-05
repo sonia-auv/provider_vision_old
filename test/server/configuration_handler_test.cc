@@ -11,7 +11,7 @@
 #include <gtest/gtest.h>
 #include "provider_vision/media/configuration_handler.h"
 #include "provider_vision/media/camera_configuration.h"
-#include "provider_vision/utils/config.h"
+#include "provider_vision/config.h"
 
 using namespace provider_vision;
 

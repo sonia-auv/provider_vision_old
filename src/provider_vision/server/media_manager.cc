@@ -14,7 +14,7 @@
 #include "provider_vision/media/context/dc1394_context.h"
 #include "provider_vision/media/context/file_context.h"
 #include "provider_vision/media/context/webcam_context.h"
-#include "provider_vision/utils/config.h"
+#include "provider_vision/config.h"
 #include "ros/console.h"
 
 namespace provider_vision {
