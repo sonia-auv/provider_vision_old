@@ -20,13 +20,10 @@
 #include <provider_vision/server/filter_factory.h>
 #include <provider_vision/server/global_param_handler.h>
 #include "provider_vision/server/target.h"
-#include "provider_vision/utils/config.h"
-#include "provider_vision/utils/pugixml.h"
-#include "provider_vision/utils/serializable.h"
 
 namespace provider_vision {
 
-class Filterchain : public Serializable {
+class Filterchain {
  public:
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
@@ -59,9 +56,9 @@ class Filterchain : public Serializable {
    */
   void SetName(const std::string &name);
 
-  bool Serialize() override;
+  bool Serialize();
 
-  bool Deserialize() override;
+  bool Deserialize();
 
   provider_vision::Filter::Ptr GetFilter(const size_t &index) const;
 
@@ -105,6 +102,8 @@ class Filterchain : public Serializable {
  private:
   //==========================================================================
   // P R I V A T E   M E M B E R S
+
+  std::string filepath_;
 
   std::string name_;
 

@@ -124,7 +124,7 @@ class TrackDetector : public Filter {
       }
 
       // Votes for the contour with the most
-      std::vector<std::pair<ObjectFullData::Ptr, int> > contour_vote;
+      std::vector<std::pair<ObjectFullData::Ptr, int>> contour_vote;
       for (auto &square : squareContour) {
         for (auto &already_voted_for : contour_vote) {
           if (cv::pointPolygonTest(

@@ -12,7 +12,8 @@
 
 #include "provider_vision/server/filterchain_manager.h"
 #include <dirent.h>
-#include <provider_vision/utils/pugixml.h>
+#include <yaml-cpp/yaml.h>
+#include <fstream>
 
 namespace provider_vision {
 
@@ -60,10 +61,12 @@ std::vector<std::string> FilterchainManager::GetAllFilterchainName() const
 //
 void FilterchainManager::CreateFilterchain(const std::string &filterchain) {
   if (!FilterchainExists(filterchain)) {
-    pugi::xml_document doc;
-    doc.append_child("Filterchain");
-    auto save_path = kConfigPath + filterchain + kFilterchainExt;
-    doc.save_file(save_path.c_str());
+    YAML::Node node;
+    node["name"] = filterchain;
+
+    auto filepath = kFilterchainPath + filterchain + kFilterchainExt;
+    std::ofstream fout(filepath);
+    fout << node;
   }
 }
 
@@ -89,8 +92,7 @@ bool FilterchainManager::FilterchainExists(const std::string &filterchain) {
 Filterchain::Ptr FilterchainManager::InstanciateFilterchain(
     const std::string &filterchainName) {
   if (FilterchainExists(filterchainName)) {
-    Filterchain::Ptr filterchain =
-        std::make_shared<Filterchain>(filterchainName);
+    auto filterchain = std::make_shared<Filterchain>(filterchainName);
     running_filterchains_.push_back(filterchain);
     ROS_INFO("Filterchain is ready.");
     return filterchain;
@@ -100,11 +102,35 @@ Filterchain::Ptr FilterchainManager::InstanciateFilterchain(
 
 //------------------------------------------------------------------------------
 //
+const std::vector<Filterchain::Ptr>
+    &FilterchainManager::InstanciateAllFilterchains() {
+  for (const auto &filterchain : GetAllFilterchainName()) {
+    InstanciateFilterchain(filterchain);
+  }
+  return GetRunningFilterchains();
+}
+
+//------------------------------------------------------------------------------
+//
 void FilterchainManager::StopFilterchain(const Filterchain::Ptr &filterchain) {
   auto instance = std::find(running_filterchains_.begin(),
                             running_filterchains_.end(), filterchain);
   running_filterchains_.erase(instance);
   ROS_INFO("Filterchain is stopped.");
+}
+
+//------------------------------------------------------------------------------
+//
+std::string FilterchainManager::GetFilterchainPath(
+    const std::string &filterchain) const {
+  return kConfigPath + filterchain + kFilterchainExt;
+}
+
+//------------------------------------------------------------------------------
+//
+const std::vector<Filterchain::Ptr>
+    &FilterchainManager::GetRunningFilterchains() const {
+  return running_filterchains_;
 }
 
 }  // namespace provider_vision

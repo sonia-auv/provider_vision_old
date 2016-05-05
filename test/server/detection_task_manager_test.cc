@@ -14,12 +14,12 @@
 #include <ros/this_node.h>
 #include <image_transport/image_transport.h>
 #include <sensor_msgs/image_encodings.h>
-#include "provider_vision/utils/config.h"
+#include "provider_vision/config.h"
 #include "provider_vision/server/detection_task_manager.h"
 #include "provider_vision/server/media_manager.h"
 #include "provider_vision/server/filterchain_manager.h"
 
-std::shared_ptr<ros::NodeHandle> nh;
+ros::NodeHandle *nhp;
 
 /**
  * Test class that subscribe to a topic and replace its image member with the
@@ -32,7 +32,7 @@ class TopicListener {
    * the name of the topic to subscribe to.
    */
   explicit TopicListener(const std::string &topic_name)
-      : image_transport(*nh),
+      : image_transport(*nhp),
         continue_(true) {
     subscriber = image_transport.subscribe(
         topic_name, 1, &TopicListener::MessageCallBack, this);
@@ -84,7 +84,7 @@ TEST(DetectionTaskManager, start_detection) {
   std::stringstream filepath;
   filepath << provider_vision::kProjectPath << "test/img/test_image.png";
 
-  provider_vision::MediaManager mmgr;
+  provider_vision::MediaManager mmgr(*nhp);
   mmgr.OpenMedia(filepath.str());
   auto streamer = mmgr.StartStreamingMedia(filepath.str());
 
@@ -129,7 +129,7 @@ TEST(DetectionTaskManager, stop_detection) {
   std::stringstream filepath;
   filepath << provider_vision::kProjectPath << "test/img/test_image.png";
 
-  provider_vision::MediaManager mmgr;
+  provider_vision::MediaManager mmgr(*nhp);
   mmgr.OpenMedia(filepath.str());
   auto streamer = mmgr.StartStreamingMedia(filepath.str());
 
@@ -154,7 +154,7 @@ TEST(DetectionTaskManager, change_observer) {
   std::stringstream filepath;
   filepath << provider_vision::kProjectPath << "test/img/test_image.png";
 
-  provider_vision::MediaManager mmgr;
+  provider_vision::MediaManager mmgr(*nhp);
   mmgr.OpenMedia(filepath.str());
   auto streamer = mmgr.StartStreamingMedia(filepath.str());
 
@@ -194,6 +194,6 @@ TEST(DetectionTaskManager, change_observer) {
 int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
   ros::init(argc, argv, "provider_vision");
-  nh = std::make_shared<ros::NodeHandle>("~");
+  nhp = new ros::NodeHandle{"~"};
   return RUN_ALL_TESTS();
 }

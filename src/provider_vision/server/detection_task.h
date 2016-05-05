@@ -16,10 +16,10 @@
 #include <lib_atlas/pattern/runnable.h>
 #include <lib_atlas/ros/image_publisher.h>
 #include <mutex>
+#include "provider_vision/config.h"
 #include "provider_vision/media/camera/base_media.h"
 #include "provider_vision/media/media_streamer.h"
 #include "provider_vision/server/filterchain.h"
-#include "provider_vision/utils/config.h"
 
 namespace provider_vision {
 
