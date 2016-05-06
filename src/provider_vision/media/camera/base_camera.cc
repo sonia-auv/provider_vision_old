@@ -28,36 +28,36 @@ BaseCamera::BaseCamera(const CameraConfiguration &configuration)
   current_features_.saturation = configuration.saturation_;
 
   gammaPid_.dState = configuration.gamma_;
-  gammaPid_.iState = 0.0;
-  gammaPid_.iMin = 1.0;
-  gammaPid_.iMax = 20;
-  gammaPid_.iGain = 1;
-  gammaPid_.pGain = 0.5;
-  gammaPid_.dGain = 0.75;
+  gammaPid_.iState = configuration.gamma_iState_;
+  gammaPid_.iMin = configuration.gamma_iMin_;
+  gammaPid_.iMax = configuration.gamma_iMax_;
+  gammaPid_.iGain = configuration.gamma_iGain_;
+  gammaPid_.pGain = configuration.gamma_pGain_;
+  gammaPid_.dGain = configuration.gamma_dGain_;
 
   gainPid_.dState = configuration.gain_;
-  gainPid_.iState = 0.0;
-  gainPid_.iMin = 1.0;
-  gainPid_.iMax = 200;
-  gainPid_.iGain = 1;
-  gainPid_.pGain = 0.5;
-  gainPid_.dGain = 0.75;
+  gainPid_.iState = configuration.gain_iState_;
+  gainPid_.iMin = configuration.gain_iMin_;
+  gainPid_.iMax = configuration.gain_iMax_;
+  gainPid_.iGain = configuration.gain_iGain_;
+  gainPid_.pGain = configuration.gain_pGain_;
+  gainPid_.dGain = configuration.gain_dGain_;
 
   exposurePid_.dState = configuration.exposure_;
-  exposurePid_.iState = 0.0;
-  exposurePid_.iMin = 1.0;
-  exposurePid_.iMax = 2000;
-  exposurePid_.iGain = 0.01;
-  exposurePid_.pGain = 2;
-  exposurePid_.dGain = 5;
+  exposurePid_.iState = configuration.exposure_iState_;
+  exposurePid_.iMin = configuration.exposure_iMin_;
+  exposurePid_.iMax = configuration.exposure_iMax_;
+  exposurePid_.iGain = configuration.exposure_iGain_;
+  exposurePid_.pGain = configuration.exposure_pGain_;
+  exposurePid_.dGain = configuration.exposure_dGain_;
 
   saturationPid_.dState = configuration.saturation_;
-  saturationPid_.iState = 0.0;
-  saturationPid_.iMin = 1.0;
-  saturationPid_.iMax = 2000;
-  saturationPid_.iGain = 0.01;
-  saturationPid_.pGain = 2;
-  saturationPid_.dGain = 5;
+  saturationPid_.iState = configuration.saturation_iState_;
+  saturationPid_.iMin = configuration.saturation_iMin_;
+  saturationPid_.iMax = configuration.saturation_iMax_;
+  saturationPid_.iGain = configuration.saturation_iGain_;
+  saturationPid_.pGain = configuration.saturation_pGain_;
+  saturationPid_.dGain = configuration.saturation_dGain_;
 }
 
 //------------------------------------------------------------------------------

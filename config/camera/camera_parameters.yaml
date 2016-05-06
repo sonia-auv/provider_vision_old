@@ -14,6 +14,30 @@
 /provider_vision/camera_parameters/front_guppy/white_balance_red: 568.0
 /provider_vision/camera_parameters/front_guppy/white_balance_blue: 381.0
 /provider_vision/camera_parameters/front_guppy/saturation: 0
+/provider_vision/camera_parameters/front_guppy/gamma/iState: 0.0
+/provider_vision/camera_parameters/front_guppy/gamma/iMin: 1.0
+/provider_vision/camera_parameters/front_guppy/gamma/iMax: 20
+/provider_vision/camera_parameters/front_guppy/gamma/iGain: 1
+/provider_vision/camera_parameters/front_guppy/gamma/pGain: 0.5
+/provider_vision/camera_parameters/front_guppy/gamma/dGain: 0.75
+/provider_vision/camera_parameters/front_guppy/gain/iState: 0.0
+/provider_vision/camera_parameters/front_guppy/gain/iMin: 1.0
+/provider_vision/camera_parameters/front_guppy/gain/iMax: 200
+/provider_vision/camera_parameters/front_guppy/gain/iGain: 1
+/provider_vision/camera_parameters/front_guppy/gain/pGain: 0.5
+/provider_vision/camera_parameters/front_guppy/gain/dGain: 0.75
+/provider_vision/camera_parameters/front_guppy/exposure/iState: 0.0
+/provider_vision/camera_parameters/front_guppy/exposure/iMin: 1.0
+/provider_vision/camera_parameters/front_guppy/exposure/iMax: 200
+/provider_vision/camera_parameters/front_guppy/exposure/iGain: 1
+/provider_vision/camera_parameters/front_guppy/exposure/pGain: 0.5
+/provider_vision/camera_parameters/front_guppy/exposure/dGain: 0.75
+/provider_vision/camera_parameters/front_guppy/saturation/iState: 0.0
+/provider_vision/camera_parameters/front_guppy/saturation/iMin: 1.0
+/provider_vision/camera_parameters/front_guppy/saturation/iMax: 200
+/provider_vision/camera_parameters/front_guppy/saturation/iGain: 1
+/provider_vision/camera_parameters/front_guppy/saturation/pGain: 0.5
+/provider_vision/camera_parameters/front_guppy/saturation/dGain: 0.75
 
 
 # Parameters for the Bottom Guppy Camera
@@ -29,7 +53,31 @@
 /provider_vision/camera_parameters/bottom_guppy/exposure: 95
 /provider_vision/camera_parameters/bottom_guppy/white_balance_red: 568.0
 /provider_vision/camera_parameters/bottom_guppy/white_balance_blue: 381.0
-/provider_vision/camera_parameters/bottom_guppy/saturation: 0
+/provider_vision/camera_parameters/bottom_guppy/gamma/iState: 0.0
+/provider_vision/camera_parameters/bottom_guppy/gamma/iMin: 1.0
+/provider_vision/camera_parameters/bottom_guppy/gamma/iMax: 20
+/provider_vision/camera_parameters/bottom_guppy/gamma/iGain: 1
+/provider_vision/camera_parameters/bottom_guppy/gamma/pGain: 0.5
+/provider_vision/camera_parameters/bottom_guppy/gamma/dGain: 0.75
+/provider_vision/camera_parameters/bottom_guppy/gain/iState: 0.0
+/provider_vision/camera_parameters/bottom_guppy/gain/iMin: 1.0
+/provider_vision/camera_parameters/bottom_guppy/gain/iMax: 200
+/provider_vision/camera_parameters/bottom_guppy/gain/iGain: 1
+/provider_vision/camera_parameters/bottom_guppy/gain/pGain: 0.5
+/provider_vision/camera_parameters/bottom_guppy/gain/dGain: 0.75
+/provider_vision/camera_parameters/bottom_guppy/exposure/iState: 0.0
+/provider_vision/camera_parameters/bottom_guppy/exposure/iMin: 1.0
+/provider_vision/camera_parameters/bottom_guppy/exposure/iMax: 200
+/provider_vision/camera_parameters/bottom_guppy/exposure/iGain: 1
+/provider_vision/camera_parameters/bottom_guppy/exposure/pGain: 0.5
+/provider_vision/camera_parameters/bottom_guppy/exposure/dGain: 0.75
+/provider_vision/camera_parameters/bottom_guppy/saturation/iState: 0.0
+/provider_vision/camera_parameters/bottom_guppy/saturation/iMin: 1.0
+/provider_vision/camera_parameters/bottom_guppy/saturation/iMax: 200
+/provider_vision/camera_parameters/bottom_guppy/saturation/iGain: 1
+/provider_vision/camera_parameters/bottom_guppy/saturation/pGain: 0.5
+/provider_vision/camera_parameters/bottom_guppy/saturation/dGain: 0.75
+
 
 # Parameters for the all other camera (default configurations)
 /provider_vision/camera_parameters/default/name: "Default Camera"

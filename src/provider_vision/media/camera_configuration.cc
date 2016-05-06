@@ -29,6 +29,30 @@ CameraConfiguration::CameraConfiguration(const ros::NodeHandle &nh,
       white_balance_blue_(511.0),
       white_balance_red_(412.0),
       saturation_(0),
+      gamma_iState_(0),
+      gamma_iMin_(0),
+      gamma_iMax_(0),
+      gamma_iGain_(0),
+      gamma_pGain_(0),
+      gamma_dGain_(0),
+      gain_iState_(0),
+      gain_iMin_(0),
+      gain_iMax_(0),
+      gain_iGain_(0),
+      gain_pGain_(0),
+      gain_dGain_(0),
+      exposure_iState_(0),
+      exposure_iMin_(0),
+      exposure_iMax_(0),
+      exposure_iGain_(0),
+      exposure_pGain_(0),
+      exposure_dGain_(0),
+      saturation_iState_(0),
+      saturation_iMin_(0),
+      saturation_iMax_(0),
+      saturation_iGain_(0),
+      saturation_pGain_(0),
+      saturation_dGain_(0),
       nh_(nh) {
   DeserializeConfiguration(name);
 }
@@ -50,6 +74,30 @@ CameraConfiguration::CameraConfiguration(const CameraConfiguration &rhs)
   white_balance_blue_ = rhs.white_balance_blue_;
   white_balance_red_ = rhs.white_balance_red_;
   saturation_ = rhs.saturation_;
+  gamma_iState_ = rhs.gamma_iState_;
+  gamma_iMax_ = rhs.gamma_iMax_;
+  gamma_iMin_=rhs.gamma_iMin_;
+  gamma_iGain_=rhs.gamma_iGain_;
+  gamma_dGain_=rhs.gamma_dGain_;
+  gamma_pGain_=rhs.gamma_pGain_;
+  gain_iState_=rhs.gain_iState_;
+  gain_iMax_=rhs.gain_iMax_;
+  gain_iMin_=rhs.gain_iMin_;
+  gain_iGain_=rhs.gain_iGain_;
+  gain_dGain_=rhs.gain_dGain_;
+  gain_pGain_=rhs.gain_pGain_;
+  exposure_iState_=rhs.exposure_iState_;
+  exposure_iMax_=rhs.exposure_iMax_;
+  exposure_iMin_=rhs.exposure_iMin_;
+  exposure_iGain_=rhs.exposure_iGain_;
+  exposure_dGain_=rhs.exposure_dGain_;
+  exposure_pGain_=rhs.exposure_pGain_;
+  saturation_iState_=rhs.saturation_iState_;
+  saturation_iMax_=rhs.saturation_iMax_;
+  saturation_iMin_=rhs.saturation_iMin_;
+  saturation_iGain_=rhs.saturation_iGain_;
+  saturation_dGain_=rhs.saturation_dGain_;
+  saturation_pGain_=rhs.saturation_pGain_;
   nh_ = rhs.nh_;
 }
 
@@ -70,6 +118,30 @@ CameraConfiguration::CameraConfiguration(CameraConfiguration &&rhs)
   white_balance_blue_ = rhs.white_balance_blue_;
   white_balance_red_ = rhs.white_balance_red_;
   saturation_ = rhs.saturation_;
+  gamma_iState_ = rhs.gamma_iState_;
+  gamma_iMax_ = rhs.gamma_iMax_;
+  gamma_iMin_=rhs.gamma_iMin_;
+  gamma_iGain_=rhs.gamma_iGain_;
+  gamma_dGain_=rhs.gamma_dGain_;
+  gamma_pGain_=rhs.gamma_pGain_;
+  gain_iState_=rhs.gain_iState_;
+  gain_iMax_=rhs.gain_iMax_;
+  gain_iMin_=rhs.gain_iMin_;
+  gain_iGain_=rhs.gain_iGain_;
+  gain_dGain_=rhs.gain_dGain_;
+  gain_pGain_=rhs.gain_pGain_;
+  exposure_iState_=rhs.exposure_iState_;
+  exposure_iMax_=rhs.exposure_iMax_;
+  exposure_iMin_=rhs.exposure_iMin_;
+  exposure_iGain_=rhs.exposure_iGain_;
+  exposure_dGain_=rhs.exposure_dGain_;
+  exposure_pGain_=rhs.exposure_pGain_;
+  saturation_iState_=rhs.saturation_iState_;
+  saturation_iMax_=rhs.saturation_iMax_;
+  saturation_iMin_=rhs.saturation_iMin_;
+  saturation_iGain_=rhs.saturation_iGain_;
+  saturation_dGain_=rhs.saturation_dGain_;
+  saturation_pGain_=rhs.saturation_pGain_;
   nh_ = rhs.nh_;
 }
 
@@ -102,6 +174,30 @@ void CameraConfiguration::DeserializeConfiguration(const std::string &name)
   FindParameter("/camera_parameters/" + name + "/white_balance_red",
                 white_balance_red_);
   FindParameter("/camera_parameters/" + name + "/saturation", saturation_);
+  FindParameter("/camera_parameters/" + name + "/gamma/iState", gamma_iState_);
+  FindParameter("/camera_parameters/" + name + "/gamma/iMin", gamma_iMin_);
+  FindParameter("/camera_parameters/" + name + "/gamma/iMax", gamma_iMax_);
+  FindParameter("/camera_parameters/" + name + "/gamma/iGain", gamma_iGain_);
+  FindParameter("/camera_parameters/" + name + "/gamma/pGain", gamma_pGain_);
+  FindParameter("/camera_parameters/" + name + "/gamma/dGain", gamma_dGain_);
+  FindParameter("/camera_parameters/" + name + "/gamma/iState", gamma_iState_);
+  FindParameter("/camera_parameters/" + name + "/gain/iMin", gain_iMin_);
+  FindParameter("/camera_parameters/" + name + "/gain/iMax", gain_iMax_);
+  FindParameter("/camera_parameters/" + name + "/gain/iGain", gain_iGain_);
+  FindParameter("/camera_parameters/" + name + "/gain/pGain", gain_pGain_);
+  FindParameter("/camera_parameters/" + name + "/gain/dGain", gain_dGain_);
+  FindParameter("/camera_parameters/" + name + "/exposure/iState", exposure_iState_);
+  FindParameter("/camera_parameters/" + name + "/exposure/iMin", exposure_iMin_);
+  FindParameter("/camera_parameters/" + name + "/exposure/iMax", exposure_iMax_);
+  FindParameter("/camera_parameters/" + name + "/exposure/iGain", exposure_iGain_);
+  FindParameter("/camera_parameters/" + name + "/exposure/pGain", exposure_pGain_);
+  FindParameter("/camera_parameters/" + name + "/exposure/dGain", exposure_dGain_);
+  FindParameter("/camera_parameters/" + name + "/saturation/iState", saturation_iState_);
+  FindParameter("/camera_parameters/" + name + "/saturation/iMin", saturation_iMin_);
+  FindParameter("/camera_parameters/" + name + "/saturation/iMax", saturation_iMax_);
+  FindParameter("/camera_parameters/" + name + "/saturation/iGain", saturation_iGain_);
+  FindParameter("/camera_parameters/" + name + "/saturation/pGain", saturation_pGain_);
+  FindParameter("/camera_parameters/" + name + "/saturation/dGain", saturation_dGain_);
 }
 
 //------------------------------------------------------------------------------

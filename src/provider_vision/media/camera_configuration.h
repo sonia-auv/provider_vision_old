@@ -62,6 +62,30 @@ class CameraConfiguration {
   double white_balance_blue_;
   double white_balance_red_;
   double saturation_;
+  double gamma_iState_;
+  double gamma_iMin_;
+  double gamma_iMax_;
+  double gamma_iGain_;
+  double gamma_pGain_;
+  double gamma_dGain_;
+  double gain_iState_;
+  double gain_iMin_;
+  double gain_iMax_;
+  double gain_iGain_;
+  double gain_pGain_;
+  double gain_dGain_;
+  double exposure_iState_;
+  double exposure_iMin_;
+  double exposure_iMax_;
+  double exposure_iGain_;
+  double exposure_pGain_;
+  double exposure_dGain_;
+  double saturation_iState_;
+  double saturation_iMin_;
+  double saturation_iMax_;
+  double saturation_iGain_;
+  double saturation_pGain_;
+  double saturation_dGain_;
 
   //==========================================================================
   // P U B L I C   M E T H O D S
