@@ -32,12 +32,12 @@
 #include <string>
 #include <string>
 #include <vector>
+#include "provider_vision/config.h"
 #include "provider_vision/media/camera/base_media.h"
 #include "provider_vision/server/detection_task.h"
 #include "provider_vision/server/detection_task_manager.h"
 #include "provider_vision/server/filterchain_manager.h"
 #include "provider_vision/server/media_manager.h"
-#include "provider_vision/utils/config.h"
 
 namespace provider_vision {
 

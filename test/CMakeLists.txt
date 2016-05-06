@@ -5,21 +5,14 @@
 # Use of this source code is governed by the MIT license that can be
 # found in the LICENSE file.
 
-catkin_add_gtest(configuration_handler_test server/configuration_handler_test.cc ${provider_vision_FILES})
-target_link_libraries(configuration_handler_test
-    dc1394
-    ${catkin_LIBRARIES}
-    ${lib_atlas_LIBRARIES}
-    ${provider_vision_LIBRARIES}
-    ${OpenCV_LIBRARIES})
-
 catkin_add_gtest(media_manager_test server/media_manager_test.cc ${provider_vision_FILES})
 target_link_libraries(media_manager_test
     dc1394
     ${catkin_LIBRARIES}
     ${lib_atlas_LIBRARIES}
     ${provider_vision_LIBRARIES}
-    ${OpenCV_LIBRARIES})
+    ${OpenCV_LIBRARIES}
+    yaml-cpp)
 
 catkin_add_gtest(detection_task_manager_test server/detection_task_manager_test.cc ${provider_vision_FILES})
 target_link_libraries(detection_task_manager_test
@@ -27,7 +20,8 @@ target_link_libraries(detection_task_manager_test
     ${catkin_LIBRARIES}
     ${lib_atlas_LIBRARIES}
     ${provider_vision_LIBRARIES}
-    ${OpenCV_LIBRARIES})
+    ${OpenCV_LIBRARIES}
+    yaml-cpp)
 
 catkin_add_gtest(filterchain_manager_test server/filterchain_manager_test.cc ${provider_vision_FILES})
 target_link_libraries(filterchain_manager_test
@@ -35,15 +29,16 @@ target_link_libraries(filterchain_manager_test
     ${catkin_LIBRARIES}
     ${lib_atlas_LIBRARIES}
     ${provider_vision_LIBRARIES}
-    ${OpenCV_LIBRARIES})
+    ${OpenCV_LIBRARIES}
+    yaml-cpp)
 
-catkin_add_gtest(utest_vision_server server/vision_server_test.cc  ${provider_vision_FILES})
-target_link_libraries(utest_vision_server
-dc1394
-${catkin_LIBRARIES}
-${lib_atlas_LIBRARIES}
-${OpenCV_LIBRARIES}
-)
+catkin_add_gtest(vision_server_test server/vision_server_test.cc  ${provider_vision_FILES})
+target_link_libraries(vision_server_test
+    dc1394
+    ${catkin_LIBRARIES}
+    ${lib_atlas_LIBRARIES}
+    ${OpenCV_LIBRARIES}
+    yaml-cpp)
 
 catkin_add_gtest( object_ranking_data_test filters/object_ranking_data_test.cc )
 target_link_libraries(object_ranking_data_test ${OpenCV_LIBRARIES})

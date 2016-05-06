@@ -439,7 +439,7 @@ bool IsRectangle(contour_t &contour, unsigned int degreeAcuracy) {
 
   // Stores the lines between the points.
   std::vector<cv::Vec3f> vertices, longestVertices;
-  std::vector<std::pair<unsigned int, cv::Vec3f> > sortedVertices;
+  std::vector<std::pair<unsigned int, cv::Vec3f>> sortedVertices;
   size_t j, size;
   for (j = 0, size = contour.size(); j < size; j++) {
     // Go to next point. If over the contour size,
@@ -594,7 +594,7 @@ double AngleBetweenThreePoints(cv::Point pt1, cv::Point pt2, cv::Point pt0) {
 //------------------------------------------------------------------------------
 //
 void DrawSquares(cv::Mat &image,
-                 const std::vector<std::vector<cv::Point> > &squares) {
+                 const std::vector<std::vector<cv::Point>> &squares) {
   for (size_t i = 0; i < squares.size(); i++) {
     const cv::Point *p = &squares[i][0];
     int n = (int)squares[i].size();

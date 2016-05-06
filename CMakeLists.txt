@@ -88,6 +88,7 @@ target_link_libraries(provider_vision_node
     ${catkin_LIBRARIES}
     ${lib_atlas_LIBRARIES}
     ${OpenCV_LIBRARIES}
+    yaml-cpp
     )
 add_dependencies(${PROJECT_NAME}_node ${PROJECT_NAME}_generate_messages_cpp sonia_msgs_generate_messages_cpp)
 
@@ -95,6 +96,4 @@ add_dependencies(${PROJECT_NAME}_node ${PROJECT_NAME}_generate_messages_cpp soni
 #==========================================================================
 # U N I T   T E S T S
 
-if (CATKIN_ENABLE_TESTING AND ${CMAKE_CURRENT_SOURCE_DIR}/test)
-  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/test)
-endif ()
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/test)

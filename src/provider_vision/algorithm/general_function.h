@@ -120,7 +120,7 @@ std::vector<cv::Point2d> GetEigenVectors(std::vector<cv::Point> &pts);
 double AngleBetweenThreePoints(cv::Point pt1, cv::Point pt2, cv::Point pt0);
 
 void DrawSquares(cv::Mat &image,
-                 const std::vector<std::vector<cv::Point> > &squares);
+                 const std::vector<std::vector<cv::Point>> &squares);
 
 bool CompareYX(const cv::Point &p1, const cv::Point &p2);
 

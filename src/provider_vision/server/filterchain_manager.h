@@ -18,8 +18,8 @@
 #include <functional>
 #include <string>
 #include <vector>
+#include "provider_vision/config.h"
 #include "provider_vision/server/filterchain.h"
-#include "provider_vision/utils/config.h"
 
 namespace provider_vision {
 
@@ -59,6 +59,11 @@ class FilterchainManager {
   std::vector<std::string> GetAllFilterchainName() const noexcept;
 
   /**
+   * Get the list of all running filterchains
+   */
+  const std::vector<Filterchain::Ptr> &GetRunningFilterchains() const;
+
+  /**
    * If the filterchain exists, this method will create
    * an ins
    *
@@ -66,6 +71,13 @@ class FilterchainManager {
    * \return Filterchain*
    */
   Filterchain::Ptr InstanciateFilterchain(const std::string &filterchainName);
+
+  /**
+   * Pass through the list of all the filterchains and instanciate them
+   *
+   * \return The list of all filter chains
+   */
+  const std::vector<Filterchain::Ptr> &InstanciateAllFilterchains();
 
   /**
    * Get all available filterchains on the system.
@@ -118,16 +130,6 @@ class FilterchainManager {
    */
   std::vector<Filterchain::Ptr> running_filterchains_;
 };
-
-//==============================================================================
-// I N L I N E   F U N C T I O N S   D E F I N I T I O N S
-
-//------------------------------------------------------------------------------
-//
-inline std::string FilterchainManager::GetFilterchainPath(
-    const std::string &filterchain) const {
-  return kConfigPath + filterchain + kFilterchainExt;
-}
 
 }  // namespace provider_vision
 

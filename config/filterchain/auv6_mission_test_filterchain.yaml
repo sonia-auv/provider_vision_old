@@ -1,0 +1,22 @@
+name: auv6_mission_test_filterchain
+filters:
+  - name: TestFilter
+    parameters:
+      - name: Enable
+        value: 1
+      - name: X
+        value: 0
+      - name: Y
+        value: 0
+      - name: Width
+        value: 200
+      - name: Height
+        value: 200
+      - name: Angle
+        value: 0
+      - name: Header
+        value: test
+      - name: SpecialField_1
+        value: sf1
+      - name: SpecialField_2
+        value: sf2
