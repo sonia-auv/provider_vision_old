@@ -92,7 +92,6 @@ bool Filterchain::Serialize() {
 //
 bool Filterchain::Deserialize() {
   YAML::Node node = YAML::LoadFile(filepath_);
-  YAML::Emitter emitter;
 
   if (node["name"]) {
     SetName(node["name"].as<std::string>());
