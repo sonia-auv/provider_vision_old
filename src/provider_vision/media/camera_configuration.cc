@@ -173,30 +173,30 @@ void CameraConfiguration::DeserializeConfiguration(const std::string &name)
   FindParameter("/camera_parameters/" + name + "/white_balance_red",
                 white_balance_red_);
   FindParameter("/camera_parameters/" + name + "/saturation", saturation_);
-  FindParameter("/camera_parameters/" + name + "/gamma/iState", gamma_iState_);
-  FindParameter("/camera_parameters/" + name + "/gamma/iMin", gamma_iMin_);
-  FindParameter("/camera_parameters/" + name + "/gamma/iMax", gamma_iMax_);
-  FindParameter("/camera_parameters/" + name + "/gamma/iGain", gamma_iGain_);
-  FindParameter("/camera_parameters/" + name + "/gamma/pGain", gamma_pGain_);
-  FindParameter("/camera_parameters/" + name + "/gamma/dGain", gamma_dGain_);
-  FindParameter("/camera_parameters/" + name + "/gamma/iState", gamma_iState_);
-  FindParameter("/camera_parameters/" + name + "/gain/iMin", gain_iMin_);
-  FindParameter("/camera_parameters/" + name + "/gain/iMax", gain_iMax_);
-  FindParameter("/camera_parameters/" + name + "/gain/iGain", gain_iGain_);
-  FindParameter("/camera_parameters/" + name + "/gain/pGain", gain_pGain_);
-  FindParameter("/camera_parameters/" + name + "/gain/dGain", gain_dGain_);
-  FindParameter("/camera_parameters/" + name + "/exposure/iState", exposure_iState_);
-  FindParameter("/camera_parameters/" + name + "/exposure/iMin", exposure_iMin_);
-  FindParameter("/camera_parameters/" + name + "/exposure/iMax", exposure_iMax_);
-  FindParameter("/camera_parameters/" + name + "/exposure/iGain", exposure_iGain_);
-  FindParameter("/camera_parameters/" + name + "/exposure/pGain", exposure_pGain_);
-  FindParameter("/camera_parameters/" + name + "/exposure/dGain", exposure_dGain_);
-  FindParameter("/camera_parameters/" + name + "/saturation/iState", saturation_iState_);
-  FindParameter("/camera_parameters/" + name + "/saturation/iMin", saturation_iMin_);
-  FindParameter("/camera_parameters/" + name + "/saturation/iMax", saturation_iMax_);
-  FindParameter("/camera_parameters/" + name + "/saturation/iGain", saturation_iGain_);
-  FindParameter("/camera_parameters/" + name + "/saturation/pGain", saturation_pGain_);
-  FindParameter("/camera_parameters/" + name + "/saturation/dGain", saturation_dGain_);
+  FindParameter("/camera_parameters/" + name + "/gamma_iState", gamma_iState_);
+  FindParameter("/camera_parameters/" + name + "/gamma_iMin", gamma_iMin_);
+  FindParameter("/camera_parameters/" + name + "/gamma_iMax", gamma_iMax_);
+  FindParameter("/camera_parameters/" + name + "/gamma_iGain", gamma_iGain_);
+  FindParameter("/camera_parameters/" + name + "/gamma_pGain", gamma_pGain_);
+  FindParameter("/camera_parameters/" + name + "/gamma_dGain", gamma_dGain_);
+  FindParameter("/camera_parameters/" + name + "/gamma_iState", gamma_iState_);
+  FindParameter("/camera_parameters/" + name + "/gain_iMin", gain_iMin_);
+  FindParameter("/camera_parameters/" + name + "/gain_iMax", gain_iMax_);
+  FindParameter("/camera_parameters/" + name + "/gain_iGain", gain_iGain_);
+  FindParameter("/camera_parameters/" + name + "/gain_pGain", gain_pGain_);
+  FindParameter("/camera_parameters/" + name + "/gain_dGain", gain_dGain_);
+  FindParameter("/camera_parameters/" + name + "/exposure_iState", exposure_iState_);
+  FindParameter("/camera_parameters/" + name + "/exposure-iMin", exposure_iMin_);
+  FindParameter("/camera_parameters/" + name + "/exposure_iMax", exposure_iMax_);
+  FindParameter("/camera_parameters/" + name + "/exposure_iGain", exposure_iGain_);
+  FindParameter("/camera_parameters/" + name + "/exposure_pGain", exposure_pGain_);
+  FindParameter("/camera_parameters/" + name + "/exposure_dGain", exposure_dGain_);
+  FindParameter("/camera_parameters/" + name + "/saturation_iState", saturation_iState_);
+  FindParameter("/camera_parameters/" + name + "/saturation_iMin", saturation_iMin_);
+  FindParameter("/camera_parameters/" + name + "/saturation_iMax", saturation_iMax_);
+  FindParameter("/camera_parameters/" + name + "/saturation_iGain", saturation_iGain_);
+  FindParameter("/camera_parameters/" + name + "/saturation_pGain", saturation_pGain_);
+  FindParameter("/camera_parameters/" + name + "/saturation_dGain", saturation_dGain_);
 }
 
 //------------------------------------------------------------------------------
