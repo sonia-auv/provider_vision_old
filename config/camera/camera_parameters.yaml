@@ -19,7 +19,7 @@
 /provider_vision/camera_parameters/front_guppy/gamma_iMax: 20
 /provider_vision/camera_parameters/front_guppy/gamma_iGain: 1
 /provider_vision/camera_parameters/front_guppy/gamma_pGain: 0.5
-/provider_vision/camera_parameters/front_guppy/gamma-dGain: 0.75
+/provider_vision/camera_parameters/front_guppy/gamma_dGain: 0.75
 /provider_vision/camera_parameters/front_guppy/gain_iState: 0.0
 /provider_vision/camera_parameters/front_guppy/gain_iMin: 1.0
 /provider_vision/camera_parameters/front_guppy/gain_iMax: 200
@@ -50,6 +50,7 @@
 /provider_vision/camera_parameters/bottom_guppy/shutter: 32.0
 /provider_vision/camera_parameters/bottom_guppy/gamma: 0
 /provider_vision/camera_parameters/bottom_guppy/exposure: 95
+/provider_vision/camera_parameters/bottom_guppy/saturation: 0
 /provider_vision/camera_parameters/bottom_guppy/white_balance_red: 568.0
 /provider_vision/camera_parameters/bottom_guppy/white_balance_blue: 381.0
 /provider_vision/camera_parameters/bottom_guppy/gamma_iState: 0.0
@@ -57,7 +58,7 @@
 /provider_vision/camera_parameters/bottom_guppy/gamma_iMax: 20
 /provider_vision/camera_parameters/bottom_guppy/gamma_iGain: 1
 /provider_vision/camera_parameters/bottom_guppy/gamma_pGain: 0.5
-/provider_vision/camera_parameters/bottom_guppy/gamma-dGain: 0.75
+/provider_vision/camera_parameters/bottom_guppy/gamma_dGain: 0.75
 /provider_vision/camera_parameters/bottom_guppy/gain_iState: 0.0
 /provider_vision/camera_parameters/bottom_guppy/gain_iMin: 1.0
 /provider_vision/camera_parameters/bottom_guppy/gain_iMax: 200
