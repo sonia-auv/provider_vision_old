@@ -23,7 +23,7 @@ class GigeCamera : public BaseCamera {
  public:
   static const int DMA_BUFFER = 4;
 
-//  static const std::string CAM_TAG;
+  static const std::string CAM_TAG;
 
   //==========================================================================
   // T Y P E D E F   A N D   E N U M

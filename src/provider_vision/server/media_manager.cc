@@ -34,14 +34,25 @@ MediaManager::MediaManager(const ros::NodeHandle &nh) noexcept : contexts_() {
   }
 
   // Creating the DC1394 context
-  std::vector<std::string> camera_names = {"front_guppy", "bottom_guppy"};
-  nh_.getParam("/provider_vision/active_dc1394", camera_names);
-  if (!camera_names.empty()) {
+  std::vector<std::string> camera_names_dc1394 = {"front_guppy", "bottom_guppy"};
+  nh_.getParam("/provider_vision/active_dc1394", camera_names_dc1394);
+  if (!camera_names_dc1394.empty()) {
     std::vector<CameraConfiguration> configurations;
-    for (const auto &camera : camera_names) {
-      configurations.push_back(CameraConfiguration(nh_, camera));
+    for (const auto &camera_dc : camera_names_dc1394) {
+      configurations.push_back(CameraConfiguration(nh_, camera_dc));
     }
     contexts_.push_back(std::make_shared<DC1394Context>(configurations));
+  }
+
+  // Creating the GigE context
+  std::vector<std::string> camera_names_gige = {"front_gige", "bottom_gige"};
+  nh_.getParam("/provide_vision/active_gige", camera_names_gige);
+  if (!camera_names_gige.empty()) {
+    std::vector<CameraConfiguration> configurations;
+    for (const auto &camera_gige : camera_names_gige) {
+      configurations.push_back(CameraConfiguration(nh_, camera_gige));
+    }
+    contexts_.push_back(std::make_shared<GigeContext>(configurations));
   }
 
   contexts_.push_back(std::make_shared<FileContext>());

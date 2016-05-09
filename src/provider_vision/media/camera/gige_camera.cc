@@ -10,7 +10,7 @@
 
 namespace provider_vision {
 
-//std::string GigeCamera::CAM_TAG = "[GigE Camera]";
+const std::string GigeCamera::CAM_TAG = "[GigE Camera]";
 
 //==============================================================================
 // C / D T O R S   S E C T I O N

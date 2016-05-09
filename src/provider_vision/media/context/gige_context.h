@@ -91,10 +91,10 @@ inline bool GigeContext::ContainsMedia(const std::string &nameMedia) const {
 
 //-----------------------------------------------------------------------------
 //
-//inline GigeContext::Ptr GigeContext::GetGigeCamera(
-//    const std::string &name) const {
-//  return GetGigeCamera(GetMedia(name));
-//}
+inline GigeCamera::Ptr GigeContext::GetGigeCamera(
+    const std::string &name) const {
+  return GetGigeCamera(GetMedia(name));
+}
 
 //-----------------------------------------------------------------------------
 //

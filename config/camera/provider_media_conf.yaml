@@ -1,2 +1,3 @@
 /provider_vision/active_dc1394: ["front_guppy", "bottom_guppy"]
 /provider_vision/active_webcam: false
+/provider_vision/active_gige: ["front_gige", "bottom_guppy"]
