@@ -12,6 +12,7 @@
 #include <stdexcept>
 #include <vector>
 #include "provider_vision/media/context/dc1394_context.h"
+#include "provider_vision/media/context/gige_context.h"
 #include "provider_vision/media/context/file_context.h"
 #include "provider_vision/media/context/webcam_context.h"
 #include "provider_vision/utils/config.h"
