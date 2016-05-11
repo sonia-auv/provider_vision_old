@@ -20,6 +20,7 @@ class GigeContext : public BaseContext {
   const std::string DRIVER_TAG;
 
   const double TIME_FOR_BUS_ERROR = 3;
+  static const int MAX_CAMERAS = 4;
 
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
@@ -72,7 +73,7 @@ class GigeContext : public BaseContext {
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
-  GEV_DEVICE_INTERFACE *driver_;
+  GEV_CAMERA_INFO driver_[MAX_CAMERAS];
 };
 
 //==============================================================================
@@ -98,8 +99,7 @@ inline GigeCamera::Ptr GigeContext::GetGigeCamera(
 
 //-----------------------------------------------------------------------------
 //
-inline GigeCamera::Ptr GigeContext::GetGigeCamera(
-    BaseMedia::Ptr media) const {
+inline GigeCamera::Ptr GigeContext::GetGigeCamera(BaseMedia::Ptr media) const {
   GigeCamera::Ptr tmp = std::dynamic_pointer_cast<GigeCamera>(media);
 
   // Should not happen since if we get here, we are probably in a for
@@ -113,4 +113,4 @@ inline GigeCamera::Ptr GigeContext::GetGigeCamera(
 }
 
 }  // namespace provider_vision
-#endif //PROVIDER_VISION_GIGE_CONTEXT_H
+#endif  // PROVIDER_VISION_GIGE_CONTEXT_H

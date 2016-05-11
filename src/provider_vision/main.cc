@@ -20,6 +20,8 @@ int main(int argc, char **argv) {
   ros::NodeHandle nh("~");
   ros::Rate loop_rate(15);
 
+  sleep(10);
+
   provider_vision::VisionServer pv(nh);
 
   while (ros::ok()) {
