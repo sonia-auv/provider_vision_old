@@ -6,8 +6,6 @@
 #include <ros/ros.h>
 #include <string>
 
-
-
 namespace provider_vision {
 
 const std::string GigeCamera::CAM_TAG = "[GigE Camera]";
@@ -17,8 +15,9 @@ const std::string GigeCamera::CAM_TAG = "[GigE Camera]";
 
 //------------------------------------------------------------------------------
 //
-GigeCamera::GigeCamera(GEV_CAMERA_HANDLE *camera, const CameraConfiguration &config)
-    : BaseCamera(config), gige_camera_(camera) { }
+GigeCamera::GigeCamera(GEV_CAMERA_HANDLE *camera,
+                       const CameraConfiguration &config)
+    : BaseCamera(config), gige_camera_(camera) {}
 
 //------------------------------------------------------------------------------
 //
@@ -31,7 +30,6 @@ GigeCamera::~GigeCamera() {
 }
 
 void GigeCamera::Open() {
-
   UINT16 status;
 
   if (IsOpened()) {
@@ -41,8 +39,9 @@ void GigeCamera::Open() {
   std::lock_guard<std::mutex> guard(cam_access_);
 
   try {
+    //    GevOpenCamera(&driver_[i], GevExclusiveMode, &gige_camera_);
+    status = GevOpenCameraByName("bottom_gige", GevExclusiveMode, gige_camera_);
     GEV_CAMERA_INFO *camera_info = GevGetCameraInfo(gige_camera_);
-    status = GevOpenCameraByAddress(camera_info->ipAddr, GevExclusiveMode, gige_camera_);
     if (status != 0) {
       throw std::runtime_error(GevGetFormatString(status));
     }
@@ -73,7 +72,6 @@ void GigeCamera::Close() {
   }
 
   close_result ? status_ = Status::CLOSE : status_ = Status::ERROR;
-
 }
 
 //------------------------------------------------------------------------------
@@ -84,8 +82,7 @@ void GigeCamera::SetStreamingModeOn() {
   if (status == GEVLIB_ERROR_INVALID_HANDLE) {
     status_ = Status::ERROR;
     throw std::runtime_error("Invalid handle. Cannot set streaming mode on.");
-  }
-  else if (status == GEV_STATUS_BUSY) {
+  } else if (status == GEV_STATUS_BUSY) {
     status_ = Status::ERROR;
     throw std::runtime_error("Camera is busy. Cannot set streaming mode on.");
   }
@@ -102,7 +99,8 @@ void GigeCamera::SetStreamingModeOff() {
   GEV_STATUS status = GevStopImageTransfer(gige_camera_);
   if (status != GEVLIB_OK) {
     status_ = Status::ERROR;
-    throw std::runtime_error("Invalid handle. The camera could not be stopped.");
+    throw std::runtime_error(
+        "Invalid handle. The camera could not be stopped.");
   }
 }
 
@@ -131,7 +129,7 @@ void GigeCamera::NextImage(cv::Mat &img) {
   if (frame != NULL) {
     try {
       cv::Mat tmp = cv::Mat(frame->h, frame->w, CV_8UC3, frame->address);
-      //TODO: check which color space the image is and convert it
+      // TODO: check which color space the image is and convert it
       undistord_matrix_.CorrectInmage(tmp, img);
     } catch (cv::Exception &e) {
       status_ = Status::ERROR;
@@ -145,7 +143,6 @@ void GigeCamera::NextImage(cv::Mat &img) {
   }
 
   // Calibrate(img);
-
 }
 
 //------------------------------------------------------------------------------
@@ -155,7 +152,8 @@ float GigeCamera::GetGainValue() const {
 
   uint32_t value;
   int type;
-  GEV_STATUS status = GevGetFeatureValue(gige_camera_, "Gain", &type, sizeof(value), &value);
+  GEV_STATUS status =
+      GevGetFeatureValue(gige_camera_, "Gain", &type, sizeof(value), &value);
 
   if (status != 0) {
     throw std::runtime_error("Cannot get the gain value on GigE Camera");
@@ -169,7 +167,8 @@ float GigeCamera::GetGammaValue() const {
 
   uint32_t value;
   int type;
-  GEV_STATUS status = GevGetFeatureValue(gige_camera_, "Gamma", &type, sizeof(value), &value);
+  GEV_STATUS status =
+      GevGetFeatureValue(gige_camera_, "Gamma", &type, sizeof(value), &value);
 
   if (status != 0) {
     throw std::runtime_error("Cannot get the gamma value on GigE Camera");
@@ -183,7 +182,8 @@ float GigeCamera::GetExposureValue() const {
 
   uint32_t value;
   int type;
-  GEV_STATUS status = GevGetFeatureValue(gige_camera_, "Exposure", &type, sizeof(value), &value);
+  GEV_STATUS status = GevGetFeatureValue(gige_camera_, "Exposure", &type,
+                                         sizeof(value), &value);
 
   if (status != 0) {
     throw std::runtime_error("Cannot get the exposure value on GigE Camera");
@@ -197,7 +197,8 @@ float GigeCamera::GetSaturationValue() const {
 
   uint32_t value;
   int type;
-  GEV_STATUS status = GevGetFeatureValue(gige_camera_, "Saturation", &type, sizeof(value), &value);
+  GEV_STATUS status = GevGetFeatureValue(gige_camera_, "Saturation", &type,
+                                         sizeof(value), &value);
 
   if (status != 0) {
     throw std::runtime_error("Cannot get the saturation value on GigE Camera");
@@ -206,84 +207,43 @@ float GigeCamera::GetSaturationValue() const {
   return static_cast<float>(value);
 }
 
-void GigeCamera::SetGainAuto() {
+void GigeCamera::SetGainAuto() {}
 
-}
+void GigeCamera::SetGainManual() {}
 
-void GigeCamera::SetGainManual() {
+void GigeCamera::SetGainValue(float value) {}
 
-}
+void GigeCamera::SetGammaValue(float value) {}
 
-void GigeCamera::SetGainValue(float value) {
+void GigeCamera::SetExposureValue(float value) {}
 
-}
+void GigeCamera::SetSaturationValue(float value) {}
 
-void GigeCamera::SetGammaValue(float value) {
+void GigeCamera::SetShutterValue(float value) {}
 
-}
+void GigeCamera::SetShutterAuto() {}
 
-void GigeCamera::SetExposureValue(float value) {
+void GigeCamera::SetShutterManual() {}
 
-}
+float GigeCamera::GetShutterMode() const {}
 
-void GigeCamera::SetSaturationValue(float value) {
+float GigeCamera::GetShutterValue() const {}
 
-}
+void GigeCamera::SetFrameRateValue(float value) {}
 
-void GigeCamera::SetShutterValue(float value) {
+float GigeCamera::GetFrameRateValue() const {}
 
-}
+void GigeCamera::SetWhiteBalanceAuto() {}
 
-void GigeCamera::SetShutterAuto() {
+void GigeCamera::SetWhiteBalanceManual() {}
 
-}
+float GigeCamera::GetWhiteBalanceMode() const {}
 
-void GigeCamera::SetShutterManual() {
+float GigeCamera::GetWhiteBalanceRed() const {}
 
-}
+void GigeCamera::SetWhiteBalanceRedValue(float value) {}
 
-float GigeCamera::GetShutterMode() const {
+void GigeCamera::SetWhiteBalanceBlueValue(float value) {}
 
-}
-
-float GigeCamera::GetShutterValue() const {
-
-}
-
-void GigeCamera::SetFrameRateValue(float value) {
-
-}
-
-float GigeCamera::GetFrameRateValue() const {
-
-}
-
-void GigeCamera::SetWhiteBalanceAuto() {
-
-}
-
-void GigeCamera::SetWhiteBalanceManual() {
-
-}
-
-float GigeCamera::GetWhiteBalanceMode() const {
-
-}
-
-float GigeCamera::GetWhiteBalanceRed() const {
-
-}
-
-void GigeCamera::SetWhiteBalanceRedValue(float value) {
-
-}
-
-void GigeCamera::SetWhiteBalanceBlueValue(float value) {
-
-}
-
-float GigeCamera::GetWhiteBalanceBlue() const {
-
-}
-
+float GigeCamera::GetWhiteBalanceBlue() const {}
 }

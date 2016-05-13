@@ -5,6 +5,7 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
+#include <gevapi.h>
 
 namespace provider_vision {
 
@@ -50,28 +51,16 @@ void GigeContext::InitContext(
     return;
   }
   ROS_INFO_NAMED(DRIVER_TAG, "%d GigE camera found", numCamera);
-  GEV_CAMERA_HANDLE *camera = nullptr;
+  GEV_CAMERA_HANDLE camera = NULL;
   for (uint i = 0; i < numCamera; i++) {
-    GevOpenCamera(&driver_[i], GevExclusiveMode, camera);
-    //      GevInitGenICamXMLFeatures( camera, TRUE);
-    //      GenApi::CNodeMapRef *Camera =
-    //      static_cast<GenApi::CNodeMapRef*>(GevGetFeatureNodeMap(camera));
-    std::stringstream macString;
-    UINT32 macHigh = driver_[i].macHigh;
-    UINT32 macLow = driver_[i].macLow;
-    macString << macHigh << macLow;
-    std::istringstream tmp(macString.str());
-    UINT32 mac;
-    tmp >> mac;
-    // TODO: change guid for id since guid is not appropriate for GigE cameras.
+    std::string name = driver_[i].username;
     for (auto const &cam_config : configurations) {
-      if (cam_config.guid_ == mac) {
-        GevOpenCamera(&driver_[i], GevExclusiveMode, camera);
-        if (camera == nullptr) {
+      if (cam_config.name_ == name) {
+        if (&camera == nullptr) {
           throw std::runtime_error("Error creating the GigE camera");
         }
 
-        std::shared_ptr<GigeCamera> cam(new GigeCamera(camera, cam_config));
+        std::shared_ptr<GigeCamera> cam(new GigeCamera(&camera, cam_config));
 
         cam->Open();
         // cam->SetCameraParams();
