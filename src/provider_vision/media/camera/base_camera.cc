@@ -58,6 +58,9 @@ BaseCamera::BaseCamera(const CameraConfiguration &configuration)
   saturationPid_.iGain = configuration.saturation_iGain_;
   saturationPid_.pGain = configuration.saturation_pGain_;
   saturationPid_.dGain = configuration.saturation_dGain_;
+
+  gain_lim_ = configuration.gain_lim_;
+  exposure_lim_ = configuration.exposure_lim_;
 }
 
 //------------------------------------------------------------------------------
@@ -166,9 +169,6 @@ float BaseCamera::GetFeature(const Feature &feat) const {
 //
 
 void BaseCamera::Calibrate(cv::Mat const &img) {
-  // Parametre a placer ds yaml plus tard
-  const float limitGain = 480.f;
-  const float limitExposure = 80.f;
   const float msvUniform = 2.5f;
 
   cv::Mat l_hist, s_hist, luvImg, hsvImg;
@@ -191,12 +191,12 @@ void BaseCamera::Calibrate(cv::Mat const &img) {
   try {
     ROS_INFO_STREAM("MSV: " << msv);
     if (msv != msvUniform) {
-      if (GetExposureValue() > limitExposure && GetGainValue() > limitGain) {
+      if (GetExposureValue() > exposure_lim_ && GetGainValue() > gain_lim_) {
         double error = fabs(GetGammaValue() - current_features_.gamma);
         current_features_.gamma = UpdatePID(gammaPid_, error, GetGammaValue());
         SetGammaValue(current_features_.gamma);
         ROS_INFO_STREAM("Gamma: " << current_features_.gamma);
-      } else if (GetGainValue() > limitGain) {
+      } else if (GetGainValue() > gain_lim_) {
         double error = fabs(GetExposureValue() - current_features_.exposure);
         current_features_.exposure =
             UpdatePID(exposurePid_, error, GetExposureValue());

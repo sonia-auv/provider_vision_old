@@ -140,6 +140,8 @@ class BaseCamera : public BaseMedia {
 
   SPid gammaPid_, gainPid_, exposurePid_, saturationPid_;
 
+  double gain_lim_, exposure_lim_;
+
  private:
   //==========================================================================
   // P R I V A T E   M E T H O D S

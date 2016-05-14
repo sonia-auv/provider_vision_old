@@ -38,6 +38,8 @@
 /provider_vision/camera_parameters/front_guppy/saturation_iGain: 1
 /provider_vision/camera_parameters/front_guppy/saturation_pGain: 0.5
 /provider_vision/camera_parameters/front_guppy/saturation_dGain: 0.75
+/provider_vision/camera_parameters/front_guppy/gain_lim: 600.0
+/provider_vision/camera_parameters/front_guppy/exposure_lim: 190.0
 
 # Parameters for the Bottom Guppy Camera
 /provider_vision/camera_parameters/bottom_guppy/name: "Bottom Guppy"
@@ -77,6 +79,8 @@
 /provider_vision/camera_parameters/bottom_guppy/saturation_iGain: 1
 /provider_vision/camera_parameters/bottom_guppy/saturation_pGain: 0.5
 /provider_vision/camera_parameters/bottom_guppy/saturation_dGain: 0.75
+/provider_vision/camera_parameters/bottom_guppy/gain_lim: 480.0
+/provider_vision/camera_parameters/bottom_guppy/exposure_lim: 80.0
 
 
 # Parameters for the all other camera (default configurations)
