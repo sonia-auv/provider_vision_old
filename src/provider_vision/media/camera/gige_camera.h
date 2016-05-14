@@ -34,7 +34,7 @@ class GigeCamera : public BaseCamera {
   // P U B L I C   C / D T O R S
 
   explicit GigeCamera(GEV_CAMERA_HANDLE *camera,
-                        const CameraConfiguration &config);
+                      const CameraConfiguration &config);
 
   ~GigeCamera();
 
@@ -120,6 +120,10 @@ class GigeCamera : public BaseCamera {
 
   GEV_CAMERA_HANDLE *gige_camera_;
 
+  GenApi::CNodeMapRef *node_map_;
+
+  PUINT8 bufAddress[8];
+
   atlas::MilliTimer acquisition_timer_;
 };
 
@@ -153,5 +157,4 @@ inline GEV_CAMERA_HANDLE *GigeCamera::GetCameraPtr() const {
 
 }  // namespace provider_vision
 
-
-#endif //PROVIDER_VISION_GIGE_CAMERA_H
+#endif  // PROVIDER_VISION_GIGE_CAMERA_H

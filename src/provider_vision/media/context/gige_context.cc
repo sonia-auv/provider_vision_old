@@ -56,10 +56,6 @@ void GigeContext::InitContext(
     std::string name = driver_[i].username;
     for (auto const &cam_config : configurations) {
       if (cam_config.name_ == name) {
-        if (&camera == nullptr) {
-          throw std::runtime_error("Error creating the GigE camera");
-        }
-
         std::shared_ptr<GigeCamera> cam(new GigeCamera(&camera, cam_config));
 
         cam->Open();

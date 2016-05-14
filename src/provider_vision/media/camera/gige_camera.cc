@@ -39,9 +39,31 @@ void GigeCamera::Open() {
   std::lock_guard<std::mutex> guard(cam_access_);
 
   try {
-    //    GevOpenCamera(&driver_[i], GevExclusiveMode, &gige_camera_);
-    status = GevOpenCameraByName("bottom_gige", GevExclusiveMode, gige_camera_);
-    GEV_CAMERA_INFO *camera_info = GevGetCameraInfo(gige_camera_);
+    std::string str = config_.name_;
+    char *name = new char[str.size() + 1];
+    std::copy(str.begin(), str.end(), name);
+    name[str.size()] = '\0';  // don't forget the terminating 0
+    status = GevOpenCameraByName(name, GevExclusiveMode, gige_camera_);
+    // don't forget to free the string after finished using it
+    delete[] name;
+    if (status != 0) {
+      throw std::runtime_error(GevGetFormatString(status));
+    }
+    status = GevInitGenICamXMLFeatures(*gige_camera_, TRUE);
+
+    GEV_CAMERA_OPTIONS camOptions = {0};
+
+    // Adjust the camera interface options if desired (see the manual)
+    GevGetCameraInterfaceOptions(*gige_camera_, &camOptions);
+    camOptions.heartbeat_timeout_ms =
+        9000;  // For debugging (delay camera timeout while in debugger)
+
+    // Write the adjusted interface options back.
+    GevSetCameraInterfaceOptions(*gige_camera_, &camOptions);
+
+    node_map_ =
+        static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(*gige_camera_));
+
     if (status != 0) {
       throw std::runtime_error(GevGetFormatString(status));
     }
@@ -49,6 +71,33 @@ void GigeCamera::Open() {
     ROS_ERROR("%s", e.what());
     ROS_ERROR("Error opening GigE camera");
   }
+
+  UINT32 format = 0;
+  UINT32 width = 0;
+  UINT32 height = 0;
+
+  try {
+    GenApi::CIntegerPtr ptrIntNode = node_map_->_GetNode("Width");
+    width = (UINT32)ptrIntNode->GetValue();
+    ptrIntNode = node_map_->_GetNode("Height");
+    height = (UINT32)ptrIntNode->GetValue();
+    GenApi::CEnumerationPtr ptrEnumNode = node_map_->_GetNode("PixelFormat");
+    format = (UINT32)ptrEnumNode->GetIntValue();
+  }
+  // Catch all possible exceptions from a node access.
+  CATCH_GENAPI_ERROR(status);
+
+  UINT32 maxDepth = GetPixelSizeInBytes(format);
+
+  // Allocate image buffers
+  UINT32 size = maxDepth * width * height;
+  for (int i = 0; i < 8; i++) {
+    bufAddress[i] = (PUINT8)malloc(size);
+    memset(bufAddress[i], 0, size);
+  }
+  status = GevInitImageTransfer(*gige_camera_, Asynchronous, 8, bufAddress);
+
+  status_ = Status::OPEN;
 }
 
 //------------------------------------------------------------------------------
@@ -77,8 +126,11 @@ void GigeCamera::Close() {
 //------------------------------------------------------------------------------
 //
 void GigeCamera::SetStreamingModeOn() {
+  GEV_STATUS status;
   cam_access_.lock();
-  GEV_STATUS status = GevStartImageTransfer(gige_camera_, -1);
+
+  status = GevStartImageTransfer(*gige_camera_, -1);
+
   if (status == GEVLIB_ERROR_INVALID_HANDLE) {
     status_ = Status::ERROR;
     throw std::runtime_error("Invalid handle. Cannot set streaming mode on.");
@@ -108,14 +160,12 @@ void GigeCamera::SetStreamingModeOff() {
 //
 void GigeCamera::NextImage(cv::Mat &img) {
   GEV_BUFFER_OBJECT *frame = NULL;
-
   timer_access_.lock();
   acquisition_timer_.Sleep(3);
   acquisition_timer_.Start();
   timer_access_.unlock();
 
-  GEV_STATUS status = GevWaitForNextImage(gige_camera_, &frame, 1000);
-
+  GEV_STATUS status = GevWaitForNextImage(*gige_camera_, &frame, 1000);
   cam_access_.unlock();
   timer_access_.lock();
   atlas::MilliTimer::Sleep(3);
