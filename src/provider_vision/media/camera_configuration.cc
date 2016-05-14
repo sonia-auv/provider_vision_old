@@ -215,10 +215,8 @@ void CameraConfiguration::DeserializeConfiguration(const std::string &name)
                 saturation_pGain_);
   FindParameter("/camera_parameters/" + name + "/saturation_dGain",
                 saturation_dGain_);
-  FindParameter("/camera_parameters/" + name + "/gian_lim",
-                gain_lim_);
-  FindParameter("/camera_parameters/" + name + "/exposure_lim",
-                exposure_lim_);
+  FindParameter("/camera_parameters/" + name + "/gian_lim", gain_lim_);
+  FindParameter("/camera_parameters/" + name + "/exposure_lim", exposure_lim_);
 }
 
 //------------------------------------------------------------------------------
