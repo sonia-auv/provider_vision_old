@@ -62,6 +62,11 @@ class CameraConfiguration {
   double white_balance_blue_;
   double white_balance_red_;
   double saturation_;
+  int width_;
+  int height_;
+  int x_offset_;
+  int y_offset_;
+  int format_;
 
   //==========================================================================
   // P U B L I C   M E T H O D S

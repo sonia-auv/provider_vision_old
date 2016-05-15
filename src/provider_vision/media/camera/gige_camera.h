@@ -121,10 +121,6 @@ class GigeCamera : public BaseCamera {
 
   GEV_CAMERA_HANDLE gige_camera_;
 
-  GenApi::CNodeMapRef *node_map_;
-
-  PUINT8 bufAddress[8];
-
   atlas::MilliTimer acquisition_timer_;
 };
 

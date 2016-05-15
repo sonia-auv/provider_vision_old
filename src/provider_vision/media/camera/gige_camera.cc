@@ -50,19 +50,6 @@ void GigeCamera::Open() {
     }
     status = GevInitGenICamXMLFeatures(gige_camera_, TRUE);
 
-    GEV_CAMERA_OPTIONS camOptions = {0};
-
-    // Adjust the camera interface options if desired (see the manual)
-    GevGetCameraInterfaceOptions(gige_camera_, &camOptions);
-    camOptions.heartbeat_timeout_ms =
-        1000;  // For debugging (delay camera timeout while in debugger)
-
-    // Write the adjusted interface options back.
-    GevSetCameraInterfaceOptions(gige_camera_, &camOptions);
-
-    node_map_ =
-        static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
-
     if (status != 0) {
       throw std::runtime_error(GevGetFormatString(status));
     }
@@ -75,20 +62,29 @@ void GigeCamera::Open() {
   UINT32 height = 0;
   UINT32 x_offset = 0;
   UINT32 y_offset = 0;
-  GevSetFeatureValue(gige_camera_, "PixelFormat", sizeof(fMtBayerRG8), &format);
-  GevGetImageParameters(gige_camera_, &width, &height, &x_offset, &y_offset,
-                        &format);
+  try {
+    status = GevSetImageParameters(
+        gige_camera_, (UINT32)config_.width_, (UINT32)config_.height_,
+        (UINT32)config_.x_offset_, (UINT32)config_.y_offset_,
+        (UINT32)config_.format_);
+    status = GevGetImageParameters(gige_camera_, &width, &height, &x_offset,
+                                   &y_offset, &format);
 
-  UINT32 maxDepth = GetPixelSizeInBytes(format);
+    UINT32 maxDepth = GetPixelSizeInBytes(format);
 
-  // Allocate image buffers
-  UINT32 size = maxDepth * width * height;
-  for (int i = 0; i < 8; i++) {
-    bufAddress[i] = (PUINT8)malloc(size);
-    memset(bufAddress[i], 0, size);
+    // Allocate image buffers
+
+    PUINT8 bufAddress[DMA_BUFFER];
+
+    UINT32 size = maxDepth * width * height;
+    for (int i = 0; i < DMA_BUFFER; i++) {
+      bufAddress[i] = (PUINT8)malloc(size);
+      memset(bufAddress[i], 0, size);
+    }
+    status = GevInitImageTransfer(gige_camera_, Asynchronous, DMA_BUFFER,
+                                  bufAddress);
   }
-  GevInitImageTransfer(gige_camera_, Asynchronous, 8, bufAddress);
-
+  CATCH_GENAPI_ERROR(status);
   status_ = Status::OPEN;
 }
 
@@ -175,7 +171,6 @@ void GigeCamera::NextImage(cv::Mat &img) {
   if (frame != NULL) {
     try {
       cv::Mat tmp = cv::Mat(frame->h, frame->w, CV_8UC1, frame->address);
-      //       TODO: check which color space the image is and convert it
       //      undistord_matrix_.CorrectInmage(tmp, img);
       tmp.copyTo(img);
       cv::cvtColor(tmp, img, CV_BayerRG2RGB);

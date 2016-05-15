@@ -28,7 +28,12 @@ CameraConfiguration::CameraConfiguration(const ros::NodeHandle &nh,
       exposure_(0),
       white_balance_blue_(511.0),
       white_balance_red_(412.0),
-      nh_(nh) {
+      nh_(nh),
+      width_(480),
+      height_(640),
+      x_offset_(0),
+      y_offset_(0),
+      format_(17301513) {
   DeserializeConfiguration(name);
 }
 
@@ -49,6 +54,11 @@ CameraConfiguration::CameraConfiguration(const CameraConfiguration &rhs)
   white_balance_blue_ = rhs.white_balance_blue_;
   white_balance_red_ = rhs.white_balance_red_;
   nh_ = rhs.nh_;
+  width_ = rhs.width_;
+  height_ = rhs.height_;
+  x_offset_ = rhs.x_offset_;
+  y_offset_ = rhs.y_offset_;
+  format_ = rhs.format_;
 }
 
 //------------------------------------------------------------------------------
@@ -68,6 +78,11 @@ CameraConfiguration::CameraConfiguration(CameraConfiguration &&rhs)
   white_balance_blue_ = rhs.white_balance_blue_;
   white_balance_red_ = rhs.white_balance_red_;
   nh_ = rhs.nh_;
+  width_ = rhs.width_;
+  height_ = rhs.height_;
+  x_offset_ = rhs.x_offset_;
+  y_offset_ = rhs.y_offset_;
+  format_ = rhs.format_;
 }
 
 CameraConfiguration::~CameraConfiguration() ATLAS_NOEXCEPT {}
@@ -99,6 +114,11 @@ void CameraConfiguration::DeserializeConfiguration(const std::string &name)
   FindParameter("/camera_parameters/" + name + "/white_balance_red",
                 white_balance_red_);
   FindParameter("/camera_parameters/" + name + "/saturation", saturation_);
+  FindParameter("/camera_parameters/" + name + "/width", width_);
+  FindParameter("/camera_parameters/" + name + "/height", height_);
+  FindParameter("/camera_parameters/" + name + "/x_offset", x_offset_);
+  FindParameter("/camera_parameters/" + name + "/y_offset", y_offset_);
+  FindParameter("/camera_parameters/" + name + "/format", format_);
 }
 
 //------------------------------------------------------------------------------

@@ -45,6 +45,11 @@
 /provider_vision/camera_parameters/bottom_gige/white_balance_red: 568.0
 /provider_vision/camera_parameters/bottom_gige/white_balance_blue: 381.0
 /provider_vision/camera_parameters/bottom_gige/saturation: 0
+/provider_vision/camera_parameters/bottom_gige/width: 968
+/provider_vision/camera_parameters/bottom_gige/height: 608
+/provider_vision/camera_parameters/bottom_gige/x_offset: 484
+/provider_vision/camera_parameters/bottom_gige/y_offset: 304
+/provider_vision/camera_parameters/bottom_gige/format: 17301513
 
 # Parameters for the all other camera (default configurations)
 /provider_vision/camera_parameters/default/name: "Default Camera"
