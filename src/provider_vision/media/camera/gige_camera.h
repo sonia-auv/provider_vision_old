@@ -33,8 +33,7 @@ class GigeCamera : public BaseCamera {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  explicit GigeCamera(GEV_CAMERA_HANDLE *camera,
-                      const CameraConfiguration &config);
+  explicit GigeCamera(const CameraConfiguration &config);
 
   ~GigeCamera();
 
@@ -67,7 +66,7 @@ class GigeCamera : public BaseCamera {
   double GetAcquistionTimerValue() const;
 
   // SHOULD BE USE ONLY BY DRIVER WITH CAUTION
-  GEV_CAMERA_HANDLE *GetCameraPtr() const;
+  GEV_CAMERA_HANDLE *GetCameraPtr();
 
  protected:
   float GetGainValue() const override;
@@ -118,7 +117,7 @@ class GigeCamera : public BaseCamera {
 
   mutable std::mutex timer_access_;
 
-  GEV_CAMERA_HANDLE *gige_camera_;
+  GEV_CAMERA_HANDLE gige_camera_;
 
   GenApi::CNodeMapRef *node_map_;
 
@@ -151,9 +150,7 @@ inline double GigeCamera::GetAcquistionTimerValue() const {
 
 //------------------------------------------------------------------------------
 //
-inline GEV_CAMERA_HANDLE *GigeCamera::GetCameraPtr() const {
-  return gige_camera_;
-}
+inline GEV_CAMERA_HANDLE *GigeCamera::GetCameraPtr() { return &gige_camera_; }
 
 }  // namespace provider_vision
 
