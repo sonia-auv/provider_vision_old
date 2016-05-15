@@ -110,6 +110,8 @@ class GigeCamera : public BaseCamera {
   // enum to float
   float ConvertFramerateToFloat(uint32_t val) const;
 
+  void balance_white(cv::Mat mat);
+
   //==========================================================================
   // P R I V A T E   M E M B E R S
 

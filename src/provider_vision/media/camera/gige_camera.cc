@@ -70,21 +70,14 @@ void GigeCamera::Open() {
     ROS_ERROR("%s", e.what());
     ROS_ERROR("Error opening GigE camera");
   }
-
-  UINT32 format = 0;
+  UINT32 format = fMtBayerRG8;
   UINT32 width = 0;
   UINT32 height = 0;
-
-  try {
-    GenApi::CIntegerPtr ptrIntNode = node_map_->_GetNode("Width");
-    width = (UINT32)ptrIntNode->GetValue();
-    ptrIntNode = node_map_->_GetNode("Height");
-    height = (UINT32)ptrIntNode->GetValue();
-    GenApi::CEnumerationPtr ptrEnumNode = node_map_->_GetNode("PixelFormat");
-    format = (UINT32)ptrEnumNode->GetIntValue();
-  }
-  // Catch all possible exceptions from a node access.
-  CATCH_GENAPI_ERROR(status);
+  UINT32 x_offset = 0;
+  UINT32 y_offset = 0;
+  GevSetFeatureValue(gige_camera_, "PixelFormat", sizeof(fMtBayerRG8), &format);
+  GevGetImageParameters(gige_camera_, &width, &height, &x_offset, &y_offset,
+                        &format);
 
   UINT32 maxDepth = GetPixelSizeInBytes(format);
 
@@ -94,10 +87,7 @@ void GigeCamera::Open() {
     bufAddress[i] = (PUINT8)malloc(size);
     memset(bufAddress[i], 0, size);
   }
-  status = GevInitImageTransfer(gige_camera_, Asynchronous, 8, bufAddress);
-  //  status = GevStartImageTransfer(gige_camera_, -1);
-  //  GEV_BUFFER_OBJECT *frame = NULL;
-  //  status = GevWaitForNextImage(gige_camera_, &frame, 1000);
+  GevInitImageTransfer(gige_camera_, Asynchronous, 8, bufAddress);
 
   status_ = Status::OPEN;
 }
@@ -155,6 +145,10 @@ void GigeCamera::SetStreamingModeOff() {
     throw std::runtime_error(
         "Invalid handle. The camera could not be stopped.");
   }
+
+  status_ = Status::OPEN;
+  // Here stopping timer just in case... Should already be closed....
+  std::lock_guard<std::mutex> guard2(timer_access_);
 }
 
 //------------------------------------------------------------------------------
@@ -167,7 +161,6 @@ void GigeCamera::NextImage(cv::Mat &img) {
   timer_access_.unlock();
 
   cam_access_.lock();
-  auto camera = gige_camera_;
   GEV_STATUS status = GevWaitForNextImage(gige_camera_, &frame, 1000);
   cam_access_.unlock();
   timer_access_.lock();
@@ -181,10 +174,12 @@ void GigeCamera::NextImage(cv::Mat &img) {
 
   if (frame != NULL) {
     try {
-      cv::Mat tmp = cv::Mat(frame->h, frame->w, CV_8UC3, frame->address);
+      cv::Mat tmp = cv::Mat(frame->h, frame->w, CV_8UC1, frame->address);
       //       TODO: check which color space the image is and convert it
       //      undistord_matrix_.CorrectInmage(tmp, img);
       tmp.copyTo(img);
+      cv::cvtColor(tmp, img, CV_BayerRG2RGB);
+      balance_white(img);
     } catch (cv::Exception &e) {
       status_ = Status::ERROR;
       throw;
@@ -300,4 +295,46 @@ void GigeCamera::SetWhiteBalanceRedValue(float value) {}
 void GigeCamera::SetWhiteBalanceBlueValue(float value) {}
 
 float GigeCamera::GetWhiteBalanceBlue() const {}
+
+void GigeCamera::balance_white(cv::Mat mat) {
+  double discard_ratio = 0.05;
+  int hists[3][256];
+  memset(hists, 0, 3 * 256 * sizeof(int));
+
+  for (int y = 0; y < mat.rows; ++y) {
+    uchar *ptr = mat.ptr<uchar>(y);
+    for (int x = 0; x < mat.cols; ++x) {
+      for (int j = 0; j < 3; ++j) {
+        hists[j][ptr[x * 3 + j]] += 1;
+      }
+    }
+  }
+
+  // cumulative hist
+  int total = mat.cols * mat.rows;
+  int vmin[3], vmax[3];
+  for (int i = 0; i < 3; ++i) {
+    for (int j = 0; j < 255; ++j) {
+      hists[i][j + 1] += hists[i][j];
+    }
+    vmin[i] = 0;
+    vmax[i] = 255;
+    while (hists[i][vmin[i]] < discard_ratio * total) vmin[i] += 1;
+    while (hists[i][vmax[i]] > (1 - discard_ratio) * total) vmax[i] -= 1;
+    if (vmax[i] < 255 - 1) vmax[i] += 1;
+  }
+
+  for (int y = 0; y < mat.rows; ++y) {
+    uchar *ptr = mat.ptr<uchar>(y);
+    for (int x = 0; x < mat.cols; ++x) {
+      for (int j = 0; j < 3; ++j) {
+        int val = ptr[x * 3 + j];
+        if (val < vmin[j]) val = vmin[j];
+        if (val > vmax[j]) val = vmax[j];
+        ptr[x * 3 + j] =
+            static_cast<uchar>((val - vmin[j]) * 255.0 / (vmax[j] - vmin[j]));
+      }
+    }
+  }
+}
 }
