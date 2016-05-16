@@ -224,8 +224,7 @@ BaseContext::Ptr MediaManager::GetContextFromMedia(
 //
 BaseCamera::Feature MediaManager::GetFeatureFromName(
     const std::string &name) const {
-  if (name == "SHUT"
-      "TER_AUTO") {
+  if (name == "SHUTTER_AUTO") {
     return BaseCamera::Feature::SHUTTER_AUTO;
   } else if (name == "SHUTTER") {
     return BaseCamera::Feature::SHUTTER;

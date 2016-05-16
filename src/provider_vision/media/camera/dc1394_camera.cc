@@ -173,7 +173,7 @@ void DC1394Camera::NextImage(cv::Mat &img) {
 
 //------------------------------------------------------------------------------
 //
-float DC1394Camera::GetGainValue() const {
+double DC1394Camera::GetGainValue() const {
   std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
   uint32_t value;
@@ -184,12 +184,12 @@ float DC1394Camera::GetGainValue() const {
                              std::to_string(static_cast<int>(error)));
   }
 
-  return static_cast<float>(value);
+  return static_cast<double>(value);
 }
 
 //------------------------------------------------------------------------------
 //
-float DC1394Camera::GetGammaValue() const {
+double DC1394Camera::GetGammaValue() const {
   std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
 
@@ -202,12 +202,12 @@ float DC1394Camera::GetGammaValue() const {
                              std::to_string(static_cast<int>(error)));
   }
 
-  return static_cast<float>(value);
+  return static_cast<double>(value);
 }
 
 //------------------------------------------------------------------------------
 //
-float DC1394Camera::GetExposureValue() const {
+double DC1394Camera::GetExposureValue() const {
   std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
   uint32_t value;
@@ -219,12 +219,12 @@ float DC1394Camera::GetExposureValue() const {
                              std::to_string(static_cast<int>(error)));
   }
 
-  return static_cast<float>(value);
+  return static_cast<double>(value);
 }
 
 //------------------------------------------------------------------------------
 //
-float DC1394Camera::GetSaturationValue() const {
+double DC1394Camera::GetSaturationValue() const {
   std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
   uint32_t value;
@@ -237,7 +237,7 @@ float DC1394Camera::GetSaturationValue() const {
         std::to_string(static_cast<int>(error)));
   }
 
-  return static_cast<float>(value);
+  return static_cast<double>(value);
 }
 
 //------------------------------------------------------------------------------
@@ -271,7 +271,7 @@ void DC1394Camera::SetGainManual() {
 
 //------------------------------------------------------------------------------
 //
-void DC1394Camera::SetGainValue(float value) {
+void DC1394Camera::SetGainValue(double value) {
   std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
   error = dc1394_feature_set_value(dc1394_camera_, DC1394_FEATURE_GAIN, value);
@@ -284,7 +284,7 @@ void DC1394Camera::SetGainValue(float value) {
 
 //------------------------------------------------------------------------------
 //
-void DC1394Camera::SetGammaValue(float value) {
+void DC1394Camera::SetGammaValue(double value) {
   std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
   error = dc1394_feature_set_value(dc1394_camera_, DC1394_FEATURE_GAMMA, value);
@@ -297,7 +297,7 @@ void DC1394Camera::SetGammaValue(float value) {
 
 //------------------------------------------------------------------------------
 //
-void DC1394Camera::SetExposureValue(float value) {
+void DC1394Camera::SetExposureValue(double value) {
   std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
   error =
@@ -311,7 +311,7 @@ void DC1394Camera::SetExposureValue(float value) {
 
 //------------------------------------------------------------------------------
 //
-void DC1394Camera::SetSaturationValue(float value) {
+void DC1394Camera::SetSaturationValue(double value) {
   std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
   error = dc1394_feature_set_value(dc1394_camera_, DC1394_FEATURE_SATURATION,
@@ -325,7 +325,7 @@ void DC1394Camera::SetSaturationValue(float value) {
 
 //------------------------------------------------------------------------------
 //
-void DC1394Camera::SetShutterValue(float value) {
+void DC1394Camera::SetShutterValue(double value) {
   std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
   error =
@@ -369,7 +369,7 @@ void DC1394Camera::SetShutterManual() {
 
 //------------------------------------------------------------------------------
 //
-void DC1394Camera::SetFrameRateValue(float value) {
+void DC1394Camera::SetFrameRateValue(double value) {
   std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
   error = dc1394_feature_set_value(dc1394_camera_, DC1394_FEATURE_FRAME_RATE,
@@ -388,7 +388,7 @@ void DC1394Camera::SetFrameRateValue(float value) {
 
 //------------------------------------------------------------------------------
 //
-float DC1394Camera::GetShutterValue() const {
+double DC1394Camera::GetShutterValue() const {
   std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
   uint32_t value;
@@ -400,12 +400,12 @@ float DC1394Camera::GetShutterValue() const {
                              std::to_string(static_cast<int>(error)));
   }
 
-  return static_cast<float>(value);
+  return static_cast<double>(value);
 }
 
 //------------------------------------------------------------------------------
 //
-float DC1394Camera::GetFrameRateValue() const {
+double DC1394Camera::GetFrameRateValue() const {
   std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
   uint32_t value;
@@ -418,7 +418,7 @@ float DC1394Camera::GetFrameRateValue() const {
         std::to_string(static_cast<int>(error)));
   }
 
-  return static_cast<float>(value);
+  return static_cast<double>(value);
 }
 
 //------------------------------------------------------------------------------
@@ -453,7 +453,7 @@ void DC1394Camera::SetWhiteBalanceManual() {
 
 //------------------------------------------------------------------------------
 //
-float DC1394Camera::GetWhiteBalanceMode() const {
+double DC1394Camera::GetWhiteBalanceMode() const {
   std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
   dc1394feature_mode_t mode;
@@ -477,7 +477,7 @@ float DC1394Camera::GetWhiteBalanceMode() const {
 
 //------------------------------------------------------------------------------
 //
-float DC1394Camera::GetWhiteBalanceRed() const {
+double DC1394Camera::GetWhiteBalanceRed() const {
   std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
   uint32_t blue, red;
@@ -489,15 +489,15 @@ float DC1394Camera::GetWhiteBalanceRed() const {
         std::to_string(static_cast<int>(error)));
   }
 
-  return static_cast<float>(red);
+  return static_cast<double>(red);
 }
 
 //------------------------------------------------------------------------------
 //
-void DC1394Camera::SetWhiteBalanceRedValue(float value) {
+void DC1394Camera::SetWhiteBalanceRedValue(double value) {
   dc1394error_t error;
   try {
-    float blue = GetWhiteBalanceBlue();
+    double blue = GetWhiteBalanceBlue();
     std::lock_guard<std::mutex> guard(cam_access_);
     error = dc1394_feature_whitebalance_set_value(dc1394_camera_,
                                                   static_cast<uint32_t>(blue),
@@ -513,10 +513,10 @@ void DC1394Camera::SetWhiteBalanceRedValue(float value) {
   }
 }
 
-void DC1394Camera::SetWhiteBalanceBlueValue(float value) {
+void DC1394Camera::SetWhiteBalanceBlueValue(double value) {
   dc1394error_t error;
   try {
-    float red = GetWhiteBalanceBlue();
+    double red = GetWhiteBalanceBlue();
     std::lock_guard<std::mutex> guard(cam_access_);
 
     error = dc1394_feature_whitebalance_set_value(dc1394_camera_,
@@ -535,7 +535,7 @@ void DC1394Camera::SetWhiteBalanceBlueValue(float value) {
 
 //------------------------------------------------------------------------------
 //
-float DC1394Camera::GetWhiteBalanceBlue() const {
+double DC1394Camera::GetWhiteBalanceBlue() const {
   std::lock_guard<std::mutex> guard(cam_access_);
   dc1394error_t error;
   uint32_t blue, red;
@@ -548,7 +548,7 @@ float DC1394Camera::GetWhiteBalanceBlue() const {
         std::to_string(static_cast<int>(error)));
   }
 
-  return static_cast<float>(blue);
+  return static_cast<double>(blue);
 }
 
 //------------------------------------------------------------------------------
@@ -567,7 +567,7 @@ uint32_t DC1394Camera::ConvertFramerateToEnum(float val) const {
 
 //------------------------------------------------------------------------------
 //
-float DC1394Camera::GetShutterMode() const {
+double DC1394Camera::GetShutterMode() const {
   dc1394error_t error;
   dc1394feature_mode_t mode;
   error =

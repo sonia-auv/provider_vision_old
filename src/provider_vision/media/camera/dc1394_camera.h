@@ -75,36 +75,36 @@ class DC1394Camera : public BaseCamera {
   dc1394camera_t *GetCameraPtr() const;
 
  protected:
-  float GetGainValue() const override;
+  double GetGainValue() const override;
   void SetGainAuto() override;
   void SetGainManual() override;
-  void SetGainValue(float value) override;
+  void SetGainValue(double value) override;
 
-  float GetGammaValue() const override;
-  void SetGammaValue(float value) override;
+  double GetGammaValue() const override;
+  void SetGammaValue(double value) override;
 
-  float GetExposureValue() const override;
-  void SetExposureValue(float value) override;
+  double GetExposureValue() const override;
+  void SetExposureValue(double value) override;
 
-  float GetSaturationValue() const override;
-  void SetSaturationValue(float value) override;
+  double GetSaturationValue() const override;
+  void SetSaturationValue(double value) override;
 
-  void SetShutterValue(float value) override;
+  void SetShutterValue(double value) override;
   void SetShutterAuto() override;
   void SetShutterManual() override;
-  float GetShutterMode() const override;
-  float GetShutterValue() const override;
+  double GetShutterMode() const override;
+  double GetShutterValue() const override;
 
-  void SetFrameRateValue(float value) override;
-  float GetFrameRateValue() const override;
+  void SetFrameRateValue(double value) override;
+  double GetFrameRateValue() const override;
 
   void SetWhiteBalanceAuto() override;
   void SetWhiteBalanceManual() override;
-  float GetWhiteBalanceMode() const override;
-  void SetWhiteBalanceRedValue(float value) override;
-  void SetWhiteBalanceBlueValue(float value) override;
-  float GetWhiteBalanceRed() const override;
-  float GetWhiteBalanceBlue() const override;
+  double GetWhiteBalanceMode() const override;
+  void SetWhiteBalanceRedValue(double value) override;
+  void SetWhiteBalanceBlueValue(double value) override;
+  double GetWhiteBalanceRed() const override;
+  double GetWhiteBalanceBlue() const override;
 
  private:
   //==========================================================================

@@ -27,37 +27,37 @@ BaseCamera::BaseCamera(const CameraConfiguration &configuration)
   current_features_.gamma = configuration.gamma_;
   current_features_.saturation = configuration.saturation_;
 
-  gammaPid_.dState = configuration.gamma_;
-  gammaPid_.iState = configuration.gamma_iState_;
-  gammaPid_.iMin = configuration.gamma_iMin_;
-  gammaPid_.iMax = configuration.gamma_iMax_;
-  gammaPid_.iGain = configuration.gamma_iGain_;
-  gammaPid_.pGain = configuration.gamma_pGain_;
-  gammaPid_.dGain = configuration.gamma_dGain_;
+  gamma_pid_.d_state = configuration.gamma_;
+  gamma_pid_.i_state = configuration.gamma_i_state_;
+  gamma_pid_.i_min = configuration.gamma_i_min_;
+  gamma_pid_.i_max = configuration.gamma_i_max_;
+  gamma_pid_.i_gain = configuration.gamma_i_gain_;
+  gamma_pid_.p_gain = configuration.gamma_p_gain_;
+  gamma_pid_.d_gain = configuration.gamma_d_gain_;
 
-  gainPid_.dState = configuration.gain_;
-  gainPid_.iState = configuration.gain_iState_;
-  gainPid_.iMin = configuration.gain_iMin_;
-  gainPid_.iMax = configuration.gain_iMax_;
-  gainPid_.iGain = configuration.gain_iGain_;
-  gainPid_.pGain = configuration.gain_pGain_;
-  gainPid_.dGain = configuration.gain_dGain_;
+  gain_pid_.d_state = configuration.gain_;
+  gain_pid_.i_state = configuration.gain_i_state_;
+  gain_pid_.i_min = configuration.gain_i_min_;
+  gain_pid_.i_max = configuration.gain_i_max_;
+  gain_pid_.i_gain = configuration.gain_i_gain_;
+  gain_pid_.p_gain = configuration.gain_p_gain_;
+  gain_pid_.d_gain = configuration.gain_d_gain_;
 
-  exposurePid_.dState = configuration.exposure_;
-  exposurePid_.iState = configuration.exposure_iState_;
-  exposurePid_.iMin = configuration.exposure_iMin_;
-  exposurePid_.iMax = configuration.exposure_iMax_;
-  exposurePid_.iGain = configuration.exposure_iGain_;
-  exposurePid_.pGain = configuration.exposure_pGain_;
-  exposurePid_.dGain = configuration.exposure_dGain_;
+  exposure_pid_.d_state = configuration.exposure_;
+  exposure_pid_.i_state = configuration.exposure_i_state_;
+  exposure_pid_.i_min = configuration.exposure_i_min_;
+  exposure_pid_.i_max = configuration.exposure_i_max_;
+  exposure_pid_.i_gain = configuration.exposure_i_gain_;
+  exposure_pid_.p_gain = configuration.exposure_p_gain_;
+  exposure_pid_.d_gain = configuration.exposure_d_gain_;
 
-  saturationPid_.dState = configuration.saturation_;
-  saturationPid_.iState = configuration.saturation_iState_;
-  saturationPid_.iMin = configuration.saturation_iMin_;
-  saturationPid_.iMax = configuration.saturation_iMax_;
-  saturationPid_.iGain = configuration.saturation_iGain_;
-  saturationPid_.pGain = configuration.saturation_pGain_;
-  saturationPid_.dGain = configuration.saturation_dGain_;
+  saturation_pid_.d_state = configuration.saturation_;
+  saturation_pid_.i_state = configuration.saturation_i_state_;
+  saturation_pid_.i_min = configuration.saturation_i_min_;
+  saturation_pid_.i_max = configuration.saturation_i_max_;
+  saturation_pid_.i_gain = configuration.saturation_i_gain_;
+  saturation_pid_.p_gain = configuration.saturation_p_gain_;
+  saturation_pid_.d_gain = configuration.saturation_d_gain_;
 
   gain_lim_ = configuration.gain_lim_;
   exposure_lim_ = configuration.exposure_lim_;
@@ -72,7 +72,7 @@ BaseCamera::~BaseCamera() {}
 
 //------------------------------------------------------------------------------
 //
-void BaseCamera::SetFeature(const Feature &feat, float value) {
+void BaseCamera::SetFeature(const Feature &feat, double value) {
   std::stringstream ss;
   ss << std::hex << config_.guid_ << " " << GetName();
   try {
@@ -128,7 +128,7 @@ void BaseCamera::SetFeature(const Feature &feat, float value) {
 
 //------------------------------------------------------------------------------
 //
-float BaseCamera::GetFeature(const Feature &feat) const {
+double BaseCamera::GetFeature(const Feature &feat) const {
   try {
     switch (feat) {
       case Feature::SHUTTER:
@@ -169,58 +169,41 @@ float BaseCamera::GetFeature(const Feature &feat) const {
 //
 
 void BaseCamera::Calibrate(cv::Mat const &img) {
-  const float msvUniform = 2.5f;
+  auto l_hist = CalculateLuminanceHistogram(img);
 
-  cv::Mat l_hist, s_hist, luvImg, hsvImg;
-
-  cv::cvtColor(img, luvImg, CV_RGB2Luv);
-
-  std::vector<cv::Mat> luv_planes, hsv_planes;
-  cv::split(luvImg, luv_planes);
-
-  int histSize = 256;
-  float range[] = {0, 256};
-  const float *histRange = {range};
-
-  bool uniform = true, accumulate = false;
-
-  cv::calcHist(&luv_planes[0], 1, 0, cv::Mat(), l_hist, 1, &histSize,
-               &histRange, uniform, accumulate);
-
-  float msv = MSV(l_hist, 5);
+  float msv = CalculateMSV(l_hist, 5);
   try {
     ROS_INFO_STREAM("MSV: " << msv);
+
+    const float msvUniform = 2.5f;
+
     if (msv != msvUniform) {
       if (GetExposureValue() > exposure_lim_ && GetGainValue() > gain_lim_) {
         double error = fabs(GetGammaValue() - current_features_.gamma);
-        current_features_.gamma = UpdatePID(gammaPid_, error, GetGammaValue());
+        current_features_.gamma = UpdatePID(gamma_pid_, error, GetGammaValue());
         SetGammaValue(current_features_.gamma);
         ROS_INFO_STREAM("Gamma: " << current_features_.gamma);
       } else if (GetGainValue() > gain_lim_) {
         double error = fabs(GetExposureValue() - current_features_.exposure);
         current_features_.exposure =
-            UpdatePID(exposurePid_, error, GetExposureValue());
+            UpdatePID(exposure_pid_, error, GetExposureValue());
         SetExposureValue(current_features_.exposure);
         ROS_INFO_STREAM("Exposure: " << current_features_.exposure);
       } else {
         double error = fabs(GetGainValue() - current_features_.gain);
-        current_features_.gain = UpdatePID(gainPid_, error, GetGainValue());
+        current_features_.gain = UpdatePID(gain_pid_, error, GetGainValue());
         SetGainValue(current_features_.gain);
         ROS_INFO_STREAM("Gain: " << current_features_.gain);
       }
     }
     if (msv > 2 && msv < 3) {
-      cv::cvtColor(img, hsvImg, CV_RGB2HSV_FULL);
-      cv::split(hsvImg, hsv_planes);
-      cv::calcHist(&hsv_planes[1], 1, 0, cv::Mat(), s_hist, 1, &histSize,
-                   &histRange, uniform, accumulate);
-
-      msv = MSV(s_hist, 5);
+      auto s_hist = CalculateSaturationHistogram(img);
+      msv = CalculateMSV(s_hist, 5);
       if (msv != msvUniform) {
         double error =
             fabs(GetSaturationValue() - current_features_.saturation);
         current_features_.saturation =
-            UpdatePID(saturationPid_, error, GetSaturationValue());
+            UpdatePID(saturation_pid_, error, GetSaturationValue());
         SetSaturationValue(current_features_.saturation);
         ROS_INFO_STREAM("Saturation: " << current_features_.saturation);
       }
@@ -232,8 +215,53 @@ void BaseCamera::Calibrate(cv::Mat const &img) {
 
 //------------------------------------------------------------------------------
 //
+cv::Mat BaseCamera::CalculateLuminanceHistogram(const cv::Mat &img) const {
+  static const int hist_size{256};
+  static const float range[] = {0, 255};
+  static const float *histRange{range};
 
-float BaseCamera::MSV(const cv::Mat &img, int nbrRegion) {
+  // Get the LUV image from the RGB image in input parameter.
+  cv::Mat luvImg;
+  cvtColor(img, luvImg, CV_RGB2Luv);
+
+  // Splitting the LUV Image into 3 channels in the luv_planes.
+  std::vector<cv::Mat> luv_planes;
+  cv::split(luvImg, luv_planes);
+
+  // Calculate the histogram of luminance by sending the first element of
+  // the plane (the L channel)
+  cv::Mat l_hist;
+  cv::calcHist(&luv_planes[0], 1, 0, cv::Mat(), l_hist, 1, &hist_size,
+               &histRange, true, false);
+  return l_hist;
+}
+
+//------------------------------------------------------------------------------
+//
+cv::Mat BaseCamera::CalculateSaturationHistogram(const cv::Mat &img) const {
+  static const int hist_size{256};
+  static const float range[] = {0, 255};
+  static const float *histRange{range};
+
+  // Get the LUV image from the RGB image in input parameter.
+  cv::Mat hsv_img;
+  cvtColor(img, hsv_img, CV_RGB2HSV_FULL);
+
+  // Splitting the LUV Image into 3 channels in the luv_planes.
+  std::vector<cv::Mat> hsv_planes;
+  cv::split(hsv_img, hsv_planes);
+
+  // Calculate the histogram of saturation by sending the first element of
+  // the plane (the L channel)
+  cv::Mat hist;
+  cv::calcHist(&hsv_planes[1], 1, 0, cv::Mat(), hist, 1, &hist_size, &histRange,
+               true, false);
+  return hist;
+}
+
+//------------------------------------------------------------------------------
+//
+float BaseCamera::CalculateMSV(const cv::Mat &img, int nbrRegion) {
   float num = 0.f, deno = 0.f;
   int inter = std::ceil(256 / nbrRegion);
   for (int j = 0; j < nbrRegion; ++j) {
@@ -251,19 +279,19 @@ float BaseCamera::MSV(const cv::Mat &img, int nbrRegion) {
 //
 double BaseCamera::UpdatePID(SPid &pid, double error,
                              double position) ATLAS_NOEXCEPT {
-  double pTerm = 0, dTerm = 0, iTerm = 0;
-  pTerm = pid.pGain * error;
+  double p_term = 0, d_term = 0, i_term = 0;
+  p_term = pid.p_gain * error;
   // calculate the proportional term
   // calculate the integral state with appropriate limiting
-  pid.iState += error;
-  if (pid.iState > pid.iMax)
-    pid.iState = pid.iMax;
-  else if (pid.iState < pid.iMin)
-    pid.iState = pid.iMin;
-  iTerm = pid.iGain * pid.iState;  // calculate the integral term
-  dTerm = pid.dGain * fabs(pid.dState - position);
-  pid.dState = position;
-  return pTerm + dTerm + iTerm;
+  pid.i_state += error;
+  if (pid.i_state > pid.i_max)
+    pid.i_state = pid.i_max;
+  else if (pid.i_state < pid.i_min)
+    pid.i_state = pid.i_min;
+  i_term = pid.i_gain * pid.i_state;  // calculate the integral term
+  d_term = pid.d_gain * fabs(pid.d_state - position);
+  pid.d_state = position;
+  return p_term + d_term + i_term;
 }
 
 }  // namespace provider_vision

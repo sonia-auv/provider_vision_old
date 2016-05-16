@@ -28,32 +28,32 @@ CameraConfiguration::CameraConfiguration(const ros::NodeHandle &nh,
       white_balance_blue_(511.0),
       white_balance_red_(412.0),
       saturation_(0),
-      gamma_iState_(0),
-      gamma_iMin_(0),
-      gamma_iMax_(0),
-      gamma_iGain_(0),
-      gamma_pGain_(0),
-      gamma_dGain_(0),
-      gain_iState_(0),
-      gain_iMin_(0),
-      gain_iMax_(0),
-      gain_iGain_(0),
-      gain_pGain_(0),
-      gain_dGain_(0),
-      exposure_iState_(0),
-      exposure_iMin_(0),
-      exposure_iMax_(0),
-      exposure_iGain_(0),
-      exposure_pGain_(0),
-      exposure_dGain_(0),
-      saturation_iState_(0),
-      saturation_iMin_(0),
-      saturation_iMax_(0),
-      saturation_iGain_(0),
-      saturation_pGain_(0),
-      saturation_dGain_(0),
-      gain_lim_(0),
-      exposure_lim_(0),
+      gamma_i_state_(0),
+      gamma_i_min_(0),
+      gamma_i_max_(0),
+      gamma_i_gain_(0),
+      gamma_p_gain_(0),
+      gamma_d_gain_(0),
+      gain_i_state_(0),
+      gain_i_min_(0),
+      gain_i_max_(0),
+      gain_i_gain_(0),
+      gain_p_gain_(0),
+      gain_d_gain_(0),
+      exposure_i_state_(0),
+      exposure_i_min_(0),
+      exposure_i_max_(0),
+      exposure_i_gain_(0),
+      exposure_p_gain_(0),
+      exposure_d_gain_(0),
+      saturation_i_state_(0),
+      saturation_i_min_(0),
+      saturation_i_max_(0),
+      saturation_i_gain_(0),
+      saturation_p_gain_(0),
+      saturation_d_gain_(0),
+gain_lim_(0),
+exposure_lim_(0),
       nh_(nh) {
   DeserializeConfiguration(name);
 }
@@ -75,30 +75,30 @@ CameraConfiguration::CameraConfiguration(const CameraConfiguration &rhs)
   white_balance_blue_ = rhs.white_balance_blue_;
   white_balance_red_ = rhs.white_balance_red_;
   saturation_ = rhs.saturation_;
-  gamma_iState_ = rhs.gamma_iState_;
-  gamma_iMax_ = rhs.gamma_iMax_;
-  gamma_iMin_ = rhs.gamma_iMin_;
-  gamma_iGain_ = rhs.gamma_iGain_;
-  gamma_dGain_ = rhs.gamma_dGain_;
-  gamma_pGain_ = rhs.gamma_pGain_;
-  gain_iState_ = rhs.gain_iState_;
-  gain_iMax_ = rhs.gain_iMax_;
-  gain_iMin_ = rhs.gain_iMin_;
-  gain_iGain_ = rhs.gain_iGain_;
-  gain_dGain_ = rhs.gain_dGain_;
-  gain_pGain_ = rhs.gain_pGain_;
-  exposure_iState_ = rhs.exposure_iState_;
-  exposure_iMax_ = rhs.exposure_iMax_;
-  exposure_iMin_ = rhs.exposure_iMin_;
-  exposure_iGain_ = rhs.exposure_iGain_;
-  exposure_dGain_ = rhs.exposure_dGain_;
-  exposure_pGain_ = rhs.exposure_pGain_;
-  saturation_iState_ = rhs.saturation_iState_;
-  saturation_iMax_ = rhs.saturation_iMax_;
-  saturation_iMin_ = rhs.saturation_iMin_;
-  saturation_iGain_ = rhs.saturation_iGain_;
-  saturation_dGain_ = rhs.saturation_dGain_;
-  saturation_pGain_ = rhs.saturation_pGain_;
+  gamma_i_state_ = rhs.gamma_i_state_;
+  gamma_i_max_ = rhs.gamma_i_max_;
+  gamma_i_min_ = rhs.gamma_i_min_;
+  gamma_i_gain_ = rhs.gamma_i_gain_;
+  gamma_d_gain_ = rhs.gamma_d_gain_;
+  gamma_p_gain_ = rhs.gamma_p_gain_;
+  gain_i_state_ = rhs.gain_i_state_;
+  gain_i_max_ = rhs.gain_i_max_;
+  gain_i_min_ = rhs.gain_i_min_;
+  gain_i_gain_ = rhs.gain_i_gain_;
+  gain_d_gain_ = rhs.gain_d_gain_;
+  gain_p_gain_ = rhs.gain_p_gain_;
+  exposure_i_state_ = rhs.exposure_i_state_;
+  exposure_i_max_ = rhs.exposure_i_max_;
+  exposure_i_min_ = rhs.exposure_i_min_;
+  exposure_i_gain_ = rhs.exposure_i_gain_;
+  exposure_d_gain_ = rhs.exposure_d_gain_;
+  exposure_p_gain_ = rhs.exposure_p_gain_;
+  saturation_i_state_ = rhs.saturation_i_state_;
+  saturation_i_max_ = rhs.saturation_i_max_;
+  saturation_i_min_ = rhs.saturation_i_min_;
+  saturation_i_gain_ = rhs.saturation_i_gain_;
+  saturation_d_gain_ = rhs.saturation_d_gain_;
+  saturation_p_gain_ = rhs.saturation_p_gain_;
   gain_lim_ = rhs.gain_lim_;
   exposure_lim_ = rhs.exposure_lim_;
   nh_ = rhs.nh_;
@@ -121,30 +121,30 @@ CameraConfiguration::CameraConfiguration(CameraConfiguration &&rhs)
   white_balance_blue_ = rhs.white_balance_blue_;
   white_balance_red_ = rhs.white_balance_red_;
   saturation_ = rhs.saturation_;
-  gamma_iState_ = rhs.gamma_iState_;
-  gamma_iMax_ = rhs.gamma_iMax_;
-  gamma_iMin_ = rhs.gamma_iMin_;
-  gamma_iGain_ = rhs.gamma_iGain_;
-  gamma_dGain_ = rhs.gamma_dGain_;
-  gamma_pGain_ = rhs.gamma_pGain_;
-  gain_iState_ = rhs.gain_iState_;
-  gain_iMax_ = rhs.gain_iMax_;
-  gain_iMin_ = rhs.gain_iMin_;
-  gain_iGain_ = rhs.gain_iGain_;
-  gain_dGain_ = rhs.gain_dGain_;
-  gain_pGain_ = rhs.gain_pGain_;
-  exposure_iState_ = rhs.exposure_iState_;
-  exposure_iMax_ = rhs.exposure_iMax_;
-  exposure_iMin_ = rhs.exposure_iMin_;
-  exposure_iGain_ = rhs.exposure_iGain_;
-  exposure_dGain_ = rhs.exposure_dGain_;
-  exposure_pGain_ = rhs.exposure_pGain_;
-  saturation_iState_ = rhs.saturation_iState_;
-  saturation_iMax_ = rhs.saturation_iMax_;
-  saturation_iMin_ = rhs.saturation_iMin_;
-  saturation_iGain_ = rhs.saturation_iGain_;
-  saturation_dGain_ = rhs.saturation_dGain_;
-  saturation_pGain_ = rhs.saturation_pGain_;
+  gamma_i_state_ = rhs.gamma_i_state_;
+  gamma_i_max_ = rhs.gamma_i_max_;
+  gamma_i_min_ = rhs.gamma_i_min_;
+  gamma_i_gain_ = rhs.gamma_i_gain_;
+  gamma_d_gain_ = rhs.gamma_d_gain_;
+  gamma_p_gain_ = rhs.gamma_p_gain_;
+  gain_i_state_ = rhs.gain_i_state_;
+  gain_i_max_ = rhs.gain_i_max_;
+  gain_i_min_ = rhs.gain_i_min_;
+  gain_i_gain_ = rhs.gain_i_gain_;
+  gain_d_gain_ = rhs.gain_d_gain_;
+  gain_p_gain_ = rhs.gain_p_gain_;
+  exposure_i_state_ = rhs.exposure_i_state_;
+  exposure_i_max_ = rhs.exposure_i_max_;
+  exposure_i_min_ = rhs.exposure_i_min_;
+  exposure_i_gain_ = rhs.exposure_i_gain_;
+  exposure_d_gain_ = rhs.exposure_d_gain_;
+  exposure_p_gain_ = rhs.exposure_p_gain_;
+  saturation_i_state_ = rhs.saturation_i_state_;
+  saturation_i_max_ = rhs.saturation_i_max_;
+  saturation_i_min_ = rhs.saturation_i_min_;
+  saturation_i_gain_ = rhs.saturation_i_gain_;
+  saturation_d_gain_ = rhs.saturation_d_gain_;
+  saturation_p_gain_ = rhs.saturation_p_gain_;
   gain_lim_ = rhs.exposure_lim_;
   exposure_lim_ = rhs.exposure_lim_;
   nh_ = rhs.nh_;
@@ -179,42 +179,44 @@ void CameraConfiguration::DeserializeConfiguration(const std::string &name)
   FindParameter("/camera_parameters/" + name + "/white_balance_red",
                 white_balance_red_);
   FindParameter("/camera_parameters/" + name + "/saturation", saturation_);
-  FindParameter("/camera_parameters/" + name + "/gamma_iState", gamma_iState_);
-  FindParameter("/camera_parameters/" + name + "/gamma_iMin", gamma_iMin_);
-  FindParameter("/camera_parameters/" + name + "/gamma_iMax", gamma_iMax_);
-  FindParameter("/camera_parameters/" + name + "/gamma_iGain", gamma_iGain_);
-  FindParameter("/camera_parameters/" + name + "/gamma_pGain", gamma_pGain_);
-  FindParameter("/camera_parameters/" + name + "/gamma_dGain", gamma_dGain_);
-  FindParameter("/camera_parameters/" + name + "/gamma_iState", gamma_iState_);
-  FindParameter("/camera_parameters/" + name + "/gain_iMin", gain_iMin_);
-  FindParameter("/camera_parameters/" + name + "/gain_iMax", gain_iMax_);
-  FindParameter("/camera_parameters/" + name + "/gain_iGain", gain_iGain_);
-  FindParameter("/camera_parameters/" + name + "/gain_pGain", gain_pGain_);
-  FindParameter("/camera_parameters/" + name + "/gain_dGain", gain_dGain_);
-  FindParameter("/camera_parameters/" + name + "/exposure_iState",
-                exposure_iState_);
-  FindParameter("/camera_parameters/" + name + "/exposure_iMin",
-                exposure_iMin_);
-  FindParameter("/camera_parameters/" + name + "/exposure_iMax",
-                exposure_iMax_);
-  FindParameter("/camera_parameters/" + name + "/exposure_iGain",
-                exposure_iGain_);
-  FindParameter("/camera_parameters/" + name + "/exposure_pGain",
-                exposure_pGain_);
-  FindParameter("/camera_parameters/" + name + "/exposure_dGain",
-                exposure_dGain_);
-  FindParameter("/camera_parameters/" + name + "/saturation_iState",
-                saturation_iState_);
-  FindParameter("/camera_parameters/" + name + "/saturation_iMin",
-                saturation_iMin_);
-  FindParameter("/camera_parameters/" + name + "/saturation_iMax",
-                saturation_iMax_);
-  FindParameter("/camera_parameters/" + name + "/saturation_iGain",
-                saturation_iGain_);
-  FindParameter("/camera_parameters/" + name + "/saturation_pGain",
-                saturation_pGain_);
-  FindParameter("/camera_parameters/" + name + "/saturation_dGain",
-                saturation_dGain_);
+  FindParameter("/camera_parameters/" + name + "/gamma_i_state",
+                gamma_i_state_);
+  FindParameter("/camera_parameters/" + name + "/gamma_i_min", gamma_i_min_);
+  FindParameter("/camera_parameters/" + name + "/gamma_i_max", gamma_i_max_);
+  FindParameter("/camera_parameters/" + name + "/gamma_i_gain", gamma_i_gain_);
+  FindParameter("/camera_parameters/" + name + "/gamma_p_gain", gamma_p_gain_);
+  FindParameter("/camera_parameters/" + name + "/gamma_d_gain", gamma_d_gain_);
+  FindParameter("/camera_parameters/" + name + "/gamma_i_state",
+                gamma_i_state_);
+  FindParameter("/camera_parameters/" + name + "/gain_i_min", gain_i_min_);
+  FindParameter("/camera_parameters/" + name + "/gain_i_max", gain_i_max_);
+  FindParameter("/camera_parameters/" + name + "/gain_i_gain", gain_i_gain_);
+  FindParameter("/camera_parameters/" + name + "/gain_p_gain", gain_p_gain_);
+  FindParameter("/camera_parameters/" + name + "/gain_d_gain", gain_d_gain_);
+  FindParameter("/camera_parameters/" + name + "/exposure_i_state",
+                exposure_i_state_);
+  FindParameter("/camera_parameters/" + name + "/exposure_i_min",
+                exposure_i_min_);
+  FindParameter("/camera_parameters/" + name + "/exposure_i_max",
+                exposure_i_max_);
+  FindParameter("/camera_parameters/" + name + "/exposure_i_gain",
+                exposure_i_gain_);
+  FindParameter("/camera_parameters/" + name + "/exposure_p_gain",
+                exposure_p_gain_);
+  FindParameter("/camera_parameters/" + name + "/exposure_d_gain",
+                exposure_d_gain_);
+  FindParameter("/camera_parameters/" + name + "/saturation_i_state",
+                saturation_i_state_);
+  FindParameter("/camera_parameters/" + name + "/saturation_i_min",
+                saturation_i_min_);
+  FindParameter("/camera_parameters/" + name + "/saturation_i_max",
+                saturation_i_max_);
+  FindParameter("/camera_parameters/" + name + "/saturation_i_gain",
+                saturation_i_gain_);
+  FindParameter("/camera_parameters/" + name + "/saturation_p_gain",
+                saturation_p_gain_);
+  FindParameter("/camera_parameters/" + name + "/saturation_d_gain",
+                saturation_d_gain_);
   FindParameter("/camera_parameters/" + name + "/gian_lim", gain_lim_);
   FindParameter("/camera_parameters/" + name + "/exposure_lim", exposure_lim_);
 }
