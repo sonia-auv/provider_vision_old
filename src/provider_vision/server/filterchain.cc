@@ -54,7 +54,7 @@ bool Filterchain::Serialize() {
   out << YAML::Key << "name";
   out << YAML::Value << GetName();
 
-  if(filters_.size() > 0) {
+  if (filters_.size() > 0) {
     out << YAML::Key << "filters";
     out << YAML::Value << YAML::BeginSeq;
     for (auto &filter : filters_) {
@@ -63,7 +63,7 @@ bool Filterchain::Serialize() {
       out << YAML::Value << filter->GetName();
 
       auto parameters = filter->GetParameters();
-      if(parameters.size() > 0) {
+      if (parameters.size() > 0) {
         out << YAML::Key << "parameters";
         out << YAML::Value << YAML::BeginSeq;
         for (const auto &parameter : parameters) {
