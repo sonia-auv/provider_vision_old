@@ -42,7 +42,18 @@ void GigeCamera::Open() {
     char *name = new char[str.size() + 1];
     std::copy(str.begin(), str.end(), name);
     name[str.size()] = '\0';  // don't forget the terminating 0
-    status = GevOpenCameraByName(name, GevControlMode, &gige_camera_);
+    for (int i = 0; i < 5; i++) {
+      status = GevOpenCameraByName(name, GevControlMode, &gige_camera_);
+      if (status == 0) {
+        i = 5;
+        ROS_INFO_NAMED("[GigE Driver]", "%s opened successfully",
+                       config_.name_.c_str());
+      } else {
+        ROS_INFO_NAMED("[GigE Driver]",
+                       "Unable to open camera. Retrying. Try: %d/5", i + 1);
+        sleep(10);
+      }
+    }
     // don't forget to free the string after finished using it
     delete[] name;
     if (status != 0) {
@@ -63,12 +74,12 @@ void GigeCamera::Open() {
   UINT32 x_offset = 0;
   UINT32 y_offset = 0;
 
-  GenApi::CNodeMapRef *Camera = static_cast<GenApi::CNodeMapRef*>
-  (GevGetFeatureNodeMap(gige_camera_));
+  GenApi::CNodeMapRef *Camera =
+      static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
 
   try {
     GenApi::CFloatPtr ptrFloatNode = Camera->_GetNode("AcquisitionFrameRate");
-    ptrFloatNode->SetValue(FPS,true);
+    ptrFloatNode->SetValue(FPS, true);
     status = GevSetImageParameters(
         gige_camera_, (UINT32)config_.width_, (UINT32)config_.height_,
         (UINT32)config_.x_offset_, (UINT32)config_.y_offset_,
@@ -180,7 +191,7 @@ void GigeCamera::NextImage(cv::Mat &img) {
       //      undistord_matrix_.CorrectInmage(tmp, img);
       tmp.copyTo(img);
       cv::cvtColor(tmp, img, CV_BayerRG2RGB);
-//      balance_white(img);
+      balance_white(img);
     } catch (cv::Exception &e) {
       status_ = Status::ERROR;
       throw;
