@@ -22,6 +22,7 @@ namespace provider_vision {
 class GigeCamera : public BaseCamera {
  public:
   static const int DMA_BUFFER = 4;
+  static const float FPS = 15;
 
   static const std::string CAM_TAG;
 

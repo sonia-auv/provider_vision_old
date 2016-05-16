@@ -62,7 +62,13 @@ void GigeCamera::Open() {
   UINT32 height = 0;
   UINT32 x_offset = 0;
   UINT32 y_offset = 0;
+
+  GenApi::CNodeMapRef *Camera = static_cast<GenApi::CNodeMapRef*>
+  (GevGetFeatureNodeMap(gige_camera_));
+
   try {
+    GenApi::CFloatPtr ptrFloatNode = Camera->_GetNode("AcquisitionFrameRate");
+    ptrFloatNode->SetValue(FPS,true);
     status = GevSetImageParameters(
         gige_camera_, (UINT32)config_.width_, (UINT32)config_.height_,
         (UINT32)config_.x_offset_, (UINT32)config_.y_offset_,
@@ -174,7 +180,7 @@ void GigeCamera::NextImage(cv::Mat &img) {
       //      undistord_matrix_.CorrectInmage(tmp, img);
       tmp.copyTo(img);
       cv::cvtColor(tmp, img, CV_BayerRG2RGB);
-      balance_white(img);
+//      balance_white(img);
     } catch (cv::Exception &e) {
       status_ = Status::ERROR;
       throw;
