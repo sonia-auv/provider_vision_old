@@ -52,8 +52,8 @@ CameraConfiguration::CameraConfiguration(const ros::NodeHandle &nh,
       saturation_i_gain_(0),
       saturation_p_gain_(0),
       saturation_d_gain_(0),
-gain_lim_(0),
-exposure_lim_(0),
+      gain_lim_(0),
+      exposure_lim_(0),
       nh_(nh) {
   DeserializeConfiguration(name);
 }
