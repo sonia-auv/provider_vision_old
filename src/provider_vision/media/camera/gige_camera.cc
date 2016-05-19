@@ -78,8 +78,10 @@ void GigeCamera::Open() {
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
 
   try {
-    GenApi::CFloatPtr ptrFloatNode = Camera->_GetNode("AcquisitionFrameRate");
-    ptrFloatNode->SetValue(FPS, true);
+    //    GenApi::CFloatPtr ptrFloatNode =
+    //    Camera->_GetNode("AcquisitionFrameRate");
+    //    ptrFloatNode->SetValue(FPS, true);
+    this->SetGainAuto();
     status = GevSetImageParameters(
         gige_camera_, (UINT32)config_.width_, (UINT32)config_.height_,
         (UINT32)config_.x_offset_, (UINT32)config_.y_offset_,
@@ -268,9 +270,21 @@ float GigeCamera::GetSaturationValue() const {
   return static_cast<float>(value);
 }
 
-void GigeCamera::SetGainAuto() {}
+void GigeCamera::SetGainAuto() {
+  GenApi::CNodeMapRef *Camera =
+      static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
+  GenApi::CEnumerationPtr ptrEnumNode = Camera->_GetNode("autoBrightnessMode");
+  GenApi::CEnumEntryPtr ptrEnumEntry = ptrEnumNode->GetEntryByName("Active");
+  ptrEnumNode->SetIntValue(1);
+}
 
-void GigeCamera::SetGainManual() {}
+void GigeCamera::SetGainManual() {
+  GenApi::CNodeMapRef *Camera =
+      static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
+  GenApi::CEnumerationPtr ptrEnumNode = Camera->_GetNode("autoBrightnessMode");
+  GenApi::CEnumEntryPtr ptrEnumEntry = ptrEnumNode->GetEntryByName("Active");
+  ptrEnumNode->SetIntValue(0);
+}
 
 void GigeCamera::SetGainValue(float value) {}
 
