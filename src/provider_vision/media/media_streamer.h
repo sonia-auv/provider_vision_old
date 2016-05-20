@@ -185,6 +185,8 @@ class MediaStreamer : public atlas::Subject<const cv::Mat &>,
   bool is_recording_;
 
   mutable std::mutex list_access_;
+
+  friend class CameraParametersListenerTest;
 };
 
 //==============================================================================
