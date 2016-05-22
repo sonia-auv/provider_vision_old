@@ -92,6 +92,9 @@ class BaseCamera : public BaseMedia {
 
   bool HasArtificialFramerate() const override;
 
+  float GetCameraMsvLum() const;
+  float GetCameraMsvSat() const;
+
  protected:
   //==========================================================================
   // P R O T E C T E D   M E T H O D S
@@ -127,6 +130,8 @@ class BaseCamera : public BaseMedia {
   virtual double GetWhiteBalanceRed() const = 0;
   virtual double GetWhiteBalanceBlue() const = 0;
 
+
+
   void Calibrate(cv::Mat const &img);
 
   float CalculateMSV(const cv::Mat &img, int nbrRegion);
@@ -156,8 +161,7 @@ class BaseCamera : public BaseMedia {
   double UpdatePID(SPid &pid, double error, double position) ATLAS_NOEXCEPT;
   cv::Mat CalculateLuminanceHistogram(const cv::Mat &img) const;
   cv::Mat CalculateSaturationHistogram(const cv::Mat &img) const;
-  float GetCameraMsvLum() const;
-  float GetCameraMsvSat() const;
+
 
   friend class CameraParametersListenerTest;
 };

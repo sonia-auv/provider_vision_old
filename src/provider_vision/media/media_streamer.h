@@ -89,6 +89,12 @@ class MediaStreamer : public atlas::Subject<const cv::Mat &>,
    */
   bool IsStreaming() const;
 
+  //To be brought back in the private member 
+  mutable std::mutex image_access_;
+
+  BaseMedia::Ptr media_;
+
+
  protected:
   //==========================================================================
   // P R O T E C T E D   M E T H O D S
@@ -145,12 +151,10 @@ class MediaStreamer : public atlas::Subject<const cv::Mat &>,
   /**
    * Protection of concurrency access between getImage and run.
    */
-  mutable std::mutex image_access_;
 
   /**
    * Active media of the loop
    */
-  BaseMedia::Ptr media_;
 
   /**
    * FrameRate members
