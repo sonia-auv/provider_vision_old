@@ -86,6 +86,8 @@ class CameraConfiguration {
   double saturation_i_gain_;
   double saturation_p_gain_;
   double saturation_d_gain_;
+  double gain_lim_;
+  double exposure_lim_;
 
   //==========================================================================
   // P U B L I C   M E T H O D S

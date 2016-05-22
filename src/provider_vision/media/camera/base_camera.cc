@@ -58,6 +58,11 @@ BaseCamera::BaseCamera(const CameraConfiguration &configuration)
   saturation_pid_.i_gain = configuration.saturation_i_gain_;
   saturation_pid_.p_gain = configuration.saturation_p_gain_;
   saturation_pid_.d_gain = configuration.saturation_d_gain_;
+
+  gain_lim_ = configuration.gain_lim_;
+  exposure_lim_ = configuration.exposure_lim_;
+  msv_lum_ = 0;
+  msv_sat_ = 0;
 }
 
 //------------------------------------------------------------------------------
@@ -168,22 +173,19 @@ double BaseCamera::GetFeature(const Feature &feat) const {
 void BaseCamera::Calibrate(cv::Mat const &img) {
   auto l_hist = CalculateLuminanceHistogram(img);
 
-  float msv = CalculateMSV(l_hist, 5);
+  msv_lum_= CalculateMSV(l_hist, 5);
   try {
-    ROS_INFO_STREAM("MSV: " << msv);
+    ROS_INFO_STREAM("MSV: " << msv_lum_);
 
-    // Parametre a placer ds yaml plus tard
-    const float limitGain = 480.f;
-    const float limitExposure = 80.f;
     const float msvUniform = 2.5f;
 
-    if (msv != msvUniform) {
-      if (GetExposureValue() > limitExposure && GetGainValue() > limitGain) {
+    if (msv_lum_ != msvUniform) {
+      if (GetExposureValue() > exposure_lim_ && GetGainValue() > gain_lim_) {
         double error = fabs(GetGammaValue() - current_features_.gamma);
         current_features_.gamma = UpdatePID(gamma_pid_, error, GetGammaValue());
         SetGammaValue(current_features_.gamma);
         ROS_INFO_STREAM("Gamma: " << current_features_.gamma);
-      } else if (GetGainValue() > limitGain) {
+      } else if (GetGainValue() > gain_lim_) {
         double error = fabs(GetExposureValue() - current_features_.exposure);
         current_features_.exposure =
             UpdatePID(exposure_pid_, error, GetExposureValue());
@@ -196,10 +198,10 @@ void BaseCamera::Calibrate(cv::Mat const &img) {
         ROS_INFO_STREAM("Gain: " << current_features_.gain);
       }
     }
-    if (msv > 2 && msv < 3) {
+    if (msv_lum_ > 2 && msv_lum_ < 3) {
       auto s_hist = CalculateSaturationHistogram(img);
-      msv = CalculateMSV(s_hist, 5);
-      if (msv != msvUniform) {
+      msv_sat_ = CalculateMSV(s_hist, 5);
+      if (msv_sat_ != msvUniform) {
         double error =
             fabs(GetSaturationValue() - current_features_.saturation);
         current_features_.saturation =
@@ -279,8 +281,8 @@ float BaseCamera::CalculateMSV(const cv::Mat &img, int nbrRegion) {
 //
 double BaseCamera::UpdatePID(SPid &pid, double error,
                              double position) ATLAS_NOEXCEPT {
-  double pTerm = 0, dTerm = 0, iTerm = 0;
-  pTerm = pid.p_gain * error;
+  double p_term = 0, d_term = 0, i_term = 0;
+  p_term = pid.p_gain * error;
   // calculate the proportional term
   // calculate the integral state with appropriate limiting
   pid.i_state += error;
@@ -288,10 +290,21 @@ double BaseCamera::UpdatePID(SPid &pid, double error,
     pid.i_state = pid.i_max;
   else if (pid.i_state < pid.i_min)
     pid.i_state = pid.i_min;
-  iTerm = pid.i_gain * pid.i_state;  // calculate the integral term
-  dTerm = pid.d_gain * fabs(pid.d_state - position);
+  i_term = pid.i_gain * pid.i_state;  // calculate the integral term
+  d_term = pid.d_gain * fabs(pid.d_state - position);
   pid.d_state = position;
-  return pTerm + dTerm + iTerm;
+  return p_term + d_term + i_term;
+}
+
+float BaseCamera::GetCameraMsvLum() const {
+  std::lock_guard<std::mutex> guard(msv_acces_);
+  return msv_lum_;
+}
+
+float BaseCamera::GetCameraMsvSat() const {
+  std::lock_guard<std::mutex> guard(msv_acces_);
+
+  return msv_sat_;
 }
 
 }  // namespace provider_vision

@@ -52,6 +52,8 @@ CameraConfiguration::CameraConfiguration(const ros::NodeHandle &nh,
       saturation_i_gain_(0),
       saturation_p_gain_(0),
       saturation_d_gain_(0),
+      gain_lim_(0),
+      exposure_lim_(0),
       nh_(nh) {
   DeserializeConfiguration(name);
 }
@@ -97,6 +99,8 @@ CameraConfiguration::CameraConfiguration(const CameraConfiguration &rhs)
   saturation_i_gain_ = rhs.saturation_i_gain_;
   saturation_d_gain_ = rhs.saturation_d_gain_;
   saturation_p_gain_ = rhs.saturation_p_gain_;
+  gain_lim_ = rhs.gain_lim_;
+  exposure_lim_ = rhs.exposure_lim_;
   nh_ = rhs.nh_;
 }
 
@@ -141,6 +145,8 @@ CameraConfiguration::CameraConfiguration(CameraConfiguration &&rhs)
   saturation_i_gain_ = rhs.saturation_i_gain_;
   saturation_d_gain_ = rhs.saturation_d_gain_;
   saturation_p_gain_ = rhs.saturation_p_gain_;
+  gain_lim_ = rhs.exposure_lim_;
+  exposure_lim_ = rhs.exposure_lim_;
   nh_ = rhs.nh_;
 }
 
@@ -211,6 +217,8 @@ void CameraConfiguration::DeserializeConfiguration(const std::string &name)
                 saturation_p_gain_);
   FindParameter("/camera_parameters/" + name + "/saturation_d_gain",
                 saturation_d_gain_);
+  FindParameter("/camera_parameters/" + name + "/gain_lim", gain_lim_);
+  FindParameter("/camera_parameters/" + name + "/exposure_lim", exposure_lim_);
 }
 
 //------------------------------------------------------------------------------

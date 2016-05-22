@@ -77,7 +77,7 @@ class GlobalParamHandler {
   // REturns reference so we can pop when we read.
   inline TargetQueue &getTargetQueue() { return _vision_target; }
 
-  inline const void clearTarget() {
+  inline void clearTarget() {
     while (!_vision_target.empty()) {
       _vision_target.pop();
     }

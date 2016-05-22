@@ -12,9 +12,11 @@
 #define PROVIDER_VISION_MEDIA_CAMERA_BASE_CAMERA_H_
 
 #include <memory>
+#include <mutex>
 #include "provider_vision/config.h"
 #include "provider_vision/media/cam_undistord_matrices.h"
 #include "provider_vision/media/camera/base_media.h"
+
 
 namespace provider_vision {
 
@@ -90,6 +92,9 @@ class BaseCamera : public BaseMedia {
 
   bool HasArtificialFramerate() const override;
 
+  float GetCameraMsvLum() const;
+  float GetCameraMsvSat() const;
+
  protected:
   //==========================================================================
   // P R O T E C T E D   M E T H O D S
@@ -125,9 +130,12 @@ class BaseCamera : public BaseMedia {
   virtual double GetWhiteBalanceRed() const = 0;
   virtual double GetWhiteBalanceBlue() const = 0;
 
+
+
   void Calibrate(cv::Mat const &img);
 
   float CalculateMSV(const cv::Mat &img, int nbrRegion);
+
 
   //==========================================================================
   // P R O T E C T E D   M E M B E R S
@@ -140,6 +148,12 @@ class BaseCamera : public BaseMedia {
 
   SPid gamma_pid_, gain_pid_, exposure_pid_, saturation_pid_;
 
+  double gain_lim_, exposure_lim_;
+
+  float msv_lum_, msv_sat_;
+
+  mutable std::mutex msv_acces_;
+
  private:
   //==========================================================================
   // P R I V A T E   M E T H O D S
@@ -148,7 +162,8 @@ class BaseCamera : public BaseMedia {
   cv::Mat CalculateLuminanceHistogram(const cv::Mat &img) const;
   cv::Mat CalculateSaturationHistogram(const cv::Mat &img) const;
 
-  friend class CameraCalibration_CreateGraph_Test;
+
+  friend class CameraParametersListenerTest;
 };
 
 //==============================================================================
