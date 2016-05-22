@@ -22,7 +22,9 @@ namespace provider_vision {
 //
 DC1394Context::DC1394Context(
     const std::vector<CameraConfiguration> &configurations) noexcept
-    : BaseContext(), DRIVER_TAG("[DC1394 Driver]"), driver_(nullptr) {
+    : BaseContext(),
+      DRIVER_TAG("[DC1394 Driver]"),
+      driver_(nullptr) {
   InitContext(configurations);
 }
 
@@ -45,6 +47,7 @@ void DC1394Context::InitContext(
   media_list_.clear();
 
   error = dc1394_camera_enumerate(driver_, &list);
+
   if (error != DC1394_SUCCESS) {
     ROS_ERROR_NAMED(DRIVER_TAG, "Could not enumerate camera.");
     return;
@@ -67,7 +70,6 @@ void DC1394Context::InitContext(
         std::shared_ptr<DC1394Camera> cam(
             new DC1394Camera(camera_dc, cam_config));
 
-        cam->Open();
         cam->SetCameraParams();
         media_list_.push_back(cam);
       }

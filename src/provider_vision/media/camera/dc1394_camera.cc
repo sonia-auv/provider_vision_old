@@ -44,7 +44,7 @@ void DC1394Camera::Open() {
   std::lock_guard<std::mutex> guard(cam_access_);
 
   try {
-    SetFormat7();
+    SetNormalFormat();
     err = dc1394_capture_setup(dc1394_camera_, DMA_BUFFER,
                                DC1394_CAPTURE_FLAGS_DEFAULT);
     if (err != DC1394_SUCCESS) {
@@ -669,8 +669,11 @@ void DC1394Camera::SetNormalFormat() {
     // TODO Jérémie St-Jules: Change the exception error.
     throw std::runtime_error("An error occurenced");
   }
-
-  err = dc1394_video_set_mode(dc1394_camera_, DC1394_VIDEO_MODE_800x600_YUV422);
+      if (std::string(dc1394_camera_->vendor).compare(std::string("AVT")) == 0) {
+        err = dc1394_video_set_mode(dc1394_camera_, DC1394_VIDEO_MODE_800x600_YUV422);
+      }else{
+        err = dc1394_video_set_mode(dc1394_camera_, DC1394_VIDEO_MODE_640x480_YUV422);
+      }
   if (err != DC1394_SUCCESS) {
     // TODO Jérémie St-Jules: Change the exception error.
     throw std::runtime_error("An error occurenced");
