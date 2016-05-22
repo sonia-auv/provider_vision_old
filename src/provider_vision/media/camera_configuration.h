@@ -67,6 +67,10 @@ class CameraConfiguration {
   int x_offset_;
   int y_offset_;
   int format_;
+  bool auto_brightness_;
+  int auto_brightness_target_;
+  int auto_brightness_target_variation_;
+  bool exposure_manual_;
 
   //==========================================================================
   // P U B L I C   M E T H O D S

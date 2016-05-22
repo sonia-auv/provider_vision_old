@@ -34,17 +34,15 @@
 # Parameters for the Bottom GigE Camera
 /provider_vision/camera_parameters/bottom_gige/name: "bottom_gige"
 /provider_vision/camera_parameters/bottom_gige/guid: "1230819763"
-/provider_vision/camera_parameters/bottom_gige/framerate: 0
-/provider_vision/camera_parameters/bottom_gige/gain_manual: true
-/provider_vision/camera_parameters/bottom_gige/shutter_manual: true
+/provider_vision/camera_parameters/bottom_gige/framerate: 15
+/provider_vision/camera_parameters/bottom_gige/auto_brightness: true
+/provider_vision/camera_parameters/bottom_gige/auto_brightness_target: 100
+/provider_vision/camera_parameters/bottom_gige/auto_brightness_target_variation: 16
+/provider_vision/camera_parameters/bottom_gige/gain_manual: false
+/provider_vision/camera_parameters/bottom_gige/gain: 1
+/provider_vision/camera_parameters/bottom_gige/exposure: 1000
+/provider_vision/camera_parameters/bottom_gige/exposure_manual: false
 /provider_vision/camera_parameters/bottom_gige/white_balance_manual: true
-/provider_vision/camera_parameters/bottom_gige/gain: 420.0
-/provider_vision/camera_parameters/bottom_gige/shutter: 32.0
-/provider_vision/camera_parameters/bottom_gige/gamma: 0
-/provider_vision/camera_parameters/bottom_gige/exposure: 0
-/provider_vision/camera_parameters/bottom_gige/white_balance_red: 568.0
-/provider_vision/camera_parameters/bottom_gige/white_balance_blue: 381.0
-/provider_vision/camera_parameters/bottom_gige/saturation: 0
 /provider_vision/camera_parameters/bottom_gige/width: 968
 /provider_vision/camera_parameters/bottom_gige/height: 608
 /provider_vision/camera_parameters/bottom_gige/x_offset: 484

@@ -52,12 +52,9 @@ class GigeCamera : public BaseCamera {
 
   void NextImage(cv::Mat &img) override;
 
-  // Sets to different streaming format.
-  void SetFormat7();
-
-  void SetNormalFormat();
-
   void SetCameraParams();
+
+  // Set some GigE specific parameters
 
   //==========================================================================
   // G E T T E R S   A N D   S E T T E R S
@@ -70,6 +67,14 @@ class GigeCamera : public BaseCamera {
   GEV_CAMERA_HANDLE *GetCameraPtr();
 
  protected:
+  void SetAutoBrightnessMode(int value);
+  void SetAutoBrightnessTarget(int value);
+  void SetAutoBrightnessTargetVariation(int value);
+  void SetExposureAuto();
+  void SetExposureManual();
+  float GetWhiteBalanceRatio() const;
+  void SetWhiteBalanceRatio(float value);
+
   float GetGainValue() const override;
   void SetGainAuto() override;
   void SetGainManual() override;
@@ -104,12 +109,6 @@ class GigeCamera : public BaseCamera {
  private:
   //==========================================================================
   // P R I V A T E   M E T H O D S
-
-  // float to enum
-  uint32_t ConvertFramerateToEnum(float val) const;
-
-  // enum to float
-  float ConvertFramerateToFloat(uint32_t val) const;
 
   void balance_white(cv::Mat mat);
 
