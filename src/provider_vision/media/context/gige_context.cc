@@ -51,7 +51,7 @@ void GigeContext::InitContext(
     return;
   }
   ROS_INFO_NAMED(DRIVER_TAG, "%d GigE camera found", numCamera);
-  for (uint i = 0; i < numCamera; i++) {
+  for (int i = 0; i < numCamera; i++) {
     std::string name = driver_[i].username;
     for (auto const &cam_config : configurations) {
       if (cam_config.name_ == name) {

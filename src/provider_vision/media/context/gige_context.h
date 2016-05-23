@@ -11,7 +11,6 @@
 #include "provider_vision/media/camera/base_media.h"
 #include "provider_vision/media/camera/gige_camera.h"
 #include "provider_vision/media/context/base_context.h"
-#include "provider_vision/utils/config.h"
 
 namespace provider_vision {
 

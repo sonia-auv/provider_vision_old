@@ -28,6 +28,8 @@ GigeCamera::~GigeCamera() {
   _CloseSocketAPI();
 }
 
+//------------------------------------------------------------------------------
+//
 void GigeCamera::Open() {
   UINT16 status;
 
@@ -101,6 +103,8 @@ void GigeCamera::Open() {
   status_ = Status::OPEN;
 }
 
+//------------------------------------------------------------------------------
+//
 void GigeCamera::Close() {
   if (!IsOpened()) {
     throw std::logic_error("The media is not started");
@@ -143,6 +147,8 @@ void GigeCamera::SetStreamingModeOn() {
   status_ = Status::STREAMING;
 }
 
+//------------------------------------------------------------------------------
+//
 void GigeCamera::SetStreamingModeOff() {
   std::lock_guard<std::mutex> guard(cam_access_);
 
@@ -202,7 +208,6 @@ void GigeCamera::NextImage(cv::Mat &img) {
 
 //------------------------------------------------------------------------------
 //
-
 void GigeCamera::SetCameraParams() {
   this->SetAutoBrightnessMode(config_.auto_brightness_);
   atlas::MilliTimer::Sleep(100);
@@ -239,7 +244,6 @@ void GigeCamera::SetCameraParams() {
 
 //------------------------------------------------------------------------------
 //
-
 void GigeCamera::SetAutoBrightnessMode(int value) {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
@@ -247,6 +251,8 @@ void GigeCamera::SetAutoBrightnessMode(int value) {
   ptrEnumNode->SetIntValue(value);
 }
 
+//------------------------------------------------------------------------------
+//
 void GigeCamera::SetAutoBrightnessTarget(int value) {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
@@ -254,6 +260,8 @@ void GigeCamera::SetAutoBrightnessTarget(int value) {
   ptrIntNode->SetValue(value);
 }
 
+//------------------------------------------------------------------------------
+//
 void GigeCamera::SetAutoBrightnessTargetVariation(int value) {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
@@ -264,7 +272,6 @@ void GigeCamera::SetAutoBrightnessTargetVariation(int value) {
 
 //------------------------------------------------------------------------------
 //
-
 void GigeCamera::SetGainAuto() {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
@@ -272,6 +279,8 @@ void GigeCamera::SetGainAuto() {
   ptrEnumNode->SetIntValue(2);
 }
 
+//------------------------------------------------------------------------------
+//
 void GigeCamera::SetGainManual() {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
@@ -279,14 +288,18 @@ void GigeCamera::SetGainManual() {
   ptrEnumNode->SetIntValue(0);
 }
 
-float GigeCamera::GetGainValue() const {
+//------------------------------------------------------------------------------
+//
+double GigeCamera::GetGainValue() const {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CFloatPtr ptrGain = Camera->_GetNode("Gain");
   return (float)ptrGain->GetValue();
 }
 
-void GigeCamera::SetGainValue(float value) {
+//------------------------------------------------------------------------------
+//
+void GigeCamera::SetGainValue(double value) {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CFloatPtr ptrGain = Camera->_GetNode("Gain");
@@ -295,7 +308,6 @@ void GigeCamera::SetGainValue(float value) {
 
 //------------------------------------------------------------------------------
 //
-
 void GigeCamera::SetExposureAuto() {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
@@ -303,6 +315,8 @@ void GigeCamera::SetExposureAuto() {
   ptrEnumNode->SetIntValue(2);
 }
 
+//------------------------------------------------------------------------------
+//
 void GigeCamera::SetExposureManual() {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
@@ -314,14 +328,18 @@ void GigeCamera::SetExposureManual() {
   ptrExposureMode->SetIntValue(0);
 }
 
-float GigeCamera::GetExposureValue() const {
+//------------------------------------------------------------------------------
+//
+double GigeCamera::GetExposureValue() const {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CFloatPtr ptrExposureTime = Camera->_GetNode("ExposureTime");
   return (float)ptrExposureTime->GetValue();
 }
 
-void GigeCamera::SetExposureValue(float value) {
+//------------------------------------------------------------------------------
+//
+void GigeCamera::SetExposureValue(double value) {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CFloatPtr ptrExposureTime = Camera->_GetNode("ExposureTime");
@@ -330,15 +348,16 @@ void GigeCamera::SetExposureValue(float value) {
 
 //------------------------------------------------------------------------------
 //
-
-void GigeCamera::SetFrameRateValue(float value) {
+void GigeCamera::SetFrameRateValue(double value) {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CFloatPtr ptrFrameRate = Camera->_GetNode("AcquisitionFrameRate");
   ptrFrameRate->SetValue(value, true);
 }
 
-float GigeCamera::GetFrameRateValue() const {
+//------------------------------------------------------------------------------
+//
+double GigeCamera::GetFrameRateValue() const {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CFloatPtr ptrFrameRate = Camera->_GetNode("AcquisitionFrameRate");
@@ -347,7 +366,6 @@ float GigeCamera::GetFrameRateValue() const {
 
 //------------------------------------------------------------------------------
 //
-
 void GigeCamera::SetWhiteBalanceAuto() {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
@@ -359,6 +377,8 @@ void GigeCamera::SetWhiteBalanceAuto() {
   ptrWhiteBalanceCmd->Execute();
 }
 
+//------------------------------------------------------------------------------
+//
 void GigeCamera::SetWhiteBalanceManual() {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
@@ -366,13 +386,17 @@ void GigeCamera::SetWhiteBalanceManual() {
   ptrEnumNode->SetIntValue(0);
 }
 
-float GigeCamera::GetWhiteBalanceMode() const {
+//------------------------------------------------------------------------------
+//
+double GigeCamera::GetWhiteBalanceMode() const {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CEnumerationPtr ptrEnumNode = Camera->_GetNode("BalanceWhiteAuto");
   return (float)ptrEnumNode->GetIntValue();
 }
 
+//------------------------------------------------------------------------------
+//
 float GigeCamera::GetWhiteBalanceRatio() const {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
@@ -380,51 +404,69 @@ float GigeCamera::GetWhiteBalanceRatio() const {
   return (float)ptrWhiteBalanceRatio->GetValue();
 }
 
-void GigeCamera::SetWhiteBalanceRatio(float value) {
+//------------------------------------------------------------------------------
+//
+void GigeCamera::SetWhiteBalanceRatio(double value) {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CFloatPtr ptrWhiteBalanceRatio = Camera->_GetNode("BalanceRatio");
   ptrWhiteBalanceRatio->SetValue(value);
 }
 
-float GigeCamera::GetWhiteBalanceRed() const { return -1; }
-
-void GigeCamera::SetWhiteBalanceRedValue(float value) {}
-
-void GigeCamera::SetWhiteBalanceBlueValue(float value) {}
-
-float GigeCamera::GetWhiteBalanceBlue() const { return -1; }
+//------------------------------------------------------------------------------
+//
+double GigeCamera::GetWhiteBalanceRed() const { return -1; }
 
 //------------------------------------------------------------------------------
 //
-
-float GigeCamera::GetGammaValue() const { return -1; }
-
-void GigeCamera::SetGammaValue(float value) {}
+void GigeCamera::SetWhiteBalanceRedValue(double value) {}
 
 //------------------------------------------------------------------------------
 //
-
-float GigeCamera::GetSaturationValue() const { return -1; }
-
-void GigeCamera::SetSaturationValue(float value) {}
+void GigeCamera::SetWhiteBalanceBlueValue(double value) {}
 
 //------------------------------------------------------------------------------
 //
+double GigeCamera::GetWhiteBalanceBlue() const { return -1; }
 
-void GigeCamera::SetShutterValue(float value) {}
+//------------------------------------------------------------------------------
+//
+double GigeCamera::GetGammaValue() const { return -1; }
 
+//------------------------------------------------------------------------------
+//
+void GigeCamera::SetGammaValue(double value) {}
+
+//------------------------------------------------------------------------------
+//
+double GigeCamera::GetSaturationValue() const { return -1; }
+
+//------------------------------------------------------------------------------
+//
+void GigeCamera::SetSaturationValue(double value) {}
+
+//------------------------------------------------------------------------------
+//
+void GigeCamera::SetShutterValue(double value) {}
+
+//------------------------------------------------------------------------------
+//
 void GigeCamera::SetShutterAuto() {}
 
+//------------------------------------------------------------------------------
+//
 void GigeCamera::SetShutterManual() {}
-
-float GigeCamera::GetShutterMode() const { return -1; }
-
-float GigeCamera::GetShutterValue() const { return -1; }
 
 //------------------------------------------------------------------------------
 //
+double GigeCamera::GetShutterMode() const { return -1; }
 
+//------------------------------------------------------------------------------
+//
+double GigeCamera::GetShutterValue() const { return -1; }
+
+//------------------------------------------------------------------------------
+//
 void GigeCamera::balance_white(cv::Mat mat) {
   double discard_ratio = 0.05;
   int hists[3][256];
@@ -466,4 +508,5 @@ void GigeCamera::balance_white(cv::Mat mat) {
     }
   }
 }
-}
+
+} // namespace
