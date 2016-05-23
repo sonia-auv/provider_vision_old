@@ -53,7 +53,8 @@ class CameraConfiguration {
   std::string name_;
   double framerate_;
   bool gain_manual_;
-  bool shutter_manual_;
+    bool shutter_manual_;
+    bool exposure_manual_;
   bool white_balance_manual_;
   double gain_;
   double shutter_;
@@ -88,6 +89,14 @@ class CameraConfiguration {
   double saturation_d_gain_;
   double gain_lim_;
   double exposure_lim_;
+  int width_;
+  int height_;
+  int x_offset_;
+  int y_offset_;
+  int format_;
+  bool auto_brightness_;
+  int auto_brightness_target_;
+  int auto_brightness_target_variation_;
 
   //==========================================================================
   // P U B L I C   M E T H O D S

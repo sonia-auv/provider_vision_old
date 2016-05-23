@@ -54,7 +54,16 @@ CameraConfiguration::CameraConfiguration(const ros::NodeHandle &nh,
       saturation_d_gain_(0),
       gain_lim_(0),
       exposure_lim_(0),
-      nh_(nh) {
+    nh_(nh),
+    width_(480),
+    height_(640),
+    x_offset_(0),
+    y_offset_(0),
+    format_(17301513),
+    auto_brightness_(true),
+    auto_brightness_target_(128),
+    auto_brightness_target_variation_(16),
+    exposure_manual_(true) {
   DeserializeConfiguration(name);
 }
 
@@ -102,6 +111,15 @@ CameraConfiguration::CameraConfiguration(const CameraConfiguration &rhs)
   gain_lim_ = rhs.gain_lim_;
   exposure_lim_ = rhs.exposure_lim_;
   nh_ = rhs.nh_;
+  width_ = rhs.width_;
+  height_ = rhs.height_;
+  x_offset_ = rhs.x_offset_;
+  y_offset_ = rhs.y_offset_;
+  format_ = rhs.format_;
+  auto_brightness_ = rhs.auto_brightness_;
+  auto_brightness_target_ = rhs.auto_brightness_target_;
+  auto_brightness_target_variation_ = rhs.auto_brightness_target_variation_;
+  exposure_manual_ = rhs.exposure_manual_;
 }
 
 //------------------------------------------------------------------------------
@@ -148,6 +166,15 @@ CameraConfiguration::CameraConfiguration(CameraConfiguration &&rhs)
   gain_lim_ = rhs.exposure_lim_;
   exposure_lim_ = rhs.exposure_lim_;
   nh_ = rhs.nh_;
+  width_ = rhs.width_;
+  height_ = rhs.height_;
+  x_offset_ = rhs.x_offset_;
+  y_offset_ = rhs.y_offset_;
+  format_ = rhs.format_;
+  auto_brightness_ = rhs.auto_brightness_;
+  auto_brightness_target_ = rhs.auto_brightness_target_;
+  auto_brightness_target_variation_ = rhs.auto_brightness_target_variation_;
+  exposure_manual_ = rhs.exposure_manual_;
 }
 
 CameraConfiguration::~CameraConfiguration() ATLAS_NOEXCEPT {}
@@ -173,7 +200,7 @@ void CameraConfiguration::DeserializeConfiguration(const std::string &name)
   FindParameter("/camera_parameters/" + name + "/gain", gain_);
   FindParameter("/camera_parameters/" + name + "/shutter", shutter_);
   FindParameter("/camera_parameters/" + name + "/gamma", gamma_);
-  FindParameter("/camera_parameters/" + name + "/exposure", shutter_);
+  FindParameter("/camera_parameters/" + name + "/exposure", exposure_);
   FindParameter("/camera_parameters/" + name + "/white_balance_blue",
                 white_balance_blue_);
   FindParameter("/camera_parameters/" + name + "/white_balance_red",
@@ -219,6 +246,20 @@ void CameraConfiguration::DeserializeConfiguration(const std::string &name)
                 saturation_d_gain_);
   FindParameter("/camera_parameters/" + name + "/gain_lim", gain_lim_);
   FindParameter("/camera_parameters/" + name + "/exposure_lim", exposure_lim_);
+  FindParameter("/camera_parameters/" + name + "/width", width_);
+  FindParameter("/camera_parameters/" + name + "/height", height_);
+  FindParameter("/camera_parameters/" + name + "/x_offset", x_offset_);
+  FindParameter("/camera_parameters/" + name + "/y_offset", y_offset_);
+  FindParameter("/camera_parameters/" + name + "/format", format_);
+  FindParameter("/camera_parameters/" + name + "/auto_brightness",
+                auto_brightness_);
+  FindParameter("/camera_parameters/" + name + "/auto_brightness_target",
+                auto_brightness_target_);
+  FindParameter(
+      "/camera_parameters/" + name + "/auto_brightness_target_variation",
+      auto_brightness_target_variation_);
+  FindParameter("/camera_parameters/" + name + "/exposure_manual",
+                exposure_manual_);
 }
 
 //------------------------------------------------------------------------------

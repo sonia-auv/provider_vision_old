@@ -1,7 +1,7 @@
 # File containing all the initial camera parameters for the default camera.
 
 # Parameters for the Front Guppy Camera
-/provider_vision/camera_parameters/front_guppy/name: "Front Guppy"
+/provider_vision/camera_parameters/front_guppy/name: "front_guppy"
 /provider_vision/camera_parameters/front_guppy/guid: "2892819690326160"
 /provider_vision/camera_parameters/front_guppy/framerate: 0
 /provider_vision/camera_parameters/front_guppy/gain_manual: true
@@ -42,7 +42,7 @@
 /provider_vision/camera_parameters/front_guppy/exposure_lim: 190.0
 
 # Parameters for the Bottom Guppy Camera
-/provider_vision/camera_parameters/bottom_guppy/name: "Bottom Guppy"
+/provider_vision/camera_parameters/bottom_guppy/name: "bottom_guppy"
 /provider_vision/camera_parameters/bottom_guppy/guid: "582164340023517285"
 /provider_vision/camera_parameters/bottom_guppy/framerate: 0
 /provider_vision/camera_parameters/bottom_guppy/gain_manual: true
@@ -82,6 +82,24 @@
 /provider_vision/camera_parameters/bottom_guppy/gain_lim: 480.0
 /provider_vision/camera_parameters/bottom_guppy/exposure_lim: 80.0
 
+
+# Parameters for the Bottom GigE Camera
+/provider_vision/camera_parameters/bottom_gige/name: "bottom_gige"
+/provider_vision/camera_parameters/bottom_gige/guid: "1230819763"
+/provider_vision/camera_parameters/bottom_gige/framerate: 15
+/provider_vision/camera_parameters/bottom_gige/auto_brightness: true
+/provider_vision/camera_parameters/bottom_gige/auto_brightness_target: 100
+/provider_vision/camera_parameters/bottom_gige/auto_brightness_target_variation: 16
+/provider_vision/camera_parameters/bottom_gige/gain_manual: false
+/provider_vision/camera_parameters/bottom_gige/gain: 1
+/provider_vision/camera_parameters/bottom_gige/exposure: 1000
+/provider_vision/camera_parameters/bottom_gige/exposure_manual: false
+/provider_vision/camera_parameters/bottom_gige/white_balance_manual: true
+/provider_vision/camera_parameters/bottom_gige/width: 968
+/provider_vision/camera_parameters/bottom_gige/height: 608
+/provider_vision/camera_parameters/bottom_gige/x_offset: 484
+/provider_vision/camera_parameters/bottom_gige/y_offset: 304
+/provider_vision/camera_parameters/bottom_gige/format: 17301513
 
 # Parameters for the all other camera (default configurations)
 /provider_vision/camera_parameters/default/name: "Default Camera"

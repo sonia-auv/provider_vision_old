@@ -77,6 +77,8 @@ include_directories(
     ${provider_vision_SRC_DIR}
     ${lib_atlas_INCLUDE_DIRS}
     ${OpenCV_INCLUDE_DIRS}
+    $ENV{GENICAM_ROOT_V3_0}/library/CPP/include/
+    $ENV{GIGEV_DIR}/include/
 )
 
 #===============================================================================
@@ -89,7 +91,12 @@ target_link_libraries(provider_vision_node
     ${lib_atlas_LIBRARIES}
     ${OpenCV_LIBRARIES}
     yaml-cpp
-    )
+    $ENV{GIGEV_DIR}/lib/libGevApi.so.2.0
+    $ENV{GENICAM_ROOT}/bin/Linux64_x64/libNodeMapData_gcc421_v3_0.so
+    $ENV{GENICAM_ROOT}/bin/Linux64_x64/libXmlParser_gcc421_v3_0.so
+    $ENV{GENICAM_ROOT}/bin/Linux64_x64/libGenApi_gcc421_v3_0.so
+    $ENV{GENICAM_ROOT}/bin/Linux64_x64/libGCBase_gcc421_v3_0.so
+)
 add_dependencies(${PROJECT_NAME}_node ${PROJECT_NAME}_generate_messages_cpp sonia_msgs_generate_messages_cpp)
 
 
