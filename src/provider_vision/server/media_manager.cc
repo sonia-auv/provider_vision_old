@@ -19,17 +19,17 @@
 /// along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
 
 #include "provider_vision/server/media_manager.h"
+#include <lib_atlas/macros.h>
 #include <stdexcept>
 #include <vector>
 #include "provider_vision/config.h"
 #include "provider_vision/media/context/dc1394_context.h"
-#include <lib_atlas/macros.h>
 #ifndef OS_DARWIN
 #include "provider_vision/media/context/gige_context.h"
 #endif
+#include <ros/console.h>
 #include "provider_vision/media/context/file_context.h"
 #include "provider_vision/media/context/webcam_context.h"
-#include <ros/console.h>
 
 namespace provider_vision {
 

@@ -64,16 +64,16 @@ CameraConfiguration::CameraConfiguration(const ros::NodeHandle &nh,
       saturation_d_gain_(0),
       gain_lim_(0),
       exposure_lim_(0),
-    nh_(nh),
-    width_(480),
-    height_(640),
-    x_offset_(0),
-    y_offset_(0),
-    format_(17301513),
-    auto_brightness_(true),
-    auto_brightness_target_(128),
-    auto_brightness_target_variation_(16),
-    exposure_manual_(true) {
+      nh_(nh),
+      width_(480),
+      height_(640),
+      x_offset_(0),
+      y_offset_(0),
+      format_(17301513),
+      auto_brightness_(true),
+      auto_brightness_target_(128),
+      auto_brightness_target_variation_(16),
+      exposure_manual_(true) {
   DeserializeConfiguration(name);
 }
 

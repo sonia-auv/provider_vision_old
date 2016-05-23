@@ -63,8 +63,8 @@ class CameraConfiguration {
   std::string name_;
   double framerate_;
   bool gain_manual_;
-    bool shutter_manual_;
-    bool exposure_manual_;
+  bool shutter_manual_;
+  bool exposure_manual_;
   bool white_balance_manual_;
   double gain_;
   double shutter_;

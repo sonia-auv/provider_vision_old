@@ -21,9 +21,9 @@
 #ifndef PROVIDER_VISION_GIGE_CONTEXT_H
 #define PROVIDER_VISION_GIGE_CONTEXT_H
 
-#include <inttypes.h>
 #include <GenApi/GenApi.h>
 #include <gevapi.h>
+#include <inttypes.h>
 #include "provider_vision/media/camera/base_media.h"
 #include "provider_vision/media/camera/gige_camera.h"
 #include "provider_vision/media/context/base_context.h"

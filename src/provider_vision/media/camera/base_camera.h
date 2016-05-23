@@ -27,7 +27,6 @@
 #include "provider_vision/media/cam_undistord_matrices.h"
 #include "provider_vision/media/camera/base_media.h"
 
-
 namespace provider_vision {
 
 /**
@@ -142,7 +141,6 @@ class BaseCamera : public BaseMedia, protected CameraConfiguration {
   void Calibrate(cv::Mat const &img);
 
   float CalculateMSV(const cv::Mat &img, int nbrRegion);
-
 
   //==========================================================================
   // P R O T E C T E D   M E M B E R S

@@ -21,9 +21,9 @@
 #include <lib_atlas/macros.h>
 #ifndef OS_DARWIN
 
-#include "provider_vision/media/camera/gige_camera.h"
 #include <ros/ros.h>
 #include <string>
+#include "provider_vision/media/camera/gige_camera.h"
 
 namespace provider_vision {
 
@@ -528,6 +528,6 @@ void GigeCamera::balance_white(cv::Mat mat) {
   }
 }
 
-} // namespace
+}  // namespace
 
-#endif // OS_DARWIN
+#endif  // OS_DARWIN

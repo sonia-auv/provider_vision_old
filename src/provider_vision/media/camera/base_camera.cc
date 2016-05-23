@@ -31,7 +31,8 @@ namespace provider_vision {
 //
 BaseCamera::BaseCamera(const CameraConfiguration &configuration)
     : BaseMedia(configuration.name_),
-      CameraConfiguration(configuration), feature_pub_() {
+      CameraConfiguration(configuration),
+      feature_pub_() {
   undistord_matrix_.InitMatrices(undistortion_matrice_path_);
 
   current_features_.exposure = configuration.exposure_;
@@ -76,10 +77,8 @@ BaseCamera::BaseCamera(const CameraConfiguration &configuration)
   msv_lum_ = 0;
   msv_sat_ = 0;
 
-  nh_.advertise<sonia_msgs::CameraFeatures>("camera/" +
-      CameraConfiguration::name_ +
-                                                "_features",
-      1000);
+  nh_.advertise<sonia_msgs::CameraFeatures>(
+      "camera/" + CameraConfiguration::name_ + "_features", 1000);
 }
 
 //------------------------------------------------------------------------------
@@ -91,8 +90,7 @@ BaseCamera::~BaseCamera() {}
 
 //------------------------------------------------------------------------------
 //
-void BaseCamera::PublishCameraFeatures() const {
-}
+void BaseCamera::PublishCameraFeatures() const {}
 
 //------------------------------------------------------------------------------
 //
@@ -196,7 +194,7 @@ double BaseCamera::GetFeature(const Feature &feat) const {
 void BaseCamera::Calibrate(cv::Mat const &img) {
   auto l_hist = CalculateLuminanceHistogram(img);
 
-  msv_lum_= CalculateMSV(l_hist, 5);
+  msv_lum_ = CalculateMSV(l_hist, 5);
   try {
     ROS_INFO_STREAM("MSV: " << msv_lum_);
 

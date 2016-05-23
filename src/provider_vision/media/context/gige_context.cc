@@ -21,14 +21,14 @@
 #include <lib_atlas/macros.h>
 #ifndef OS_DARWIN
 
-#include "provider_vision/media/context/dc1394_context.h"
-#include "provider_vision/media/context/gige_context.h"
+#include <gevapi.h>
 #include <ros/ros.h>
+#include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
-#include <sstream>
-#include <iostream>
-#include <gevapi.h>
+#include "provider_vision/media/context/dc1394_context.h"
+#include "provider_vision/media/context/gige_context.h"
 
 namespace provider_vision {
 
@@ -39,8 +39,7 @@ namespace provider_vision {
 //
 GigeContext::GigeContext(
     const std::vector<CameraConfiguration> &configurations) noexcept
-    : BaseContext(),
-      DRIVER_TAG("[GigE Driver]") {
+    : BaseContext(), DRIVER_TAG("[GigE Driver]") {
   InitContext(configurations);
 }
 
@@ -178,4 +177,4 @@ void GigeContext::GetFeature(BaseCamera::Feature feat, const std::string &name,
 
 }  // namespace provider_vision
 
-#endif // OS_DARWIN
+#endif  // OS_DARWIN
