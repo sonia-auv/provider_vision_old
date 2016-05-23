@@ -74,11 +74,11 @@ class FileContext : public BaseContext {
 
   void StopStreamingMedia(const std::string &name) override;
 
-  void SetFeature(BaseCamera::Feature feat, const std::string &name,
-                  float val) override;
+  virtual void GetFeature(const BaseCamera::Feature &feat,
+                          const std::string &name, boost::any &val) const override;
 
-  void GetFeature(BaseCamera::Feature feat, const std::string &name,
-                  float &val) const override;
+  virtual void SetFeature(const BaseCamera::Feature &feat, const std::string
+  &name, boost::any &val) override;
 
   bool ContainsMedia(const std::string &nameMedia) const override;
 

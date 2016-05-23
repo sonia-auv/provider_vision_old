@@ -104,15 +104,16 @@ bool FileContext::ContainsMedia(const std::string &nameMedia) const {
   }
   return result;
 }
-//------------------------------------------------------------------------------
-//
-void FileContext::SetFeature(BaseCamera::Feature feat, const std::string &name,
-                             float val) {}
 
 //------------------------------------------------------------------------------
 //
-void FileContext::GetFeature(BaseCamera::Feature feat, const std::string &name,
-                             float &val) const {}
+void FileContext::SetFeature(const BaseCamera::Feature &feat,
+                             const std::string &name, boost::any &val) {}
+
+//------------------------------------------------------------------------------
+//
+void FileContext::GetFeature(const BaseCamera::Feature &feat,
+                             const std::string &name, boost::any &val) const {}
 
 //------------------------------------------------------------------------------
 //

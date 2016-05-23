@@ -161,18 +161,18 @@ bool GigeContext::WatchDogFunc() {
 
 //------------------------------------------------------------------------------
 //
-void GigeContext::SetFeature(BaseCamera::Feature feat, const std::string &name,
-                             float val) {
+void GigeContext::SetFeature(const BaseCamera::Feature &feat,
+                               const std::string &name, boost::any &val) {
   GigeCamera::Ptr cam = GetGigeCamera(name);
   cam->SetFeature(feat, val);
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeContext::GetFeature(BaseCamera::Feature feat, const std::string &name,
-                             float &val) const {
+void GigeContext::GetFeature(const BaseCamera::Feature &feat,
+                               const std::string &name, boost::any &val) const {
   GigeCamera::Ptr cam = GetGigeCamera(name);
-  val = cam->GetFeature(feat);
+  cam->GetFeature(feat, val);
 }
 
 }  // namespace provider_vision

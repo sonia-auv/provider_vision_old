@@ -29,16 +29,15 @@
 #include <sonia_msgs/get_filterchain_from_execution.h>
 #include <sonia_msgs/get_information_list.h>
 #include <sonia_msgs/get_media_from_execution.h>
-#include <sonia_msgs/get_media_param.h>
 #include <sonia_msgs/manage_filterchain.h>
 #include <sonia_msgs/manage_filterchain_filter.h>
 #include <sonia_msgs/save_filterchain.h>
 #include <sonia_msgs/set_filterchain_filter_observer.h>
 #include <sonia_msgs/set_filterchain_filter_order.h>
 #include <sonia_msgs/set_filterchain_filter_param.h>
-#include <sonia_msgs/set_media_param.h>
+#include <sonia_msgs/GetCameraFeature.h>
+#include <sonia_msgs/SetCameraFeature.h>
 #include <memory>
-#include <string>
 #include <string>
 #include <vector>
 #include "provider_vision/config.h"
@@ -359,17 +358,12 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
       provider_vision::get_information_list::Request &rqst,
       provider_vision::get_information_list::Response &rep);
 
-  /**
-   * Answer to the service get media params
-   */
-  bool CallbackGetCMD(get_media_param::Request &rqst,
-                      get_media_param::Response &rep);
+  bool CallbackGetCameraFeature(sonia_msgs::GetCameraFeature::Request &rqst,
+                                sonia_msgs::GetCameraFeature::Response &rep);
 
-  /**
-   * Answer to the service asking to set a parameter of a media.
-   */
-  bool CallbackSetCMD(set_media_param::Request &rqst,
-                      set_media_param::Response &rep);
+  bool CallbackSetCameraFeature(
+      sonia_msgs::SetCameraFeature::Request &rqst,
+      sonia_msgs::SetCameraFeature::Response &rep);
 
   //==========================================================================
   // P R I V A T E   M E M B E R S

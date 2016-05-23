@@ -23,6 +23,7 @@
 
 #include <memory>
 #include <mutex>
+#include <boost/any.hpp>
 #include "provider_vision/config.h"
 #include "provider_vision/media/cam_undistord_matrices.h"
 #include "provider_vision/media/camera/base_media.h"
@@ -46,22 +47,98 @@ class BaseCamera : public BaseMedia, protected CameraConfiguration {
    * the enum name, ex. "FRAMERATE" for FEATURE::FRAMERATE
    */
   enum class Feature {
-    ERROR_FEATURE,
-    SHUTTER_AUTO,
-    SHUTTER_MANUAL,
-    SHUTTER,
-    GAIN_AUTO,
-    GAIN_MANUAL,
-    GAIN,
-    WHITE_BALANCE_AUTO,
-    WHITE_BALANCE_MANUAL,
-    WHITE_BALANCE_RED,
-    WHITE_BALANCE_BLUE,
-    FRAMERATE,
-    GAMMA,
-    EXPOSURE,
-    SATURATION
+    SHUTTER_MODE,
+    SHUTTER_VALUE,
+    GAIN_MODE,
+    GAIN_VALUE,
+    WHITE_BALANCE_MODE,
+    WHITE_BALANCE_RED_VALUE,
+    WHITE_BALANCE_BLUE_VALUE,
+    // FRAMERATE_MODE,
+    FRAMERATE_VALUE,
+    // GAMMA_MODE,
+    GAMMA_VALUE,
+    EXPOSURE_MODE,
+    EXPOSURE_VALUE,
+    // SATURATION_MODE,
+    SATURATION_VALUE
   };
+
+  struct FeatureMode {
+    static constexpr bool AUTO = true;
+    static constexpr bool MANUAL = false;
+  };
+
+  //==========================================================================
+  // P U B L I C   C / D T O R S
+
+  explicit BaseCamera(const CameraConfiguration &configuration);
+
+  virtual ~BaseCamera();
+
+  //==========================================================================
+  // P U B L I C   M E T H O D S
+
+  void SetFeature(const Feature &feat, const boost::any &value);
+
+  void GetFeature(const Feature &feat, boost::any &value) const;
+
+  bool HasArtificialFramerate() const override;
+
+  void PublishCameraFeatures() const;
+
+ protected:
+  //==========================================================================
+  // P R O T E C T E D   M E T H O D S
+
+  virtual void SetGainMode(bool) = 0;
+  virtual void SetGainValue(double value) = 0;
+  virtual bool GetGainMode() const = 0;
+  virtual double GetGainValue() const = 0;
+
+  virtual double GetGammaValue() const = 0;
+  virtual void SetGammaValue(double value) = 0;
+
+  virtual void SetExposureMode(bool) = 0;
+  virtual bool GetExposureMode() const = 0;
+  virtual double GetExposureValue() const = 0;
+  virtual void SetExposureValue(double value) = 0;
+
+  virtual double GetSaturationValue() const = 0;
+  virtual void SetSaturationValue(double value) = 0;
+
+  virtual void SetShutterValue(double value) = 0;
+  virtual void SetShutterMode(bool) = 0;
+  virtual bool GetShutterMode() const = 0;
+  virtual double GetShutterValue() const = 0;
+
+  virtual void SetFrameRateValue(double value) = 0;
+  virtual double GetFrameRateValue() const = 0;
+
+  virtual void SetWhiteBalanceMode(bool) = 0;
+  virtual bool GetWhiteBalanceMode() const = 0;
+  virtual void SetWhiteBalanceRedValue(double value) = 0;
+  virtual void SetWhiteBalanceBlueValue(double value) = 0;
+  virtual double GetWhiteBalanceRed() const = 0;
+  virtual double GetWhiteBalanceBlue() const = 0;
+
+  float GetLimunanceMSV() const noexcept;
+  float GetSaturationMSV() const noexcept;
+
+  void Calibrate(cv::Mat const &img);
+
+  float CalculateMSV(const cv::Mat &img, int nbrRegion);
+
+  //==========================================================================
+  // P R O T E C T E D   M E M B E R S
+
+  ros::Publisher feature_pub_;
+
+  CameraUndistordMatrices undistord_matrix_;
+
+ private:
+  //==========================================================================
+  // T Y P E D E F   A N D   E N U M
 
   struct SPid {
     double d_state;       // Last position input
@@ -78,86 +155,13 @@ class BaseCamera : public BaseMedia, protected CameraConfiguration {
    * This is going to be compared with the real values
    * of the features to calculate the error
    */
-  struct FeatureValues {
+  struct CalibrationFeatureValues {
     double gain;
     double gamma;
     double exposure;
     double saturation;
   };
 
-  //==========================================================================
-  // P U B L I C   C / D T O R S
-
-  explicit BaseCamera(const CameraConfiguration &configuration);
-
-  virtual ~BaseCamera();
-
-  //==========================================================================
-  // P U B L I C   M E T H O D S
-
-  virtual void SetFeature(const Feature &feat, double value = 0);
-
-  virtual double GetFeature(const Feature &feat) const;
-
-  bool HasArtificialFramerate() const override;
-
-  void PublishCameraFeatures() const;
-
- protected:
-  //==========================================================================
-  // P R O T E C T E D   M E T H O D S
-
-  virtual double GetGainValue() const = 0;
-  virtual void SetGainAuto() = 0;
-  virtual void SetGainManual() = 0;
-  virtual void SetGainValue(double value) = 0;
-
-  virtual double GetGammaValue() const = 0;
-  virtual void SetGammaValue(double value) = 0;
-
-  virtual double GetExposureValue() const = 0;
-  virtual void SetExposureValue(double value) = 0;
-
-  virtual double GetSaturationValue() const = 0;
-  virtual void SetSaturationValue(double value) = 0;
-
-  virtual void SetShutterValue(double value) = 0;
-  virtual void SetShutterAuto() = 0;
-  virtual void SetShutterManual() = 0;
-  virtual double GetShutterMode() const = 0;
-  virtual double GetShutterValue() const = 0;
-
-  virtual void SetFrameRateValue(double value) = 0;
-  virtual double GetFrameRateValue() const = 0;
-
-  virtual void SetWhiteBalanceAuto() = 0;
-  virtual void SetWhiteBalanceManual() = 0;
-  virtual double GetWhiteBalanceMode() const = 0;
-  virtual void SetWhiteBalanceRedValue(double value) = 0;
-  virtual void SetWhiteBalanceBlueValue(double value) = 0;
-  virtual double GetWhiteBalanceRed() const = 0;
-  virtual double GetWhiteBalanceBlue() const = 0;
-
-  void Calibrate(cv::Mat const &img);
-
-  float CalculateMSV(const cv::Mat &img, int nbrRegion);
-
-  //==========================================================================
-  // P R O T E C T E D   M E M B E R S
-
-  ros::Publisher feature_pub_;
-
-  FeatureValues current_features_;
-
-  CameraUndistordMatrices undistord_matrix_;
-
-  SPid gamma_pid_, gain_pid_, exposure_pid_, saturation_pid_;
-
-  double gain_lim_, exposure_lim_;
-
-  float msv_lum_, msv_sat_;
-
- private:
   //==========================================================================
   // P R I V A T E   M E T H O D S
 
@@ -168,6 +172,22 @@ class BaseCamera : public BaseMedia, protected CameraConfiguration {
 
   //==========================================================================
   // P R I V A T E   M E M B E R S
+
+  CalibrationFeatureValues current_features_;
+
+  double gain_lim_;
+  double exposure_lim_;
+
+  /// We are going to lock every access to the features of the camera as we are
+  /// certainly going to be accessed through a different thread (ros service)
+  mutable std::mutex features_mutex_;
+
+  /// The last values of the MSV calculated during the calibration of the
+  /// cameras.
+  float msv_lum_;
+  float msv_sat_;
+
+  SPid gamma_pid_, gain_pid_, exposure_pid_, saturation_pid_;
 };
 
 //==============================================================================

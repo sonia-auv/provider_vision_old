@@ -59,6 +59,8 @@ class CameraConfiguration {
   //==========================================================================
   // P U B L I C   M E M B E R S
 
+  ros::NodeHandle nh_;
+
   uint64_t guid_;
   std::string name_;
   double framerate_;
@@ -107,8 +109,6 @@ class CameraConfiguration {
   bool auto_brightness_;
   int auto_brightness_target_;
   int auto_brightness_target_variation_;
-
-  ros::NodeHandle nh_;
 
   std::string undistortion_matrice_path_;
 

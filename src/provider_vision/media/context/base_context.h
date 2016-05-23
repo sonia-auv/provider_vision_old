@@ -26,6 +26,7 @@
 #include <mutex>
 #include "provider_vision/media/camera/base_camera.h"
 #include "provider_vision/media/camera/base_media.h"
+#include <boost/any.hpp>
 
 namespace provider_vision {
 
@@ -60,14 +61,11 @@ class BaseContext : public atlas::Runnable {
 
   virtual void StopStreamingMedia(const std::string &name) = 0;
 
-  /**
-   * Feature setting/getting handler
-   */
-  virtual void SetFeature(BaseCamera::Feature feat, const std::string &name,
-                          float val) = 0;
+  virtual void GetFeature(const BaseCamera::Feature &feat,
+                          const std::string &name, boost::any &val) const = 0;
 
-  virtual void GetFeature(BaseCamera::Feature feat, const std::string &name,
-                          float &val) const = 0;
+  virtual void SetFeature(const BaseCamera::Feature &feat, const std::string
+  &name, boost::any &val) = 0;
 
   /**
    * Method to get all listed (connected) camera of the system

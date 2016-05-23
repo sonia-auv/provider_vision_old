@@ -19,7 +19,6 @@
 /// along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
 
 #include "provider_vision/server/vision_server.h"
-#include <string>
 
 namespace provider_vision {
 
@@ -41,12 +40,6 @@ VisionServer::VisionServer(const ros::NodeHandle &nh)
   RegisterService<get_information_list>(base_node_name + "get_information_list",
                                         &VisionServer::CallbackInfoListCMD,
                                         *this);
-
-  RegisterService<get_media_param>(base_node_name + "get_media_param_list",
-                                   &VisionServer::CallbackGetCMD, *this);
-
-  RegisterService<set_media_param>(base_node_name + "set_media_param_list",
-                                   &VisionServer::CallbackSetCMD, *this);
 
   RegisterService<copy_filterchain>(base_node_name + "copy_filterchain",
                                     &VisionServer::CallbackCopyFc, *this);
@@ -92,6 +85,17 @@ VisionServer::VisionServer(const ros::NodeHandle &nh)
   RegisterService<set_filterchain_filter_observer>(
       base_node_name + "set_filterchain_filter_observer",
       &VisionServer::CallbackSetObserver, *this);
+
+
+  // This is the services that are part of the new version of the provider
+  // vision.
+  RegisterService<sonia_msgs::GetCameraFeature>(
+      base_node_name + "get_camera_feature",
+      &VisionServer::CallbackGetCameraFeature, *this);
+  RegisterService<sonia_msgs::SetCameraFeature>(
+      base_node_name + "get_camera_feature",
+      &VisionServer::CallbackSetCameraFeature, *this);
+
 }
 
 //------------------------------------------------------------------------------
@@ -178,34 +182,6 @@ bool provider_vision::VisionServer::CallbackInfoListCMD(
   }
 
   return true;
-}
-
-//------------------------------------------------------------------------------
-//
-bool VisionServer::CallbackGetCMD(get_media_param::Request &rqst,
-                                  get_media_param::Response &rep) {
-  try {
-    rep.value = media_mgr_.GetCameraFeature(rqst.media_name, rqst.param_name);
-    return true;
-  } catch (const std::invalid_argument &e) {
-    ROS_ERROR("An error occured while getting the feature: %s", e.what());
-    return false;
-  }
-}
-
-//------------------------------------------------------------------------------
-//
-bool VisionServer::CallbackSetCMD(set_media_param::Request &rqst,
-                                  set_media_param::Response &rep) {
-  try {
-    media_mgr_.SetCameraFeature(rqst.media_name, rqst.param_name, rqst.value);
-    rep.success = rep.SUCCESS;
-    return true;
-  } catch (const std::invalid_argument &e) {
-    rep.success = rep.FAIL;
-    ROS_ERROR("An error occured while setting the feature: %s", e.what());
-    return false;
-  }
 }
 
 //------------------------------------------------------------------------------
@@ -459,6 +435,54 @@ bool VisionServer::CallbackGetMediaFromExec(
   ROS_INFO("Call to get_media_from_execution.");
   auto response = "media_" + rqst.exec_name;
   rep.list = response;
+  return true;
+}
+
+//------------------------------------------------------------------------------
+//
+bool VisionServer::CallbackGetCameraFeature(sonia_msgs::GetCameraFeature::Request &rqst,
+                              sonia_msgs::GetCameraFeature::Response &rep) {
+  boost::any feature_value;
+  media_mgr_.GetCameraFeature(rqst.camera_name, rqst
+      .camera_feature, feature_value);
+  std::stringstream ss;
+  if(feature_value.type() == typeid(bool)) {
+    rep.feature_type = sonia_msgs::GetCameraFeature::Request::FEATURE_BOOL;
+    ss << boost::any_cast<bool>(feature_value);
+  } else if (feature_value.type() == typeid(int)) {
+    rep.feature_type = sonia_msgs::GetCameraFeature::Request::FEATURE_INT;
+    ss << boost::any_cast<int>(feature_value);
+  } else if(feature_value.type() == typeid(double)) {
+    rep.feature_type = sonia_msgs::GetCameraFeature::Request::FEATURE_DOUBLE;
+    ss << boost::any_cast<double>(feature_value);
+  } else {
+    ROS_ERROR("The feature type is not supported.");
+    return false;
+  }
+  rep.feature_value = ss.str();
+  return true;
+}
+
+//------------------------------------------------------------------------------
+//
+bool VisionServer::CallbackSetCameraFeature(
+    sonia_msgs::SetCameraFeature::Request &rqst,
+    sonia_msgs::SetCameraFeature::Response &rep) {
+  if(rqst.feature_type == sonia_msgs::GetCameraFeatureRequest::FEATURE_BOOL) {
+    boost::any value = boost::lexical_cast<bool>(rqst.feature_value);
+    media_mgr_.GetCameraFeature(rqst.camera_name, rqst.camera_feature, value);
+  } else if (rqst.feature_type ==
+      sonia_msgs::GetCameraFeatureRequest::FEATURE_DOUBLE) {
+    boost::any value = boost::lexical_cast<double>(rqst.feature_value);
+    media_mgr_.GetCameraFeature(rqst.camera_name, rqst.camera_feature, value);
+  } else if (rqst.feature_type ==
+      sonia_msgs::GetCameraFeatureRequest::FEATURE_INT) {
+    boost::any value = boost::lexical_cast<int>(rqst.feature_value);
+    media_mgr_.GetCameraFeature(rqst.camera_name, rqst.camera_feature, value);
+  } else {
+    ROS_ERROR("The feature type is not supported.");
+    return false;
+  }
   return true;
 }
 

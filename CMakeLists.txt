@@ -18,8 +18,8 @@ if (NOT CMAKE_BUILD_TYPE)
        FORCE)
 endif (NOT CMAKE_BUILD_TYPE)
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++11 -Wall")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++11 -O3 -s")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++11 -Wall -Wno-unknown-pragmas")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++11 -O3 -s -Wno-unknown-pragmas")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -78,8 +78,8 @@ include_directories(
     ${OpenCV_INCLUDE_DIRS}
 )
 
-if(!APPLE)
-  target_link_libraries(provider_vision_node
+if(NOT APPLE)
+  include_directories(
       $ENV{GENICAM_ROOT_V3_0}/library/CPP/include/
       $ENV{GIGEV_DIR}/include/
       )
@@ -97,7 +97,7 @@ target_link_libraries(provider_vision_node
     yaml-cpp
 )
 
-if(!APPLE)
+if(NOT APPLE)
   target_link_libraries(provider_vision_node
       $ENV{GIGEV_DIR}/lib/libGevApi.so.2.0
       $ENV{GENICAM_ROOT}/bin/Linux64_x64/libNodeMapData_gcc421_v3_0.so

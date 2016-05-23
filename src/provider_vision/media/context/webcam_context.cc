@@ -47,13 +47,13 @@ void WebcamContext::CloseContext() {}
 
 //------------------------------------------------------------------------------
 //
-void WebcamContext::SetFeature(BaseCamera::Feature feat,
-                               const std::string &name, float val) {}
+void WebcamContext::SetFeature(const BaseCamera::Feature &feat,
+                               const std::string &name, boost::any &val) {}
 
 //------------------------------------------------------------------------------
 //
-void WebcamContext::GetFeature(BaseCamera::Feature feat,
-                               const std::string &name, float &val) const {}
+void WebcamContext::GetFeature(const BaseCamera::Feature &feat,
+                               const std::string &name, boost::any &val) const {}
 
 //------------------------------------------------------------------------------
 //

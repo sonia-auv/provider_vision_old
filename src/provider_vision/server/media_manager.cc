@@ -26,7 +26,7 @@
 #include "provider_vision/media/context/dc1394_context.h"
 #ifndef OS_DARWIN
 #include "provider_vision/media/context/gige_context.h"
-#endif
+#endif // OS_DARWIN
 #include <ros/console.h>
 #include "provider_vision/media/context/file_context.h"
 #include "provider_vision/media/context/webcam_context.h"
@@ -212,7 +212,8 @@ size_t MediaManager::GetAllMediasCount() const noexcept {
 //------------------------------------------------------------------------------
 //
 void MediaManager::SetCameraFeature(const std::string &media_name,
-                                    const std::string &feature, float value) {
+                                    const std::string &feature, boost::any
+                                    &value) {
   BaseContext::Ptr context = GetContextFromMedia(media_name);
   if (context) {
     context->SetFeature(GetFeatureFromName(feature), media_name, value);
@@ -223,16 +224,15 @@ void MediaManager::SetCameraFeature(const std::string &media_name,
 
 //------------------------------------------------------------------------------
 //
-float MediaManager::GetCameraFeature(const std::string &media_name,
-                                     const std::string &feature) {
+void MediaManager::GetCameraFeature(const std::string &media_name,
+                                     const std::string &feature, boost::any
+                                    &value) const {
   BaseContext::Ptr context = GetContextFromMedia(media_name);
-  float value = -1.0f;
   if (context) {
     context->GetFeature(GetFeatureFromName(feature), media_name, value);
   } else {
     throw std::invalid_argument("Context not found");
   }
-  return value;
 }
 
 //------------------------------------------------------------------------------
@@ -252,17 +252,17 @@ BaseContext::Ptr MediaManager::GetContextFromMedia(
 BaseCamera::Feature MediaManager::GetFeatureFromName(
     const std::string &name) const {
   if (name == "SHUTTER_AUTO") {
-    return BaseCamera::Feature::SHUTTER_AUTO;
+    return BaseCamera::Feature::SHUTTER_MODE;
   } else if (name == "SHUTTER") {
-    return BaseCamera::Feature::SHUTTER;
+    return BaseCamera::Feature::SHUTTER_VALUE;
   } else if (name == "WHITE_BALANCE_AUTO") {
-    return BaseCamera::Feature::WHITE_BALANCE_AUTO;
+    return BaseCamera::Feature::WHITE_BALANCE_MODE;
   } else if (name == "WHITE_BALANCE_RED") {
-    return BaseCamera::Feature::WHITE_BALANCE_RED;
+    return BaseCamera::Feature::WHITE_BALANCE_RED_VALUE;
   } else if (name == "WHITE_BALANCE_BLUE") {
-    return BaseCamera::Feature::WHITE_BALANCE_BLUE;
+    return BaseCamera::Feature::WHITE_BALANCE_BLUE_VALUE;
   } else if (name == "FRAMERATE") {
-    return BaseCamera::Feature::FRAMERATE;
+    return BaseCamera::Feature::FRAMERATE_VALUE;
   } else {
     throw std::invalid_argument("No feature with this name");
   }

@@ -21,8 +21,33 @@
 #include "provider_vision/media/camera/base_camera.h"
 #include <ros/ros.h>
 #include <sonia_msgs/CameraFeatures.h>
+#include <type_traits>
+#include <boost/any.hpp>
 
 namespace provider_vision {
+
+namespace {
+
+inline bool CastToBool(const boost::any &op) {
+  // Unfortunatly, cannot static assert the type of the value.
+  // The type will be cast at runtime instead.
+  try {
+    return boost::any_cast<bool>(op);
+  } catch (const boost::bad_any_cast &) {
+    throw std::runtime_error("The value for this feature must be a boolean");
+  }
+}
+
+inline double CastToDouble(const boost::any &op) {
+  // Unfortunatly, cannot static assert the type of the value.
+  // The type will be cast at runtime instead.
+  try {
+    return boost::any_cast<double>(op);
+  } catch(const boost::bad_any_cast &) {
+    throw std::runtime_error("The value for this feature must be a double");
+  }
+}
+}
 
 //==============================================================================
 // C / D T O R S   S E C T I O N
@@ -90,101 +115,126 @@ BaseCamera::~BaseCamera() {}
 
 //------------------------------------------------------------------------------
 //
-void BaseCamera::PublishCameraFeatures() const {}
+void BaseCamera::PublishCameraFeatures() const {
+  sonia_msgs::CameraFeatures msg;
+
+  msg.shutter_mode = static_cast<uint8_t>(GetShutterMode());
+  msg.white_balance_mode = static_cast<uint8_t>(GetShutterMode());
+  msg.gain_mode = static_cast<uint8_t>(GetShutterMode());
+
+  msg.shutter_value = GetShutterValue();
+  msg.gamma_value = GetShutterValue();
+  msg.exposure_value = GetShutterValue();
+  msg.saturation_value = GetShutterValue();
+  msg.luminance_msv = GetLimunanceMSV();
+  msg.saturation_msv = GetSaturationMSV();
+
+  msg.gamma_pid = std::vector<double>{gamma_pid_.p_gain, gamma_pid_.i_gain,
+                                      gamma_pid_.d_gain};
+  msg.gain_pid =
+      std::vector<double>{gain_pid_.p_gain, gain_pid_.i_gain, gain_pid_.d_gain};
+  msg.exposure_pid = std::vector<double>{
+      exposure_pid_.p_gain, exposure_pid_.i_gain, exposure_pid_.d_gain};
+  msg.saturation_pid = std::vector<double>{
+      saturation_pid_.p_gain, saturation_pid_.i_gain, saturation_pid_.d_gain};
+
+  feature_pub_.publish(msg);
+}
 
 //------------------------------------------------------------------------------
 //
-void BaseCamera::SetFeature(const Feature &feat, double value) {
-  std::stringstream ss;
-  ss << std::hex << guid_ << " " << GetName();
+void BaseCamera::SetFeature(const Feature &feat, const boost::any &value) {
   try {
     switch (feat) {
-      case Feature::SHUTTER:
-        SetShutterValue(value);
+      case Feature::SHUTTER_VALUE:
+        SetShutterValue(CastToDouble(value));
         break;
-      case Feature::SHUTTER_AUTO:
-        SetShutterAuto();
+      case Feature::SHUTTER_MODE:
+        SetShutterMode(CastToBool(value));
         break;
-      case Feature::SHUTTER_MANUAL:
-        SetShutterManual();
+      case Feature::GAIN_MODE:
+        SetGainMode(CastToBool(value));
         break;
-      case Feature::GAIN_AUTO:
-        SetGainAuto();
+      case Feature::GAIN_VALUE:
+        SetGainValue(CastToDouble(value));
         break;
-      case Feature::GAIN_MANUAL:
-        SetGainManual();
+      case Feature::FRAMERATE_VALUE:
+        SetFrameRateValue(CastToDouble(value));
         break;
-      case Feature::GAIN:
-        SetGainValue(value);
+      case Feature::WHITE_BALANCE_MODE:
+        SetWhiteBalanceMode(CastToBool(value));
         break;
-      case Feature::FRAMERATE:
-        SetFrameRateValue(value);
-      case Feature::WHITE_BALANCE_AUTO:
-        SetWhiteBalanceAuto();
+      case Feature::WHITE_BALANCE_BLUE_VALUE:
+        SetWhiteBalanceBlueValue(CastToDouble(value));
         break;
-      case Feature::WHITE_BALANCE_MANUAL:
-        SetWhiteBalanceManual();
+      case Feature::WHITE_BALANCE_RED_VALUE:
+        SetWhiteBalanceRedValue(CastToDouble(value));
         break;
-      case Feature::WHITE_BALANCE_BLUE:
-        SetWhiteBalanceBlueValue(value);
+      case Feature::EXPOSURE_VALUE:
+        SetExposureValue(CastToDouble(value));
         break;
-      case Feature::WHITE_BALANCE_RED:
-        SetWhiteBalanceRedValue(value);
+      case Feature::GAMMA_VALUE:
+        SetGammaValue(CastToDouble(value));
         break;
-      case Feature::EXPOSURE:
-        SetExposureValue(value);
+      case Feature::SATURATION_VALUE:
+        SetSaturationValue(CastToDouble(value));
         break;
-      case Feature::GAMMA:
-        SetGammaValue(value);
-        break;
-      case Feature::SATURATION:
-        SetSaturationValue(value);
-        break;
-      case Feature::ERROR_FEATURE:
+      case Feature::EXPOSURE_MODE:
+        SetExposureMode(CastToBool(value));
         break;
     }
   } catch (const std::runtime_error &e) {
-    ROS_ERROR("%s", e.what());
+    ROS_ERROR("Could not set the feature for the camera: %s", e.what());
+    throw;
   }
   PublishCameraFeatures();
 }
 
 //------------------------------------------------------------------------------
 //
-double BaseCamera::GetFeature(const Feature &feat) const {
+void BaseCamera::GetFeature(const Feature &feat, boost::any &value) const {
   try {
     switch (feat) {
-      case Feature::SHUTTER:
-        return GetShutterValue();
-      case Feature::SHUTTER_AUTO:
-        return GetShutterMode();
-      case Feature::SHUTTER_MANUAL:
-        return (static_cast<int>(GetShutterMode()) + 1) % 2;
-      case Feature::FRAMERATE:
-        return GetFrameRateValue();
-      case Feature::WHITE_BALANCE_AUTO:
-        return GetWhiteBalanceMode();
-      case Feature::WHITE_BALANCE_MANUAL:
-        return (static_cast<int>(GetWhiteBalanceMode()) + 1) % 2;
-      case Feature::WHITE_BALANCE_BLUE:
-        return GetWhiteBalanceBlue();
-      case Feature::WHITE_BALANCE_RED:
-        return GetWhiteBalanceRed();
-      case Feature::GAIN:
-        return GetGainValue();
-      case Feature::GAMMA:
-        return GetGammaValue();
-      case Feature::EXPOSURE:
-        return GetExposureValue();
-      case Feature::SATURATION:
-        return GetSaturationValue();
-      case Feature::ERROR_FEATURE:
-      default:
-        return -1.0f;
+      case Feature::SHUTTER_VALUE:
+        value = GetShutterValue();
+        break;
+      case Feature::SHUTTER_MODE:
+        value = GetShutterMode();
+        break;
+      case Feature::FRAMERATE_VALUE:
+        value = GetFrameRateValue();
+        break;
+      case Feature::WHITE_BALANCE_MODE:
+        value = GetWhiteBalanceMode();
+        break;
+      case Feature::WHITE_BALANCE_BLUE_VALUE:
+        value = GetWhiteBalanceBlue();
+        break;
+      case Feature::WHITE_BALANCE_RED_VALUE:
+        value = GetWhiteBalanceRed();
+        break;
+      case Feature::GAIN_VALUE:
+        value = GetGainValue();
+        break;
+      case Feature::GAMMA_VALUE:
+        value = GetGammaValue();
+        break;
+      case Feature::EXPOSURE_VALUE:
+        value = GetExposureValue();
+        break;
+      case Feature::SATURATION_VALUE:
+        value = GetSaturationValue();
+        break;
+      case Feature::GAIN_MODE:
+        value = GetGainMode();
+        break;
+      case Feature::EXPOSURE_MODE:
+        value = GetExposureMode();
+        break;
     }
   } catch (const std::runtime_error &e) {
-    ROS_ERROR("%s", e.what());
-    return -1.0f;
+    ROS_ERROR("Could not get the feature for the camera: %s", e.what());
+    throw;
   }
 }
 
@@ -192,6 +242,8 @@ double BaseCamera::GetFeature(const Feature &feat) const {
 //
 
 void BaseCamera::Calibrate(cv::Mat const &img) {
+  std::lock_guard<std::mutex> guard(features_mutex_);
+
   auto l_hist = CalculateLuminanceHistogram(img);
 
   msv_lum_ = CalculateMSV(l_hist, 5);
@@ -315,6 +367,20 @@ double BaseCamera::UpdatePID(SPid &pid, double error,
   d_term = pid.d_gain * fabs(pid.d_state - position);
   pid.d_state = position;
   return p_term + d_term + i_term;
+}
+
+//------------------------------------------------------------------------------
+//
+float BaseCamera::GetLimunanceMSV() const noexcept {
+  std::lock_guard<std::mutex> guard(features_mutex_);
+  return msv_lum_;
+}
+
+//------------------------------------------------------------------------------
+//
+float BaseCamera::GetSaturationMSV() const noexcept {
+  std::lock_guard<std::mutex> guard(features_mutex_);
+  return msv_sat_;
 }
 
 }  // namespace provider_vision

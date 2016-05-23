@@ -108,7 +108,8 @@ class MediaManager {
    * \param value The value to set on the given feature.
    */
   void SetCameraFeature(const std::string &media_name,
-                        const std::string &feature, float value);
+                        const std::string &feature, boost::any
+                        &value);
 
   /**
    * If the media is a camera, get the value of the given feature.
@@ -120,8 +121,9 @@ class MediaManager {
    * \param media_name The name of the media to set the feature to.
    * \param feature The feature to change the value of.
    */
-  float GetCameraFeature(const std::string &media_name,
-                         const std::string &feature);
+  void GetCameraFeature(const std::string &media_name,
+                         const std::string &feature, boost::any
+                         &value) const;
 
  private:
   //==========================================================================

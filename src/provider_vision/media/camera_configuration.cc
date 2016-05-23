@@ -25,11 +25,13 @@ namespace provider_vision {
 
 CameraConfiguration::CameraConfiguration(const ros::NodeHandle &nh,
                                          const std::string &name) ATLAS_NOEXCEPT
-    : guid_(0),
+    : nh_(),
+      guid_(0),
       name_(name),
       framerate_(0),
       gain_manual_(true),
       shutter_manual_(true),
+      exposure_manual_(true),
       white_balance_manual_(true),
       gain_(350.0),
       shutter_(500.0),
@@ -64,7 +66,6 @@ CameraConfiguration::CameraConfiguration(const ros::NodeHandle &nh,
       saturation_d_gain_(0),
       gain_lim_(0),
       exposure_lim_(0),
-      nh_(nh),
       width_(480),
       height_(640),
       x_offset_(0),
@@ -72,8 +73,7 @@ CameraConfiguration::CameraConfiguration(const ros::NodeHandle &nh,
       format_(17301513),
       auto_brightness_(true),
       auto_brightness_target_(128),
-      auto_brightness_target_variation_(16),
-      exposure_manual_(true) {
+      auto_brightness_target_variation_(16) {
   DeserializeConfiguration(name);
 }
 

@@ -160,18 +160,18 @@ bool DC1394Context::WatchDogFunc() {
 
 //------------------------------------------------------------------------------
 //
-void DC1394Context::SetFeature(BaseCamera::Feature feat,
-                               const std::string &name, float val) {
+void DC1394Context::SetFeature(const BaseCamera::Feature &feat,
+                               const std::string &name, boost::any &val) {
   DC1394Camera::Ptr cam = GetDC1394Camera(name);
   cam->SetFeature(feat, val);
 }
 
 //------------------------------------------------------------------------------
 //
-void DC1394Context::GetFeature(BaseCamera::Feature feat,
-                               const std::string &name, float &val) const {
+void DC1394Context::GetFeature(const BaseCamera::Feature &feat,
+                               const std::string &name, boost::any &val) const {
   DC1394Camera::Ptr cam = GetDC1394Camera(name);
-  val = cam->GetFeature(feat);
+  cam->GetFeature(feat, val);
 }
 
 }  // namespace provider_vision

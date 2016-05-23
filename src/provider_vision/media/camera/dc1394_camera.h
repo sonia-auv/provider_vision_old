@@ -85,14 +85,16 @@ class DC1394Camera : public BaseCamera {
   dc1394camera_t *GetCameraPtr() const;
 
  protected:
-  double GetGainValue() const override;
-  void SetGainAuto() override;
-  void SetGainManual() override;
+  void SetGainMode(bool value) override;
   void SetGainValue(double value) override;
+  bool GetGainMode() const override;
+  double GetGainValue() const override;
 
   double GetGammaValue() const override;
   void SetGammaValue(double value) override;
 
+  void SetExposureMode(bool value) override;
+  bool GetExposureMode() const override;
   double GetExposureValue() const override;
   void SetExposureValue(double value) override;
 
@@ -100,17 +102,15 @@ class DC1394Camera : public BaseCamera {
   void SetSaturationValue(double value) override;
 
   void SetShutterValue(double value) override;
-  void SetShutterAuto() override;
-  void SetShutterManual() override;
-  double GetShutterMode() const override;
+  void SetShutterMode(bool value) override;
+  bool GetShutterMode() const override;
   double GetShutterValue() const override;
 
   void SetFrameRateValue(double value) override;
   double GetFrameRateValue() const override;
 
-  void SetWhiteBalanceAuto() override;
-  void SetWhiteBalanceManual() override;
-  double GetWhiteBalanceMode() const override;
+  void SetWhiteBalanceMode(bool value) override;
+  bool GetWhiteBalanceMode() const override;
   void SetWhiteBalanceRedValue(double value) override;
   void SetWhiteBalanceBlueValue(double value) override;
   double GetWhiteBalanceRed() const override;

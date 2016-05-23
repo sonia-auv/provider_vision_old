@@ -52,7 +52,7 @@ class GigeCamera : public BaseCamera {
 
   explicit GigeCamera(const CameraConfiguration &config);
 
-  ~GigeCamera();
+  virtual ~GigeCamera();
 
   //==========================================================================
   // P U B L I C   M E T H O D S
@@ -68,68 +68,68 @@ class GigeCamera : public BaseCamera {
 
   void NextImage(cv::Mat &img) override;
 
-  void SetCameraParams();
-
-  // Set some GigE specific parameters
-
-  //==========================================================================
-  // G E T T E R S   A N D   S E T T E R S
-
-  std::string GetModel() const;
-
   double GetAcquistionTimerValue() const;
 
-  // SHOULD BE USE ONLY BY DRIVER WITH CAUTION
-  GEV_CAMERA_HANDLE *GetCameraPtr();
-
  protected:
-  void SetAutoBrightnessMode(int value);
-  void SetAutoBrightnessTarget(int value);
-  void SetAutoBrightnessTargetVariation(int value);
-  void SetExposureAuto();
-  void SetExposureManual();
-  float GetWhiteBalanceRatio() const;
-  void SetWhiteBalanceRatio(double value);
+  //==========================================================================
+  // P R O T E C T E D   M E T H O D S
 
-  double GetGainValue() const override;
-  void SetGainAuto() override;
-  void SetGainManual() override;
+  void SetGainMode(bool) override;
   void SetGainValue(double value) override;
+  bool GetGainMode() const override;
+  double GetGainValue() const override;
 
   double GetGammaValue() const override;
   void SetGammaValue(double value) override;
 
   double GetExposureValue() const override;
   void SetExposureValue(double value) override;
+  void SetExposureMode(bool) override;
+  bool GetExposureMode() const override;
 
   double GetSaturationValue() const override;
   void SetSaturationValue(double value) override;
 
   void SetShutterValue(double value) override;
-  void SetShutterAuto() override;
-  void SetShutterManual() override;
-  double GetShutterMode() const override;
+  void SetShutterMode(bool) override;
+  bool GetShutterMode() const override;
   double GetShutterValue() const override;
 
   void SetFrameRateValue(double value) override;
   double GetFrameRateValue() const override;
 
-  void SetWhiteBalanceAuto() override;
-  void SetWhiteBalanceManual() override;
-  double GetWhiteBalanceMode() const override;
+  void SetWhiteBalanceMode(bool) override;
+  bool GetWhiteBalanceMode() const override;
   void SetWhiteBalanceRedValue(double value) override;
   void SetWhiteBalanceBlueValue(double value) override;
   double GetWhiteBalanceRed() const override;
   double GetWhiteBalanceBlue() const override;
 
+
+  /// Specific GigE vision features.
+  /// This will be used internally only, mainly for calibration purpose.
+  /// If we wished to use these feature widely, we must define them
+  /// on the BaseCamera abstract class.
+  double GetWhiteBalanceRatio() const;
+  void SetWhiteBalanceRatio(double value);
+  void SetAutoBrightnessMode(int value);
+  void SetAutoBrightnessTarget(int value);
+  void SetAutoBrightnessTargetVariation(int value);
+
  private:
   //==========================================================================
   // P R I V A T E   M E T H O D S
 
-  void balance_white(cv::Mat mat);
+  void BalanceWhite(cv::Mat mat);
+
+  void SetCameraParams();
+
+  std::string GetModel() const;
 
   //==========================================================================
   // P R I V A T E   M E M B E R S
+
+  GEV_CAMERA_HANDLE *GetCameraPtr();
 
   mutable std::mutex cam_access_;
 
@@ -160,7 +160,7 @@ inline double GigeCamera::GetAcquistionTimerValue() const {
   double timer = acquisition_timer_.Time();
   timer_access_.unlock();
   return timer;
-};
+}
 
 //------------------------------------------------------------------------------
 //
