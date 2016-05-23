@@ -13,10 +13,13 @@
 #include <vector>
 #include "provider_vision/config.h"
 #include "provider_vision/media/context/dc1394_context.h"
+#include <lib_atlas/macros.h>
+#ifndef OS_DARWIN
 #include "provider_vision/media/context/gige_context.h"
+#endif
 #include "provider_vision/media/context/file_context.h"
 #include "provider_vision/media/context/webcam_context.h"
-#include "ros/console.h"
+#include <ros/console.h>
 
 namespace provider_vision {
 
@@ -44,6 +47,7 @@ MediaManager::MediaManager(const ros::NodeHandle &nh) noexcept : contexts_() {
     contexts_.push_back(std::make_shared<DC1394Context>(configurations));
   }
 
+#ifndef OS_DARWIN
   // Creating the GigE context
   std::vector<std::string> camera_names_gige;
   nh_.getParam("/provider_vision/active_gige", camera_names_gige);
@@ -54,6 +58,7 @@ MediaManager::MediaManager(const ros::NodeHandle &nh) noexcept : contexts_() {
     }
     contexts_.push_back(std::make_shared<GigeContext>(configurations));
   }
+#endif
 
   contexts_.push_back(std::make_shared<FileContext>());
 }

@@ -10,6 +10,7 @@
 
 #include "provider_vision/media/camera/base_camera.h"
 #include <ros/ros.h>
+#include <sonia_msgs/CameraFeatures.h>
 
 namespace provider_vision {
 
@@ -19,8 +20,9 @@ namespace provider_vision {
 //------------------------------------------------------------------------------
 //
 BaseCamera::BaseCamera(const CameraConfiguration &configuration)
-    : BaseMedia(configuration.name_), config_(configuration) {
-  undistord_matrix_.InitMatrices(config_.GetUndistortionMatricePath());
+    : BaseMedia(configuration.name_),
+      CameraConfiguration(configuration), feature_pub_() {
+  undistord_matrix_.InitMatrices(undistortion_matrice_path_);
 
   current_features_.exposure = configuration.exposure_;
   current_features_.gain = configuration.gain_;
@@ -63,6 +65,11 @@ BaseCamera::BaseCamera(const CameraConfiguration &configuration)
   exposure_lim_ = configuration.exposure_lim_;
   msv_lum_ = 0;
   msv_sat_ = 0;
+
+  nh_.advertise<sonia_msgs::CameraFeatures>("camera/" +
+      CameraConfiguration::name_ +
+                                                "_features",
+      1000);
 }
 
 //------------------------------------------------------------------------------
@@ -74,9 +81,14 @@ BaseCamera::~BaseCamera() {}
 
 //------------------------------------------------------------------------------
 //
+void BaseCamera::PublishCameraFeatures() const {
+}
+
+//------------------------------------------------------------------------------
+//
 void BaseCamera::SetFeature(const Feature &feat, double value) {
   std::stringstream ss;
-  ss << std::hex << config_.guid_ << " " << GetName();
+  ss << std::hex << guid_ << " " << GetName();
   try {
     switch (feat) {
       case Feature::SHUTTER:
@@ -126,6 +138,7 @@ void BaseCamera::SetFeature(const Feature &feat, double value) {
   } catch (const std::runtime_error &e) {
     ROS_ERROR("%s", e.what());
   }
+  PublishCameraFeatures();
 }
 
 //------------------------------------------------------------------------------
@@ -294,17 +307,6 @@ double BaseCamera::UpdatePID(SPid &pid, double error,
   d_term = pid.d_gain * fabs(pid.d_state - position);
   pid.d_state = position;
   return p_term + d_term + i_term;
-}
-
-float BaseCamera::GetCameraMsvLum() const {
-  std::lock_guard<std::mutex> guard(msv_acces_);
-  return msv_lum_;
-}
-
-float BaseCamera::GetCameraMsvSat() const {
-  std::lock_guard<std::mutex> guard(msv_acces_);
-
-  return msv_sat_;
 }
 
 }  // namespace provider_vision

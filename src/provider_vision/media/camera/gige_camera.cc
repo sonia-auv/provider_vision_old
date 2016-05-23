@@ -510,3 +510,5 @@ void GigeCamera::balance_white(cv::Mat mat) {
 }
 
 } // namespace
+
+#endif // OS_DARWIN

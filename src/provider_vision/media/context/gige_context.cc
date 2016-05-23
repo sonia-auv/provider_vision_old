@@ -1,5 +1,5 @@
 #include "provider_vision/media/context/dc1394_context.h"
-#include "gige_context.h"
+#include "provider_vision/media/context/gige_context.h"
 #include <ros/ros.h>
 #include <string>
 #include <vector>
@@ -154,3 +154,5 @@ void GigeContext::GetFeature(BaseCamera::Feature feat, const std::string &name,
 }
 
 }  // namespace provider_vision
+
+#endif // OS_DARWIN

@@ -112,4 +112,5 @@ inline GigeCamera::Ptr GigeContext::GetGigeCamera(BaseMedia::Ptr media) const {
 }
 
 }  // namespace provider_vision
+
 #endif  // PROVIDER_VISION_GIGE_CONTEXT_H
