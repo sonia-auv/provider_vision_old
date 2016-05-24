@@ -506,6 +506,8 @@ void DC1394Camera::SetWhiteBalanceRedValue(double value) {
   }
 }
 
+//------------------------------------------------------------------------------
+//
 void DC1394Camera::SetWhiteBalanceBlueValue(double value) {
   dc1394error_t error;
   try {
@@ -579,7 +581,6 @@ bool DC1394Camera::GetShutterMode() const {
     throw std::runtime_error(
         "Canno't get the white balance blue value on DC1394 Camera");
 }
-
 
 //------------------------------------------------------------------------------
 //
@@ -707,32 +708,32 @@ void DC1394Camera::SetCameraParams() {
   if (std::string(dc1394_camera_->vendor).compare(std::string("AVT")) == 0) {
     SetFeature(Feature::GAIN_MODE, false);
     atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::GAIN_VALUE, 420.0f);
+    SetFeature(Feature::GAIN_VALUE, 420.0);
     atlas::MilliTimer::Sleep(100);
     SetFeature(Feature::SHUTTER_MODE, false);
     atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::SHUTTER_VALUE, 32.0f);
+    SetFeature(Feature::SHUTTER_VALUE, 32.0);
     atlas::MilliTimer::Sleep(100);
     SetFeature(Feature::WHITE_BALANCE_MODE, false);
     atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::WHITE_BALANCE_BLUE_VALUE, 381.0f);
+    SetFeature(Feature::WHITE_BALANCE_BLUE_VALUE, 381.0);
     atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::WHITE_BALANCE_RED_VALUE, 568.0f);
+    SetFeature(Feature::WHITE_BALANCE_RED_VALUE, 568.0);
     atlas::MilliTimer::Sleep(100);
   } else {
     SetFeature(Feature::GAIN_MODE, false);
     atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::GAIN_VALUE, 350.0f);
+    SetFeature(Feature::GAIN_VALUE, 350.0);
     atlas::MilliTimer::Sleep(100);
     SetFeature(Feature::SHUTTER_MODE, false);
     atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::SHUTTER_VALUE, 500.0f);
+    SetFeature(Feature::SHUTTER_VALUE, 500.0);
     atlas::MilliTimer::Sleep(100);
     SetFeature(Feature::WHITE_BALANCE_MODE, false);
     atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::WHITE_BALANCE_BLUE_VALUE, 412.0f);
+    SetFeature(Feature::WHITE_BALANCE_BLUE_VALUE, 412.0);
     atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::WHITE_BALANCE_RED_VALUE, 511.0f);
+    SetFeature(Feature::WHITE_BALANCE_RED_VALUE, 511.0);
     atlas::MilliTimer::Sleep(100);
   }
 }

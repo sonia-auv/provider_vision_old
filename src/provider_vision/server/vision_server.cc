@@ -86,16 +86,14 @@ VisionServer::VisionServer(const ros::NodeHandle &nh)
       base_node_name + "set_filterchain_filter_observer",
       &VisionServer::CallbackSetObserver, *this);
 
-
   // This is the services that are part of the new version of the provider
   // vision.
   RegisterService<sonia_msgs::GetCameraFeature>(
       base_node_name + "get_camera_feature",
       &VisionServer::CallbackGetCameraFeature, *this);
   RegisterService<sonia_msgs::SetCameraFeature>(
-      base_node_name + "get_camera_feature",
+      base_node_name + "set_camera_feature",
       &VisionServer::CallbackSetCameraFeature, *this);
-
 }
 
 //------------------------------------------------------------------------------
@@ -440,19 +438,20 @@ bool VisionServer::CallbackGetMediaFromExec(
 
 //------------------------------------------------------------------------------
 //
-bool VisionServer::CallbackGetCameraFeature(sonia_msgs::GetCameraFeature::Request &rqst,
-                              sonia_msgs::GetCameraFeature::Response &rep) {
+bool VisionServer::CallbackGetCameraFeature(
+    sonia_msgs::GetCameraFeature::Request &rqst,
+    sonia_msgs::GetCameraFeature::Response &rep) {
   boost::any feature_value;
-  media_mgr_.GetCameraFeature(rqst.camera_name, rqst
-      .camera_feature, feature_value);
+  media_mgr_.GetCameraFeature(rqst.camera_name, rqst.camera_feature,
+                              feature_value);
   std::stringstream ss;
-  if(feature_value.type() == typeid(bool)) {
+  if (feature_value.type() == typeid(bool)) {
     rep.feature_type = sonia_msgs::GetCameraFeature::Request::FEATURE_BOOL;
     ss << boost::any_cast<bool>(feature_value);
   } else if (feature_value.type() == typeid(int)) {
     rep.feature_type = sonia_msgs::GetCameraFeature::Request::FEATURE_INT;
     ss << boost::any_cast<int>(feature_value);
-  } else if(feature_value.type() == typeid(double)) {
+  } else if (feature_value.type() == typeid(double)) {
     rep.feature_type = sonia_msgs::GetCameraFeature::Request::FEATURE_DOUBLE;
     ss << boost::any_cast<double>(feature_value);
   } else {
@@ -468,15 +467,15 @@ bool VisionServer::CallbackGetCameraFeature(sonia_msgs::GetCameraFeature::Reques
 bool VisionServer::CallbackSetCameraFeature(
     sonia_msgs::SetCameraFeature::Request &rqst,
     sonia_msgs::SetCameraFeature::Response &rep) {
-  if(rqst.feature_type == sonia_msgs::GetCameraFeatureRequest::FEATURE_BOOL) {
+  if (rqst.feature_type == sonia_msgs::GetCameraFeatureRequest::FEATURE_BOOL) {
     boost::any value = boost::lexical_cast<bool>(rqst.feature_value);
     media_mgr_.GetCameraFeature(rqst.camera_name, rqst.camera_feature, value);
   } else if (rqst.feature_type ==
-      sonia_msgs::GetCameraFeatureRequest::FEATURE_DOUBLE) {
+             sonia_msgs::GetCameraFeatureRequest::FEATURE_DOUBLE) {
     boost::any value = boost::lexical_cast<double>(rqst.feature_value);
     media_mgr_.GetCameraFeature(rqst.camera_name, rqst.camera_feature, value);
   } else if (rqst.feature_type ==
-      sonia_msgs::GetCameraFeatureRequest::FEATURE_INT) {
+             sonia_msgs::GetCameraFeatureRequest::FEATURE_INT) {
     boost::any value = boost::lexical_cast<int>(rqst.feature_value);
     media_mgr_.GetCameraFeature(rqst.camera_name, rqst.camera_feature, value);
   } else {

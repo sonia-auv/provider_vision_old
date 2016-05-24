@@ -43,7 +43,7 @@ inline double CastToDouble(const boost::any &op) {
   // The type will be cast at runtime instead.
   try {
     return boost::any_cast<double>(op);
-  } catch(const boost::bad_any_cast &) {
+  } catch (const boost::bad_any_cast &) {
     throw std::runtime_error("The value for this feature must be a double");
   }
 }
@@ -102,8 +102,10 @@ BaseCamera::BaseCamera(const CameraConfiguration &configuration)
   msv_lum_ = 0;
   msv_sat_ = 0;
 
-  nh_.advertise<sonia_msgs::CameraFeatures>(
-      "camera/" + CameraConfiguration::name_ + "_features", 1000);
+  std::string base_node_name{kRosNodeName};
+  feature_pub_ = nh_.advertise<sonia_msgs::CameraFeatures>(
+      base_node_name + "/camera/" + CameraConfiguration::name_ + "_features",
+      1000);
 }
 
 //------------------------------------------------------------------------------
@@ -240,7 +242,6 @@ void BaseCamera::GetFeature(const Feature &feat, boost::any &value) const {
 
 //------------------------------------------------------------------------------
 //
-
 void BaseCamera::Calibrate(cv::Mat const &img) {
   std::lock_guard<std::mutex> guard(features_mutex_);
 
@@ -253,7 +254,7 @@ void BaseCamera::Calibrate(cv::Mat const &img) {
     const float msvUniform = 2.5f;
 
     if (msv_lum_ != msvUniform) {
-      if (GetExposureValue() > exposure_lim_ && GetGainValue() > gain_lim_) {
+      if (GetExposureValue() < exposure_lim_ && GetGainValue() < gain_lim_) {
         double error = fabs(GetGammaValue() - current_features_.gamma);
         current_features_.gamma = UpdatePID(gamma_pid_, error, GetGammaValue());
         SetGammaValue(current_features_.gamma);
