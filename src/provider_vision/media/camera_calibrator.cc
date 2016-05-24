@@ -169,30 +169,18 @@ double CameraCalibrator::GetSaturationMSV() const noexcept {
 //
 void CameraCalibrator::DeserializeConfiguration(const std::string &name) {
   double a;
-  FindParameter(name_ + "/gamma_i_state", a);
-  FindParameter(name_ + "/gamma_i_min", a);
-  FindParameter(name_ + "/gamma_i_max", a);
   FindParameter(name_ + "/gamma_i_gain", a);
   FindParameter(name_ + "/gamma_p_gain", a);
   FindParameter(name_ + "/gamma_d_gain", a);
 
-  FindParameter(name_ + "/gain_i_state", a);
-  FindParameter(name_ + "/gain_i_min", a);
-  FindParameter(name_ + "/gain_i_max", a);
   FindParameter(name_ + "/gain_i_gain", a);
   FindParameter(name_ + "/gain_p_gain", a);
   FindParameter(name_ + "/gain_d_gain", a);
 
-  FindParameter(name_ + "/exposure_i_state", a);
-  FindParameter(name_ + "/exposure_i_min", a);
-  FindParameter(name_ + "/exposure_i_max", a);
   FindParameter(name_ + "/exposure_i_gain", a);
   FindParameter(name_ + "/exposure_p_gain", a);
   FindParameter(name_ + "/exposure_d_gain", a);
 
-  FindParameter(name_ + "/saturation_i_state", a);
-  FindParameter(name_ + "/saturation_i_min", a);
-  FindParameter(name_ + "/saturation_i_max", a);
   FindParameter(name_ + "/saturation_i_gain", a);
   FindParameter(name_ + "/saturation_p_gain", a);
   FindParameter(name_ + "/saturation_d_gain", a);
