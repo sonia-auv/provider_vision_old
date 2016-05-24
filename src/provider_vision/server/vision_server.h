@@ -21,6 +21,8 @@
 #ifndef PROVIDER_VISION_SERVER_VISION_SERVER_H_
 #define PROVIDER_VISION_SERVER_VISION_SERVER_H_
 
+#include <sonia_msgs/GetCameraFeature.h>
+#include <sonia_msgs/SetCameraFeature.h>
 #include <sonia_msgs/copy_filterchain.h>
 #include <sonia_msgs/execute_cmd.h>
 #include <sonia_msgs/get_filterchain_filter.h>
@@ -35,8 +37,6 @@
 #include <sonia_msgs/set_filterchain_filter_observer.h>
 #include <sonia_msgs/set_filterchain_filter_order.h>
 #include <sonia_msgs/set_filterchain_filter_param.h>
-#include <sonia_msgs/GetCameraFeature.h>
-#include <sonia_msgs/SetCameraFeature.h>
 #include <memory>
 #include <string>
 #include <vector>
@@ -361,9 +361,8 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
   bool CallbackGetCameraFeature(sonia_msgs::GetCameraFeature::Request &rqst,
                                 sonia_msgs::GetCameraFeature::Response &rep);
 
-  bool CallbackSetCameraFeature(
-      sonia_msgs::SetCameraFeature::Request &rqst,
-      sonia_msgs::SetCameraFeature::Response &rep);
+  bool CallbackSetCameraFeature(sonia_msgs::SetCameraFeature::Request &rqst,
+                                sonia_msgs::SetCameraFeature::Response &rep);
 
   //==========================================================================
   // P R I V A T E   M E M B E R S

@@ -22,11 +22,11 @@
 #define PROVIDER_VISION_MEDIA_CONTEXT_BASE_CONTEXT_H_
 
 #include <lib_atlas/pattern/runnable.h>
+#include <boost/any.hpp>
 #include <memory>
 #include <mutex>
 #include "provider_vision/media/camera/base_camera.h"
 #include "provider_vision/media/camera/base_media.h"
-#include <boost/any.hpp>
 
 namespace provider_vision {
 
@@ -64,8 +64,8 @@ class BaseContext : public atlas::Runnable {
   virtual void GetFeature(const BaseCamera::Feature &feat,
                           const std::string &name, boost::any &val) const = 0;
 
-  virtual void SetFeature(const BaseCamera::Feature &feat, const std::string
-  &name, boost::any &val) = 0;
+  virtual void SetFeature(const BaseCamera::Feature &feat,
+                          const std::string &name, boost::any &val) = 0;
 
   /**
    * Method to get all listed (connected) camera of the system

@@ -26,7 +26,7 @@
 #include "provider_vision/media/context/dc1394_context.h"
 #ifndef OS_DARWIN
 #include "provider_vision/media/context/gige_context.h"
-#endif // OS_DARWIN
+#endif  // OS_DARWIN
 #include <ros/console.h>
 #include "provider_vision/media/context/file_context.h"
 #include "provider_vision/media/context/webcam_context.h"
@@ -212,8 +212,8 @@ size_t MediaManager::GetAllMediasCount() const noexcept {
 //------------------------------------------------------------------------------
 //
 void MediaManager::SetCameraFeature(const std::string &media_name,
-                                    const std::string &feature, boost::any
-                                    &value) {
+                                    const std::string &feature,
+                                    boost::any &value) {
   BaseContext::Ptr context = GetContextFromMedia(media_name);
   if (context) {
     context->SetFeature(GetFeatureFromName(feature), media_name, value);
@@ -225,8 +225,8 @@ void MediaManager::SetCameraFeature(const std::string &media_name,
 //------------------------------------------------------------------------------
 //
 void MediaManager::GetCameraFeature(const std::string &media_name,
-                                     const std::string &feature, boost::any
-                                    &value) const {
+                                    const std::string &feature,
+                                    boost::any &value) const {
   BaseContext::Ptr context = GetContextFromMedia(media_name);
   if (context) {
     context->GetFeature(GetFeatureFromName(feature), media_name, value);

@@ -53,7 +53,8 @@ void WebcamContext::SetFeature(const BaseCamera::Feature &feat,
 //------------------------------------------------------------------------------
 //
 void WebcamContext::GetFeature(const BaseCamera::Feature &feat,
-                               const std::string &name, boost::any &val) const {}
+                               const std::string &name, boost::any &val) const {
+}
 
 //------------------------------------------------------------------------------
 //

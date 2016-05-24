@@ -96,10 +96,9 @@ void GigeCamera::Open() {
 
   try {
     SetCameraParams();
-    status = GevSetImageParameters(
-        gige_camera_, (UINT32)width_, (UINT32)height_,
-        (UINT32)x_offset_, (UINT32)y_offset_,
-        (UINT32)format_);
+    status = GevSetImageParameters(gige_camera_, (UINT32)width_,
+                                   (UINT32)height_, (UINT32)x_offset_,
+                                   (UINT32)y_offset_, (UINT32)format_);
     status = GevGetImageParameters(gige_camera_, &width, &height, &x_offset,
                                    &y_offset, &format);
 
@@ -251,9 +250,8 @@ void GigeCamera::SetCameraParams() {
     SetExposureMode(true);
   atlas::MilliTimer::Sleep(100);
 
-  GevSetImageParameters(gige_camera_, (UINT32)width_,
-                        (UINT32)height_, (UINT32)x_offset_,
-                        (UINT32)y_offset_, (UINT32)format_);
+  GevSetImageParameters(gige_camera_, (UINT32)width_, (UINT32)height_,
+                        (UINT32)x_offset_, (UINT32)y_offset_, (UINT32)format_);
   atlas::MilliTimer::Sleep(100);
 }
 
@@ -352,10 +350,10 @@ bool GigeCamera::GetExposureMode() const {
   GenApi::CEnumerationPtr ptrExposureMode = Camera->_GetNode("ExposureMode");
   auto mode = ptrExposureMode->GetIntValue();
 
-  if(mode == 2) {
+  if (mode == 2) {
     return FeatureMode::AUTO;
   } else {
-    return  FeatureMode::MANUAL;
+    return FeatureMode::MANUAL;
   }
 }
 

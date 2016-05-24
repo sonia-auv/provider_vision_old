@@ -105,7 +105,6 @@ class GigeCamera : public BaseCamera {
   double GetWhiteBalanceRed() const override;
   double GetWhiteBalanceBlue() const override;
 
-
   /// Specific GigE vision features.
   /// This will be used internally only, mainly for calibration purpose.
   /// If we wished to use these feature widely, we must define them

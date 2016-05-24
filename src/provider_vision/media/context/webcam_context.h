@@ -58,10 +58,11 @@ class WebcamContext : public BaseContext {
   void OpenMedia(const std::string &name) override;
 
   virtual void GetFeature(const BaseCamera::Feature &feat,
-                          const std::string &name, boost::any &val) const override;
+                          const std::string &name,
+                          boost::any &val) const override;
 
-  virtual void SetFeature(const BaseCamera::Feature &feat, const std::string
-    &name, boost::any &val) override;
+  virtual void SetFeature(const BaseCamera::Feature &feat,
+                          const std::string &name, boost::any &val) override;
 
   void CloseMedia(const std::string &name) override;
 

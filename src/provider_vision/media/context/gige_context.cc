@@ -162,7 +162,7 @@ bool GigeContext::WatchDogFunc() {
 //------------------------------------------------------------------------------
 //
 void GigeContext::SetFeature(const BaseCamera::Feature &feat,
-                               const std::string &name, boost::any &val) {
+                             const std::string &name, boost::any &val) {
   GigeCamera::Ptr cam = GetGigeCamera(name);
   cam->SetFeature(feat, val);
 }
@@ -170,7 +170,7 @@ void GigeContext::SetFeature(const BaseCamera::Feature &feat,
 //------------------------------------------------------------------------------
 //
 void GigeContext::GetFeature(const BaseCamera::Feature &feat,
-                               const std::string &name, boost::any &val) const {
+                             const std::string &name, boost::any &val) const {
   GigeCamera::Ptr cam = GetGigeCamera(name);
   cam->GetFeature(feat, val);
 }
