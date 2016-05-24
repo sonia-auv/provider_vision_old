@@ -21,13 +21,13 @@
 #ifndef PROVIDER_VISION_MEDIA_CAMERA_BASE_CAMERA_H_
 #define PROVIDER_VISION_MEDIA_CAMERA_BASE_CAMERA_H_
 
+#include <boost/any.hpp>
 #include <memory>
 #include <mutex>
-#include <boost/any.hpp>
-#include "provider_vision/media/camera_calibrator.h"
 #include "provider_vision/config.h"
 #include "provider_vision/media/cam_undistord_matrices.h"
 #include "provider_vision/media/camera/base_media.h"
+#include "provider_vision/media/camera_calibrator.h"
 
 namespace provider_vision {
 
@@ -123,74 +123,18 @@ class BaseCamera : public BaseMedia, protected CameraConfiguration {
   virtual double GetWhiteBalanceRed() const = 0;
   virtual double GetWhiteBalanceBlue() const = 0;
 
-  float GetLimunanceMSV() const noexcept;
-  float GetSaturationMSV() const noexcept;
-
-  void Calibrate(cv::Mat const &img);
-
-  float CalculateMSV(const cv::Mat &img, int nbrRegion);
-
   //==========================================================================
   // P R O T E C T E D   M E M B E R S
 
   ros::Publisher feature_pub_;
 
-  CameraUndistordMatrices undistord_matrix_;
-
- private:
-  //==========================================================================
-  // T Y P E D E F   A N D   E N U M
-
-  struct SPid {
-    double d_state;       // Last position input
-    double i_state;       // Integrator state
-    double i_max, i_min;  // Maximum and minimum allowable integrator state
-    double i_gain,        // integral gain
-        p_gain,           // proportional gain
-        d_gain;           // derivative gain
-  };
-
-  /**
-   * This structure is only used for the calibration
-   * It represent all the features of the camera
-   * This is going to be compared with the real values
-   * of the features to calculate the error
-   */
-  struct CalibrationFeatureValues {
-    double gain;
-    double gamma;
-    double exposure;
-    double saturation;
-  };
-
-  //==========================================================================
-  // P R I V A T E   M E T H O D S
-
-  double UpdatePID(SPid &pid, double error, double position) ATLAS_NOEXCEPT;
-
-  cv::Mat CalculateLuminanceHistogram(const cv::Mat &img) const;
-  cv::Mat CalculateSaturationHistogram(const cv::Mat &img) const;
-
-  //==========================================================================
-  // P R I V A T E   M E M B E R S
-
-  CalibrationFeatureValues current_features_;
-
   CameraCalibrator calibrator_;
 
-  double gain_lim_;
-  double exposure_lim_;
+  CameraUndistordMatrices undistord_matrix_;
 
-  /// We are going to lock every access to the features of the camera as we are
-  /// certainly going to be accessed through a different thread (ros service)
-  mutable std::mutex features_mutex_;
-
-  /// The last values of the MSV calculated during the calibration of the
-  /// cameras.
-  float msv_lum_;
-  float msv_sat_;
-
-  SPid gamma_pid_, gain_pid_, exposure_pid_, saturation_pid_;
+  /// We want the CameraCalibrator to access the features of the camera directly
+  /// without having to call the GetFeature method.
+  friend class CameraCalibrator;
 };
 
 //==============================================================================

@@ -22,8 +22,10 @@
 #define PROVIDER_VISION_MEDIA_CAMERA_CALIBRATOR_H_
 
 #include <lib_atlas/macros.h>
+#include <lib_atlas/maths/pid.h>
 #include <lib_atlas/ros/configuration_parser.h>
 #include <ros/node_handle.h>
+#include <opencv/cv.h>
 #include <stdlib.h>
 #include <map>
 #include <memory>
@@ -31,6 +33,8 @@
 #include <vector>
 
 namespace provider_vision {
+
+class BaseCamera;
 
 class CameraCalibrator : public atlas::ConfigurationParser {
  public:
@@ -42,41 +46,51 @@ class CameraCalibrator : public atlas::ConfigurationParser {
   using PtrList = std::vector<CameraCalibrator::Ptr>;
   using ConstPtrList = std::vector<CameraCalibrator::ConstPtr>;
 
-  struct PID {
-    double i_state_;
-    double i_min_;
-    double i_max_;
-    double i_gain_;
-    double p_gain_;
-    double d_gain_;
-  };
-
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  explicit CameraCalibrator(const ros::NodeHandle &nh,
-                            const std::string &name);
+  explicit CameraCalibrator(const ros::NodeHandle &nh, const std::string &name);
 
   virtual ~CameraCalibrator();
 
-  PID gamma_pid_;
-  PID gain_pid_;
-  PID exposure_pid_;
-  PID saturation_pid_;
+  void Calibrate(BaseCamera *camera, cv::Mat img);
 
-  double gain_lim_;
-  double exposure_lim_;
+  double GetLimunanceMSV() const noexcept;
+  double GetSaturationMSV() const noexcept;
 
  private:
   //============================================================================
   // P R I V A T E   M E T H O D S
 
-  void DeserializeConfiguration(const std::string &name) ATLAS_NOEXCEPT;
+  void DeserializeConfiguration(const std::string &name);
+
+  float CalculateMSV(const cv::Mat &img, int nbrRegion);
+
+  cv::Mat CalculateLuminanceHistogram(const cv::Mat &img) const;
+  cv::Mat CalculateSaturationHistogram(const cv::Mat &img) const;
 
   //============================================================================
   // P R I V A T E   M E M B E R S
 
   std::string name_;
+
+  atlas::PID gamma_pid_;
+  atlas::PID gain_pid_;
+  atlas::PID exposure_pid_;
+  atlas::PID saturation_pid_;
+
+  /// We are going to lock every access to the features of the camera as we are
+  /// certainly going to be accessed through a different thread (ros service)
+  mutable std::mutex features_mutex_;
+
+  /// The last values of the MSV calculated during the calibration of the
+  /// cameras.
+  double msv_lum_;
+  double msv_sat_;
+  double msv_uniform_;
+
+  double gain_lim_;
+  double exposure_lim_;
 };
 
 }  // namespace provider_vision

@@ -77,33 +77,25 @@ void CameraConfiguration::DeserializeConfiguration(const std::string &name)
   FindParameter(name + "/name", name_);
   FindParameter(name + "/framerate", framerate_);
   FindParameter(name + "/gain_manual", gain_manual_);
-  FindParameter(name + "/shutter_manual",
-                shutter_manual_);
-  FindParameter(name + "/white_balance_manual",
-                white_balance_manual_);
+  FindParameter(name + "/shutter_manual", shutter_manual_);
+  FindParameter(name + "/white_balance_manual", white_balance_manual_);
   FindParameter(name + "/gain", gain_);
   FindParameter(name + "/shutter", shutter_);
   FindParameter(name + "/gamma", gamma_);
   FindParameter(name + "/exposure", exposure_);
-  FindParameter(name + "/white_balance_blue",
-                white_balance_blue_);
-  FindParameter(name + "/white_balance_red",
-                white_balance_red_);
+  FindParameter(name + "/white_balance_blue", white_balance_blue_);
+  FindParameter(name + "/white_balance_red", white_balance_red_);
   FindParameter(name + "/saturation", saturation_);
   FindParameter(name + "/width", width_);
   FindParameter(name + "/height", height_);
   FindParameter(name + "/x_offset", x_offset_);
   FindParameter(name + "/y_offset", y_offset_);
   FindParameter(name + "/format", format_);
-  FindParameter(name + "/auto_brightness",
-                auto_brightness_);
-  FindParameter(name + "/auto_brightness_target",
-                auto_brightness_target_);
-  FindParameter(
-      name + "/auto_brightness_target_variation",
-      auto_brightness_target_variation_);
-  FindParameter(name + "/exposure_manual",
-                exposure_manual_);
+  FindParameter(name + "/auto_brightness", auto_brightness_);
+  FindParameter(name + "/auto_brightness_target", auto_brightness_target_);
+  FindParameter(name + "/auto_brightness_target_variation",
+                auto_brightness_target_variation_);
+  FindParameter(name + "/exposure_manual", exposure_manual_);
 }
 
 }  // namespace provider_vision

@@ -19,6 +19,7 @@
 /// along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
 
 #include <provider_vision/media/camera_calibrator.h>
+#include "provider_vision/media/camera/base_camera.h"
 #include <boost/lexical_cast.hpp>
 
 namespace provider_vision {
@@ -29,13 +30,16 @@ namespace provider_vision {
 //------------------------------------------------------------------------------
 //
 CameraCalibrator::CameraCalibrator(const ros::NodeHandle &nh,
-                                         const std::string &name)
+                                   const std::string &name)
     : ConfigurationParser(nh, "/provider_vision/camera_pid/"),
       name_(name),
       gamma_pid_(),
       gain_pid_(),
       exposure_pid_(),
       saturation_pid_(),
+      msv_lum_(),
+      msv_sat_(),
+      msv_uniform_(2.5),
       gain_lim_(),
       exposure_lim_() {
   DeserializeConfiguration(name_);
@@ -50,46 +54,149 @@ CameraCalibrator::~CameraCalibrator() {}
 
 //------------------------------------------------------------------------------
 //
-void CameraCalibrator::DeserializeConfiguration(const std::string &name)
-ATLAS_NOEXCEPT {
-  FindParameter(name_ + "/gamma_i_state",
-                gamma_pid_.i_state_);
-  FindParameter(name_ + "/gamma_i_min", gamma_pid_.i_min_);
-  FindParameter(name_ + "/gamma_i_max", gamma_pid_.i_max_);
-  FindParameter(name_ + "/gamma_i_gain", gamma_pid_.i_gain_);
-  FindParameter(name_ + "/gamma_p_gain", gamma_pid_.p_gain_);
-  FindParameter(name_ + "/gamma_d_gain", gamma_pid_.d_gain_);
-  FindParameter(name_ + "/gamma_i_state",
-                gamma_pid_.i_state_);
-  FindParameter(name_ + "/gain_i_min", gain_pid_.i_min_);
-  FindParameter(name_ + "/gain_i_max", gain_pid_.i_max_);
-  FindParameter(name_ + "/gain_i_gain", gain_pid_.i_gain_);
-  FindParameter(name_ + "/gain_p_gain", gain_pid_.p_gain_);
-  FindParameter(name_ + "/gain_d_gain", gain_pid_.d_gain_);
-  FindParameter(name_ + "/exposure_i_state",
-                exposure_pid_.i_state_);
-  FindParameter(name_ + "/exposure_i_min",
-                exposure_pid_.i_min_);
-  FindParameter(name_ + "/exposure_i_max",
-                exposure_pid_.i_max_);
-  FindParameter(name_ + "/exposure_i_gain",
-                exposure_pid_.i_gain_);
-  FindParameter(name_ + "/exposure_p_gain",
-                exposure_pid_.p_gain_);
-  FindParameter(name_ + "/exposure_d_gain",
-                exposure_pid_.d_gain_);
-  FindParameter(name_ + "/saturation_i_state",
-                saturation_pid_.i_state_);
-  FindParameter(name_ + "/saturation_i_min",
-                saturation_pid_.i_min_);
-  FindParameter(name_ + "/saturation_i_max",
-                saturation_pid_.i_max_);
-  FindParameter(name_ + "/saturation_i_gain",
-                saturation_pid_.i_gain_);
-  FindParameter(name_ + "/saturation_p_gain",
-                saturation_pid_.p_gain_);
-  FindParameter(name_ + "/saturation_d_gain",
-                saturation_pid_.d_gain_);
+void CameraCalibrator::Calibrate(BaseCamera *camera, cv::Mat img) {
+  std::lock_guard<std::mutex> guard(features_mutex_);
+  auto l_hist = CalculateLuminanceHistogram(img);
+
+  msv_lum_ = CalculateMSV(l_hist, 5);
+  try {
+    if (msv_lum_ != msv_uniform_) {
+      if (camera->GetExposureValue() < exposure_lim_ &&
+          camera->GetGainValue() < gain_lim_) {
+        auto gamma = gamma_pid_.Refresh(camera->GetGammaValue());
+        camera->SetGammaValue(std::move(gamma));
+      } else if (camera->GetGainValue() > gain_lim_) {
+        auto exposure = exposure_pid_.Refresh(camera->GetExposureValue());
+        camera->SetExposureValue(std::move(exposure));
+      } else {
+        auto gain = gain_pid_.Refresh(camera->GetGainValue());
+        camera->SetGainValue(std::move(gain));
+      }
+    }
+    if (msv_lum_ > 2 && msv_lum_ < 3) {
+      auto s_hist = CalculateSaturationHistogram(img);
+      msv_sat_ = CalculateMSV(s_hist, 5);
+      if (msv_sat_ != msv_uniform_) {
+        auto saturation = saturation_pid_.Refresh(camera->GetSaturationValue());
+        camera->SetSaturationValue(std::move(saturation));
+      }
+    }
+  } catch (const std::exception &e) {
+    ROS_ERROR("Error in calibrate camera: %s.\n", e.what());
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+cv::Mat CameraCalibrator::CalculateLuminanceHistogram(
+    const cv::Mat &img) const {
+  static const int hist_size{256};
+  static const float range[] = {0, 255};
+  static const float *histRange{range};
+
+  // Get the LUV image from the RGB image in input parameter.
+  cv::Mat luvImg;
+  cvtColor(img, luvImg, CV_RGB2Luv);
+
+  // Splitting the LUV Image into 3 channels in the luv_planes.
+  std::vector<cv::Mat> luv_planes;
+  cv::split(luvImg, luv_planes);
+
+  // Calculate the histogram of luminance by sending the first element of
+  // the plane (the L channel)
+  cv::Mat l_hist;
+  cv::calcHist(&luv_planes[0], 1, 0, cv::Mat(), l_hist, 1, &hist_size,
+               &histRange, true, false);
+  return l_hist;
+}
+
+//------------------------------------------------------------------------------
+//
+cv::Mat CameraCalibrator::CalculateSaturationHistogram(
+    const cv::Mat &img) const {
+  static const int hist_size{256};
+  static const float range[] = {0, 255};
+  static const float *histRange{range};
+
+  // Get the LUV image from the RGB image in input parameter.
+  cv::Mat hsv_img;
+  cvtColor(img, hsv_img, CV_RGB2HSV_FULL);
+
+  // Splitting the LUV Image into 3 channels in the luv_planes.
+  std::vector<cv::Mat> hsv_planes;
+  cv::split(hsv_img, hsv_planes);
+
+  // Calculate the histogram of saturation by sending the first element of
+  // the plane (the L channel)
+  cv::Mat hist;
+  cv::calcHist(&hsv_planes[1], 1, 0, cv::Mat(), hist, 1, &hist_size, &histRange,
+               true, false);
+  return hist;
+}
+
+//------------------------------------------------------------------------------
+//
+float CameraCalibrator::CalculateMSV(const cv::Mat &img, int nbrRegion) {
+  float num = 0.f, deno = 0.f;
+  int inter = std::ceil(256 / nbrRegion);
+  for (int j = 0; j < nbrRegion; ++j) {
+    float num_buff = 0.f;
+    for (int i = j * inter; i < (j + 1) * inter; ++i) {
+      deno += img.at<float>(i);
+      num_buff += img.at<float>(i);
+    }
+    num += num_buff * (j + 1);
+  }
+  return num / deno;
+}
+
+//------------------------------------------------------------------------------
+//
+double CameraCalibrator::GetLimunanceMSV() const noexcept {
+  std::lock_guard<std::mutex> guard(features_mutex_);
+  return msv_lum_;
+}
+
+//------------------------------------------------------------------------------
+//
+double CameraCalibrator::GetSaturationMSV() const noexcept {
+  std::lock_guard<std::mutex> guard(features_mutex_);
+  return msv_sat_;
+}
+
+
+//------------------------------------------------------------------------------
+//
+void CameraCalibrator::DeserializeConfiguration(const std::string &name) {
+  double a;
+  FindParameter(name_ + "/gamma_i_state", a);
+  FindParameter(name_ + "/gamma_i_min", a);
+  FindParameter(name_ + "/gamma_i_max", a);
+  FindParameter(name_ + "/gamma_i_gain", a);
+  FindParameter(name_ + "/gamma_p_gain", a);
+  FindParameter(name_ + "/gamma_d_gain", a);
+
+  FindParameter(name_ + "/gain_i_state", a);
+  FindParameter(name_ + "/gain_i_min", a);
+  FindParameter(name_ + "/gain_i_max", a);
+  FindParameter(name_ + "/gain_i_gain", a);
+  FindParameter(name_ + "/gain_p_gain", a);
+  FindParameter(name_ + "/gain_d_gain", a);
+
+  FindParameter(name_ + "/exposure_i_state", a);
+  FindParameter(name_ + "/exposure_i_min", a);
+  FindParameter(name_ + "/exposure_i_max", a);
+  FindParameter(name_ + "/exposure_i_gain", a);
+  FindParameter(name_ + "/exposure_p_gain", a);
+  FindParameter(name_ + "/exposure_d_gain", a);
+
+  FindParameter(name_ + "/saturation_i_state", a);
+  FindParameter(name_ + "/saturation_i_min", a);
+  FindParameter(name_ + "/saturation_i_max", a);
+  FindParameter(name_ + "/saturation_i_gain", a);
+  FindParameter(name_ + "/saturation_p_gain", a);
+  FindParameter(name_ + "/saturation_d_gain", a);
+
   FindParameter(name_ + "/gain_lim", gain_lim_);
   FindParameter(name_ + "/exposure_lim", exposure_lim_);
 }
