@@ -10,90 +10,54 @@
 #include <gtest/gtest.h>
 #include <opencv2/opencv.hpp>
 #include <fstream>
+#include <ros/ros.h>
 #include <provider_vision/server/detection_task.h>
 #include <provider_vision/server/detection_task_manager.h>
 #include <provider_vision/server/filterchain_manager.h>
 #include <provider_vision/server/vision_server.h>
-#include "provider_vision/server/media_manager.h"
+#include <sonia_msgs/CameraFeatures.h>
 
 ros::NodeHandle *nhp;
 const std::string cam_name = "Bottom Guppy";
 
-class CameraParametersListenerTest : public atlas::Observer<const cv::Mat &> {
+class CameraParametersListenerTest {
  public:
-  explicit CameraParametersListenerTest(
-      provider_vision::MediaStreamer::Ptr const &media,
-      const std::clock_t timer)
-      : camera_(nullptr),
-        file_(nullptr),
-        start_(timer),
-        is_calibrated_(false),
-        msv_prev_(0),
-        msv_lum_(0)
-  // date_(date)
-  {
-    /// We don't want any member of the media to be dangling, just to be safe
-    /// To much mutex anyway, one more....
-    media->image_access_.lock();
-    camera_ = dynamic_cast<provider_vision::BaseCamera *>(media->media_.get());
-    media->image_access_.unlock();
-    assert(media != nullptr);
-    file_.open("Values_settings_cam.csv");
-    assert(file_.is_open());
-  }
+  CameraParametersListenerTest(ros::NodeHandlePtr nh) : nh_(nh), listener_() {
+    listener_ = nh_->subscribe(
+        "/provider_vision/camera/" + cam_name + "_features", 1000,
+        &CameraParametersListenerTest::ListenerCallback, this);
+  };
   virtual ~CameraParametersListenerTest(){};
 
-  virtual void OnSubjectNotify(atlas::Subject<const cv::Mat &> &subject,
-                               const cv::Mat &args) override {
-    if (!is_calibrated_) {
-      msv_lum_ = camera_->GetCameraMsvLum();
-      file_ << msv_lum_ << ",";
-      file_ << camera_->GetCameraMsvSat() << ",";
-      file_ << camera_->GetFeature(provider_vision::BaseCamera::Feature::GAIN)
-            << ",";
-      file_ << camera_->GetFeature(provider_vision::BaseCamera::Feature::GAMMA)
-            << ",";
-      file_ << camera_->GetFeature(
-                   provider_vision::BaseCamera::Feature::EXPOSURE) << ",";
-      file_ << camera_->GetFeature(
-                   provider_vision::BaseCamera::Feature::SATURATION) << ",";
-      file_ << (std::clock() - start_) / (double)CLOCKS_PER_SEC << "\n";
-
-      if ((msv_prev_ - msv_lum_) <= 0.01) {
-        msv_prev_ = msv_lum_;
-      } else {
-        is_calibrated_ = true;
-        file_.close();
-      }
-    }
-  }
-
-  virtual bool GetStatus() { return is_calibrated_; }
+ protected:
+  void ListenerCallback(const sonia_msgs::CameraFeatures &msg) {}
 
  private:
-  provider_vision::BaseCamera *camera_;
-  std::fstream file_;
-  clock_t start_;
-  bool is_calibrated_;
-  double msv_prev_, msv_lum_;
-  // std::string date_;
+  ros::NodeHandlePtr nh_;
+  ros::Subscriber listener_;
 };
 
 void StartVisionServer() {
   provider_vision::VisionServer server(*nhp);
 
   provider_vision::MediaManager mmng(*nhp);
-  auto media = mmng.StartStreamingMedia("Bottom Guppy");
+  auto media = mmng.StartStreamingMedia(cam_name);
 
   provider_vision::FilterchainManager fcmgr;
   auto filterchain = fcmgr.InstanciateFilterchain("test_filterchain");
 
   provider_vision::DetectionTaskManager dmgr;
-  dmgr.StartDetectionTask(media, filterchain, rqst.node_name);
+  // dmgr.StartDetectionTask(media, filterchain, rqst.node_name);
 }
 
 TEST(CameraCalibration, CreateGraph) {
-  std::thread vs_start(&StartVisionServer);
+  provider_vision::VisionServer server(*nhp);
+
+  provider_vision::MediaManager mmng(*nhp);
+  auto media = mmng.StartStreamingMedia(cam_name);
+
+  provider_vision::FilterchainManager fcmgr;
+  auto filterchain = fcmgr.InstanciateFilterchain("test_filterchain");
 
   // We are able to get the media streamer from the newly created media.
   provider_vision::MediaStreamer::Ptr mstreamer =
@@ -108,7 +72,6 @@ TEST(CameraCalibration, CreateGraph) {
             provider_vision::BaseMedia::Status::STREAMING);
 
   // Creating the filterchain to get the camera feed
-  provider_vision::FilterchainManager fcmgr;
   auto fc = fcmgr.InstanciateFilterchain("camera_feed");
   provider_vision::DetectionTaskManager dmgr;
   dmgr.StartDetectionTask(mstreamer, fc, "Calibration_data");
@@ -124,13 +87,6 @@ TEST(CameraCalibration, CreateGraph) {
   // Creating timer for time stamping data
   std::clock_t start;
   start = std::clock();
-
-  CameraParametersListenerTest listener(mstreamer, start);
-  mstreamer->Attach(listener);
-
-  while (!listener.GetStatus()) {
-  }
-  vs_start.join();
 }
 
 int main(int argc, char **argv) {
