@@ -31,6 +31,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <mutex>
 
 namespace provider_vision {
 
