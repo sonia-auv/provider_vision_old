@@ -114,4 +114,4 @@ add_dependencies(${PROJECT_NAME}_node ${PROJECT_NAME}_generate_messages_cpp soni
 # U N I T   T E S T S
 
 # Uncomment this line to compile UT.
-# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/test)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/test)
