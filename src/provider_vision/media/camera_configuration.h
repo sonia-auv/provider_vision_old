@@ -22,6 +22,7 @@
 #define PROVIDER_VISION_MEDIA_CAMERA_CONFIGURATION_H_
 
 #include <lib_atlas/macros.h>
+#include <lib_atlas/ros/configuration_parser.h>
 #include <ros/node_handle.h>
 #include <stdlib.h>
 #include <map>
@@ -31,7 +32,7 @@
 
 namespace provider_vision {
 
-class CameraConfiguration {
+class CameraConfiguration : public atlas::ConfigurationParser {
  public:
   //============================================================================
   // T Y P E D E F   A N D   E N U M
@@ -46,13 +47,6 @@ class CameraConfiguration {
 
   explicit CameraConfiguration(const ros::NodeHandle &nh,
                                const std::string &name) ATLAS_NOEXCEPT;
-
-  /**
-   * We want to define copy constructor here for optimization purpose.
-   * Do not copy the members if is a rvalue.
-   */
-  explicit CameraConfiguration(const CameraConfiguration &rhs) ATLAS_NOEXCEPT;
-  explicit CameraConfiguration(CameraConfiguration &&rhs) ATLAS_NOEXCEPT;
 
   virtual ~CameraConfiguration() ATLAS_NOEXCEPT;
 
@@ -75,32 +69,6 @@ class CameraConfiguration {
   double white_balance_blue_;
   double white_balance_red_;
   double saturation_;
-  double gamma_i_state_;
-  double gamma_i_min_;
-  double gamma_i_max_;
-  double gamma_i_gain_;
-  double gamma_p_gain_;
-  double gamma_d_gain_;
-  double gain_i_state_;
-  double gain_i_min_;
-  double gain_i_max_;
-  double gain_i_gain_;
-  double gain_p_gain_;
-  double gain_d_gain_;
-  double exposure_i_state_;
-  double exposure_i_min_;
-  double exposure_i_max_;
-  double exposure_i_gain_;
-  double exposure_p_gain_;
-  double exposure_d_gain_;
-  double saturation_i_state_;
-  double saturation_i_min_;
-  double saturation_i_max_;
-  double saturation_i_gain_;
-  double saturation_p_gain_;
-  double saturation_d_gain_;
-  double gain_lim_;
-  double exposure_lim_;
   int width_;
   int height_;
   int x_offset_;
@@ -124,9 +92,6 @@ class CameraConfiguration {
   // P R I V A T E   M E T H O D S
 
   void DeserializeConfiguration(const std::string &name) ATLAS_NOEXCEPT;
-
-  template <typename Tp_>
-  void FindParameter(const std::string &str, Tp_ &p) ATLAS_NOEXCEPT;
 };
 
 //==============================================================================

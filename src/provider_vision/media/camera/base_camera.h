@@ -24,6 +24,7 @@
 #include <memory>
 #include <mutex>
 #include <boost/any.hpp>
+#include "provider_vision/media/camera_calibrator.h"
 #include "provider_vision/config.h"
 #include "provider_vision/media/cam_undistord_matrices.h"
 #include "provider_vision/media/camera/base_media.h"
@@ -174,6 +175,8 @@ class BaseCamera : public BaseMedia, protected CameraConfiguration {
   // P R I V A T E   M E M B E R S
 
   CalibrationFeatureValues current_features_;
+
+  CameraCalibrator calibrator_;
 
   double gain_lim_;
   double exposure_lim_;

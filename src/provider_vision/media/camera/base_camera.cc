@@ -57,6 +57,7 @@ inline double CastToDouble(const boost::any &op) {
 BaseCamera::BaseCamera(const CameraConfiguration &configuration)
     : BaseMedia(configuration.name_),
       CameraConfiguration(configuration),
+      calibrator_(nh_, CameraConfiguration::name_),
       feature_pub_() {
   undistord_matrix_.InitMatrices(undistortion_matrice_path_);
 
@@ -66,39 +67,39 @@ BaseCamera::BaseCamera(const CameraConfiguration &configuration)
   current_features_.saturation = configuration.saturation_;
 
   gamma_pid_.d_state = configuration.gamma_;
-  gamma_pid_.i_state = configuration.gamma_i_state_;
-  gamma_pid_.i_min = configuration.gamma_i_min_;
-  gamma_pid_.i_max = configuration.gamma_i_max_;
-  gamma_pid_.i_gain = configuration.gamma_i_gain_;
-  gamma_pid_.p_gain = configuration.gamma_p_gain_;
-  gamma_pid_.d_gain = configuration.gamma_d_gain_;
+  gamma_pid_.i_state = calibrator_.gamma_pid_.i_state_;
+  gamma_pid_.i_min = calibrator_.gamma_pid_.i_min_;
+  gamma_pid_.i_max = calibrator_.gamma_pid_.i_max_;
+  gamma_pid_.i_gain = calibrator_.gamma_pid_.i_gain_;
+  gamma_pid_.p_gain = calibrator_.gamma_pid_.p_gain_;
+  gamma_pid_.d_gain = calibrator_.gamma_pid_.d_gain_;
 
   gain_pid_.d_state = configuration.gain_;
-  gain_pid_.i_state = configuration.gain_i_state_;
-  gain_pid_.i_min = configuration.gain_i_min_;
-  gain_pid_.i_max = configuration.gain_i_max_;
-  gain_pid_.i_gain = configuration.gain_i_gain_;
-  gain_pid_.p_gain = configuration.gain_p_gain_;
-  gain_pid_.d_gain = configuration.gain_d_gain_;
+  gain_pid_.i_state = calibrator_.gain_pid_.i_state_;
+  gain_pid_.i_min = calibrator_.gain_pid_.i_min_;
+  gain_pid_.i_max = calibrator_.gain_pid_.i_max_;
+  gain_pid_.i_gain = calibrator_.gain_pid_.i_gain_;
+  gain_pid_.p_gain = calibrator_.gain_pid_.p_gain_;
+  gain_pid_.d_gain = calibrator_.gain_pid_.d_gain_;
 
   exposure_pid_.d_state = configuration.exposure_;
-  exposure_pid_.i_state = configuration.exposure_i_state_;
-  exposure_pid_.i_min = configuration.exposure_i_min_;
-  exposure_pid_.i_max = configuration.exposure_i_max_;
-  exposure_pid_.i_gain = configuration.exposure_i_gain_;
-  exposure_pid_.p_gain = configuration.exposure_p_gain_;
-  exposure_pid_.d_gain = configuration.exposure_d_gain_;
+  exposure_pid_.i_state = calibrator_.exposure_pid_.i_state_;
+  exposure_pid_.i_min = calibrator_.exposure_pid_.i_min_;
+  exposure_pid_.i_max = calibrator_.exposure_pid_.i_max_;
+  exposure_pid_.i_gain = calibrator_.exposure_pid_.i_gain_;
+  exposure_pid_.p_gain = calibrator_.exposure_pid_.p_gain_;
+  exposure_pid_.d_gain = calibrator_.exposure_pid_.d_gain_;
 
   saturation_pid_.d_state = configuration.saturation_;
-  saturation_pid_.i_state = configuration.saturation_i_state_;
-  saturation_pid_.i_min = configuration.saturation_i_min_;
-  saturation_pid_.i_max = configuration.saturation_i_max_;
-  saturation_pid_.i_gain = configuration.saturation_i_gain_;
-  saturation_pid_.p_gain = configuration.saturation_p_gain_;
-  saturation_pid_.d_gain = configuration.saturation_d_gain_;
+  saturation_pid_.i_state = calibrator_.saturation_pid_.i_state_;
+  saturation_pid_.i_min = calibrator_.saturation_pid_.i_min_;
+  saturation_pid_.i_max = calibrator_.saturation_pid_.i_max_;
+  saturation_pid_.i_gain = calibrator_.saturation_pid_.i_gain_;
+  saturation_pid_.p_gain = calibrator_.saturation_pid_.p_gain_;
+  saturation_pid_.d_gain = calibrator_.saturation_pid_.d_gain_;
 
-  gain_lim_ = configuration.gain_lim_;
-  exposure_lim_ = configuration.exposure_lim_;
+  gain_lim_ = calibrator_.gain_lim_;
+  exposure_lim_ = calibrator_.exposure_lim_;
   msv_lum_ = 0;
   msv_sat_ = 0;
 
@@ -185,7 +186,6 @@ void BaseCamera::SetFeature(const Feature &feat, const boost::any &value) {
     }
   } catch (const std::runtime_error &e) {
     ROS_ERROR("Could not set the feature for the camera: %s", e.what());
-    throw;
   }
   PublishCameraFeatures();
 }
