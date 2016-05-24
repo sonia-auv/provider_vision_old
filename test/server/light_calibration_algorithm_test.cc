@@ -48,7 +48,7 @@ TEST(CalibrationAlgorithm, core_test) {
   FirewireCamera cam;
   init(cam);
   if (!cam.StartCamera()) return;
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 4; i++) {
     cv::Mat tmp;
     cam.GetNextImage(tmp);
     cv::imshow("SAS", tmp);
@@ -65,7 +65,6 @@ int main(int argc, char **argv) {
 bool init(FirewireCamera &firewire_camera) {
   context_ = dc1394_new();
 
-  dc1394error_t error;
   dc1394camera_list_t *list;
   dc1394error_t err;
 
@@ -90,6 +89,8 @@ bool init(FirewireCamera &firewire_camera) {
   printf("Using camera with GUID %d\n", camera->guid);
 
   firewire_camera.SetCamera(camera);
+
+  return true;
 }
 
 //==============================================================================
@@ -110,7 +111,7 @@ bool FirewireCamera::StartCamera() {
   if (err != DC1394_SUCCESS) {
     return false;
   }
-  err = err = dc1394_capture_setup(camera_, 4, DC1394_CAPTURE_FLAGS_DEFAULT);
+  err = dc1394_capture_setup(camera_, 4, DC1394_CAPTURE_FLAGS_DEFAULT);
   if (err != DC1394_SUCCESS) {
     return false;
   }
@@ -118,6 +119,7 @@ bool FirewireCamera::StartCamera() {
   if (err != DC1394_SUCCESS) {
     return false;
   }
+  return true;
 }
 
 bool FirewireCamera::GetNextImage(cv::Mat &img) {
