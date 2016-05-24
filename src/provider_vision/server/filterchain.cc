@@ -114,7 +114,7 @@ bool Filterchain::Deserialize() {
       auto filter_node = filters[i];
       AddFilter(filter_node["name"].as<std::string>());
 
-      if (node["parameters"]) {
+      if (filter_node["parameters"]) {
         auto parameters = filter_node["parameters"];
         assert(parameters.Type() == YAML::NodeType::Sequence);
 
@@ -152,7 +152,8 @@ void Filterchain::ExecuteFilterChain(cv::Mat &image) {
 
         index++;
       }
-    } catch (cv::Exception &e) {
+    }
+    catch (cv::Exception &e) {
       auto filterchainID = std::string{"[FILTERCHAIN " + name_ + "]"};
       ROS_ERROR_NAMED(filterchainID.c_str(), "Error in image processing: %s",
                       e.what());
