@@ -41,10 +41,21 @@ class FirewireCamera {
 
 dc1394_t *context_;
 
-bool init();
+bool init(FirewireCamera &firewire_camera);
 bool close();
 
-TEST(CalibrationAlgorithm, core_test) {}
+TEST(CalibrationAlgorithm, core_test) {
+  FirewireCamera cam;
+  init(cam);
+  if (!cam.StartCamera()) return;
+  for (int i = 0; i < 10; i++) {
+    cv::Mat tmp;
+    cam.GetNextImage(tmp);
+    cv::imshow("SAS", tmp);
+    cv::waitKey(-1);
+  }
+  cam.StopCamera();
+}
 
 int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
@@ -123,8 +134,7 @@ bool FirewireCamera::GetNextImage(cv::Mat &img) {
     cv::Mat tmp =
         cv::Mat(frame->size[1], frame->size[0], CV_8UC2, frame->image);
     cv::cvtColor(tmp, img, CV_YUV2BGR_Y422);
-  }
-  catch (cv::Exception &e) {
+  } catch (cv::Exception &e) {
     return false;
   }
   // Clean, prepare for new frame.

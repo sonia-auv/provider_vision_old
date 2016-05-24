@@ -15,13 +15,19 @@ target_link_libraries(camera_calibration_test
     yaml-cpp)
 
 catkin_add_gtest(light_calibration_algorithm_test server/light_calibration_algorithm_test.cc ${provider_vision_FILES})
-target_link_libraries(camera_calibration_test
+target_link_libraries(light_calibration_algorithm_test
         dc1394
         ${catkin_LIBRARIES}
         ${lib_atlas_LIBRARIES}
         ${provider_vision_LIBRARIES}
         ${OpenCV_LIBRARIES}
-        yaml-cpp)
+        yaml-cpp
+        $ENV{GIGEV_DIR}/lib/libGevApi.so.2.0
+        $ENV{GENICAM_ROOT}/bin/Linux64_x64/libNodeMapData_gcc421_v3_0.so
+        $ENV{GENICAM_ROOT}/bin/Linux64_x64/libXmlParser_gcc421_v3_0.so
+        $ENV{GENICAM_ROOT}/bin/Linux64_x64/libGenApi_gcc421_v3_0.so
+        $ENV{GENICAM_ROOT}/bin/Linux64_x64/libGCBase_gcc421_v3_0.so
+        )
 
 catkin_add_gtest(media_manager_test server/media_manager_test.cc ${provider_vision_FILES})
 target_link_libraries(media_manager_test
