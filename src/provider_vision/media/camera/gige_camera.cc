@@ -334,7 +334,6 @@ void GigeCamera::SetExposureMode(bool mode) {
   if (mode == FeatureMode::AUTO) {
     ptrExposureAuto->SetIntValue(2);
     atlas::MilliTimer::Sleep(100);
-    ptrExposureMode->SetIntValue(2);
   } else if (mode == FeatureMode::MANUAL) {
     ptrExposureAuto->SetIntValue(0);
     atlas::MilliTimer::Sleep(100);
