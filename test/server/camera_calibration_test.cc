@@ -22,22 +22,30 @@ const std::string cam_name = "Bottom Guppy";
 
 class CameraParametersListenerTest {
  public:
-  CameraParametersListenerTest(ros::NodeHandlePtr nh) : nh_(nh), listener_() {
-    listener_ = nh_->subscribe(
-        "/provider_vision/camera/" + cam_name + "_features", 1000,
-        &CameraParametersListenerTest::ListenerCallback, this);
+  CameraParametersListenerTest(ros::NodeHandlePtr nh) : nh_(nh), listener_(), csv_file_("Camera_parameters_" + atlas::Timer::CurrentDate(), std::ofstream::out) {
+    if (csv_file_.is_open()) {
+      csv_file_ << "MSV Lum,MSV Sat,Gamma,Gain,Saturation,Exposure\n";
+      listener_ = nh_->subscribe(
+          "/provider_vision/camera/" + cam_name + "_features", 1000,
+          &CameraParametersListenerTest::ListenerCallback, this);
+    }
   };
   virtual ~CameraParametersListenerTest(){};
 
  protected:
   void ListenerCallback(const sonia_msgs::CameraFeatures &msg) {
-    ROS_INFO("Data: [%d]", msg.luminance_msv);
-
+    csv_file_ << msg.luminance_msv << ",";
+    csv_file_ << msg.saturation_msv << ",";
+    csv_file_ << msg.gamma_value << ",";
+    csv_file_ << msg.gain_value << ",";
+    csv_file_ << msg.saturation_value << ",";
+    csv_file_ << msg.exposure_value << "\n";
   }
 
  private:
   ros::NodeHandlePtr nh_;
   ros::Subscriber listener_;
+  std::ofstream csv_file_;
 };
 
 void StartVisionServer() {
