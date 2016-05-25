@@ -30,7 +30,10 @@ class CameraParametersListenerTest {
   virtual ~CameraParametersListenerTest(){};
 
  protected:
-  void ListenerCallback(const sonia_msgs::CameraFeatures &msg) {}
+  void ListenerCallback(const sonia_msgs::CameraFeatures &msg) {
+    ROS_INFO("Data: [%d]", msg.luminance_msv);
+
+  }
 
  private:
   ros::NodeHandlePtr nh_;
@@ -76,17 +79,7 @@ TEST(CameraCalibration, CreateGraph) {
   provider_vision::DetectionTaskManager dmgr;
   dmgr.StartDetectionTask(mstreamer, fc, "Calibration_data");
 
-  //  std::string current_date_ =
-  //  atlas::Timer<std::chrono::milliseconds,std::chrono::steady_clock>::CurrentDate();
-
-  // Creating CSV file to output the data
-  std::fstream csv_file;
-  csv_file.open("Values_settings_cam.csv");
-  csv_file << "MSV Sat,MSV Lum,Gain,Gamma,Exposure,Saturation,Time";
-
-  // Creating timer for time stamping data
-  std::clock_t start;
-  start = std::clock();
+  
 }
 
 int main(int argc, char **argv) {
