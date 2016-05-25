@@ -83,10 +83,10 @@ void BaseCamera::PublishCameraFeatures() const {
   msg.white_balance_mode = static_cast<uint8_t>(GetShutterMode());
   msg.gain_mode = static_cast<uint8_t>(GetShutterMode());
 
-  msg.shutter_value = GetShutterValue();
-  msg.gamma_value = GetShutterValue();
-  msg.exposure_value = GetShutterValue();
-  msg.saturation_value = GetShutterValue();
+  msg.gain_value = GetGainValue();
+  msg.gamma_value = GetGammaValue();
+  msg.exposure_value = GetExposureValue();
+  msg.saturation_value = GetSaturationValue();
   msg.luminance_msv = calibrator_.GetLimunanceMSV();
   msg.saturation_msv = calibrator_.GetSaturationMSV();
 
