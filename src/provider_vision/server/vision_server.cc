@@ -122,7 +122,8 @@ bool VisionServer::CallbackExecutionCMD(execute_cmd::Request &rqst,
       rep.response = detection_task_mgr_.StartDetectionTask(media, filterchain,
                                                             rqst.node_name);
       ROS_INFO("Starting topic: %s", rep.response.c_str());
-    } catch (const std::exception &e) {
+    }
+    catch (const std::exception &e) {
       ROS_ERROR("Starting execution error: %s", e.what());
       rep.response = "";
       return false;
@@ -156,8 +157,8 @@ bool VisionServer::CallbackExecutionCMD(execute_cmd::Request &rqst,
       filterchain_mgr_.StopFilterchain(fc);
 
       detection_task_mgr_.StopDetectionTask(rqst.node_name);
-
-    } catch (const std::exception &e) {
+    }
+    catch (const std::exception &e) {
       ROS_ERROR("Closing execution error: %s", e.what());
       return false;
     }
@@ -469,15 +470,15 @@ bool VisionServer::CallbackSetCameraFeature(
     sonia_msgs::SetCameraFeature::Response &rep) {
   if (rqst.feature_type == sonia_msgs::GetCameraFeatureRequest::FEATURE_BOOL) {
     boost::any value = boost::lexical_cast<bool>(rqst.feature_value);
-    media_mgr_.GetCameraFeature(rqst.camera_name, rqst.camera_feature, value);
+    media_mgr_.SetCameraFeature(rqst.camera_name, rqst.camera_feature, value);
   } else if (rqst.feature_type ==
              sonia_msgs::GetCameraFeatureRequest::FEATURE_DOUBLE) {
     boost::any value = boost::lexical_cast<double>(rqst.feature_value);
-    media_mgr_.GetCameraFeature(rqst.camera_name, rqst.camera_feature, value);
+    media_mgr_.SetCameraFeature(rqst.camera_name, rqst.camera_feature, value);
   } else if (rqst.feature_type ==
              sonia_msgs::GetCameraFeatureRequest::FEATURE_INT) {
     boost::any value = boost::lexical_cast<int>(rqst.feature_value);
-    media_mgr_.GetCameraFeature(rqst.camera_name, rqst.camera_feature, value);
+    media_mgr_.SetCameraFeature(rqst.camera_name, rqst.camera_feature, value);
   } else {
     ROS_ERROR("The feature type is not supported.");
     return false;
