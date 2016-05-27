@@ -63,21 +63,6 @@ class MediaManager {
 
   void StopStreamingMedia(const std::string &media) noexcept;
 
-  const BaseMedia::Status &GetMediaStatus(const std::string &name);
-
-  MediaStreamer::Ptr GetMediaStreamer(const std::string &name);
-
-  /**
-   * Return true if a media streamer has been created for the given media.
-   *
-   * This will compare the value of the media name with all the media streamer
-   * in the system and this will return true if there is a match, false if not.
-   *
-   * \param name The media name to check.
-   * \return True if the media is streaming.
-   */
-  bool IsMediaStreaming(const std::string &name);
-
   /**
    * Get the name of all existing medias in the system.
    *
@@ -126,6 +111,16 @@ class MediaManager {
  private:
   //==========================================================================
   // P R I V A T E   M E T H O D S
+  /**
+   * Return true if a media streamer has been created for the given media.
+   *
+   * This will compare the value of the media name with all the media streamer
+   * in the system and this will return true if there is a match, false if not.
+   *
+   * \param name The media name to check.
+   * \return True if the media is streaming.
+   */
+  bool IsMediaStreaming(const std::string &name);
 
   void StopStreamingMedia(const MediaStreamer::Ptr &streamer) noexcept;
 
@@ -134,6 +129,8 @@ class MediaManager {
   BaseContext::Ptr GetContextFromMedia(const std::string &name) const;
 
   BaseCamera::Feature GetFeatureFromName(const std::string &name) const;
+
+  MediaStreamer::Ptr GetMediaStreamer(const std::string &name);
 
   void AddMediaStreamer(MediaStreamer::Ptr media_streamer);
 

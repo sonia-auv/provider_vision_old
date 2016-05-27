@@ -7,7 +7,7 @@
 
 catkin_add_gtest(camera_calibration_test server/camera_calibration_test.cc ${provider_vision_FILES})
 target_link_libraries(camera_calibration_test
-    dc1394
+    dc1394 pthread
     ${catkin_LIBRARIES}
     ${lib_atlas_LIBRARIES}
     ${sonia_msgs_LIBRARIES}
@@ -23,7 +23,7 @@ target_link_libraries(camera_calibration_test
 
 catkin_add_gtest(light_calibration_algorithm_test server/light_calibration_algorithm_test.cc ${provider_vision_FILES})
 target_link_libraries(light_calibration_algorithm_test
-        dc1394
+        dc1394 pthread
         ${catkin_LIBRARIES}
         ${lib_atlas_LIBRARIES}
         ${provider_vision_LIBRARIES}
@@ -38,12 +38,18 @@ target_link_libraries(light_calibration_algorithm_test
 
 catkin_add_gtest(media_manager_test server/media_manager_test.cc ${provider_vision_FILES})
 target_link_libraries(media_manager_test
-    dc1394
+    dc1394 pthread
     ${catkin_LIBRARIES}
     ${lib_atlas_LIBRARIES}
     ${provider_vision_LIBRARIES}
     ${OpenCV_LIBRARIES}
-    yaml-cpp)
+    yaml-cpp
+        $ENV{GIGEV_DIR}/lib/libGevApi.so.2.0
+        $ENV{GENICAM_ROOT}/bin/Linux64_x64/libNodeMapData_gcc421_v3_0.so
+        $ENV{GENICAM_ROOT}/bin/Linux64_x64/libXmlParser_gcc421_v3_0.so
+        $ENV{GENICAM_ROOT}/bin/Linux64_x64/libGenApi_gcc421_v3_0.so
+        $ENV{GENICAM_ROOT}/bin/Linux64_x64/libGCBase_gcc421_v3_0.so
+        )
 
 catkin_add_gtest(detection_task_manager_test server/detection_task_manager_test.cc ${provider_vision_FILES})
 target_link_libraries(detection_task_manager_test
@@ -52,11 +58,17 @@ target_link_libraries(detection_task_manager_test
     ${lib_atlas_LIBRARIES}
     ${provider_vision_LIBRARIES}
     ${OpenCV_LIBRARIES}
-    yaml-cpp)
+    yaml-cpp
+        $ENV{GIGEV_DIR}/lib/libGevApi.so.2.0
+        $ENV{GENICAM_ROOT}/bin/Linux64_x64/libNodeMapData_gcc421_v3_0.so
+        $ENV{GENICAM_ROOT}/bin/Linux64_x64/libXmlParser_gcc421_v3_0.so
+        $ENV{GENICAM_ROOT}/bin/Linux64_x64/libGenApi_gcc421_v3_0.so
+        $ENV{GENICAM_ROOT}/bin/Linux64_x64/libGCBase_gcc421_v3_0.so
+        )
 
 catkin_add_gtest(filterchain_manager_test server/filterchain_manager_test.cc ${provider_vision_FILES})
 target_link_libraries(filterchain_manager_test
-    dc1394
+    dc1394 pthread
     ${catkin_LIBRARIES}
     ${lib_atlas_LIBRARIES}
     ${provider_vision_LIBRARIES}
@@ -65,35 +77,45 @@ target_link_libraries(filterchain_manager_test
 
 catkin_add_gtest(vision_server_test server/vision_server_test.cc  ${provider_vision_FILES})
 target_link_libraries(vision_server_test
-    dc1394
+    dc1394 pthread
     ${catkin_LIBRARIES}
     ${lib_atlas_LIBRARIES}
     ${OpenCV_LIBRARIES}
-    yaml-cpp)
+    yaml-cpp
+        $ENV{GIGEV_DIR}/lib/libGevApi.so.2.0
+        $ENV{GENICAM_ROOT}/bin/Linux64_x64/libNodeMapData_gcc421_v3_0.so
+        $ENV{GENICAM_ROOT}/bin/Linux64_x64/libXmlParser_gcc421_v3_0.so
+        $ENV{GENICAM_ROOT}/bin/Linux64_x64/libGenApi_gcc421_v3_0.so
+        $ENV{GENICAM_ROOT}/bin/Linux64_x64/libGCBase_gcc421_v3_0.so
+        )
 
-catkin_add_gtest( object_ranking_data_test filters/object_ranking_data_test.cc )
-target_link_libraries(object_ranking_data_test ${OpenCV_LIBRARIES})
+file(GLOB_RECURSE provider_vision_image_proc_FILES
+        "${provider_vision_SRC_DIR}/algorithm/*.cc"
+        "${provider_vision_SRC_DIR}/algorithm/*.h")
 
-catkin_add_gtest( object_tracking_data_test filters/object_tracking_data_test.cc )
-target_link_libraries(object_tracking_data_test ${OpenCV_LIBRARIES})
+catkin_add_gtest( object_ranking_data_test filters/object_ranking_data_test.cc ${provider_vision_image_proc_FILES})
+target_link_libraries(object_ranking_data_test ${OpenCV_LIBRARIES} pthread)
 
-catkin_add_gtest( object_ranker_test filters/object_ranker_test.cc )
-target_link_libraries(object_ranker_test ${OpenCV_LIBRARIES})
+catkin_add_gtest( object_tracking_data_test filters/object_tracking_data_test.cc ${provider_vision_image_proc_FILES})
+target_link_libraries(object_tracking_data_test ${OpenCV_LIBRARIES} pthread)
 
-catkin_add_gtest( object_full_data_test filters/object_full_data_test.cc )
-target_link_libraries(object_full_data_test ${OpenCV_LIBRARIES})
+catkin_add_gtest( object_ranker_test filters/object_ranker_test.cc ${provider_vision_image_proc_FILES})
+target_link_libraries(object_ranker_test ${OpenCV_LIBRARIES} pthread)
 
-catkin_add_gtest( object_frame_memory_test filters/object_frame_memory_test.cc )
-target_link_libraries(object_frame_memory_test ${OpenCV_LIBRARIES})
+catkin_add_gtest( object_full_data_test filters/object_full_data_test.cc ${provider_vision_image_proc_FILES})
+target_link_libraries(object_full_data_test ${OpenCV_LIBRARIES} pthread)
 
-catkin_add_gtest( object_basic_data_test filters/object_basic_data_test.cc )
-target_link_libraries(object_basic_data_test ${OpenCV_LIBRARIES})
+catkin_add_gtest( object_frame_memory_test filters/object_frame_memory_test.cc ${provider_vision_image_proc_FILES})
+target_link_libraries(object_frame_memory_test ${OpenCV_LIBRARIES} pthread)
 
-catkin_add_gtest( feature_factory_test filters/feature_factory_test.cc )
-target_link_libraries(feature_factory_test ${OpenCV_LIBRARIES})
+catkin_add_gtest( object_basic_data_test filters/object_basic_data_test.cc ${provider_vision_image_proc_FILES})
+target_link_libraries(object_basic_data_test ${OpenCV_LIBRARIES} pthread)
 
-catkin_add_gtest( performace_evaluator_test filters/performace_evaluator_test.cc )
-target_link_libraries(performace_evaluator_test ${OpenCV_LIBRARIES})
+catkin_add_gtest( feature_factory_test filters/feature_factory_test.cc ${provider_vision_image_proc_FILES})
+target_link_libraries(feature_factory_test ${OpenCV_LIBRARIES} pthread)
 
-catkin_add_gtest( contour_test filters/contour_test.cc )
-target_link_libraries(contour_test ${OpenCV_LIBRARIES})
+catkin_add_gtest( performace_evaluator_test filters/performace_evaluator_test.cc ${provider_vision_image_proc_FILES})
+target_link_libraries(performace_evaluator_test ${OpenCV_LIBRARIES} pthread)
+
+catkin_add_gtest( contour_test filters/contour_test.cc ${provider_vision_image_proc_FILES})
+target_link_libraries(contour_test ${OpenCV_LIBRARIES} pthread)
