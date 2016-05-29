@@ -40,7 +40,7 @@ class GigeCamera : public BaseCamera {
   static const int DMA_BUFFER = 4;
   static constexpr float FPS = 15;
 
-  static const std::string CAM_TAG;
+  static const char *CAM_TAG;
 
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
@@ -58,15 +58,15 @@ class GigeCamera : public BaseCamera {
   // P U B L I C   M E T H O D S
 
   // BaseCamera override
-  void Open() override;
+  bool Open() override;
 
-  void Close() override;
+  bool Close() override;
 
-  void SetStreamingModeOn() override;
+  bool SetStreamingModeOn() override;
 
-  void SetStreamingModeOff() override;
+  bool SetStreamingModeOff() override;
 
-  void NextImage(cv::Mat &img) override;
+  bool NextImage(cv::Mat &img) override;
 
   double GetAcquistionTimerValue() const;
 
@@ -74,34 +74,34 @@ class GigeCamera : public BaseCamera {
   //==========================================================================
   // P R O T E C T E D   M E T H O D S
 
-  void SetGainMode(bool) override;
-  void SetGainValue(double value) override;
+  bool SetGainMode(bool) override;
+  bool SetGainValue(double value) override;
   bool GetGainMode() const override;
   double GetGainValue() const override;
 
   double GetGammaValue() const override;
-  void SetGammaValue(double value) override;
+  bool SetGammaValue(double value) override;
 
   double GetExposureValue() const override;
-  void SetExposureValue(double value) override;
-  void SetExposureMode(bool) override;
+  bool SetExposureValue(double value) override;
+  bool SetExposureMode(bool) override;
   bool GetExposureMode() const override;
 
   double GetSaturationValue() const override;
-  void SetSaturationValue(double value) override;
+  bool SetSaturationValue(double value) override;
 
-  void SetShutterValue(double value) override;
-  void SetShutterMode(bool) override;
+  bool SetShutterValue(double value) override;
+  bool SetShutterMode(bool) override;
   bool GetShutterMode() const override;
   double GetShutterValue() const override;
 
-  void SetFrameRateValue(double value) override;
+  bool SetFrameRateValue(double value) override;
   double GetFrameRateValue() const override;
 
-  void SetWhiteBalanceMode(bool) override;
+  bool SetWhiteBalanceMode(bool) override;
   bool GetWhiteBalanceMode() const override;
-  void SetWhiteBalanceRedValue(double value) override;
-  void SetWhiteBalanceBlueValue(double value) override;
+  bool SetWhiteBalanceRedValue(double value) override;
+  bool SetWhiteBalanceBlueValue(double value) override;
   double GetWhiteBalanceRed() const override;
   double GetWhiteBalanceBlue() const override;
 
@@ -110,10 +110,10 @@ class GigeCamera : public BaseCamera {
   /// If we wished to use these feature widely, we must define them
   /// on the BaseCamera abstract class.
   double GetWhiteBalanceRatio() const;
-  void SetWhiteBalanceRatio(double value);
-  void SetAutoBrightnessMode(int value);
-  void SetAutoBrightnessTarget(int value);
-  void SetAutoBrightnessTargetVariation(int value);
+  bool SetWhiteBalanceRatio(double value);
+  bool SetAutoBrightnessMode(int value);
+  bool SetAutoBrightnessTarget(int value);
+  bool SetAutoBrightnessTargetVariation(int value);
 
  private:
   //==========================================================================
@@ -121,7 +121,7 @@ class GigeCamera : public BaseCamera {
 
   void BalanceWhite(cv::Mat mat);
 
-  void SetCameraParams();
+  bool SetCameraParams();
 
   std::string GetModel() const;
 

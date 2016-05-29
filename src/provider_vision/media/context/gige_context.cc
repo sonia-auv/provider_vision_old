@@ -34,12 +34,12 @@ namespace provider_vision {
 
 //==============================================================================
 // C / D T O R S   S E C T I O N
-
 //------------------------------------------------------------------------------
 //
 GigeContext::GigeContext(
     const std::vector<CameraConfiguration> &configurations) noexcept
-    : BaseContext(), DRIVER_TAG("[GigE Driver]") {
+    : BaseContext(),
+      DRIVER_TAG("[GigE Driver]") {
   InitContext(configurations);
 }
 
@@ -93,42 +93,53 @@ void GigeContext::CloseContext() {
   for (auto &media : media_list_) {
     GigeCamera::Ptr cam = GetGigeCamera(media);
 
-    cam->StopStreaming();
-
-    cam->Close();
+    if (cam) {
+      cam->StopStreaming();
+      cam->Close();
+    }
   }
-
   media_list_.clear();
-
   GevApiUninitialize();
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeContext::OpenMedia(const std::string &name) {
+bool GigeContext::OpenMedia(const std::string &name) {
   GigeCamera::Ptr cam = GetGigeCamera(name);
-  cam->Open();
+  if (cam) {
+    return cam->Open();
+  }
+  return false;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeContext::CloseMedia(const std::string &name) {
+bool GigeContext::CloseMedia(const std::string &name) {
   GigeCamera::Ptr cam = GetGigeCamera(name);
-  cam->Close();
+  if (cam) {
+    return cam->Close();
+  }
+  return false;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeContext::StartStreamingMedia(const std::string &name) {
+bool GigeContext::StartStreamingMedia(const std::string &name) {
   GigeCamera::Ptr cam = GetGigeCamera(name);
-  cam->StartStreaming();
+  if (cam) {
+    return cam->StartStreaming();
+  }
+  return false;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeContext::StopStreamingMedia(const std::string &name) {
+bool GigeContext::StopStreamingMedia(const std::string &name) {
   GigeCamera::Ptr cam = GetGigeCamera(name);
-  cam->StopStreaming();
+  if (cam) {
+    return cam->StopStreaming();
+  }
+  return false;
 }
 
 //------------------------------------------------------------------------------
@@ -161,18 +172,24 @@ bool GigeContext::WatchDogFunc() {
 
 //------------------------------------------------------------------------------
 //
-void GigeContext::SetFeature(const BaseCamera::Feature &feat,
+bool GigeContext::SetFeature(const BaseCamera::Feature &feat,
                              const std::string &name, boost::any &val) {
   GigeCamera::Ptr cam = GetGigeCamera(name);
-  cam->SetFeature(feat, val);
+  if (cam) {
+    return cam->SetFeature(feat, val);
+  }
+  return false;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeContext::GetFeature(const BaseCamera::Feature &feat,
+bool GigeContext::GetFeature(const BaseCamera::Feature &feat,
                              const std::string &name, boost::any &val) const {
   GigeCamera::Ptr cam = GetGigeCamera(name);
-  cam->GetFeature(feat, val);
+  if (cam) {
+    return cam->GetFeature(feat, val);
+  }
+  return false;
 }
 
 }  // namespace provider_vision
