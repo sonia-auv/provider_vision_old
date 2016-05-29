@@ -156,21 +156,19 @@ void DetectionTask::Run() {
             // signed Jeremie St-Jules
           }
         }
-        provider_vision::GlobalParamHandler::Ptr paramHandler =
+        provider_vision::GlobalParamHandler *paramHandler =
             filterchain_->GetParameterHandler();
         if (paramHandler) {
           provider_vision::TargetQueue targetQueue =
               paramHandler->getTargetQueue();
-          if (!targetQueue.empty()) {
-            while (!targetQueue.empty()) {
-              sonia_msgs::VisionTarget msg;
-              provider_vision::Target target = targetQueue.front();
-              target.SetMessage(msg);
-              result_publisher_.publish(msg);
-              targetQueue.pop();
-            }
-            assert(paramHandler->getTargetQueue().size() != 0);
+          while (!targetQueue.empty()) {
+            sonia_msgs::VisionTarget msg;
+            provider_vision::Target target = targetQueue.front();
+            target.SetMessage(msg);
+            result_publisher_.publish(msg);
+            targetQueue.pop();
           }
+          paramHandler->clearTarget();
         }
       } else {
         image_publisher_.Write(image_being_processed_);
