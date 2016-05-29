@@ -57,8 +57,9 @@ inline double CastToDouble(const boost::any &op) {
 BaseCamera::BaseCamera(const CameraConfiguration &configuration)
     : BaseMedia(configuration.name_),
       CameraConfiguration(configuration),
-      calibrator_(nh_, CameraConfiguration::name_),
-      feature_pub_() {
+      feature_pub_(),
+      calibrator_(nh_, CameraConfiguration::name_)
+       {
   undistord_matrix_.InitMatrices(undistortion_matrice_path_);
 
   std::string base_node_name{kRosNodeName};
