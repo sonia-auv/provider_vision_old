@@ -31,7 +31,7 @@ namespace provider_vision {
 //
 CameraCalibrator::CameraCalibrator(const ros::NodeHandle &nh,
                                    const std::string &name)
-    : ConfigurationParser(nh, "/provider_vision/camera_pid/"),
+    : ConfigurationParser(nh, "/provider_vision/camera_pid/" + name),
       name_(name),
       gamma_pid_(),
       gain_pid_(),
@@ -61,10 +61,9 @@ void CameraCalibrator::Calibrate(BaseCamera *camera, cv::Mat img) {
   msv_lum_ = CalculateMSV(l_hist, 5);
   double shutter = camera->GetShutterValue();
   try {
-    if (msv_lum_ > 2.6){
+    if (msv_lum_ > 2.6) {
       shutter -= 100;
-    }
-    else if(msv_lum_ < 2.4){
+    } else if (msv_lum_ < 2.4) {
       shutter += 100;
     }
     camera->SetShutterValue(shutter);
@@ -83,8 +82,8 @@ cv::Mat CameraCalibrator::CalculateLuminanceHistogram(
   static const float *histRange{range};
 
   // Get the LUV image from the RGB image in input parameter.
-  //cv::Mat luvImg;
-  //cvtColor(img, luvImg, CV_RGB2Luv);
+  // cv::Mat luvImg;
+  // cvtColor(img, luvImg, CV_RGB2Luv);
 
   // Splitting the LUV Image into 3 channels in the luv_planes.
   std::vector<cv::Mat> luv_planes;
@@ -140,41 +139,40 @@ float CameraCalibrator::CalculateMSV(const cv::Mat &img, int nbrRegion) {
 
 //------------------------------------------------------------------------------
 //
-double CameraCalibrator::GetLimunanceMSV() const noexcept {
+double CameraCalibrator::GetLimunanceMSV() const {
   std::lock_guard<std::mutex> guard(features_mutex_);
   return msv_lum_;
 }
 
 //------------------------------------------------------------------------------
 //
-double CameraCalibrator::GetSaturationMSV() const noexcept {
+double CameraCalibrator::GetSaturationMSV() const {
   std::lock_guard<std::mutex> guard(features_mutex_);
   return msv_sat_;
 }
-
 
 //------------------------------------------------------------------------------
 //
 void CameraCalibrator::DeserializeConfiguration(const std::string &name) {
   double a;
-  FindParameter(name_ + "/gamma_i_gain", a);
-  FindParameter(name_ + "/gamma_p_gain", a);
-  FindParameter(name_ + "/gamma_d_gain", a);
+  FindParameter("gamma_i_gain", a);
+  FindParameter("gamma_p_gain", a);
+  FindParameter("gamma_d_gain", a);
 
-  FindParameter(name_ + "/gain_i_gain", a);
-  FindParameter(name_ + "/gain_p_gain", a);
-  FindParameter(name_ + "/gain_d_gain", a);
+  FindParameter("gain_i_gain", a);
+  FindParameter("gain_p_gain", a);
+  FindParameter("gain_d_gain", a);
 
-  FindParameter(name_ + "/exposure_i_gain", a);
-  FindParameter(name_ + "/exposure_p_gain", a);
-  FindParameter(name_ + "/exposure_d_gain", a);
+  FindParameter("exposure_i_gain", a);
+  FindParameter("exposure_p_gain", a);
+  FindParameter("exposure_d_gain", a);
 
-  FindParameter(name_ + "/saturation_i_gain", a);
-  FindParameter(name_ + "/saturation_p_gain", a);
-  FindParameter(name_ + "/saturation_d_gain", a);
+  FindParameter("saturation_i_gain", a);
+  FindParameter("saturation_p_gain", a);
+  FindParameter("saturation_d_gain", a);
 
-  FindParameter(name_ + "/gain_lim", gain_lim_);
-  FindParameter(name_ + "/exposure_lim", exposure_lim_);
+  FindParameter("gain_lim", gain_lim_);
+  FindParameter("exposure_lim", exposure_lim_);
 }
 
 }  // namespace provider_vision

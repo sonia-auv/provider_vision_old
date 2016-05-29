@@ -43,8 +43,7 @@ FilterchainManager::~FilterchainManager() {}
 // M E T H O D   S E C T I O N
 //------------------------------------------------------------------------------
 //
-std::vector<std::string> FilterchainManager::GetAllFilterchainName() const
-    noexcept {
+std::vector<std::string> FilterchainManager::GetAllFilterchainName() const {
   auto availableFilterchains = std::vector<std::string>{};
   std::stringstream ss;
   ss << kConfigPath << "filterchain/";
@@ -110,8 +109,8 @@ Filterchain::Ptr FilterchainManager::InstanciateFilterchain(
 
 //------------------------------------------------------------------------------
 //
-const std::vector<Filterchain::Ptr>
-    &FilterchainManager::InstanciateAllFilterchains() {
+const std::vector<Filterchain::Ptr> &
+FilterchainManager::InstanciateAllFilterchains() {
   for (const auto &filterchain : GetAllFilterchainName()) {
     InstanciateFilterchain(filterchain);
   }
@@ -136,8 +135,8 @@ std::string FilterchainManager::GetFilterchainPath(
 
 //------------------------------------------------------------------------------
 //
-const std::vector<Filterchain::Ptr>
-    &FilterchainManager::GetRunningFilterchains() const {
+const std::vector<Filterchain::Ptr> &
+FilterchainManager::GetRunningFilterchains() const {
   return running_filterchains_;
 }
 

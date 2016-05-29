@@ -41,9 +41,9 @@ class MediaManager {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  explicit MediaManager(const ros::NodeHandle &nh) noexcept;
+  explicit MediaManager(const ros::NodeHandle &nh);
 
-  ~MediaManager() noexcept;
+  ~MediaManager();
 
   //==========================================================================
   // P U B L I C   M E T H O D S
@@ -61,7 +61,7 @@ class MediaManager {
    */
   MediaStreamer::Ptr StartStreamingMedia(const std::string &media_name);
 
-  void StopStreamingMedia(const std::string &media) noexcept;
+  void StopStreamingMedia(const std::string &media);
 
   /**
    * Get the name of all existing medias in the system.
@@ -71,7 +71,7 @@ class MediaManager {
    *
    * \return The name of all medias in the system.
    */
-  std::vector<std::string> GetAllMediasName() const noexcept;
+  std::vector<std::string> GetAllMediasName() const;
 
   /**
    * Get the number of all medias in the system.
@@ -80,7 +80,7 @@ class MediaManager {
    *
    * \return The total count of all medias.
    */
-  size_t GetAllMediasCount() const noexcept;
+  size_t GetAllMediasCount() const;
 
   /**
    * If the media is a camera, set the feature to a specific value.
@@ -122,9 +122,9 @@ class MediaManager {
    */
   bool IsMediaStreaming(const std::string &name);
 
-  void StopStreamingMedia(const MediaStreamer::Ptr &streamer) noexcept;
+  void StopStreamingMedia(const MediaStreamer::Ptr &streamer);
 
-  BaseMedia::Ptr GetMedia(const std::string &name) const noexcept;
+  BaseMedia::Ptr GetMedia(const std::string &name) const;
 
   BaseContext::Ptr GetContextFromMedia(const std::string &name) const;
 

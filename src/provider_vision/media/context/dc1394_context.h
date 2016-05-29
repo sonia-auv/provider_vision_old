@@ -52,9 +52,9 @@ class DC1394Context : public BaseContext {
   // P U B L I C   C / D T O R S
 
   explicit DC1394Context(
-      const std::vector<CameraConfiguration> &configurations) noexcept;
+      const std::vector<CameraConfiguration> &configurations);
 
-  virtual ~DC1394Context() noexcept;
+  virtual ~DC1394Context();
 
   //==========================================================================
   // P U B L I C   M E T H O D S

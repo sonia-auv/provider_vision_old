@@ -173,7 +173,7 @@ void DC1394Camera::NextImage(cv::Mat &img) {
         "The image is empty, there is a problem with the media");
   }
 
-  ++calibrate_count_;
+  //  ++calibrate_count_;
 
   if (calibrate_count_ == 10) {
     calibrator_.Calibrate(this, img);
@@ -568,9 +568,8 @@ bool DC1394Camera::GetShutterMode() const {
       dc1394_feature_get_mode(dc1394_camera_, DC1394_FEATURE_SHUTTER, &mode);
 
   if (error != DC1394_SUCCESS) {
-    throw std::runtime_error(
-        "Canno't get the white balance blue value on DC1394 Camera" +
-        std::to_string(static_cast<int>(error)));
+    throw std::runtime_error("Canno't get the shutter mode on DC1394 Camera" +
+                             std::to_string(static_cast<int>(error)));
   }
 
   if (mode == DC1394_FEATURE_MODE_MANUAL)
@@ -585,16 +584,46 @@ bool DC1394Camera::GetShutterMode() const {
 //------------------------------------------------------------------------------
 //
 bool DC1394Camera::GetExposureMode() const {
-  ROS_WARN("The feature GainMode is not available on DC1394 cameras.");
-  // There is no such feature as exposure mode. We return the manual mode in
-  // this case
-  return 0;
+  std::lock_guard<std::mutex> guard(cam_access_);
+  dc1394error_t error;
+  dc1394feature_mode_t mode;
+
+  error =
+      dc1394_feature_get_mode(dc1394_camera_, DC1394_FEATURE_EXPOSURE, &mode);
+
+  if (error != DC1394_SUCCESS) {
+    throw std::runtime_error("Canno't get the shutter mode on DC1394 Camera" +
+                             std::to_string(static_cast<int>(error)));
+  }
+
+  if (mode == DC1394_FEATURE_MODE_MANUAL)
+    return 0;
+  else if (mode == DC1394_FEATURE_MODE_AUTO)
+    return 1;
+  else
+    throw std::runtime_error(
+        "Canno't get the white balance blue value on DC1394 Camera");
 }
 
 //------------------------------------------------------------------------------
 //
-void DC1394Camera::SetExposureMode(bool) {
-  ROS_WARN("The feature ExposureMode is not available on DC1394 cameras.");
+void DC1394Camera::SetExposureMode(bool mode) {
+  std::lock_guard<std::mutex> guard(cam_access_);
+  dc1394error_t error;
+
+  if (mode) {
+    error = dc1394_feature_set_mode(dc1394_camera_, DC1394_FEATURE_EXPOSURE,
+                                    DC1394_FEATURE_MODE_AUTO);
+  } else {
+    error = dc1394_feature_set_mode(dc1394_camera_, DC1394_FEATURE_SHUTTER,
+                                    DC1394_FEATURE_MODE_MANUAL);
+  }
+
+  if (error != DC1394_SUCCESS) {
+    throw std::runtime_error(
+        "Canno't set the shutter in automatic on DC1394 Camera" +
+        std::to_string(static_cast<int>(error)));
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -704,36 +733,31 @@ void DC1394Camera::SetCameraParams() {
     // TODO Jérémie St-Jules: Change the exception error.
     throw std::runtime_error("An error occurenced");
   }
-  // We have a guppy
-  if (std::string(dc1394_camera_->vendor).compare(std::string("AVT")) == 0) {
-    SetFeature(Feature::GAIN_MODE, false);
+
+  SetFeature(Feature::EXPOSURE_MODE, !exposure_manual_);
+  atlas::MilliTimer::Sleep(100);
+  if (!exposure_manual_) {
+    SetFeature(Feature::EXPOSURE_VALUE, exposure_);
     atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::GAIN_VALUE, 420.0);
+  }
+  SetFeature(Feature::GAIN_MODE, !gain_manual_);
+  atlas::MilliTimer::Sleep(100);
+  if (gain_manual_) {
+    SetFeature(Feature::GAIN_VALUE, gain_);
     atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::SHUTTER_MODE, false);
+  }
+  SetFeature(Feature::SHUTTER_MODE, !shutter_manual_);
+  atlas::MilliTimer::Sleep(100);
+  if (shutter_manual_) {
+    SetFeature(Feature::SHUTTER_VALUE, shutter_);
     atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::SHUTTER_VALUE, 32.0);
+  }
+  SetFeature(Feature::WHITE_BALANCE_MODE, !white_balance_manual_);
+  atlas::MilliTimer::Sleep(100);
+  if (white_balance_manual_) {
+    SetFeature(Feature::WHITE_BALANCE_BLUE_VALUE, white_balance_blue_);
     atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::WHITE_BALANCE_MODE, false);
-    atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::WHITE_BALANCE_BLUE_VALUE, 381.0);
-    atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::WHITE_BALANCE_RED_VALUE, 568.0);
-    atlas::MilliTimer::Sleep(100);
-  } else {
-    SetFeature(Feature::GAIN_MODE, false);
-    atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::GAIN_VALUE, 350.0);
-    atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::SHUTTER_MODE, false);
-    atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::SHUTTER_VALUE, 500.0);
-    atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::WHITE_BALANCE_MODE, false);
-    atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::WHITE_BALANCE_BLUE_VALUE, 412.0);
-    atlas::MilliTimer::Sleep(100);
-    SetFeature(Feature::WHITE_BALANCE_RED_VALUE, 511.0);
+    SetFeature(Feature::WHITE_BALANCE_RED_VALUE, white_balance_red_);
     atlas::MilliTimer::Sleep(100);
   }
 }

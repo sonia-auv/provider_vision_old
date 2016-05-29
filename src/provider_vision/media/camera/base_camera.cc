@@ -58,8 +58,7 @@ BaseCamera::BaseCamera(const CameraConfiguration &configuration)
     : BaseMedia(configuration.name_),
       CameraConfiguration(configuration),
       feature_pub_(),
-      calibrator_(nh_, CameraConfiguration::name_)
-       {
+      calibrator_(nh_, CameraConfiguration::name_) {
   undistord_matrix_.InitMatrices(undistortion_matrice_path_);
 
   std::string base_node_name{kRosNodeName};
@@ -136,8 +135,9 @@ void BaseCamera::SetFeature(const Feature &feat, const boost::any &value) {
         SetExposureMode(CastToBool(value));
         break;
     }
-  } catch (const std::runtime_error &e) {
-    ROS_ERROR("Could not set the feature for the camera: %s", e.what());
+  } catch (const std::exception &e) {
+    ROS_ERROR("Could not set the feature %d for the camera Error: %s", feat,
+              e.what());
   }
   PublishCameraFeatures();
 }
@@ -184,7 +184,7 @@ void BaseCamera::GetFeature(const Feature &feat, boost::any &value) const {
         value = GetExposureMode();
         break;
     }
-  } catch (const std::runtime_error &e) {
+  } catch (const std::exception &e) {
     ROS_ERROR("Could not get the feature for the camera: %s", e.what());
     throw;
   }

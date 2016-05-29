@@ -27,7 +27,7 @@ namespace provider_vision {
 
 //------------------------------------------------------------------------------
 //
-FileContext::FileContext() noexcept : BaseContext() {}
+FileContext::FileContext() : BaseContext() {}
 
 //------------------------------------------------------------------------------
 //

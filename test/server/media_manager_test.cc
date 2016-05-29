@@ -22,13 +22,13 @@ ros::NodeHandle *nhp;
  */
 class ImageObserver : public atlas::Observer<const cv::Mat &> {
  public:
-  ImageObserver() noexcept : Observer() {}
-  virtual ~ImageObserver() noexcept {}
+  ImageObserver() : Observer() {}
+  virtual ~ImageObserver() {}
   cv::Mat image_;
 
  private:
   void OnSubjectNotify(atlas::Subject<const cv::Mat &> &subject,
-                       const cv::Mat &image) noexcept override {
+                       const cv::Mat &image) override {
     image_ = image;
   }
 };

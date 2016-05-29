@@ -32,8 +32,7 @@ class TopicListener {
    * the name of the topic to subscribe to.
    */
   explicit TopicListener(const std::string &topic_name)
-      : image_transport(*nhp),
-        continue_(true) {
+      : image_transport(*nhp), continue_(true) {
     subscriber = image_transport.subscribe(
         topic_name, 1, &TopicListener::MessageCallBack, this);
   }
@@ -51,7 +50,7 @@ class TopicListener {
    * Run while ROS is running
    */
   void Run() {
-    while(ros::ok() && continue_) {
+    while (ros::ok() && continue_) {
       ros::spinOnce();
     }
   }
@@ -59,16 +58,12 @@ class TopicListener {
   /**
    * Last image getter
    */
-  const cv::Mat &GetImage() const {
-    return image;
-  }
+  const cv::Mat &GetImage() const { return image; }
 
   /**
    * Stop the execution of the Run method.
    */
-  void Stop() noexcept {
-    continue_ = false;
-  }
+  void Stop() { continue_ = false; }
 
  private:
   cv::Mat image;
@@ -96,24 +91,31 @@ TEST(DetectionTaskManager, start_detection) {
   ASSERT_EQ(*(dmgr.GetAllDetectionTasksName().begin()), "test");
 
   // Check that starting exiting detection task throws.
-  ASSERT_THROW(dmgr.StartDetectionTask(nullptr, nullptr, "test"), std::logic_error);
+  ASSERT_THROW(dmgr.StartDetectionTask(nullptr, nullptr, "test"),
+               std::logic_error);
 
   // Check that starting exiting detection task throws.
-  ASSERT_THROW(dmgr.StartDetectionTask(streamer, fc, ""), std::invalid_argument);
+  ASSERT_THROW(dmgr.StartDetectionTask(streamer, fc, ""),
+               std::invalid_argument);
 
   std::vector<std::string> nodes;
   ros::this_node::getAdvertisedTopics(nodes);
   std::stringstream topic_name;
-  topic_name << provider_vision::kRosNodeName << "test" << "_result";
+  topic_name << provider_vision::kRosNodeName << "test"
+             << "_result";
 
   // Check that a publisher has been created for this detection task
-  ASSERT_NE(std::find(nodes.begin(), nodes.end(), topic_name.str()), nodes.end());
-  ASSERT_NE(std::find(nodes.begin(), nodes.end(), provider_vision::kRosNodeName + "test" + "_image"), nodes.end());
+  ASSERT_NE(std::find(nodes.begin(), nodes.end(), topic_name.str()),
+            nodes.end());
+  ASSERT_NE(std::find(nodes.begin(), nodes.end(),
+                      provider_vision::kRosNodeName + "test" + "_image"),
+            nodes.end());
 
   TopicListener listener(provider_vision::kRosNodeName + "test" + "_image");
   std::thread thread(&TopicListener::Run, &listener);
   std::this_thread::sleep_for(std::chrono::milliseconds(150));
-  auto origin = cv::imread(filepath.str(), CV_LOAD_IMAGE_ANYDEPTH | CV_LOAD_IMAGE_ANYCOLOR);
+  auto origin = cv::imread(filepath.str(),
+                           CV_LOAD_IMAGE_ANYDEPTH | CV_LOAD_IMAGE_ANYCOLOR);
 
   // Check if the image send on ROS is the same that the original one.
   // Allow some difference due to the compression.
@@ -176,7 +178,8 @@ TEST(DetectionTaskManager, change_observer) {
   listener.GetImage().copyTo(second_image);
 
   // Check that the observer has changed.
-  ASSERT_FALSE(std::equal(first_image.begin<uchar>(), first_image.end<uchar>(), second_image.begin<uchar>()));
+  ASSERT_FALSE(std::equal(first_image.begin<uchar>(), first_image.end<uchar>(),
+                          second_image.begin<uchar>()));
 
   dmgr.ChangeReturnImageToFilterchain("test");
   std::this_thread::sleep_for(std::chrono::milliseconds(150));
@@ -185,7 +188,8 @@ TEST(DetectionTaskManager, change_observer) {
   listener.GetImage().copyTo(third_image);
 
   // Check that the observer has changed to the filterchain output
-  ASSERT_TRUE(std::equal(first_image.begin<uchar>(), first_image.end<uchar>(), third_image.begin<uchar>()));
+  ASSERT_TRUE(std::equal(first_image.begin<uchar>(), first_image.end<uchar>(),
+                         third_image.begin<uchar>()));
 
   listener.Stop();
   thread.join();

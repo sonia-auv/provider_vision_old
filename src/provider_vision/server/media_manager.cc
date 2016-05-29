@@ -38,7 +38,7 @@ namespace provider_vision {
 
 //------------------------------------------------------------------------------
 //
-MediaManager::MediaManager(const ros::NodeHandle &nh) noexcept : contexts_() {
+MediaManager::MediaManager(const ros::NodeHandle &nh) : contexts_() {
   // Creating the Webcam context
   auto active_webcam = false;
   nh_.getParam("/provider_vision/active_webcam", active_webcam);
@@ -75,7 +75,7 @@ MediaManager::MediaManager(const ros::NodeHandle &nh) noexcept : contexts_() {
 
 //------------------------------------------------------------------------------
 //
-MediaManager::~MediaManager() noexcept {
+MediaManager::~MediaManager() {
   for (auto &elem : contexts_) {
     elem->CloseContext();
   }
@@ -146,7 +146,7 @@ MediaStreamer::Ptr MediaManager::StartStreamingMedia(
 
 //------------------------------------------------------------------------------
 //
-void MediaManager::StopStreamingMedia(const std::string &media) noexcept {
+void MediaManager::StopStreamingMedia(const std::string &media) {
   MediaStreamer::Ptr streamer = GetMediaStreamer(media);
   if (streamer) {
     StopStreamingMedia(streamer);
@@ -159,8 +159,7 @@ void MediaManager::StopStreamingMedia(const std::string &media) noexcept {
 
 //------------------------------------------------------------------------------
 //
-void MediaManager::StopStreamingMedia(
-    const MediaStreamer::Ptr &streamer) noexcept {
+void MediaManager::StopStreamingMedia(const MediaStreamer::Ptr &streamer) {
   if (streamer->ObserverCount() > 1) {
     ROS_INFO(
         "Not stopping the media because at least another observer is using "
@@ -174,7 +173,7 @@ void MediaManager::StopStreamingMedia(
 
 //------------------------------------------------------------------------------
 //
-BaseMedia::Ptr MediaManager::GetMedia(const std::string &name) const noexcept {
+BaseMedia::Ptr MediaManager::GetMedia(const std::string &name) const {
   BaseMedia::Ptr media(nullptr);
   for (const auto &context : contexts_) {
     if (context->ContainsMedia(name)) {
@@ -186,7 +185,7 @@ BaseMedia::Ptr MediaManager::GetMedia(const std::string &name) const noexcept {
 
 //------------------------------------------------------------------------------
 //
-std::vector<std::string> MediaManager::GetAllMediasName() const noexcept {
+std::vector<std::string> MediaManager::GetAllMediasName() const {
   std::vector<std::string> medias;
 
   for (auto &context : contexts_) {
@@ -200,7 +199,7 @@ std::vector<std::string> MediaManager::GetAllMediasName() const noexcept {
 
 //------------------------------------------------------------------------------
 //
-size_t MediaManager::GetAllMediasCount() const noexcept {
+size_t MediaManager::GetAllMediasCount() const {
   size_t size = 0;
   for (auto &context : contexts_) {
     size += context->GetMediaList().size();
@@ -236,8 +235,8 @@ void MediaManager::GetCameraFeature(const std::string &media_name,
 
 //------------------------------------------------------------------------------
 //
-BaseContext::Ptr MediaManager::GetContextFromMedia(const std::string &name)
-    const {
+BaseContext::Ptr MediaManager::GetContextFromMedia(
+    const std::string &name) const {
   BaseContext::Ptr context_ptr(nullptr);
   for (auto &context : contexts_) {
     if (context->ContainsMedia(name)) {
@@ -249,8 +248,8 @@ BaseContext::Ptr MediaManager::GetContextFromMedia(const std::string &name)
 
 //------------------------------------------------------------------------------
 //
-BaseCamera::Feature MediaManager::GetFeatureFromName(const std::string &name)
-    const {
+BaseCamera::Feature MediaManager::GetFeatureFromName(
+    const std::string &name) const {
   if (name == "SHUTTER_AUTO") {
     return BaseCamera::Feature::SHUTTER_MODE;
   } else if (name == "SHUTTER") {

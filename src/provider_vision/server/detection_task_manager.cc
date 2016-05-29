@@ -78,8 +78,8 @@ void DetectionTaskManager::StopDetectionTask(
 
 //------------------------------------------------------------------------------
 //
-std::vector<std::string> DetectionTaskManager::GetAllDetectionTasksName() const
-    noexcept {
+std::vector<std::string> DetectionTaskManager::GetAllDetectionTasksName()
+    const {
   std::vector<std::string> names;
   for (const auto &task : detection_tasks_) {
     names.push_back(task->GetDetectionTaskName());
@@ -109,7 +109,7 @@ void DetectionTaskManager::ChangeReturnImageToOrigin(const std::string &name) {
 
 //------------------------------------------------------------------------------
 //
-size_t DetectionTaskManager::GetAllDetectionTasksCount() const noexcept {
+size_t DetectionTaskManager::GetAllDetectionTasksCount() const {
   return detection_tasks_.size();
 }
 

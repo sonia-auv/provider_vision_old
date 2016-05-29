@@ -48,7 +48,7 @@ class BaseCamera : public BaseMedia, protected CameraConfiguration {
    * the enum name, ex. "FRAMERATE" for FEATURE::FRAMERATE
    */
   enum class Feature {
-    SHUTTER_MODE,
+    SHUTTER_MODE = 0,
     SHUTTER_VALUE,
     GAIN_MODE,
     GAIN_VALUE,

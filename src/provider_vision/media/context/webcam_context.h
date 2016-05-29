@@ -46,9 +46,9 @@ class WebcamContext : public BaseContext {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  WebcamContext() noexcept;
+  WebcamContext();
 
-  virtual ~WebcamContext() noexcept;
+  virtual ~WebcamContext();
 
   //==========================================================================
   // P U B L I C   M E T H O D S

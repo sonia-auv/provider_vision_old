@@ -64,7 +64,7 @@ class FilterchainManager {
    * \param filter : string
    * \return vector<std::string>
    */
-  std::vector<std::string> GetAllFilterchainName() const noexcept;
+  std::vector<std::string> GetAllFilterchainName() const;
 
   /**
    * Get the list of all running filterchains

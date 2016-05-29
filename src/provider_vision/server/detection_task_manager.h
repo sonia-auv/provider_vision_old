@@ -61,7 +61,7 @@ class DetectionTaskManager {
    *
    * \return The name of all detection tasks in the system.
    */
-  std::vector<std::string> GetAllDetectionTasksName() const noexcept;
+  std::vector<std::string> GetAllDetectionTasksName() const;
 
   /**
    * Change the image returned by the detection task to the result of a
@@ -95,7 +95,7 @@ class DetectionTaskManager {
    *
    * \return The total count of all detection tasks.
    */
-  size_t GetAllDetectionTasksCount() const noexcept;
+  size_t GetAllDetectionTasksCount() const;
 
   /**
    * Get the media streamer object from the detection task.

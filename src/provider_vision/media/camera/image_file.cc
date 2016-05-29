@@ -29,12 +29,12 @@ namespace provider_vision {
 
 //------------------------------------------------------------------------------
 //
-ImageFile::ImageFile(const std::string &path_to_file) noexcept
+ImageFile::ImageFile(const std::string &path_to_file)
     : BaseMedia(path_to_file), path_(path_to_file) {}
 
 //------------------------------------------------------------------------------
 //
-ImageFile::~ImageFile() noexcept {}
+ImageFile::~ImageFile() {}
 
 //==============================================================================
 // M E T H O D   S E C T I O N
@@ -78,6 +78,6 @@ void ImageFile::NextImage(cv::Mat &image) {
 
 //------------------------------------------------------------------------------
 //
-void ImageFile::NextImageCopy(cv::Mat &image) noexcept { NextImage(image); }
+void ImageFile::NextImageCopy(cv::Mat &image) { NextImage(image); }
 
 }  // namespace provider_vision

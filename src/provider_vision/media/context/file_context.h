@@ -57,7 +57,7 @@ class FileContext : public BaseContext {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  FileContext() noexcept;
+  FileContext();
 
   virtual ~FileContext();
 

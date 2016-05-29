@@ -45,10 +45,9 @@ class GigeContext : public BaseContext {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  explicit GigeContext(
-      const std::vector<CameraConfiguration> &configurations) noexcept;
+  explicit GigeContext(const std::vector<CameraConfiguration> &configurations);
 
-  virtual ~GigeContext() noexcept;
+  virtual ~GigeContext();
 
   //==========================================================================
   // P U B L I C   M E T H O D S

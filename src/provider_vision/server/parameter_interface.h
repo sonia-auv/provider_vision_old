@@ -48,7 +48,7 @@ class ParameterInterface {
 
   ParameterInterface() = default;
 
-  virtual ~ParameterInterface() ATLAS_NOEXCEPT = default;
+  virtual ~ParameterInterface() = default;
 
   //============================================================================
   // P U B L I C   M E T H O D S

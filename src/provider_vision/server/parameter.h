@@ -49,7 +49,7 @@ class Parameter : public ParameterInterface {
                      std::vector<ParameterInterface *> *vector = nullptr,
                      const std::string &description = "");
 
-  virtual ~Parameter() ATLAS_NOEXCEPT = default;
+  virtual ~Parameter() = default;
 
   //============================================================================
   // P U B L I C   O P E R A T O R S

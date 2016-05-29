@@ -113,7 +113,7 @@ void DetectionTask::ChangeReturnImageToOrigin() {
 //------------------------------------------------------------------------------
 //
 void DetectionTask::OnSubjectNotify(atlas::Subject<const cv::Mat &> &subject,
-                                    const cv::Mat &image) noexcept {
+                                    const cv::Mat &image) {
   std::lock_guard<std::mutex> guard(newest_image_mutex_);
   newest_image_ = image;
   new_image_ready_ = true;
