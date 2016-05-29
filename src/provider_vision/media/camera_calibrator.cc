@@ -59,28 +59,16 @@ void CameraCalibrator::Calibrate(BaseCamera *camera, cv::Mat img) {
   auto l_hist = CalculateLuminanceHistogram(img);
 
   msv_lum_ = CalculateMSV(l_hist, 5);
+  double shutter = camera->GetShutterValue();
   try {
-    if (msv_lum_ != msv_uniform_) {
-      if (camera->GetExposureValue() < exposure_lim_ &&
-          camera->GetGainValue() < gain_lim_) {
-        auto gamma = gamma_pid_.Refresh(camera->GetGammaValue());
-        camera->SetGammaValue(std::move(gamma));
-      } else if (camera->GetGainValue() > gain_lim_) {
-        auto exposure = exposure_pid_.Refresh(camera->GetExposureValue());
-        camera->SetExposureValue(std::move(exposure));
-      } else {
-        auto gain = gain_pid_.Refresh(camera->GetGainValue());
-        camera->SetGainValue(std::move(gain));
-      }
+    if (msv_lum_ > 2.6){
+      shutter -= 100;
     }
-    if (msv_lum_ > 2 && msv_lum_ < 3) {
-      auto s_hist = CalculateSaturationHistogram(img);
-      msv_sat_ = CalculateMSV(s_hist, 5);
-      if (msv_sat_ != msv_uniform_) {
-        auto saturation = saturation_pid_.Refresh(camera->GetSaturationValue());
-        camera->SetSaturationValue(std::move(saturation));
-      }
+    else if(msv_lum_ < 2.4){
+      shutter += 100;
     }
+    camera->SetShutterValue(shutter);
+
   } catch (const std::exception &e) {
     ROS_ERROR("Error in calibrate camera: %s.\n", e.what());
   }
@@ -95,12 +83,12 @@ cv::Mat CameraCalibrator::CalculateLuminanceHistogram(
   static const float *histRange{range};
 
   // Get the LUV image from the RGB image in input parameter.
-  cv::Mat luvImg;
-  cvtColor(img, luvImg, CV_RGB2Luv);
+  //cv::Mat luvImg;
+  //cvtColor(img, luvImg, CV_RGB2Luv);
 
   // Splitting the LUV Image into 3 channels in the luv_planes.
   std::vector<cv::Mat> luv_planes;
-  cv::split(luvImg, luv_planes);
+  cv::split(img, luv_planes);
 
   // Calculate the histogram of luminance by sending the first element of
   // the plane (the L channel)
