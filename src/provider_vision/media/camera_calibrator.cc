@@ -83,12 +83,12 @@ cv::Mat CameraCalibrator::CalculateLuminanceHistogram(
   static const float *histRange{range};
 
   // Get the LUV image from the RGB image in input parameter.
-  //cv::Mat luvImg;
-  //cvtColor(img, luvImg, CV_RGB2Luv);
+  cv::Mat luvImg;
+  cvtColor(img, luvImg, CV_RGB2Luv);
 
   // Splitting the LUV Image into 3 channels in the luv_planes.
   std::vector<cv::Mat> luv_planes;
-  cv::split(img, luv_planes);
+  cv::split(luvImg, luv_planes);
 
   // Calculate the histogram of luminance by sending the first element of
   // the plane (the L channel)
