@@ -61,10 +61,11 @@ void CameraCalibrator::Calibrate(BaseCamera *camera, cv::Mat img) {
   try {
     if (msv_lum_ > 2.6) {
       shutter -= 100;
+      camera->SetShutterValue(shutter);
     } else if (msv_lum_ < 2.4) {
       shutter += 100;
+      camera->SetShutterValue(shutter);
     }
-    camera->SetShutterValue(shutter);
 
   } catch (const std::exception &e) {
     ROS_ERROR("Error in calibrate camera: %s.\n", e.what());
