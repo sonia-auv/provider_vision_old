@@ -5,6 +5,5 @@
 	    output="log" />
 
   <rosparam command="load" file="$(find provider_vision)/config/camera/camera_parameters.yaml"/>
-  <rosparam command="load" file="$(find provider_vision)/config/camera/camera_calibration.yaml"/>
   <rosparam command="load" file="$(find provider_vision)/config/camera/provider_media_conf.yaml"/>
 </launch>
