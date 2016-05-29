@@ -20,7 +20,6 @@
 
 #include <provider_vision/media/camera_calibrator.h>
 #include "provider_vision/media/camera/base_camera.h"
-#include <boost/lexical_cast.hpp>
 
 namespace provider_vision {
 
@@ -39,7 +38,6 @@ CameraCalibrator::CameraCalibrator(const ros::NodeHandle &nh,
       saturation_pid_(),
       msv_lum_(),
       msv_sat_(),
-      msv_uniform_(2.5),
       gain_lim_(),
       exposure_lim_() {
   DeserializeConfiguration(name_);
