@@ -52,16 +52,12 @@ class FileContext : public BaseContext {
 
   using Ptr = std::shared_ptr<FileContext>;
 
-  enum class MediaType {
-    IMAGE,
-    VIDEO,
-    NONE
-  };
+  enum class MediaType { IMAGE, VIDEO, NONE };
 
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  FileContext() noexcept;
+  FileContext();
 
   virtual ~FileContext();
 
@@ -79,8 +75,8 @@ class FileContext : public BaseContext {
   bool StopStreamingMedia(const std::string &name) override;
 
   virtual bool GetFeature(const BaseCamera::Feature &feat,
-                          const std::string &name, boost::any &val) const
-      override;
+                          const std::string &name,
+                          boost::any &val) const override;
 
   virtual bool SetFeature(const BaseCamera::Feature &feat,
                           const std::string &name, boost::any &val) override;

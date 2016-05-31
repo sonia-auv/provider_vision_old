@@ -20,7 +20,6 @@
 
 #include <provider_vision/media/camera_calibrator.h>
 #include "provider_vision/media/camera/base_camera.h"
-#include <boost/lexical_cast.hpp>
 
 namespace provider_vision {
 
@@ -31,7 +30,7 @@ namespace provider_vision {
 //
 CameraCalibrator::CameraCalibrator(const ros::NodeHandle &nh,
                                    const std::string &name)
-    : ConfigurationParser(nh, "/provider_vision/camera_pid/"),
+    : ConfigurationParser(nh, "/provider_vision/camera_pid/" + name),
       name_(name),
       gamma_pid_(),
       gain_pid_(),
@@ -39,7 +38,6 @@ CameraCalibrator::CameraCalibrator(const ros::NodeHandle &nh,
       saturation_pid_(),
       msv_lum_(),
       msv_sat_(),
-      msv_uniform_(2.5),
       gain_lim_(),
       exposure_lim_() {
   DeserializeConfiguration(name_);
@@ -59,43 +57,26 @@ void CameraCalibrator::Calibrate(BaseCamera *camera, cv::Mat img) {
   auto l_hist = CalculateLuminanceHistogram(img);
 
   msv_lum_ = CalculateMSV(l_hist, 5);
-  double exposure_val, gain_val, gamma_val;
-  camera->GetExposureValue(exposure_val);
-  camera->GetGainValue(gain_val);
-  camera->GetGammaValue(gamma_val);
+  double shutter;
+  camera->GetShutterValue(shutter);
   try {
-    if (msv_lum_ != msv_uniform_) {
-      if (exposure_val < exposure_lim_ && gain_val < gain_lim_) {
-        auto gamma = gamma_pid_.Refresh(gamma_val);
-        camera->SetGammaValue(std::move(gamma));
-      } else if (gain_val > gain_lim_) {
-        auto exposure = exposure_pid_.Refresh(exposure_val);
-        camera->SetExposureValue(std::move(exposure));
-      } else {
-        auto gain = gain_pid_.Refresh(gain_val);
-        camera->SetGainValue(std::move(gain));
-      }
+    if (msv_lum_ > 2.6) {
+      shutter -= 100;
+      camera->SetShutterValue(shutter);
+    } else if (msv_lum_ < 2.4) {
+      shutter += 100;
+      camera->SetShutterValue(shutter);
     }
-    double staturation_val;
-    camera->GetSaturationValue(staturation_val);
-    if (msv_lum_ > 2 && msv_lum_ < 3) {
-      auto s_hist = CalculateSaturationHistogram(img);
-      msv_sat_ = CalculateMSV(s_hist, 5);
-      if (msv_sat_ != msv_uniform_) {
-        auto saturation = saturation_pid_.Refresh(staturation_val);
-        camera->SetSaturationValue(std::move(saturation));
-      }
-    }
-  }
-  catch (const std::exception &e) {
+
+  } catch (const std::exception &e) {
     ROS_ERROR("Error in calibrate camera: %s.\n", e.what());
   }
 }
 
 //------------------------------------------------------------------------------
 //
-cv::Mat CameraCalibrator::CalculateLuminanceHistogram(const cv::Mat &img)
-    const {
+cv::Mat CameraCalibrator::CalculateLuminanceHistogram(
+    const cv::Mat &img) const {
   static const int hist_size{256};
   static const float range[] = {0, 255};
   static const float *histRange{range};
@@ -118,8 +99,8 @@ cv::Mat CameraCalibrator::CalculateLuminanceHistogram(const cv::Mat &img)
 
 //------------------------------------------------------------------------------
 //
-cv::Mat CameraCalibrator::CalculateSaturationHistogram(const cv::Mat &img)
-    const {
+cv::Mat CameraCalibrator::CalculateSaturationHistogram(
+    const cv::Mat &img) const {
   static const int hist_size{256};
   static const float range[] = {0, 255};
   static const float *histRange{range};
@@ -158,14 +139,14 @@ float CameraCalibrator::CalculateMSV(const cv::Mat &img, int nbrRegion) {
 
 //------------------------------------------------------------------------------
 //
-double CameraCalibrator::GetLimunanceMSV() const noexcept {
+double CameraCalibrator::GetLimunanceMSV() const {
   std::lock_guard<std::mutex> guard(features_mutex_);
   return msv_lum_;
 }
 
 //------------------------------------------------------------------------------
 //
-double CameraCalibrator::GetSaturationMSV() const noexcept {
+double CameraCalibrator::GetSaturationMSV() const {
   std::lock_guard<std::mutex> guard(features_mutex_);
   return msv_sat_;
 }
@@ -174,24 +155,24 @@ double CameraCalibrator::GetSaturationMSV() const noexcept {
 //
 void CameraCalibrator::DeserializeConfiguration(const std::string &name) {
   double a;
-  FindParameter(name_ + "/gamma_i_gain", a);
-  FindParameter(name_ + "/gamma_p_gain", a);
-  FindParameter(name_ + "/gamma_d_gain", a);
+  FindParameter("gamma_i_gain", a);
+  FindParameter("gamma_p_gain", a);
+  FindParameter("gamma_d_gain", a);
 
-  FindParameter(name_ + "/gain_i_gain", a);
-  FindParameter(name_ + "/gain_p_gain", a);
-  FindParameter(name_ + "/gain_d_gain", a);
+  FindParameter("gain_i_gain", a);
+  FindParameter("gain_p_gain", a);
+  FindParameter("gain_d_gain", a);
 
-  FindParameter(name_ + "/exposure_i_gain", a);
-  FindParameter(name_ + "/exposure_p_gain", a);
-  FindParameter(name_ + "/exposure_d_gain", a);
+  FindParameter("exposure_i_gain", a);
+  FindParameter("exposure_p_gain", a);
+  FindParameter("exposure_d_gain", a);
 
-  FindParameter(name_ + "/saturation_i_gain", a);
-  FindParameter(name_ + "/saturation_p_gain", a);
-  FindParameter(name_ + "/saturation_d_gain", a);
+  FindParameter("saturation_i_gain", a);
+  FindParameter("saturation_p_gain", a);
+  FindParameter("saturation_d_gain", a);
 
-  FindParameter(name_ + "/gain_lim", gain_lim_);
-  FindParameter(name_ + "/exposure_lim", exposure_lim_);
+  FindParameter("gain_lim", gain_lim_);
+  FindParameter("exposure_lim", exposure_lim_);
 }
 
 }  // namespace provider_vision

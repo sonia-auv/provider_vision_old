@@ -56,8 +56,8 @@ class CameraCalibrator : public atlas::ConfigurationParser {
 
   void Calibrate(BaseCamera *camera, cv::Mat img);
 
-  double GetLimunanceMSV() const noexcept;
-  double GetSaturationMSV() const noexcept;
+  double GetLimunanceMSV() const;
+  double GetSaturationMSV() const;
 
  private:
   //============================================================================
@@ -88,7 +88,6 @@ class CameraCalibrator : public atlas::ConfigurationParser {
   /// cameras.
   double msv_lum_;
   double msv_sat_;
-  double msv_uniform_;
 
   double gain_lim_;
   double exposure_lim_;

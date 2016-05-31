@@ -48,7 +48,7 @@ class GigeContext : public BaseContext {
   explicit GigeContext(
       const std::vector<CameraConfiguration> &configurations) noexcept;
 
-  virtual ~GigeContext() noexcept;
+  virtual ~GigeContext();
 
   //==========================================================================
   // P U B L I C   M E T H O D S
@@ -64,8 +64,8 @@ class GigeContext : public BaseContext {
   bool StopStreamingMedia(const std::string &name) override;
 
   virtual bool GetFeature(const BaseCamera::Feature &feat,
-                          const std::string &name, boost::any &val) const
-      override;
+                          const std::string &name,
+                          boost::any &val) const override;
 
   virtual bool SetFeature(const BaseCamera::Feature &feat,
                           const std::string &name, boost::any &val) override;
@@ -108,8 +108,8 @@ inline bool GigeContext::ContainsMedia(const std::string &nameMedia) const {
 
 //-----------------------------------------------------------------------------
 //
-inline GigeCamera::Ptr GigeContext::GetGigeCamera(const std::string &name)
-    const {
+inline GigeCamera::Ptr GigeContext::GetGigeCamera(
+    const std::string &name) const {
   return GetGigeCamera(GetMedia(name));
 }
 

@@ -46,7 +46,7 @@ GigeContext::GigeContext(
 //------------------------------------------------------------------------------
 //
 
-GigeContext::~GigeContext() noexcept {}
+GigeContext::~GigeContext() {}
 
 //==============================================================================
 // M E T H O D   S E C T I O N

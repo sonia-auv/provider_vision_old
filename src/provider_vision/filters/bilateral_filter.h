@@ -39,7 +39,7 @@ class BilateralFilter : public Filter {
   //============================================================================
   // P U B L I C   C / D T O R
 
-  explicit BilateralFilter(const GlobalParamHandler &globalParams) noexcept
+  explicit BilateralFilter(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
         enable_("Enable", false, &parameters_),
         diameter_("Diameter", -100, 0, 100, &parameters_),
@@ -48,7 +48,7 @@ class BilateralFilter : public Filter {
     SetName("BilateralFilter");
   }
 
-  virtual ~BilateralFilter() noexcept {}
+  virtual ~BilateralFilter() {}
 
   //============================================================================
   // P U B L I C   M E T H O D S

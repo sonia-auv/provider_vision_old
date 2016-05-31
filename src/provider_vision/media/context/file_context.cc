@@ -27,7 +27,7 @@ namespace provider_vision {
 const char *FileContext::DRIVER_TAG = "File context";
 //------------------------------------------------------------------------------
 //
-FileContext::FileContext() noexcept : BaseContext() {}
+FileContext::FileContext() : BaseContext() {}
 
 //------------------------------------------------------------------------------
 //
@@ -144,8 +144,8 @@ bool FileContext::WatchDogFunc() { return true; }
 
 //------------------------------------------------------------------------------
 //
-FileContext::MediaType FileContext::GetMediaType(const std::string &nameMedia)
-    const {
+FileContext::MediaType FileContext::GetMediaType(
+    const std::string &nameMedia) const {
   // on commence par rechercher une image
   if (nameMedia.find(".jpg") != std::string::npos ||
       nameMedia.find(".png") != std::string::npos ||

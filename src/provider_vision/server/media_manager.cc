@@ -77,7 +77,7 @@ MediaManager::MediaManager(const ros::NodeHandle &nh) noexcept
 
 //------------------------------------------------------------------------------
 //
-MediaManager::~MediaManager() noexcept {
+MediaManager::~MediaManager() {
   for (auto &elem : contexts_) {
     elem->CloseContext();
   }
@@ -186,7 +186,7 @@ bool MediaManager::StopStreamingMedia(
 
 //------------------------------------------------------------------------------
 //
-BaseMedia::Ptr MediaManager::GetMedia(const std::string &name) const noexcept {
+BaseMedia::Ptr MediaManager::GetMedia(const std::string &name) const {
   BaseMedia::Ptr media(nullptr);
   for (const auto &context : contexts_) {
     if (context->ContainsMedia(name)) {
@@ -198,7 +198,7 @@ BaseMedia::Ptr MediaManager::GetMedia(const std::string &name) const noexcept {
 
 //------------------------------------------------------------------------------
 //
-std::vector<std::string> MediaManager::GetAllMediasName() const noexcept {
+std::vector<std::string> MediaManager::GetAllMediasName() const {
   std::vector<std::string> medias;
 
   for (auto &context : contexts_) {
@@ -212,7 +212,7 @@ std::vector<std::string> MediaManager::GetAllMediasName() const noexcept {
 
 //------------------------------------------------------------------------------
 //
-size_t MediaManager::GetAllMediasCount() const noexcept {
+size_t MediaManager::GetAllMediasCount() const {
   size_t size = 0;
   for (auto &context : contexts_) {
     size += context->GetMediaList().size();
@@ -250,8 +250,8 @@ bool MediaManager::GetCameraFeature(const std::string &media_name,
 
 //------------------------------------------------------------------------------
 //
-BaseContext::Ptr MediaManager::GetContextFromMedia(const std::string &name)
-    const {
+BaseContext::Ptr MediaManager::GetContextFromMedia(
+    const std::string &name) const {
   BaseContext::Ptr context_ptr(nullptr);
   for (auto &context : contexts_) {
     if (context->ContainsMedia(name)) {
@@ -263,8 +263,8 @@ BaseContext::Ptr MediaManager::GetContextFromMedia(const std::string &name)
 
 //------------------------------------------------------------------------------
 //
-BaseCamera::Feature MediaManager::GetFeatureFromName(const std::string &name)
-    const {
+BaseCamera::Feature MediaManager::GetFeatureFromName(
+    const std::string &name) const {
   if (name == "SHUTTER_AUTO") {
     return BaseCamera::Feature::SHUTTER_MODE;
   } else if (name == "SHUTTER") {

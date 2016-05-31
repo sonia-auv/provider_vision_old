@@ -48,7 +48,7 @@ class WebcamContext : public BaseContext {
 
   WebcamContext() noexcept;
 
-  virtual ~WebcamContext() noexcept;
+  virtual ~WebcamContext();
 
   //==========================================================================
   // P U B L I C   M E T H O D S
@@ -58,8 +58,8 @@ class WebcamContext : public BaseContext {
   bool OpenMedia(const std::string &name) override;
 
   virtual bool GetFeature(const BaseCamera::Feature &feat,
-                          const std::string &name, boost::any &val) const
-      override;
+                          const std::string &name,
+                          boost::any &val) const override;
 
   virtual bool SetFeature(const BaseCamera::Feature &feat,
                           const std::string &name, boost::any &val) override;

@@ -42,7 +42,7 @@ class InRange : public Filter {
   //============================================================================
   // P U B L I C   C / D T O R
 
-  explicit InRange(const GlobalParamHandler &globalParams) noexcept
+  explicit InRange(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
         enable_("Enable", false, &parameters_),
         lower_hue_("HSVLowH", 0, 0, 255, &parameters_),
@@ -60,7 +60,7 @@ class InRange : public Filter {
     SetName("InRange");
   }
 
-  virtual ~InRange() noexcept {}
+  virtual ~InRange() {}
 
   //============================================================================
   // P U B L I C   M E T H O D S

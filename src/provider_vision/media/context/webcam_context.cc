@@ -37,7 +37,7 @@ WebcamContext::WebcamContext() noexcept
 
 //------------------------------------------------------------------------------
 //
-WebcamContext::~WebcamContext() noexcept {}
+WebcamContext::~WebcamContext() {}
 
 //==============================================================================
 // M E T H O D   S E C T I O N

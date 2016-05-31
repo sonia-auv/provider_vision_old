@@ -44,7 +44,7 @@ class MediaManager {
 
   explicit MediaManager(const ros::NodeHandle &nh) noexcept;
 
-  ~MediaManager() noexcept;
+  ~MediaManager();
 
   //==========================================================================
   // P U B L I C   M E T H O D S
@@ -72,7 +72,7 @@ class MediaManager {
    *
    * \return The name of all medias in the system.
    */
-  std::vector<std::string> GetAllMediasName() const noexcept;
+  std::vector<std::string> GetAllMediasName() const;
 
   /**
    * Get the number of all medias in the system.
@@ -81,7 +81,7 @@ class MediaManager {
    *
    * \return The total count of all medias.
    */
-  size_t GetAllMediasCount() const noexcept;
+  size_t GetAllMediasCount() const;
 
   /**
    * If the media is a camera, set the feature to a specific value.
@@ -125,7 +125,7 @@ class MediaManager {
 
   bool StopStreamingMedia(const MediaStreamer::Ptr &streamer) noexcept;
 
-  BaseMedia::Ptr GetMedia(const std::string &name) const noexcept;
+  BaseMedia::Ptr GetMedia(const std::string &name) const;
 
   BaseContext::Ptr GetContextFromMedia(const std::string &name) const;
 

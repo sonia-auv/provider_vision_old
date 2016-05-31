@@ -48,7 +48,7 @@ class CameraConfiguration : public atlas::ConfigurationParser {
   explicit CameraConfiguration(const ros::NodeHandle &nh,
                                const std::string &name) ATLAS_NOEXCEPT;
 
-  virtual ~CameraConfiguration() ATLAS_NOEXCEPT;
+  virtual ~CameraConfiguration();
 
   //==========================================================================
   // P U B L I C   M E M B E R S
@@ -83,15 +83,15 @@ class CameraConfiguration : public atlas::ConfigurationParser {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  std::string GetUndistortionMatricePath() const ATLAS_NOEXCEPT;
+  std::string GetUndistortionMatricePath() const;
 
-  void SetUndistortionMatricePath(const std::string path) ATLAS_NOEXCEPT;
+  void SetUndistortionMatricePath(const std::string path);
 
  private:
   //============================================================================
   // P R I V A T E   M E T H O D S
 
-  void DeserializeConfiguration(const std::string &name) ATLAS_NOEXCEPT;
+  void DeserializeConfiguration(const std::string &name);
 };
 
 //==============================================================================
@@ -100,14 +100,13 @@ class CameraConfiguration : public atlas::ConfigurationParser {
 //-----------------------------------------------------------------------------
 //
 inline void CameraConfiguration::SetUndistortionMatricePath(
-    const std::string path) ATLAS_NOEXCEPT {
+    const std::string path) {
   undistortion_matrice_path_ = path;
 }
 
 //-----------------------------------------------------------------------------
 //
-inline std::string CameraConfiguration::GetUndistortionMatricePath() const
-    ATLAS_NOEXCEPT {
+inline std::string CameraConfiguration::GetUndistortionMatricePath() const {
   return undistortion_matrice_path_;
 }
 

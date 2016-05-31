@@ -48,7 +48,7 @@ class RangedParameter : public Parameter<Tp_> {
         min_(min),
         max_(max) {}
 
-  virtual ~RangedParameter() ATLAS_NOEXCEPT = default;
+  virtual ~RangedParameter() = default;
 
   //============================================================================
   // P U B L I C   M E T H O D S

@@ -46,7 +46,7 @@ class ImageFile : public BaseMedia {
 
   explicit ImageFile(const std::string &path_to_file) noexcept;
 
-  virtual ~ImageFile() noexcept;
+  virtual ~ImageFile();
 
   //==========================================================================
   // P U B L I C   M E T H O D S
@@ -77,7 +77,7 @@ class ImageFile : public BaseMedia {
    * image twice by calling it.
    * We will simply call NextImage and return a swallow copy.
    */
-  void NextImageCopy(cv::Mat &image) noexcept override;
+  void NextImageCopy(cv::Mat &image) override;
 
  private:
   //==========================================================================

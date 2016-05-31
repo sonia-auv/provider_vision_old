@@ -106,7 +106,7 @@ class Filterchain {
   std::vector<provider_vision::ParameterInterface *> GetFilterAllParameters(
       const size_t &index);
 
-  provider_vision::GlobalParamHandler::Ptr GetParameterHandler();
+  provider_vision::GlobalParamHandler *GetParameterHandler();
 
  private:
   //==========================================================================
@@ -172,9 +172,8 @@ inline void Filterchain::SetObserver(const size_t &index) {
 
 //------------------------------------------------------------------------------
 //
-inline provider_vision::GlobalParamHandler::Ptr
-Filterchain::GetParameterHandler() {
-  return std::make_shared<provider_vision::GlobalParamHandler>(param_handler_);
+inline provider_vision::GlobalParamHandler *Filterchain::GetParameterHandler() {
+  return &param_handler_;
 }
 
 //------------------------------------------------------------------------------

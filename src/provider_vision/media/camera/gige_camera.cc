@@ -68,7 +68,7 @@ bool GigeCamera::Open() {
       status = GevOpenCameraByName(name, GevControlMode, &gige_camera_);
       if (status == 0) {
         i = 5;
-        ROS_INFO_STREAM_NAMED(CAM_TAG, "%s opened successfully" << str);
+        ROS_INFO_NAMED(CAM_TAG, "opened successfully %s", str.c_str());
       } else {
         ROS_INFO_NAMED(CAM_TAG, "Unable to open camera. Retrying. Try: %d/5",
                        i + 1);
@@ -89,8 +89,7 @@ bool GigeCamera::Open() {
                       GevGetFormatString(status));
       return false;
     }
-  }
-  catch (std::exception &e) {
+  } catch (std::exception &e) {
     ROS_ERROR_NAMED(CAM_TAG,
                     "Error while opening the camera. GIGE: %s EXECPTION: %s",
                     GevGetFormatString(status), e.what());
@@ -123,8 +122,7 @@ bool GigeCamera::Open() {
     }
     status = GevInitImageTransfer(gige_camera_, Asynchronous, DMA_BUFFER,
                                   bufAddress);
-  }
-  catch (std::exception &e) {
+  } catch (std::exception &e) {
     ROS_ERROR_NAMED(CAM_TAG,
                     "Error while opening the camera. GIGE: %s EXECPTION: %s",
                     GevGetFormatString(status), e.what());
@@ -204,8 +202,7 @@ bool GigeCamera::SetStreamingModeOff() {
   try {
     acquisition_timer_.Pause();
     acquisition_timer_.Reset();
-  }
-  catch (std::exception &e) {
+  } catch (std::exception &e) {
     ROS_ERROR_NAMED(CAM_TAG, "Exception on timer handling %s", e.what());
   }
   return true;
@@ -240,8 +237,7 @@ bool GigeCamera::NextImage(cv::Mat &img) {
       tmp.copyTo(img);
       cv::cvtColor(tmp, img, CV_BayerRG2RGB);
       BalanceWhite(img);
-    }
-    catch (cv::Exception &e) {
+    } catch (cv::Exception &e) {
       status_ = Status::ERROR;
       ROS_ERROR_NAMED(CAM_TAG, "Error on opencv image transformation %s",
                       e.what());

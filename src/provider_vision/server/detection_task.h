@@ -87,13 +87,13 @@ class DetectionTask : private atlas::Runnable,
    */
   void ChangeReturnImageToOrigin();
 
-  MediaStreamer::Ptr GetMediaStreamer() const noexcept;
+  MediaStreamer::Ptr GetMediaStreamer() const;
 
-  Filterchain::Ptr GetFilterchain() const noexcept;
+  Filterchain::Ptr GetFilterchain() const;
 
-  const std::string &GetDetectionTaskName() const noexcept;
+  const std::string &GetDetectionTaskName() const;
 
-  const std::string &GetMediaName() const noexcept;
+  const std::string &GetMediaName() const;
 
  protected:
   //==========================================================================
@@ -104,7 +104,7 @@ class DetectionTask : private atlas::Runnable,
    * Catches the acquisitionLoop's notification that an image is ready.
    */
   void OnSubjectNotify(atlas::Subject<const cv::Mat &> &subject,
-                       const cv::Mat &image) noexcept override;
+                       const cv::Mat &image) override;
 
   /**
    * HTThread override
@@ -169,25 +169,25 @@ class DetectionTask : private atlas::Runnable,
 
 //------------------------------------------------------------------------------
 //
-inline MediaStreamer::Ptr DetectionTask::GetMediaStreamer() const noexcept {
+inline MediaStreamer::Ptr DetectionTask::GetMediaStreamer() const {
   return media_streamer_;
 }
 
 //------------------------------------------------------------------------------
 //
-inline Filterchain::Ptr DetectionTask::GetFilterchain() const noexcept {
+inline Filterchain::Ptr DetectionTask::GetFilterchain() const {
   return filterchain_;
 }
 
 //------------------------------------------------------------------------------
 //
-inline const std::string &DetectionTask::GetDetectionTaskName() const noexcept {
+inline const std::string &DetectionTask::GetDetectionTaskName() const {
   return name_;
 }
 
 //------------------------------------------------------------------------------
 //
-inline const std::string &DetectionTask::GetMediaName() const noexcept {
+inline const std::string &DetectionTask::GetMediaName() const {
   return media_streamer_.get()->GetMediaName();
 }
 

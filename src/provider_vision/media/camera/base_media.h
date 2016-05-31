@@ -39,12 +39,7 @@ class BaseMedia {
 
   using Ptr = std::shared_ptr<BaseMedia>;
 
-  enum class Status {
-    OPEN,
-    STREAMING,
-    CLOSE,
-    ERROR
-  };
+  enum class Status { OPEN, STREAMING, CLOSE, ERROR };
 
   //==========================================================================
   // P U B L I C   C / D T O R S
@@ -87,7 +82,7 @@ class BaseMedia {
    * Warning, this method is very costly, use it only if you want the media to
    * keep the original image.
    */
-  virtual void NextImageCopy(cv::Mat &image) noexcept;
+  virtual void NextImageCopy(cv::Mat &image);
 
   /**
    * Returns the current camera Status
@@ -135,7 +130,7 @@ class BaseMedia {
 
 //------------------------------------------------------------------------------
 //
-inline void BaseMedia::NextImageCopy(cv::Mat &image) noexcept {
+inline void BaseMedia::NextImageCopy(cv::Mat &image) {
   cv::Mat tmp_image;
   NextImage(tmp_image);
   image = tmp_image.clone();

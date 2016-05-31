@@ -35,7 +35,7 @@ ImageFile::ImageFile(const std::string &path_to_file) noexcept
 
 //------------------------------------------------------------------------------
 //
-ImageFile::~ImageFile() noexcept {}
+ImageFile::~ImageFile() {}
 
 //==============================================================================
 // M E T H O D   S E C T I O N
@@ -84,6 +84,6 @@ bool ImageFile::NextImage(cv::Mat &image) {
 
 //------------------------------------------------------------------------------
 //
-void ImageFile::NextImageCopy(cv::Mat &image) noexcept { NextImage(image); }
+void ImageFile::NextImageCopy(cv::Mat &image) { NextImage(image); }
 
 }  // namespace provider_vision

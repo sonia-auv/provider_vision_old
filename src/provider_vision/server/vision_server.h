@@ -84,8 +84,7 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    * Return a string of each execution separated by the current
    * COMPONENT_SEPARATOR given a list of the executions.
    */
-  std::string BuildRosMessage(const std::vector<std::string> &name_vec) const
-      noexcept;
+  std::string BuildRosMessage(const std::vector<std::string> &name_vec) const;
 
   /**
    * When the vision client returns a filter name, it contains the index
@@ -101,7 +100,7 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
    * filterchain).
    */
   std::string ConstructFilterUIName(const std::string &name,
-                                    const size_t &index) const noexcept;
+                                    const size_t &index) const;
 
   /**
    * \brief Copies a filterchain which is not used by a running execution.
@@ -388,7 +387,7 @@ class VisionServer : public atlas::ServiceServerManager<VisionServer> {
 //------------------------------------------------------------------------------
 //
 inline std::string VisionServer::BuildRosMessage(
-    const std::vector<std::string> &name_vec) const noexcept {
+    const std::vector<std::string> &name_vec) const {
   std::string msg("");
   for (const auto &name : name_vec) {
     msg += name + ";";
@@ -411,7 +410,7 @@ inline size_t VisionServer::ExtractFilterIndexFromUIName(
 //------------------------------------------------------------------------------
 //
 inline std::string VisionServer::ConstructFilterUIName(
-    const std::string &name, const size_t &index) const noexcept {
+    const std::string &name, const size_t &index) const {
   return name + "_" + std::to_string(index);
 }
 

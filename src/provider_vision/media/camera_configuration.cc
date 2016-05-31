@@ -58,15 +58,14 @@ CameraConfiguration::CameraConfiguration(const ros::NodeHandle &nh,
 
 //------------------------------------------------------------------------------
 //
-CameraConfiguration::~CameraConfiguration() ATLAS_NOEXCEPT {}
+CameraConfiguration::~CameraConfiguration() {}
 
 //==============================================================================
 // M E T H O D   S E C T I O N
 
 //------------------------------------------------------------------------------
 //
-void CameraConfiguration::DeserializeConfiguration(const std::string &name)
-    ATLAS_NOEXCEPT {
+void CameraConfiguration::DeserializeConfiguration(const std::string &name) {
   std::string guid_str = "";
   FindParameter(name + "/guid", guid_str);
 
