@@ -133,8 +133,7 @@ bool DC1394Camera::SetStreamingModeOff() {
   try {
     acquisition_timer_.Pause();
     acquisition_timer_.Reset();
-  }
-  catch (std::exception &e) {
+  } catch (std::exception &e) {
     ROS_ERROR_NAMED(CAM_TAG, "Exception on timer handling %s", e.what());
   }
   return result;
@@ -172,8 +171,7 @@ bool DC1394Camera::NextImage(cv::Mat &img) {
         cv::Mat(frame->size[1], frame->size[0], CV_8UC2, frame->image);
     cv::cvtColor(tmp, tmp, CV_YUV2BGR_Y422);
     undistord_matrix_.CorrectInmage(tmp, img);
-  }
-  catch (cv::Exception &e) {
+  } catch (cv::Exception &e) {
     status_ = Status::ERROR;
     ROS_ERROR_NAMED(CAM_TAG, "Error on OpenCV image transformation %s",
                     e.what());
@@ -544,7 +542,7 @@ bool DC1394Camera::SetWhiteBalanceRedValue(double value) {
   dc1394error_t error;
   double blue;
 
-  if (GetWhiteBalanceBlue(blue)) {
+  if (!GetWhiteBalanceBlue(blue)) {
     ROS_ERROR_NAMED(CAM_TAG,
                     "Cannot get the white balance blue value, "
                     "so cannot set the whitebalance red ");
@@ -569,7 +567,7 @@ bool DC1394Camera::SetWhiteBalanceBlueValue(double value) {
   dc1394error_t error;
   double red;
 
-  if (GetWhiteBalanceBlue(red)) {
+  if (!GetWhiteBalanceBlue(red)) {
     ROS_ERROR_NAMED(CAM_TAG,
                     "Cannot get the white balance red value, "
                     "so cannot set the whitebalance blue");
@@ -674,11 +672,9 @@ float DC1394Camera::ConvertFramerateToFloat(uint32_t val) const {
 //------------------------------------------------------------------------------
 //
 bool DC1394Camera::SetFormat7() {
-
   dc1394error_t err;
   // Sets the ISO speed to maximum.
   if (dc1394_camera_->bmode_capable) {
-
     err = dc1394_video_set_operation_mode(dc1394_camera_,
                                           DC1394_OPERATION_MODE_1394B);
     if (err != DC1394_SUCCESS) {
@@ -747,7 +743,6 @@ bool DC1394Camera::SetFormat7() {
 //------------------------------------------------------------------------------
 //
 bool DC1394Camera::SetNormalFormat() {
-
   dc1394error_t err;
 
   // ISO SPEED

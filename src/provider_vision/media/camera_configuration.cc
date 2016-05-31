@@ -30,7 +30,7 @@ namespace provider_vision {
 //
 CameraConfiguration::CameraConfiguration(const ros::NodeHandle &nh,
                                          const std::string &name) ATLAS_NOEXCEPT
-    : ConfigurationParser(nh, "/provider_vision/camera_parameters/"),
+    : ConfigurationParser(nh, "/provider_vision/camera_parameters"),
       guid_(0),
       name_(name),
       framerate_(0),
@@ -68,7 +68,7 @@ CameraConfiguration::~CameraConfiguration() ATLAS_NOEXCEPT {}
 void CameraConfiguration::DeserializeConfiguration(const std::string &name)
     ATLAS_NOEXCEPT {
   std::string guid_str = "";
-  FindParameter("/guid", guid_str);
+  FindParameter(name + "/guid", guid_str);
 
   if (guid_str != "") {
     guid_ = std::stoull(guid_str);

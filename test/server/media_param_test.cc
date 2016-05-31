@@ -23,35 +23,25 @@ const int FEAT_DBL = sonia_msgs::SetCameraFeature::Request::FEATURE_DOUBLE;
 const int FEAT_INT = sonia_msgs::SetCameraFeature::Request::FEATURE_INT;
 const int FEAT_BOOL = sonia_msgs::SetCameraFeature::Request::FEATURE_BOOL;
 
-std::tuple<std::string, std::string, int32_t> command_to_send[23];
+std::tuple<std::string, std::string, int32_t> command_to_send[16];
 void fillTuple() {
   int i = 0;
   command_to_send[i++] = std::make_tuple("SHUTTER", "100.0", FEAT_DBL);
-  command_to_send[i++] = std::make_tuple("SHUTTER", "-10.0", FEAT_DBL);
-  command_to_send[i++] = std::make_tuple("SHUTTER_AUTO", "true", FEAT_BOOL);
-  command_to_send[i++] = std::make_tuple("SHUTTER_AUTO", "false", FEAT_BOOL);
-  command_to_send[i++] =
-      std::make_tuple("WHITE_BALANCE_AUTO", "true", FEAT_BOOL);
-  command_to_send[i++] =
-      std::make_tuple("WHITE_BALANCE_AUTO", "false", FEAT_BOOL);
-  command_to_send[i++] = std::make_tuple("WHITE_BALANCE_RED", "-100", FEAT_DBL);
+  command_to_send[i++] = std::make_tuple("SHUTTER_AUTO", "1", FEAT_BOOL);
+  command_to_send[i++] = std::make_tuple("SHUTTER_AUTO", "0", FEAT_BOOL);
+  command_to_send[i++] = std::make_tuple("WHITE_BALANCE_AUTO", "1", FEAT_BOOL);
+  command_to_send[i++] = std::make_tuple("WHITE_BALANCE_AUTO", "0", FEAT_BOOL);
   command_to_send[i++] = std::make_tuple("WHITE_BALANCE_RED", "444", FEAT_DBL);
-  command_to_send[i++] =
-      std::make_tuple("WHITE_BALANCE_BLUE", "-100", FEAT_DBL);
   command_to_send[i++] = std::make_tuple("WHITE_BALANCE_BLUE", "444", FEAT_DBL);
   command_to_send[i++] = std::make_tuple("FRAMERATE_VALUE", "15.0", FEAT_DBL);
-  command_to_send[i++] = std::make_tuple("GAIN_AUTO", "true", FEAT_BOOL);
-  command_to_send[i++] = std::make_tuple("GAIN_AUTO", "false", FEAT_BOOL);
+  command_to_send[i++] = std::make_tuple("GAIN_AUTO", "1", FEAT_BOOL);
+  command_to_send[i++] = std::make_tuple("GAIN_AUTO", "0", FEAT_BOOL);
   command_to_send[i++] = std::make_tuple("GAIN", "100", FEAT_DBL);
-  command_to_send[i++] = std::make_tuple("GAIN", "-100", FEAT_DBL);
-  command_to_send[i++] = std::make_tuple("EXPOSURE_AUTO", "true", FEAT_BOOL);
-  command_to_send[i++] = std::make_tuple("EXPOSURE_AUTO", "false", FEAT_BOOL);
+  command_to_send[i++] = std::make_tuple("EXPOSURE_AUTO", "1", FEAT_BOOL);
+  command_to_send[i++] = std::make_tuple("EXPOSURE_AUTO", "0", FEAT_BOOL);
   command_to_send[i++] = std::make_tuple("EXPOSURE", "100.0", FEAT_DBL);
-  command_to_send[i++] = std::make_tuple("EXPOSURE", "-10", FEAT_DBL);
   command_to_send[i++] = std::make_tuple("SATURATION", "100.0", FEAT_DBL);
-  command_to_send[i++] = std::make_tuple("SATURATION", "-10", FEAT_DBL);
   command_to_send[i++] = std::make_tuple("GAMMA", "100.0", FEAT_DBL);
-  command_to_send[i++] = std::make_tuple("GAMMA", "-10", FEAT_DBL);
 };
 
 class CameraParameterTest {
@@ -62,7 +52,7 @@ class CameraParameterTest {
     get_client = nh_.serviceClient<sonia_msgs::GetCameraFeature>(
         "/provider_vision/get_camera_feature");
   };
-  ~CameraParameterTest() {};
+  ~CameraParameterTest(){};
 
   void SetFeature(const std::string &camera, const std::string &feature,
                   const std::string &value, int type) {
