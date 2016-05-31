@@ -28,6 +28,17 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 
 set(provider_vision_SRC_DIR "src")
 
+
+#============================================================================
+# D Y N A M I C  R E C O N F I G U R E
+find_package(catkin REQUIRED dynamic_reconfigure)
+generate_dynamic_reconfigure_options(
+        cfg/camera_dynamic_reconf.cfg
+)
+include_directories(${dynamic_reconfigure_PACKAGE_PATH}/cmake/cfgbuild.cmake)
+#add_executable(dynamic_reconfigure_node src/dynamic_reconfigure_node.cpp)
+
+
 #===============================================================================
 # C A T K I N   C O N F I G U R A T I O N
 
@@ -57,6 +68,7 @@ catkin_package(
     roslaunch
     lib_atlas
     sonia_msgs
+    dynamic_reconfigure
 )
 
 roslaunch_add_file_check(launch)
@@ -85,10 +97,10 @@ if(NOT APPLE)
       )
 endif()
 
-#===============================================================================
+        #===============================================================================
 # C R E A T E   E X E C U T A B L E
 
-add_executable(${PROJECT_NAME}_node ${provider_vision_SRC_DIR}/${PROJECT_NAME}/main.cc ${provider_vision_FILES})
+add_executable(${PROJECT_NAME}_node ${provider_vision_SRC_DIR}/${PROJECT_NAME}/main.cc ${provider_vision_FILES} )
 target_link_libraries(provider_vision_node
     dc1394
     ${catkin_LIBRARIES}
@@ -107,10 +119,9 @@ if(NOT APPLE)
       )
 endif()
 
-add_dependencies(${PROJECT_NAME}_node ${PROJECT_NAME}_generate_messages_cpp sonia_msgs_generate_messages_cpp)
+add_dependencies(${PROJECT_NAME}_node ${PROJECT_NAME}_generate_messages_cpp sonia_msgs_generate_messages_cpp ${PROJECT_NAME}_gencfg)
 
-
-#==========================================================================
+#============================================================================
 # U N I T   T E S T S
 
 # Uncomment this line to compile UT.
