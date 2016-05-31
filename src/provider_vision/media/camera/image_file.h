@@ -51,15 +51,15 @@ class ImageFile : public BaseMedia {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  void Open() override;
+  bool Open() override;
 
-  void Close() override;
-
-  /** Method override from Media */
-  void SetStreamingModeOn() override;
+  bool Close() override;
 
   /** Method override from Media */
-  void SetStreamingModeOff() override;
+  bool SetStreamingModeOn() override;
+
+  /** Method override from Media */
+  bool SetStreamingModeOff() override;
 
   /**
    * Method override from Media.
@@ -68,7 +68,7 @@ class ImageFile : public BaseMedia {
    * we do not want to loose the origin image neither to relaunch at each
    * NextImage() call
    */
-  void NextImage(cv::Mat &image) override;
+  bool NextImage(cv::Mat &image) override;
 
   /**
    * Get a deep copy of the image.

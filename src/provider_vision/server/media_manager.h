@@ -37,6 +37,7 @@ class MediaManager {
   // T Y P E D E F   A N D   E N U M
 
   using Ptr = std::shared_ptr<MediaManager>;
+  const char *MEDIA_MNGR_TAG;
 
   //==========================================================================
   // P U B L I C   C / D T O R S
@@ -48,9 +49,9 @@ class MediaManager {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  void OpenMedia(const std::string &media_name);
+  bool OpenMedia(const std::string &media_name);
 
-  void CloseMedia(const std::string &media_name);
+  bool CloseMedia(const std::string &media_name);
 
   /**
    * Start the acquisition of the images on the given media.
@@ -61,7 +62,7 @@ class MediaManager {
    */
   MediaStreamer::Ptr StartStreamingMedia(const std::string &media_name);
 
-  void StopStreamingMedia(const std::string &media) noexcept;
+  bool StopStreamingMedia(const std::string &media) noexcept;
 
   /**
    * Get the name of all existing medias in the system.
@@ -92,7 +93,7 @@ class MediaManager {
    * \param feature The feature to change the value of.
    * \param value The value to set on the given feature.
    */
-  void SetCameraFeature(const std::string &media_name,
+  bool SetCameraFeature(const std::string &media_name,
                         const std::string &feature, boost::any &value);
 
   /**
@@ -105,7 +106,7 @@ class MediaManager {
    * \param media_name The name of the media to set the feature to.
    * \param feature The feature to change the value of.
    */
-  void GetCameraFeature(const std::string &media_name,
+  bool GetCameraFeature(const std::string &media_name,
                         const std::string &feature, boost::any &value) const;
 
  private:
@@ -122,7 +123,7 @@ class MediaManager {
    */
   bool IsMediaStreaming(const std::string &name);
 
-  void StopStreamingMedia(const MediaStreamer::Ptr &streamer) noexcept;
+  bool StopStreamingMedia(const MediaStreamer::Ptr &streamer) noexcept;
 
   BaseMedia::Ptr GetMedia(const std::string &name) const noexcept;
 

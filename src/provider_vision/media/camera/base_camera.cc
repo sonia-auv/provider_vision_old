@@ -33,7 +33,8 @@ inline bool CastToBool(const boost::any &op) {
   // The type will be cast at runtime instead.
   try {
     return boost::any_cast<bool>(op);
-  } catch (const boost::bad_any_cast &) {
+  }
+  catch (const boost::bad_any_cast &) {
     throw std::runtime_error("The value for this feature must be a boolean");
   }
 }
@@ -43,11 +44,15 @@ inline double CastToDouble(const boost::any &op) {
   // The type will be cast at runtime instead.
   try {
     return boost::any_cast<double>(op);
-  } catch (const boost::bad_any_cast &) {
+  }
+  catch (const boost::bad_any_cast &) {
     throw std::runtime_error("The value for this feature must be a double");
   }
 }
 }
+
+const double BaseCamera::INVALID_DOUBLE = DBL_MIN;
+const float BaseCamera::INVALID_FLOAT = FLT_MIN;
 
 //==============================================================================
 // C / D T O R S   S E C T I O N
@@ -57,8 +62,8 @@ inline double CastToDouble(const boost::any &op) {
 BaseCamera::BaseCamera(const CameraConfiguration &configuration)
     : BaseMedia(configuration.name_),
       CameraConfiguration(configuration),
-      calibrator_(nh_, CameraConfiguration::name_),
-      feature_pub_() {
+      feature_pub_(),
+      calibrator_(nh_, CameraConfiguration::name_) {
   undistord_matrix_.InitMatrices(undistortion_matrice_path_);
 
   std::string base_node_name{kRosNodeName};
@@ -79,14 +84,24 @@ BaseCamera::~BaseCamera() {}
 void BaseCamera::PublishCameraFeatures() const {
   sonia_msgs::CameraFeatures msg;
 
-  msg.shutter_mode = static_cast<uint8_t>(GetShutterMode());
-  msg.white_balance_mode = static_cast<uint8_t>(GetShutterMode());
-  msg.gain_mode = static_cast<uint8_t>(GetShutterMode());
+  bool tmp_bool;
+  GetShutterMode(tmp_bool);
+  msg.shutter_mode = static_cast<uint8_t>(tmp_bool);
+  GetShutterMode(tmp_bool);
+  msg.white_balance_mode = static_cast<uint8_t>(tmp_bool);
+  GetShutterMode(tmp_bool);
+  msg.gain_mode = static_cast<uint8_t>(tmp_bool);
 
-  msg.gain_value = GetGainValue();
-  msg.gamma_value = GetGammaValue();
-  msg.exposure_value = GetExposureValue();
-  msg.saturation_value = GetSaturationValue();
+  double tmp_val;
+  GetGainValue(tmp_val);
+  msg.gain_value = tmp_val;
+  GetGammaValue(tmp_val);
+  msg.gamma_value = tmp_val;
+  GetExposureValue(tmp_val);
+  msg.exposure_value = tmp_val;
+  GetSaturationValue(tmp_val);
+  msg.saturation_value = tmp_val;
+
   msg.luminance_msv = calibrator_.GetLimunanceMSV();
   msg.saturation_msv = calibrator_.GetSaturationMSV();
 
@@ -95,98 +110,120 @@ void BaseCamera::PublishCameraFeatures() const {
 
 //------------------------------------------------------------------------------
 //
-void BaseCamera::SetFeature(const Feature &feat, const boost::any &value) {
-  try {
-    switch (feat) {
-      case Feature::SHUTTER_VALUE:
-        SetShutterValue(CastToDouble(value));
-        break;
-      case Feature::SHUTTER_MODE:
-        SetShutterMode(CastToBool(value));
-        break;
-      case Feature::GAIN_MODE:
-        SetGainMode(CastToBool(value));
-        break;
-      case Feature::GAIN_VALUE:
-        SetGainValue(CastToDouble(value));
-        break;
-      case Feature::FRAMERATE_VALUE:
-        SetFrameRateValue(CastToDouble(value));
-        break;
-      case Feature::WHITE_BALANCE_MODE:
-        SetWhiteBalanceMode(CastToBool(value));
-        break;
-      case Feature::WHITE_BALANCE_BLUE_VALUE:
-        SetWhiteBalanceBlueValue(CastToDouble(value));
-        break;
-      case Feature::WHITE_BALANCE_RED_VALUE:
-        SetWhiteBalanceRedValue(CastToDouble(value));
-        break;
-      case Feature::EXPOSURE_VALUE:
-        SetExposureValue(CastToDouble(value));
-        break;
-      case Feature::GAMMA_VALUE:
-        SetGammaValue(CastToDouble(value));
-        break;
-      case Feature::SATURATION_VALUE:
-        SetSaturationValue(CastToDouble(value));
-        break;
-      case Feature::EXPOSURE_MODE:
-        SetExposureMode(CastToBool(value));
-        break;
-    }
-  } catch (const std::runtime_error &e) {
-    ROS_ERROR("Could not set the feature for the camera: %s", e.what());
+bool BaseCamera::SetFeature(const Feature &feat, const boost::any &value) {
+  bool result = false;
+  switch (feat) {
+    case Feature::SHUTTER_VALUE:
+      result = SetShutterValue(CastToDouble(value));
+      break;
+    case Feature::SHUTTER_MODE:
+      result = SetShutterMode(CastToBool(value));
+      break;
+    case Feature::GAIN_MODE:
+      result = SetGainMode(CastToBool(value));
+      break;
+    case Feature::GAIN_VALUE:
+      result = SetGainValue(CastToDouble(value));
+      break;
+    case Feature::FRAMERATE_VALUE:
+      result = SetFrameRateValue(CastToDouble(value));
+      break;
+    case Feature::WHITE_BALANCE_MODE:
+      result = SetWhiteBalanceMode(CastToBool(value));
+      break;
+    case Feature::WHITE_BALANCE_BLUE_VALUE:
+      result = SetWhiteBalanceBlueValue(CastToDouble(value));
+      break;
+    case Feature::WHITE_BALANCE_RED_VALUE:
+      result = SetWhiteBalanceRedValue(CastToDouble(value));
+      break;
+    case Feature::EXPOSURE_VALUE:
+      result = SetExposureValue(CastToDouble(value));
+      break;
+    case Feature::GAMMA_VALUE:
+      result = SetGammaValue(CastToDouble(value));
+      break;
+    case Feature::SATURATION_VALUE:
+      result = SetSaturationValue(CastToDouble(value));
+      break;
+    case Feature::EXPOSURE_MODE:
+      result = SetExposureMode(CastToBool(value));
+      break;
+    default:
+      ROS_ERROR("Invalid feature given.");
+      result = false;
+  }
+  if (!result) {
+    ROS_ERROR("Could not set the feature for the camera: %s",
+              media_name_.c_str());
   }
   PublishCameraFeatures();
+  return result;
 }
 
 //------------------------------------------------------------------------------
 //
-void BaseCamera::GetFeature(const Feature &feat, boost::any &value) const {
-  try {
-    switch (feat) {
-      case Feature::SHUTTER_VALUE:
-        value = GetShutterValue();
-        break;
-      case Feature::SHUTTER_MODE:
-        value = GetShutterMode();
-        break;
-      case Feature::FRAMERATE_VALUE:
-        value = GetFrameRateValue();
-        break;
-      case Feature::WHITE_BALANCE_MODE:
-        value = GetWhiteBalanceMode();
-        break;
-      case Feature::WHITE_BALANCE_BLUE_VALUE:
-        value = GetWhiteBalanceBlue();
-        break;
-      case Feature::WHITE_BALANCE_RED_VALUE:
-        value = GetWhiteBalanceRed();
-        break;
-      case Feature::GAIN_VALUE:
-        value = GetGainValue();
-        break;
-      case Feature::GAMMA_VALUE:
-        value = GetGammaValue();
-        break;
-      case Feature::EXPOSURE_VALUE:
-        value = GetExposureValue();
-        break;
-      case Feature::SATURATION_VALUE:
-        value = GetSaturationValue();
-        break;
-      case Feature::GAIN_MODE:
-        value = GetGainMode();
-        break;
-      case Feature::EXPOSURE_MODE:
-        value = GetExposureMode();
-        break;
-    }
-  } catch (const std::runtime_error &e) {
-    ROS_ERROR("Could not get the feature for the camera: %s", e.what());
-    throw;
+bool BaseCamera::GetFeature(const Feature &feat, boost::any &value) const {
+  bool result;
+  bool bool_val;
+  double dbl_val;
+  switch (feat) {
+
+    case Feature::SHUTTER_VALUE:
+      result = GetShutterValue(dbl_val);
+      value = dbl_val;
+      break;
+    case Feature::SHUTTER_MODE:
+      result = GetShutterMode(bool_val);
+      value = bool_val;
+      break;
+    case Feature::FRAMERATE_VALUE:
+      result = GetFrameRateValue(dbl_val);
+      value = dbl_val;
+      break;
+    case Feature::WHITE_BALANCE_MODE:
+      result = GetWhiteBalanceMode(bool_val);
+      value = bool_val;
+      break;
+    case Feature::WHITE_BALANCE_BLUE_VALUE:
+      result = GetWhiteBalanceBlue(dbl_val);
+      value = dbl_val;
+      break;
+    case Feature::WHITE_BALANCE_RED_VALUE:
+      result = GetWhiteBalanceRed(dbl_val);
+      value = dbl_val;
+      break;
+    case Feature::GAIN_VALUE:
+      result = GetGainValue(dbl_val);
+      value = dbl_val;
+      break;
+    case Feature::GAMMA_VALUE:
+      result = GetGammaValue(dbl_val);
+      value = dbl_val;
+      break;
+    case Feature::EXPOSURE_VALUE:
+      result = GetExposureValue(dbl_val);
+      value = dbl_val;
+      break;
+    case Feature::SATURATION_VALUE:
+      result = GetSaturationValue(dbl_val);
+      value = dbl_val;
+      break;
+    case Feature::GAIN_MODE:
+      result = GetGainMode(bool_val);
+      value = bool_val;
+      break;
+    case Feature::EXPOSURE_MODE:
+      result = GetExposureMode(bool_val);
+      value = bool_val;
+      break;
+    default:
+      ROS_ERROR("Feature invalid");
+      break;
   }
+  // For now, since we do have a system to detect error on getter, will ignore.
+  // TODO Implement the system.
+  return result;
 }
 
 }  // namespace provider_vision

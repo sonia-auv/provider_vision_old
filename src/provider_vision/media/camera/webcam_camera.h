@@ -60,27 +60,27 @@ class WebcamCamera : public BaseMedia, private cv::VideoCapture {
   /**
    * Method override from Media
    */
-  void Open() override;
+  bool Open() override;
 
   /**
    * Method override from Media
    */
-  void Close() override;
+  bool Close() override;
 
   /**
    * Method override from Media
    */
-  void SetStreamingModeOn() override;
+  bool SetStreamingModeOn() override;
 
   /**
    * Method override from Media
    */
-  void SetStreamingModeOff() override;
+  bool SetStreamingModeOff() override;
 
   /**
    * Method override from Media
    */
-  void NextImage(cv::Mat &image) override;
+  bool NextImage(cv::Mat &image) override;
 };
 
 }  // namespace provider_vision

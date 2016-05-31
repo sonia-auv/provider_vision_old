@@ -32,7 +32,9 @@ namespace provider_vision {
 //
 DC1394Context::DC1394Context(
     const std::vector<CameraConfiguration> &configurations) noexcept
-    : BaseContext(), DRIVER_TAG("[DC1394 Driver]"), driver_(nullptr) {
+    : BaseContext(),
+      DRIVER_TAG("[DC1394 Driver]"),
+      driver_(nullptr) {
   InitContext(configurations);
 }
 
@@ -72,7 +74,8 @@ void DC1394Context::InitContext(
       if (cam_config.guid_ == list->ids[i].guid) {
         camera_dc = dc1394_camera_new(driver_, list->ids[i].guid);
         if (camera_dc == nullptr) {
-          throw std::runtime_error("Error creating the DC1394 camera");
+          ROS_ERROR_NAMED(DRIVER_TAG, "Error creating the DC1394 camera");
+          continue;
         }
 
         std::shared_ptr<DC1394Camera> cam(
@@ -91,10 +94,11 @@ void DC1394Context::InitContext(
 void DC1394Context::CloseContext() {
   for (auto &media : media_list_) {
     DC1394Camera::Ptr cam = GetDC1394Camera(media);
-    // Stop if running
-    cam->StopStreaming();
-
-    cam->Close();
+    if (cam) {
+      // Stop if running
+      cam->StopStreaming();
+      cam->Close();
+    }
   }
 
   media_list_.clear();
@@ -104,30 +108,42 @@ void DC1394Context::CloseContext() {
 
 //------------------------------------------------------------------------------
 //
-void DC1394Context::OpenMedia(const std::string &name) {
+bool DC1394Context::OpenMedia(const std::string &name) {
   DC1394Camera::Ptr cam = GetDC1394Camera(name);
-  cam->Open();
+  if (cam) {
+    return cam->Open();
+  }
+  return false;
 }
 
 //------------------------------------------------------------------------------
 //
-void DC1394Context::CloseMedia(const std::string &name) {
+bool DC1394Context::CloseMedia(const std::string &name) {
   DC1394Camera::Ptr cam = GetDC1394Camera(name);
-  cam->Close();
+  if (cam) {
+    return cam->Close();
+  }
+  return false;
 }
 
 //------------------------------------------------------------------------------
 //
-void DC1394Context::StartStreamingMedia(const std::string &name) {
+bool DC1394Context::StartStreamingMedia(const std::string &name) {
   DC1394Camera::Ptr cam = GetDC1394Camera(name);
-  cam->StartStreaming();
+  if (cam) {
+    return cam->StartStreaming();
+  }
+  return false;
 }
 
 //------------------------------------------------------------------------------
 //
-void DC1394Context::StopStreamingMedia(const std::string &name) {
+bool DC1394Context::StopStreamingMedia(const std::string &name) {
   DC1394Camera::Ptr cam = GetDC1394Camera(name);
-  cam->StopStreaming();
+  if (cam) {
+    return cam->StopStreaming();
+  }
+  return false;
 }
 
 //------------------------------------------------------------------------------
@@ -160,18 +176,24 @@ bool DC1394Context::WatchDogFunc() {
 
 //------------------------------------------------------------------------------
 //
-void DC1394Context::SetFeature(const BaseCamera::Feature &feat,
+bool DC1394Context::SetFeature(const BaseCamera::Feature &feat,
                                const std::string &name, boost::any &val) {
   DC1394Camera::Ptr cam = GetDC1394Camera(name);
-  cam->SetFeature(feat, val);
+  if (cam) {
+    return cam->SetFeature(feat, val);
+  }
+  return false;
 }
 
 //------------------------------------------------------------------------------
 //
-void DC1394Context::GetFeature(const BaseCamera::Feature &feat,
+bool DC1394Context::GetFeature(const BaseCamera::Feature &feat,
                                const std::string &name, boost::any &val) const {
   DC1394Camera::Ptr cam = GetDC1394Camera(name);
-  cam->GetFeature(feat, val);
+  if (cam) {
+    cam->GetFeature(feat, val);
+  }
+  return false;
 }
 
 }  // namespace provider_vision

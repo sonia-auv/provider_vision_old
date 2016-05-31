@@ -55,20 +55,20 @@ class WebcamContext : public BaseContext {
 
   void CloseContext() override;
 
-  void OpenMedia(const std::string &name) override;
+  bool OpenMedia(const std::string &name) override;
 
-  virtual void GetFeature(const BaseCamera::Feature &feat,
-                          const std::string &name,
-                          boost::any &val) const override;
+  virtual bool GetFeature(const BaseCamera::Feature &feat,
+                          const std::string &name, boost::any &val) const
+      override;
 
-  virtual void SetFeature(const BaseCamera::Feature &feat,
+  virtual bool SetFeature(const BaseCamera::Feature &feat,
                           const std::string &name, boost::any &val) override;
 
-  void CloseMedia(const std::string &name) override;
+  bool CloseMedia(const std::string &name) override;
 
-  void StartStreamingMedia(const std::string &name) override;
+  bool StartStreamingMedia(const std::string &name) override;
 
-  void StopStreamingMedia(const std::string &name) override;
+  bool StopStreamingMedia(const std::string &name) override;
 
   std::vector<BaseMedia::Ptr> GetMediaList() const override;
 

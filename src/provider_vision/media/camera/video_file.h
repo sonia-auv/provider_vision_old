@@ -50,16 +50,16 @@ class VideoFile : public BaseMedia, private cv::VideoCapture {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  void Open() override;
+  bool Open() override;
 
-  void Close() override;
+  bool Close() override;
 
   // BaseMedia override
-  void SetStreamingModeOn() override;
+  bool SetStreamingModeOn() override;
 
-  void SetStreamingModeOff() override;
+  bool SetStreamingModeOff() override;
 
-  void NextImage(cv::Mat &image) override;
+  bool NextImage(cv::Mat &image) override;
 
   void SetPathToVideo(const std::string &full_path);
 

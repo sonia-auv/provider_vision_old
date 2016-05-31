@@ -62,13 +62,19 @@ class BaseCamera : public BaseMedia, protected CameraConfiguration {
     EXPOSURE_MODE,
     EXPOSURE_VALUE,
     // SATURATION_MODE,
-    SATURATION_VALUE
+    SATURATION_VALUE,
+    INVALID_FEATURE
   };
 
   struct FeatureMode {
     static constexpr bool AUTO = true;
     static constexpr bool MANUAL = false;
   };
+
+  // When getter cannot acheive their task, they will return
+  // this value.
+  static const double INVALID_DOUBLE;
+  static const float INVALID_FLOAT;
 
   //==========================================================================
   // P U B L I C   C / D T O R S
@@ -80,9 +86,9 @@ class BaseCamera : public BaseMedia, protected CameraConfiguration {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  void SetFeature(const Feature &feat, const boost::any &value);
+  bool SetFeature(const Feature &feat, const boost::any &value);
 
-  void GetFeature(const Feature &feat, boost::any &value) const;
+  bool GetFeature(const Feature &feat, boost::any &value) const;
 
   bool HasArtificialFramerate() const override;
 
@@ -92,36 +98,36 @@ class BaseCamera : public BaseMedia, protected CameraConfiguration {
   //==========================================================================
   // P R O T E C T E D   M E T H O D S
 
-  virtual void SetGainMode(bool) = 0;
-  virtual void SetGainValue(double value) = 0;
-  virtual bool GetGainMode() const = 0;
-  virtual double GetGainValue() const = 0;
+  virtual bool SetGainMode(bool value) = 0;
+  virtual bool SetGainValue(double value) = 0;
+  virtual bool GetGainMode(bool &value) const = 0;
+  virtual bool GetGainValue(double &value) const = 0;
 
-  virtual double GetGammaValue() const = 0;
-  virtual void SetGammaValue(double value) = 0;
+  virtual bool GetGammaValue(double &value) const = 0;
+  virtual bool SetGammaValue(double value) = 0;
 
-  virtual void SetExposureMode(bool) = 0;
-  virtual bool GetExposureMode() const = 0;
-  virtual double GetExposureValue() const = 0;
-  virtual void SetExposureValue(double value) = 0;
+  virtual bool SetExposureMode(bool value) = 0;
+  virtual bool SetExposureValue(double value) = 0;
+  virtual bool GetExposureMode(bool &value) const = 0;
+  virtual bool GetExposureValue(double &value) const = 0;
 
-  virtual double GetSaturationValue() const = 0;
-  virtual void SetSaturationValue(double value) = 0;
+  virtual bool GetSaturationValue(double &value) const = 0;
+  virtual bool SetSaturationValue(double value) = 0;
 
-  virtual void SetShutterValue(double value) = 0;
-  virtual void SetShutterMode(bool) = 0;
-  virtual bool GetShutterMode() const = 0;
-  virtual double GetShutterValue() const = 0;
+  virtual bool SetShutterValue(double value) = 0;
+  virtual bool SetShutterMode(bool value) = 0;
+  virtual bool GetShutterMode(bool &value) const = 0;
+  virtual bool GetShutterValue(double &value) const = 0;
 
-  virtual void SetFrameRateValue(double value) = 0;
-  virtual double GetFrameRateValue() const = 0;
+  virtual bool SetFrameRateValue(double value) = 0;
+  virtual bool GetFrameRateValue(double &value) const = 0;
 
-  virtual void SetWhiteBalanceMode(bool) = 0;
-  virtual bool GetWhiteBalanceMode() const = 0;
-  virtual void SetWhiteBalanceRedValue(double value) = 0;
-  virtual void SetWhiteBalanceBlueValue(double value) = 0;
-  virtual double GetWhiteBalanceRed() const = 0;
-  virtual double GetWhiteBalanceBlue() const = 0;
+  virtual bool SetWhiteBalanceMode(bool value) = 0;
+  virtual bool GetWhiteBalanceMode(bool &value) const = 0;
+  virtual bool SetWhiteBalanceRedValue(double value) = 0;
+  virtual bool SetWhiteBalanceBlueValue(double value) = 0;
+  virtual bool GetWhiteBalanceRed(double &value) const = 0;
+  virtual bool GetWhiteBalanceBlue(double &value) const = 0;
 
   //==========================================================================
   // P R O T E C T E D   M E M B E R S

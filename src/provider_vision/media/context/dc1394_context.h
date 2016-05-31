@@ -39,7 +39,7 @@ namespace provider_vision {
  */
 class DC1394Context : public BaseContext {
  public:
-  const std::string DRIVER_TAG;
+  const char *DRIVER_TAG;
 
   const double TIME_FOR_BUS_ERROR = 3;
 
@@ -61,19 +61,19 @@ class DC1394Context : public BaseContext {
 
   void CloseContext() override;
 
-  void OpenMedia(const std::string &name) override;
+  bool OpenMedia(const std::string &name) override;
 
-  void CloseMedia(const std::string &name) override;
+  bool CloseMedia(const std::string &name) override;
 
-  void StartStreamingMedia(const std::string &name) override;
+  bool StartStreamingMedia(const std::string &name) override;
 
-  void StopStreamingMedia(const std::string &name) override;
+  bool StopStreamingMedia(const std::string &name) override;
 
-  virtual void GetFeature(const BaseCamera::Feature &feat,
-                          const std::string &name,
-                          boost::any &val) const override;
+  virtual bool GetFeature(const BaseCamera::Feature &feat,
+                          const std::string &name, boost::any &val) const
+      override;
 
-  virtual void SetFeature(const BaseCamera::Feature &feat,
+  virtual bool SetFeature(const BaseCamera::Feature &feat,
                           const std::string &name, boost::any &val) override;
 
   bool ContainsMedia(const std::string &nameMedia) const override;
@@ -114,15 +114,15 @@ inline bool DC1394Context::ContainsMedia(const std::string &nameMedia) const {
 
 //-----------------------------------------------------------------------------
 //
-inline DC1394Camera::Ptr DC1394Context::GetDC1394Camera(
-    const std::string &name) const {
+inline DC1394Camera::Ptr DC1394Context::GetDC1394Camera(const std::string &name)
+    const {
   return GetDC1394Camera(GetMedia(name));
 }
 
 //-----------------------------------------------------------------------------
 //
-inline DC1394Camera::Ptr DC1394Context::GetDC1394Camera(
-    BaseMedia::Ptr media) const {
+inline DC1394Camera::Ptr DC1394Context::GetDC1394Camera(BaseMedia::Ptr media)
+    const {
   DC1394Camera::Ptr tmp = std::dynamic_pointer_cast<DC1394Camera>(media);
 
   // Should not happen since if we get here, we are probably in a for
@@ -130,7 +130,8 @@ inline DC1394Camera::Ptr DC1394Context::GetDC1394Camera(
   // OR we received a name which returned true at ContainsMedia call
   // since it is the first step for calling camera function on a context
   if (!tmp) {
-    throw std::invalid_argument("Media is not a DC1394 camera");
+    ROS_ERROR("%s Media is not a DC1394 camera", DRIVER_TAG);
+    return nullptr;
   }
   return tmp;
 }

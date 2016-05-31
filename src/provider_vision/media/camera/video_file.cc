@@ -51,7 +51,7 @@ VideoFile::~VideoFile() {
 
 //------------------------------------------------------------------------------
 //
-void VideoFile::Open() {
+bool VideoFile::Open() {
   // Might be already open since we do it on construction if the path is
   // provided
   if (!isOpened()) {
@@ -59,32 +59,42 @@ void VideoFile::Open() {
   }
 
   if (!isOpened()) {
-    // Check if the video could be opened.
-    throw std::runtime_error("The video could not be opened.");
+    ROS_ERROR("The video %s could not be opened.", path_.c_str());
+    return false;
   }
+
   status_ = Status::OPEN;
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-void VideoFile::Close() {
+bool VideoFile::Close() {
   if (isOpened()) {
     release();
   }
 
   if (isOpened()) {
-    throw std::runtime_error("The video could not be closed.");
+    ROS_ERROR("The video %s could not be closed.", path_.c_str());
+    return false;
   }
   status_ = Status::CLOSE;
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-void VideoFile::SetStreamingModeOn() { status_ = Status::STREAMING; }
+bool VideoFile::SetStreamingModeOn() {
+  status_ = Status::STREAMING;
+  return true;
+}
 
 //------------------------------------------------------------------------------
 //
-void VideoFile::SetStreamingModeOff() { status_ = Status::CLOSE; }
+bool VideoFile::SetStreamingModeOff() {
+  status_ = Status::CLOSE;
+  return true;
+}
 
 //------------------------------------------------------------------------------
 //
@@ -98,7 +108,7 @@ bool VideoFile::LoadVideo(const std::string &path_to_file) {
 
 //------------------------------------------------------------------------------
 //
-void VideoFile::NextImage(cv::Mat &image) {
+bool VideoFile::NextImage(cv::Mat &image) {
   if (isOpened()) {
     // Clear the previous image.
     current_image_ = cv::Mat();
@@ -112,10 +122,13 @@ void VideoFile::NextImage(cv::Mat &image) {
       // Delay will happen, but it's part of the lib...
       set(CV_CAP_PROP_POS_AVI_RATIO, 0);
     } else {
-      // No more frame and not looping, end of sequence.
-      throw std::logic_error("No image could be acquiered from this media");
+      ROS_ERROR("No image could be acquiered from this media %s.",
+                path_.c_str());
+      return false;
     }
+    return true;
   }
+  return false;
 }
 
 }  // namespace provider_vision

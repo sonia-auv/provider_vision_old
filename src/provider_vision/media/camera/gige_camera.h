@@ -74,42 +74,42 @@ class GigeCamera : public BaseCamera {
   //==========================================================================
   // P R O T E C T E D   M E T H O D S
 
-  bool SetGainMode(bool) override;
+  bool SetGainMode(bool value) override;
   bool SetGainValue(double value) override;
-  bool GetGainMode() const override;
-  double GetGainValue() const override;
+  bool GetGainMode(bool &value) const override;
+  bool GetGainValue(double &value) const override;
 
-  double GetGammaValue() const override;
+  bool GetGammaValue(double &value) const override;
   bool SetGammaValue(double value) override;
 
-  double GetExposureValue() const override;
+  bool GetExposureValue(double &value) const override;
   bool SetExposureValue(double value) override;
-  bool SetExposureMode(bool) override;
-  bool GetExposureMode() const override;
+  bool SetExposureMode(bool value) override;
+  bool GetExposureMode(bool &value) const override;
 
-  double GetSaturationValue() const override;
+  bool GetSaturationValue(double &value) const override;
   bool SetSaturationValue(double value) override;
 
   bool SetShutterValue(double value) override;
-  bool SetShutterMode(bool) override;
-  bool GetShutterMode() const override;
-  double GetShutterValue() const override;
+  bool SetShutterMode(bool value) override;
+  bool GetShutterMode(bool &value) const override;
+  bool GetShutterValue(double &value) const override;
 
   bool SetFrameRateValue(double value) override;
-  double GetFrameRateValue() const override;
+  bool GetFrameRateValue(double &value) const override;
 
-  bool SetWhiteBalanceMode(bool) override;
-  bool GetWhiteBalanceMode() const override;
+  bool SetWhiteBalanceMode(bool value) override;
+  bool GetWhiteBalanceMode(bool &value) const override;
   bool SetWhiteBalanceRedValue(double value) override;
   bool SetWhiteBalanceBlueValue(double value) override;
-  double GetWhiteBalanceRed() const override;
-  double GetWhiteBalanceBlue() const override;
+  bool GetWhiteBalanceRed(double &value) const override;
+  bool GetWhiteBalanceBlue(double &value) const override;
 
   /// Specific GigE vision features.
   /// This will be used internally only, mainly for calibration purpose.
   /// If we wished to use these feature widely, we must define them
   /// on the BaseCamera abstract class.
-  double GetWhiteBalanceRatio() const;
+  bool GetWhiteBalanceRatio(double &value) const;
   bool SetWhiteBalanceRatio(double value);
   bool SetAutoBrightnessMode(int value);
   bool SetAutoBrightnessTarget(int value);
@@ -145,11 +145,12 @@ class GigeCamera : public BaseCamera {
 //------------------------------------------------------------------------------
 //
 inline std::string GigeCamera::GetModel() const {
-  if (gige_camera_ != nullptr) {
-    throw std::runtime_error("Null camera pointer");
+  if (gige_camera_) {
+    GEV_CAMERA_INFO *camera_info = GevGetCameraInfo(gige_camera_);
+    return camera_info->model;
   }
-  GEV_CAMERA_INFO *camera_info = GevGetCameraInfo(gige_camera_);
-  return camera_info->model;
+  ROS_ERROR_NAMED(CAM_TAG, "Could not retreive camera model");
+  return "";
 }
 
 //------------------------------------------------------------------------------

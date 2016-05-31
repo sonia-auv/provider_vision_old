@@ -59,37 +59,43 @@ void CameraCalibrator::Calibrate(BaseCamera *camera, cv::Mat img) {
   auto l_hist = CalculateLuminanceHistogram(img);
 
   msv_lum_ = CalculateMSV(l_hist, 5);
+  double exposure_val, gain_val, gamma_val;
+  camera->GetExposureValue(exposure_val);
+  camera->GetGainValue(gain_val);
+  camera->GetGammaValue(gamma_val);
   try {
     if (msv_lum_ != msv_uniform_) {
-      if (camera->GetExposureValue() < exposure_lim_ &&
-          camera->GetGainValue() < gain_lim_) {
-        auto gamma = gamma_pid_.Refresh(camera->GetGammaValue());
+      if (exposure_val < exposure_lim_ && gain_val < gain_lim_) {
+        auto gamma = gamma_pid_.Refresh(gamma_val);
         camera->SetGammaValue(std::move(gamma));
-      } else if (camera->GetGainValue() > gain_lim_) {
-        auto exposure = exposure_pid_.Refresh(camera->GetExposureValue());
+      } else if (gain_val > gain_lim_) {
+        auto exposure = exposure_pid_.Refresh(exposure_val);
         camera->SetExposureValue(std::move(exposure));
       } else {
-        auto gain = gain_pid_.Refresh(camera->GetGainValue());
+        auto gain = gain_pid_.Refresh(gain_val);
         camera->SetGainValue(std::move(gain));
       }
     }
+    double staturation_val;
+    camera->GetSaturationValue(staturation_val);
     if (msv_lum_ > 2 && msv_lum_ < 3) {
       auto s_hist = CalculateSaturationHistogram(img);
       msv_sat_ = CalculateMSV(s_hist, 5);
       if (msv_sat_ != msv_uniform_) {
-        auto saturation = saturation_pid_.Refresh(camera->GetSaturationValue());
+        auto saturation = saturation_pid_.Refresh(staturation_val);
         camera->SetSaturationValue(std::move(saturation));
       }
     }
-  } catch (const std::exception &e) {
+  }
+  catch (const std::exception &e) {
     ROS_ERROR("Error in calibrate camera: %s.\n", e.what());
   }
 }
 
 //------------------------------------------------------------------------------
 //
-cv::Mat CameraCalibrator::CalculateLuminanceHistogram(
-    const cv::Mat &img) const {
+cv::Mat CameraCalibrator::CalculateLuminanceHistogram(const cv::Mat &img)
+    const {
   static const int hist_size{256};
   static const float range[] = {0, 255};
   static const float *histRange{range};
@@ -112,8 +118,8 @@ cv::Mat CameraCalibrator::CalculateLuminanceHistogram(
 
 //------------------------------------------------------------------------------
 //
-cv::Mat CameraCalibrator::CalculateSaturationHistogram(
-    const cv::Mat &img) const {
+cv::Mat CameraCalibrator::CalculateSaturationHistogram(const cv::Mat &img)
+    const {
   static const int hist_size{256};
   static const float range[] = {0, 255};
   static const float *histRange{range};
@@ -163,7 +169,6 @@ double CameraCalibrator::GetSaturationMSV() const noexcept {
   std::lock_guard<std::mutex> guard(features_mutex_);
   return msv_sat_;
 }
-
 
 //------------------------------------------------------------------------------
 //
