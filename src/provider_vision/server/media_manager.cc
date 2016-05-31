@@ -277,8 +277,20 @@ BaseCamera::Feature MediaManager::GetFeatureFromName(const std::string &name)
     return BaseCamera::Feature::WHITE_BALANCE_BLUE_VALUE;
   } else if (name == "FRAMERATE") {
     return BaseCamera::Feature::FRAMERATE_VALUE;
+  } else if (name == "GAIN_AUTO") {
+    return BaseCamera::Feature::GAIN_MODE;
+  } else if (name == "GAIN") {
+    return BaseCamera::Feature::GAIN_VALUE;
+  } else if (name == "EXPOSURE_AUTO") {
+    return BaseCamera::Feature::EXPOSURE_MODE;
+  } else if (name == "EXPOSURE") {
+    return BaseCamera::Feature::EXPOSURE_VALUE;
+  } else if (name == "GAMMA") {
+    return BaseCamera::Feature::GAMMA_VALUE;
+  } else if (name == "SATURATION") {
+    return BaseCamera::Feature::SATURATION_VALUE;
   } else {
-    ROS_ERROR_NAMED("[Media Manager]", "No feature with this name");
+    ROS_ERROR_NAMED(MEDIA_MNGR_TAG, "No feature with this name");
     return BaseCamera::Feature::INVALID_FEATURE;
   }
 }

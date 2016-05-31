@@ -1,8 +1,4 @@
-int32 FEATURE_BOOL=0
-uint32 FEATURE_INT=1
-uint32 FEATURE_DOUBLE=2
-
-rosservice call /provider_vision/set_camera_feature "camera_name: 'bottom_guppy' camera_feature: 'SHUTTER' 		feature_value:	'100.0' feature_type: FEATURE_DOUBLE" 
+rosservice call /provider_vision/set_camera_feature "camera_name: 'bottom_guppy' camera_feature: 'SHUTTER' 		feature_value:	'100.0' feature_type: FEATURE_DOUBLE"
 rosservice call /provider_vision/set_camera_feature "camera_name: 'bottom_guppy' camera_feature: 'SHUTTER' 		feature_value:	'-10.0' feature_type: FEATURE_DOUBLE" 
 rosservice call /provider_vision/set_camera_feature "camera_name: 'bottom_guppy' camera_feature: 'SHUTTER_AUTO' 	feature_value: 	'true' 	feature_type: FEATURE_BOOL" 
 rosservice call /provider_vision/set_camera_feature "camera_name: 'bottom_guppy' camera_feature: 'SHUTTER_AUTO' 	feature_value: 	'false' feature_type: FEATURE_BOOL" 
