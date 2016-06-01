@@ -21,6 +21,13 @@
 #include <lib_atlas/ros/service_server_manager.h>
 #include <ros/ros.h>
 #include "provider_vision/server/vision_server.h"
+#include "../../cfg/cpp/provider_vision/Camera_Parameters_Config.h"
+#include <dynamic_reconfigure/server.h>
+
+void CallBackDynamReconf(provider_vision::Camera_Parameters_Config &config,
+                         uint32_t level) {
+  ROS_INFO("Recongifure Request: %d", config.gain_value);
+}
 
 //------------------------------------------------------------------------------
 //
@@ -29,6 +36,12 @@ int main(int argc, char **argv) {
   ros::NodeHandle nh("~");
 
   provider_vision::VisionServer pv(nh);
+
+  dynamic_reconfigure::Server<provider_vision::Camera_Parameters_Config> server;
+  dynamic_reconfigure::Server<
+      provider_vision::Camera_Parameters_Config>::CallbackType cb;
+
+  cb = boost::bind(&CallBackDynamReconf, _1, _2);
 
   while (ros::ok()) {
     ros::spinOnce();
