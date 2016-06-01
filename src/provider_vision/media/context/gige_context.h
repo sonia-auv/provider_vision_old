@@ -32,7 +32,7 @@ namespace provider_vision {
 
 class GigeContext : public BaseContext {
  public:
-  const std::string DRIVER_TAG;
+  const char *DRIVER_TAG;
 
   const double TIME_FOR_BUS_ERROR = 3;
   static const int MAX_CAMERAS = 4;
@@ -45,7 +45,8 @@ class GigeContext : public BaseContext {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  explicit GigeContext(const std::vector<CameraConfiguration> &configurations);
+  explicit GigeContext(
+      const std::vector<CameraConfiguration> &configurations) noexcept;
 
   virtual ~GigeContext();
 
@@ -54,19 +55,19 @@ class GigeContext : public BaseContext {
 
   void CloseContext() override;
 
-  void OpenMedia(const std::string &name) override;
+  bool OpenMedia(const std::string &name) override;
 
-  void CloseMedia(const std::string &name) override;
+  bool CloseMedia(const std::string &name) override;
 
-  void StartStreamingMedia(const std::string &name) override;
+  bool StartStreamingMedia(const std::string &name) override;
 
-  void StopStreamingMedia(const std::string &name) override;
+  bool StopStreamingMedia(const std::string &name) override;
 
-  virtual void GetFeature(const BaseCamera::Feature &feat,
+  virtual bool GetFeature(const BaseCamera::Feature &feat,
                           const std::string &name,
                           boost::any &val) const override;
 
-  virtual void SetFeature(const BaseCamera::Feature &feat,
+  virtual bool SetFeature(const BaseCamera::Feature &feat,
                           const std::string &name, boost::any &val) override;
 
   bool ContainsMedia(const std::string &nameMedia) const override;
@@ -122,7 +123,8 @@ inline GigeCamera::Ptr GigeContext::GetGigeCamera(BaseMedia::Ptr media) const {
   // OR we received a name which returned true at ContainsMedia call
   // since it is the first step for calling camera function on a context
   if (!tmp) {
-    throw std::invalid_argument("Media is not a GigE camera");
+    ROS_ERROR("%s Media is not a GigE camera", DRIVER_TAG);
+    return nullptr;
   }
   return tmp;
 }

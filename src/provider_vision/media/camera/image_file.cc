@@ -29,8 +29,9 @@ namespace provider_vision {
 
 //------------------------------------------------------------------------------
 //
-ImageFile::ImageFile(const std::string &path_to_file)
-    : BaseMedia(path_to_file), path_(path_to_file) {}
+ImageFile::ImageFile(const std::string &path_to_file) noexcept
+    : BaseMedia(path_to_file),
+      path_(path_to_file) {}
 
 //------------------------------------------------------------------------------
 //
@@ -41,39 +42,44 @@ ImageFile::~ImageFile() {}
 
 //------------------------------------------------------------------------------
 //
-void ImageFile::Open() {
+bool ImageFile::Open() {
   image_ = cv::imread(path_, CV_LOAD_IMAGE_ANYDEPTH | CV_LOAD_IMAGE_ANYCOLOR);
   if (image_.empty()) {
-    throw std::runtime_error("There is no image file with this path");
+    ROS_ERROR("There is no image file with this path: %s", path_.c_str());
   }
   status_ = Status::OPEN;
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-void ImageFile::Close() { status_ = Status::CLOSE; }
+bool ImageFile::Close() {
+  status_ = Status::CLOSE;
+  return true;
+}
 
 //------------------------------------------------------------------------------
 //
-void ImageFile::SetStreamingModeOn() { status_ = Status::STREAMING; }
+bool ImageFile::SetStreamingModeOn() {
+  status_ = Status::STREAMING;
+  return true;
+}
 
 //------------------------------------------------------------------------------
 //
-void ImageFile::SetStreamingModeOff() { status_ = Status::OPEN; }
+bool ImageFile::SetStreamingModeOff() {
+  status_ = Status::OPEN;
+  return true;
+}
 
 //------------------------------------------------------------------------------
 //
-void ImageFile::NextImage(cv::Mat &image) {
+bool ImageFile::NextImage(cv::Mat &image) {
   if (!image_.empty()) {
-    if (IsClosed()) {
-      image = cv::Mat().clone();
-    } else {
-      image_.copyTo(image);
-    }
-  } else {
-    throw std::runtime_error(
-        "The image could not be loaded, an error occurenced");
+    image_.copyTo(image);
+    return true;
   }
+  return false;
 }
 
 //------------------------------------------------------------------------------

@@ -89,6 +89,21 @@ target_link_libraries(vision_server_test
         $ENV{GENICAM_ROOT}/bin/Linux64_x64/libGCBase_gcc421_v3_0.so
         )
 
+catkin_add_gtest(media_param_test server/media_param_test.cc  ${provider_vision_FILES})
+target_link_libraries(media_param_test
+        dc1394 pthread
+        ${catkin_LIBRARIES}
+        ${lib_atlas_LIBRARIES}
+        ${OpenCV_LIBRARIES}
+        yaml-cpp
+        $ENV{GIGEV_DIR}/lib/libGevApi.so.2.0
+        $ENV{GENICAM_ROOT}/bin/Linux64_x64/libNodeMapData_gcc421_v3_0.so
+        $ENV{GENICAM_ROOT}/bin/Linux64_x64/libXmlParser_gcc421_v3_0.so
+        $ENV{GENICAM_ROOT}/bin/Linux64_x64/libGenApi_gcc421_v3_0.so
+        $ENV{GENICAM_ROOT}/bin/Linux64_x64/libGCBase_gcc421_v3_0.so
+        )
+
+
 file(GLOB_RECURSE provider_vision_image_proc_FILES
         "${provider_vision_SRC_DIR}/algorithm/*.cc"
         "${provider_vision_SRC_DIR}/algorithm/*.h")

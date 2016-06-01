@@ -53,18 +53,18 @@ class BaseContext : public atlas::Runnable {
 
   virtual void CloseContext() = 0;
 
-  virtual void OpenMedia(const std::string &name) = 0;
+  virtual bool OpenMedia(const std::string &name) = 0;
 
-  virtual void CloseMedia(const std::string &name) = 0;
+  virtual bool CloseMedia(const std::string &name) = 0;
 
-  virtual void StartStreamingMedia(const std::string &name) = 0;
+  virtual bool StartStreamingMedia(const std::string &name) = 0;
 
-  virtual void StopStreamingMedia(const std::string &name) = 0;
+  virtual bool StopStreamingMedia(const std::string &name) = 0;
 
-  virtual void GetFeature(const BaseCamera::Feature &feat,
+  virtual bool GetFeature(const BaseCamera::Feature &feat,
                           const std::string &name, boost::any &val) const = 0;
 
-  virtual void SetFeature(const BaseCamera::Feature &feat,
+  virtual bool SetFeature(const BaseCamera::Feature &feat,
                           const std::string &name, boost::any &val) = 0;
 
   /**

@@ -38,7 +38,7 @@ class DC1394Camera : public BaseCamera {
  public:
   static const int DMA_BUFFER = 4;
 
-  static const std::string CAM_TAG;
+  static const char *CAM_TAG;
 
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
@@ -57,22 +57,22 @@ class DC1394Camera : public BaseCamera {
   // P U B L I C   M E T H O D S
 
   // BaseCamera override
-  void Open() override;
+  bool Open() override;
 
-  void Close() override;
+  bool Close() override;
 
-  void SetStreamingModeOn() override;
+  bool SetStreamingModeOn() override;
 
-  void SetStreamingModeOff() override;
+  bool SetStreamingModeOff() override;
 
-  void NextImage(cv::Mat &img) override;
+  bool NextImage(cv::Mat &img) override;
 
   // Sets to different streaming format.
-  void SetFormat7();
+  bool SetFormat7();
 
-  void SetNormalFormat();
+  bool SetNormalFormat();
 
-  void SetCameraParams();
+  bool SetCameraParams();
 
   //==========================================================================
   // G E T T E R S   A N D   S E T T E R S
@@ -85,36 +85,36 @@ class DC1394Camera : public BaseCamera {
   dc1394camera_t *GetCameraPtr() const;
 
  protected:
-  void SetGainMode(bool value) override;
-  void SetGainValue(double value) override;
-  bool GetGainMode() const override;
-  double GetGainValue() const override;
+  bool SetGainMode(bool value) override;
+  bool SetGainValue(double value) override;
+  bool GetGainMode(bool &value) const override;
+  bool GetGainValue(double &value) const override;
 
-  double GetGammaValue() const override;
-  void SetGammaValue(double value) override;
+  bool GetGammaValue(double &value) const override;
+  bool SetGammaValue(double value) override;
 
-  void SetExposureMode(bool value) override;
-  bool GetExposureMode() const override;
-  double GetExposureValue() const override;
-  void SetExposureValue(double value) override;
+  bool SetExposureMode(bool value) override;
+  bool GetExposureMode(bool &value) const override;
+  bool GetExposureValue(double &value) const override;
+  bool SetExposureValue(double value) override;
 
-  double GetSaturationValue() const override;
-  void SetSaturationValue(double value) override;
+  bool GetSaturationValue(double &value) const override;
+  bool SetSaturationValue(double value) override;
 
-  void SetShutterValue(double value) override;
-  void SetShutterMode(bool value) override;
-  bool GetShutterMode() const override;
-  double GetShutterValue() const override;
+  bool SetShutterValue(double value) override;
+  bool SetShutterMode(bool value) override;
+  bool GetShutterMode(bool &value) const override;
+  bool GetShutterValue(double &value) const override;
 
-  void SetFrameRateValue(double value) override;
-  double GetFrameRateValue() const override;
+  bool SetFrameRateValue(double value) override;
+  bool GetFrameRateValue(double &value) const override;
 
-  void SetWhiteBalanceMode(bool value) override;
-  bool GetWhiteBalanceMode() const override;
-  void SetWhiteBalanceRedValue(double value) override;
-  void SetWhiteBalanceBlueValue(double value) override;
-  double GetWhiteBalanceRed() const override;
-  double GetWhiteBalanceBlue() const override;
+  bool SetWhiteBalanceMode(bool value) override;
+  bool GetWhiteBalanceMode(bool &value) const override;
+  bool SetWhiteBalanceRedValue(double value) override;
+  bool SetWhiteBalanceBlueValue(double value) override;
+  bool GetWhiteBalanceRed(double &value) const override;
+  bool GetWhiteBalanceBlue(double &value) const override;
 
  private:
   //==========================================================================
@@ -146,10 +146,11 @@ class DC1394Camera : public BaseCamera {
 //------------------------------------------------------------------------------
 //
 inline std::string DC1394Camera::GetModel() const {
-  if (dc1394_camera_ != nullptr) {
-    throw std::runtime_error("Null camera pointer");
+  if (dc1394_camera_) {
+    return dc1394_camera_->model;
   }
-  return dc1394_camera_->model;
+  ROS_ERROR_NAMED(CAM_TAG, "Null camera pointer");
+  return "";
 }
 
 //------------------------------------------------------------------------------

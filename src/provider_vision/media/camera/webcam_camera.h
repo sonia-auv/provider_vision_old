@@ -43,14 +43,14 @@ class WebcamCamera : public BaseMedia, private cv::VideoCapture {
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  WebcamCamera();
+  WebcamCamera() noexcept;
 
   /**
    * By giving the id of the camera, OpenCv will open it from it's own,
    * do not try to start the webcam if you already started it with
    * this constructor.
    */
-  explicit WebcamCamera(int webcamIdx);
+  explicit WebcamCamera(int webcamIdx) noexcept;
 
   virtual ~WebcamCamera();
 
@@ -60,27 +60,27 @@ class WebcamCamera : public BaseMedia, private cv::VideoCapture {
   /**
    * Method override from Media
    */
-  void Open() override;
+  bool Open() override;
 
   /**
    * Method override from Media
    */
-  void Close() override;
+  bool Close() override;
 
   /**
    * Method override from Media
    */
-  void SetStreamingModeOn() override;
+  bool SetStreamingModeOn() override;
 
   /**
    * Method override from Media
    */
-  void SetStreamingModeOff() override;
+  bool SetStreamingModeOff() override;
 
   /**
    * Method override from Media
    */
-  void NextImage(cv::Mat &image) override;
+  bool NextImage(cv::Mat &image) override;
 };
 
 }  // namespace provider_vision

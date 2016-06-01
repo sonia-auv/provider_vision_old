@@ -31,8 +31,9 @@ const std::string WebcamContext::WEBCAM_NAME("Webcam");
 
 //------------------------------------------------------------------------------
 //
-WebcamContext::WebcamContext()
-    : BaseContext(), webcam_(std::make_shared<WebcamCamera>()) {}
+WebcamContext::WebcamContext() noexcept
+    : BaseContext(),
+      webcam_(std::make_shared<WebcamCamera>()) {}
 
 //------------------------------------------------------------------------------
 //
@@ -47,45 +48,54 @@ void WebcamContext::CloseContext() {}
 
 //------------------------------------------------------------------------------
 //
-void WebcamContext::SetFeature(const BaseCamera::Feature &feat,
-                               const std::string &name, boost::any &val) {}
+bool WebcamContext::SetFeature(const BaseCamera::Feature &feat,
+                               const std::string &name, boost::any &val) {
+  // Webcam are not really supported...
+  return true;
+}
 
 //------------------------------------------------------------------------------
 //
-void WebcamContext::GetFeature(const BaseCamera::Feature &feat,
+bool WebcamContext::GetFeature(const BaseCamera::Feature &feat,
                                const std::string &name, boost::any &val) const {
+  // Webcam are not really supported...
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-void WebcamContext::OpenMedia(const std::string &name) {
+bool WebcamContext::OpenMedia(const std::string &name) {
   if (WEBCAM_NAME.compare(name) == 0) {
-    webcam_->Open();
+    return webcam_->Open();
   }
+  return false;
 }
 
 //------------------------------------------------------------------------------
 //
-void WebcamContext::CloseMedia(const std::string &name) {
+bool WebcamContext::CloseMedia(const std::string &name) {
   if (WEBCAM_NAME.compare(name) == 0) {
-    webcam_->Close();
+    return webcam_->Close();
   }
+  return false;
 }
 
 //------------------------------------------------------------------------------
 //
-void WebcamContext::StartStreamingMedia(const std::string &name) {
+bool WebcamContext::StartStreamingMedia(const std::string &name) {
   if (WEBCAM_NAME.compare(name) == 0) {
-    webcam_->StartStreaming();
+    return webcam_->StartStreaming();
   }
+  return false;
 }
 
 //------------------------------------------------------------------------------
 //
-void WebcamContext::StopStreamingMedia(const std::string &name) {
+bool WebcamContext::StopStreamingMedia(const std::string &name) {
   if (WEBCAM_NAME.compare(name) == 0) {
-    webcam_->Close();
+    return webcam_->Close();
   }
+  return false;
 }
 
 //------------------------------------------------------------------------------

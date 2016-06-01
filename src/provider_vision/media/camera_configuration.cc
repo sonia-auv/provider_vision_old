@@ -29,8 +29,8 @@ namespace provider_vision {
 //------------------------------------------------------------------------------
 //
 CameraConfiguration::CameraConfiguration(const ros::NodeHandle &nh,
-                                         const std::string &name)
-    : ConfigurationParser(nh, "/provider_vision/camera_parameters/" + name),
+                                         const std::string &name) ATLAS_NOEXCEPT
+    : ConfigurationParser(nh, "/provider_vision/camera_parameters"),
       guid_(0),
       name_(name),
       framerate_(0),
@@ -67,34 +67,34 @@ CameraConfiguration::~CameraConfiguration() {}
 //
 void CameraConfiguration::DeserializeConfiguration(const std::string &name) {
   std::string guid_str = "";
-  FindParameter("guid", guid_str);
+  FindParameter(name + "/guid", guid_str);
 
   if (guid_str != "") {
     guid_ = std::stoull(guid_str);
   }
 
-  FindParameter("name", name_);
-  FindParameter("framerate", framerate_);
-  FindParameter("gain_manual", gain_manual_);
-  FindParameter("shutter_manual", shutter_manual_);
-  FindParameter("white_balance_manual", white_balance_manual_);
-  FindParameter("gain", gain_);
-  FindParameter("shutter", shutter_);
-  FindParameter("gamma", gamma_);
-  FindParameter("exposure", exposure_);
-  FindParameter("white_balance_blue", white_balance_blue_);
-  FindParameter("white_balance_red", white_balance_red_);
-  FindParameter("saturation", saturation_);
-  FindParameter("width", width_);
-  FindParameter("height", height_);
-  FindParameter("x_offset", x_offset_);
-  FindParameter("y_offset", y_offset_);
-  FindParameter("format", format_);
-  FindParameter("auto_brightness", auto_brightness_);
-  FindParameter("auto_brightness_target", auto_brightness_target_);
-  FindParameter("auto_brightness_target_variation",
+  FindParameter(name + "/name", name_);
+  FindParameter(name + "/framerate", framerate_);
+  FindParameter(name + "/gain_manual", gain_manual_);
+  FindParameter(name + "/shutter_manual", shutter_manual_);
+  FindParameter(name + "/white_balance_manual", white_balance_manual_);
+  FindParameter(name + "/gain", gain_);
+  FindParameter(name + "/shutter", shutter_);
+  FindParameter(name + "/gamma", gamma_);
+  FindParameter(name + "/exposure", exposure_);
+  FindParameter(name + "/white_balance_blue", white_balance_blue_);
+  FindParameter(name + "/white_balance_red", white_balance_red_);
+  FindParameter(name + "/saturation", saturation_);
+  FindParameter(name + "/width", width_);
+  FindParameter(name + "/height", height_);
+  FindParameter(name + "/x_offset", x_offset_);
+  FindParameter(name + "/y_offset", y_offset_);
+  FindParameter(name + "/format", format_);
+  FindParameter(name + "/auto_brightness", auto_brightness_);
+  FindParameter(name + "/auto_brightness_target", auto_brightness_target_);
+  FindParameter(name + "/auto_brightness_target_variation",
                 auto_brightness_target_variation_);
-  FindParameter("exposure_manual", exposure_manual_);
+  FindParameter(name + "/exposure_manual", exposure_manual_);
 }
 
 }  // namespace provider_vision

@@ -27,7 +27,7 @@
 
 namespace provider_vision {
 
-const std::string GigeCamera::CAM_TAG = "[GigE Camera]";
+const char *GigeCamera::CAM_TAG = "[GigE Camera]";
 
 //==============================================================================
 // C / D T O R S   S E C T I O N
@@ -49,11 +49,12 @@ GigeCamera::~GigeCamera() {
 
 //------------------------------------------------------------------------------
 //
-void GigeCamera::Open() {
-  UINT16 status;
+bool GigeCamera::Open() {
+  UINT16 status = 0;
 
   if (IsOpened()) {
-    throw std::logic_error("The media is already started");
+    ROS_INFO_NAMED(CAM_TAG, "The media is already started");
+    return true;
   }
 
   std::lock_guard<std::mutex> guard(cam_access_);
@@ -67,26 +68,32 @@ void GigeCamera::Open() {
       status = GevOpenCameraByName(name, GevControlMode, &gige_camera_);
       if (status == 0) {
         i = 5;
-        ROS_INFO_STREAM_NAMED("[GigE Driver]", "%s opened successfully" << str);
+        ROS_INFO_NAMED(CAM_TAG, "opened successfully %s", str.c_str());
       } else {
-        ROS_INFO_NAMED("[GigE Driver]",
-                       "Unable to open camera. Retrying. Try: %d/5", i + 1);
+        ROS_INFO_NAMED(CAM_TAG, "Unable to open camera. Retrying. Try: %d/5",
+                       i + 1);
         sleep(10);
       }
     }
     // don't forget to free the string after finished using it
     delete[] name;
     if (status != 0) {
-      throw std::runtime_error(GevGetFormatString(status));
+      ROS_ERROR_NAMED(CAM_TAG, "Error while opening the camera %s",
+                      GevGetFormatString(status));
+      return false;
     }
     status = GevInitGenICamXMLFeatures(gige_camera_, TRUE);
 
     if (status != 0) {
-      throw std::runtime_error(GevGetFormatString(status));
+      ROS_ERROR_NAMED(CAM_TAG, "Error while getting the camera feature %s",
+                      GevGetFormatString(status));
+      return false;
     }
   } catch (std::exception &e) {
-    ROS_ERROR("%s", e.what());
-    ROS_ERROR("Error opening GigE camera");
+    ROS_ERROR_NAMED(CAM_TAG,
+                    "Error while opening the camera. GIGE: %s EXECPTION: %s",
+                    GevGetFormatString(status), e.what());
+    return false;
   }
   UINT32 format = fMtBayerRG8;
   UINT32 width = 0;
@@ -115,23 +122,29 @@ void GigeCamera::Open() {
     }
     status = GevInitImageTransfer(gige_camera_, Asynchronous, DMA_BUFFER,
                                   bufAddress);
+  } catch (std::exception &e) {
+    ROS_ERROR_NAMED(CAM_TAG,
+                    "Error while opening the camera. GIGE: %s EXECPTION: %s",
+                    GevGetFormatString(status), e.what());
+    return false;
   }
-  CATCH_GENAPI_ERROR(status);
   status_ = Status::OPEN;
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeCamera::Close() {
+bool GigeCamera::Close() {
   if (!IsOpened()) {
-    throw std::logic_error("The media is not started");
+    ROS_INFO_NAMED(CAM_TAG, "The media is not started");
+    return true;
   }
 
   std::lock_guard<std::mutex> guard(cam_access_);
 
   bool close_result = true;
   if (status_ == Status::STREAMING) {
-    StopStreaming();
+    close_result = StopStreaming();
   }
 
   GEV_STATUS status = GevCloseCamera(&gige_camera_);
@@ -141,11 +154,12 @@ void GigeCamera::Close() {
   }
 
   close_result ? status_ = Status::CLOSE : status_ = Status::ERROR;
+  return close_result;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeCamera::SetStreamingModeOn() {
+bool GigeCamera::SetStreamingModeOn() {
   GEV_STATUS status;
   std::lock_guard<std::mutex> guard(cam_access_);
 
@@ -153,37 +167,50 @@ void GigeCamera::SetStreamingModeOn() {
 
   if (status == GEVLIB_ERROR_INVALID_HANDLE) {
     status_ = Status::ERROR;
-    throw std::runtime_error("Invalid handle. Cannot set streaming mode on.");
+    ROS_ERROR_NAMED(CAM_TAG, "Invalid handle. Cannot set streaming mode on.");
+    return false;
   } else if (status == GEV_STATUS_BUSY) {
     status_ = Status::ERROR;
-    throw std::runtime_error("Camera is busy. Cannot set streaming mode on.");
+    ROS_ERROR_NAMED(CAM_TAG, "Camera is busy. Cannot set streaming mode on.");
+    return false;
   }
   atlas::MilliTimer::Sleep(2500);
-  if (!white_balance_manual_) SetWhiteBalanceMode(1);
+  if (!white_balance_manual_) {
+    SetWhiteBalanceMode(1);
+  }
 
   status_ = Status::STREAMING;
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeCamera::SetStreamingModeOff() {
+bool GigeCamera::SetStreamingModeOff() {
   std::lock_guard<std::mutex> guard(cam_access_);
 
   GEV_STATUS status = GevStopImageTransfer(gige_camera_);
   if (status != GEVLIB_OK) {
     status_ = Status::ERROR;
-    throw std::runtime_error(
-        "Invalid handle. The camera could not be stopped.");
+    ROS_ERROR_NAMED(CAM_TAG,
+                    "Invalid handle. The camera could not be stopped.");
+    return false;
   }
 
   status_ = Status::OPEN;
   // Here stopping timer just in case... Should already be closed....
   std::lock_guard<std::mutex> guard2(timer_access_);
+  try {
+    acquisition_timer_.Pause();
+    acquisition_timer_.Reset();
+  } catch (std::exception &e) {
+    ROS_ERROR_NAMED(CAM_TAG, "Exception on timer handling %s", e.what());
+  }
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeCamera::NextImage(cv::Mat &img) {
+bool GigeCamera::NextImage(cv::Mat &img) {
   GEV_BUFFER_OBJECT *frame = NULL;
   timer_access_.lock();
   acquisition_timer_.Sleep(3);
@@ -197,9 +224,10 @@ void GigeCamera::NextImage(cv::Mat &img) {
   atlas::MilliTimer::Sleep(3);
   timer_access_.unlock();
 
-  if (status != 0) {
+  if (status != 0 || frame == nullptr) {
     status_ = Status::ERROR;
-    throw std::runtime_error("Cannot get next image.");
+    ROS_ERROR_NAMED(CAM_TAG, "Cannot get next image.");
+    return false;
   }
 
   if (frame != NULL) {
@@ -211,19 +239,23 @@ void GigeCamera::NextImage(cv::Mat &img) {
       BalanceWhite(img);
     } catch (cv::Exception &e) {
       status_ = Status::ERROR;
-      throw;
+      ROS_ERROR_NAMED(CAM_TAG, "Error on opencv image transformation %s",
+                      e.what());
+      return false;
     }
   }
 
   if (img.empty() || img.size().height == 0 || img.size().height == 0) {
-    throw std::runtime_error(
-        "The image is empty, there is a problem with the media");
+    ROS_ERROR_NAMED(CAM_TAG,
+                    "The image is empty, there is a problem with the media");
+    return false;
   }
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeCamera::SetCameraParams() {
+bool GigeCamera::SetCameraParams() {
   SetAutoBrightnessMode(auto_brightness_);
   atlas::MilliTimer::Sleep(100);
   if (auto_brightness_) {
@@ -253,79 +285,88 @@ void GigeCamera::SetCameraParams() {
   GevSetImageParameters(gige_camera_, (UINT32)width_, (UINT32)height_,
                         (UINT32)x_offset_, (UINT32)y_offset_, (UINT32)format_);
   atlas::MilliTimer::Sleep(100);
+
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeCamera::SetAutoBrightnessMode(int value) {
+bool GigeCamera::SetAutoBrightnessMode(int value) {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CEnumerationPtr ptrEnumNode = Camera->_GetNode("autoBrightnessMode");
   ptrEnumNode->SetIntValue(value);
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeCamera::SetAutoBrightnessTarget(int value) {
+bool GigeCamera::SetAutoBrightnessTarget(int value) {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CIntegerPtr ptrIntNode = Camera->_GetNode("autoBrightnessTarget");
   ptrIntNode->SetValue(value);
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeCamera::SetAutoBrightnessTargetVariation(int value) {
+bool GigeCamera::SetAutoBrightnessTargetVariation(int value) {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CIntegerPtr ptrIntNode =
       Camera->_GetNode("autoBrightnessTargetRangeVariation");
   ptrIntNode->SetValue(value);
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeCamera::SetGainMode(bool mode) {
+bool GigeCamera::SetGainMode(bool mode) {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CEnumerationPtr ptrEnumNode = Camera->_GetNode("GainAuto");
   if (mode == FeatureMode::AUTO) {
     ptrEnumNode->SetIntValue(2);
-  } else if (mode == FeatureMode::MANUAL) {
+  } else {  // Manual
     ptrEnumNode->SetIntValue(0);
   }
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-bool GigeCamera::GetGainMode() const {
+bool GigeCamera::GetGainMode(bool &value) const {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CEnumerationPtr ptrEnumNode = Camera->_GetNode("GainAuto");
-  return static_cast<bool>(ptrEnumNode->GetIntValue());
+  value = static_cast<bool>(ptrEnumNode->GetIntValue());
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-double GigeCamera::GetGainValue() const {
+bool GigeCamera::GetGainValue(double &value) const {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CFloatPtr ptrGain = Camera->_GetNode("Gain");
-  return (float)ptrGain->GetValue();
+  value = (float)ptrGain->GetValue();
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeCamera::SetGainValue(double value) {
+bool GigeCamera::SetGainValue(double value) {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CFloatPtr ptrGain = Camera->_GetNode("Gain");
   ptrGain->SetValue(value);
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeCamera::SetExposureMode(bool mode) {
+bool GigeCamera::SetExposureMode(bool mode) {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CEnumerationPtr ptrExposureAuto = Camera->_GetNode("ExposureAuto");
@@ -334,67 +375,73 @@ void GigeCamera::SetExposureMode(bool mode) {
   if (mode == FeatureMode::AUTO) {
     ptrExposureAuto->SetIntValue(2);
     atlas::MilliTimer::Sleep(100);
-  } else if (mode == FeatureMode::MANUAL) {
+  } else {  // Manual mode
     ptrExposureAuto->SetIntValue(0);
     atlas::MilliTimer::Sleep(100);
     ptrExposureMode->SetIntValue(0);
   }
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-bool GigeCamera::GetExposureMode() const {
+bool GigeCamera::GetExposureMode(bool &value) const {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CEnumerationPtr ptrExposureMode = Camera->_GetNode("ExposureMode");
   auto mode = ptrExposureMode->GetIntValue();
 
   if (mode == 2) {
-    return FeatureMode::AUTO;
+    value = FeatureMode::AUTO;
   } else {
-    return FeatureMode::MANUAL;
+    value = FeatureMode::MANUAL;
   }
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-double GigeCamera::GetExposureValue() const {
+bool GigeCamera::GetExposureValue(double &value) const {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CFloatPtr ptrExposureTime = Camera->_GetNode("ExposureTime");
-  return (float)ptrExposureTime->GetValue();
+  value = (double)ptrExposureTime->GetValue();
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeCamera::SetExposureValue(double value) {
+bool GigeCamera::SetExposureValue(double value) {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CFloatPtr ptrExposureTime = Camera->_GetNode("ExposureTime");
   ptrExposureTime->SetValue(value);
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeCamera::SetFrameRateValue(double value) {
+bool GigeCamera::SetFrameRateValue(double value) {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CFloatPtr ptrFrameRate = Camera->_GetNode("AcquisitionFrameRate");
   ptrFrameRate->SetValue(value, true);
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-double GigeCamera::GetFrameRateValue() const {
+bool GigeCamera::GetFrameRateValue(double &value) const {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CFloatPtr ptrFrameRate = Camera->_GetNode("AcquisitionFrameRate");
-  return (float)ptrFrameRate->GetValue();
+  value = (double)ptrFrameRate->GetValue();
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeCamera::SetWhiteBalanceMode(bool mode) {
+bool GigeCamera::SetWhiteBalanceMode(bool mode) {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CEnumerationPtr ptrEnumNode = Camera->_GetNode("BalanceWhiteAuto");
@@ -408,111 +455,143 @@ void GigeCamera::SetWhiteBalanceMode(bool mode) {
   } else if (mode == FeatureMode::MANUAL) {
     ptrEnumNode->SetIntValue(0);
   }
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-bool GigeCamera::GetWhiteBalanceMode() const {
+bool GigeCamera::GetWhiteBalanceMode(bool &value) const {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CEnumerationPtr ptrEnumNode = Camera->_GetNode("BalanceWhiteAuto");
-  return static_cast<bool>(ptrEnumNode->GetIntValue());
+  value = static_cast<bool>(ptrEnumNode->GetIntValue());
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-double GigeCamera::GetWhiteBalanceRatio() const {
+bool GigeCamera::GetWhiteBalanceRatio(double &value) const {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CFloatPtr ptrWhiteBalanceRatio = Camera->_GetNode("BalanceRatio");
-  return (double)ptrWhiteBalanceRatio->GetValue();
+  value = (double)ptrWhiteBalanceRatio->GetValue();
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeCamera::SetWhiteBalanceRatio(double value) {
+bool GigeCamera::SetWhiteBalanceRatio(double value) {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CFloatPtr ptrWhiteBalanceRatio = Camera->_GetNode("BalanceRatio");
   ptrWhiteBalanceRatio->SetValue(value);
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-double GigeCamera::GetWhiteBalanceRed() const {
-  ROS_WARN("The feature WhiteBalance is not available on GigE cameras.");
-  return -1;
+bool GigeCamera::GetWhiteBalanceRed(double &value) const {
+  ROS_WARN_NAMED(CAM_TAG,
+                 "The feature WhiteBalance is not available on GigE cameras.");
+  return INVALID_DOUBLE;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeCamera::SetWhiteBalanceRedValue(double value) {
-  ROS_WARN("The feature WhiteBalance is not available on GigE cameras.");
+bool GigeCamera::SetWhiteBalanceRedValue(double value) {
+  (void)value;
+  ROS_WARN_NAMED(CAM_TAG,
+                 "The feature WhiteBalance is not available on GigE cameras.");
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeCamera::SetWhiteBalanceBlueValue(double value) {
-  ROS_WARN("The feature WhiteBalance is not available on GigE cameras.");
+bool GigeCamera::SetWhiteBalanceBlueValue(double value) {
+  (void)value;
+  ROS_WARN_NAMED(CAM_TAG,
+                 "The feature WhiteBalance is not available on GigE cameras.");
+  return false;
 }
 
 //------------------------------------------------------------------------------
 //
-double GigeCamera::GetWhiteBalanceBlue() const {
-  ROS_WARN("The feature WhiteBalance is not available on GigE cameras.");
-  return -1;
+bool GigeCamera::GetWhiteBalanceBlue(double &value) const {
+  (void)value;
+  ROS_WARN_NAMED(CAM_TAG,
+                 "The feature WhiteBalance is not available on GigE cameras.");
+  return false;
 }
 
 //------------------------------------------------------------------------------
 //
-double GigeCamera::GetGammaValue() const {
-  ROS_WARN("The feature GammaValue is not available on GigE cameras.");
-  return -1;
+bool GigeCamera::GetGammaValue(double &value) const {
+  (void)value;
+  ROS_WARN_NAMED(CAM_TAG,
+                 "The feature GammaValue is not available on GigE cameras.");
+  return false;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeCamera::SetGammaValue(double value) {
-  ROS_WARN("The feature GammaValue is not available on GigE cameras.");
+bool GigeCamera::SetGammaValue(double value) {
+  (void)value;
+  ROS_WARN_NAMED(CAM_TAG,
+                 "The feature GammaValue is not available on GigE cameras.");
+  return false;
 }
 
 //------------------------------------------------------------------------------
 //
-double GigeCamera::GetSaturationValue() const {
-  ROS_WARN("The feature SaturationValue is not available on GigE cameras.");
-  return -1;
+bool GigeCamera::GetSaturationValue(double &value) const {
+  (void)value;
+  ROS_WARN_NAMED(
+      CAM_TAG, "The feature SaturationValue is not available on GigE cameras.");
+  return false;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeCamera::SetSaturationValue(double value) {
-  ROS_WARN("The feature SaturationValue is not available on GigE cameras.");
+bool GigeCamera::SetSaturationValue(double value) {
+  (void)value;
+  ROS_WARN_NAMED(
+      CAM_TAG, "The feature SaturationValue is not available on GigE cameras.");
+  return false;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeCamera::SetShutterValue(double value) {
-  ROS_WARN("The feature ShutterValue is not available on GigE cameras.");
+bool GigeCamera::SetShutterValue(double value) {
+  (void)value;
+  ROS_WARN_NAMED(CAM_TAG,
+                 "The feature ShutterValue is not available on GigE cameras.");
+  return false;
 }
 
 //------------------------------------------------------------------------------
 //
-void GigeCamera::SetShutterMode(bool) {
-  ROS_WARN("The feature ShutterMode is not available on GigE cameras.");
+bool GigeCamera::SetShutterMode(bool value) {
+  (void)value;
+  ROS_WARN_NAMED(CAM_TAG,
+                 "The feature ShutterMode is not available on GigE cameras.");
+  return false;
 }
 
 //------------------------------------------------------------------------------
 //
-bool GigeCamera::GetShutterMode() const {
-  ROS_WARN("The feature ShutterMode is not available on GigE cameras.");
-  return 0;
+bool GigeCamera::GetShutterMode(bool &value) const {
+  ROS_WARN_NAMED(CAM_TAG,
+                 "The feature ShutterMode is not available on GigE cameras.");
+  return false;
 }
 
 //------------------------------------------------------------------------------
 //
-double GigeCamera::GetShutterValue() const {
-  ROS_WARN("The feature ShutterValue is not available on GigE cameras.");
-  return -1;
+bool GigeCamera::GetShutterValue(double &value) const {
+  (void)value;
+  ROS_WARN_NAMED(CAM_TAG,
+                 "The feature ShutterValue is not available on GigE cameras.");
+  return false;
 }
 
 //------------------------------------------------------------------------------

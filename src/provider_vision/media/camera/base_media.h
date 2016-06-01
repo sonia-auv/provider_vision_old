@@ -45,7 +45,7 @@ class BaseMedia {
   // P U B L I C   C / D T O R S
 
   explicit BaseMedia(const std::string &name)
-      : status_(Status::CLOSE), name_(name) {}
+      : status_(Status::CLOSE), media_name_(name) {}
 
   virtual ~BaseMedia() = default;
 
@@ -58,24 +58,24 @@ class BaseMedia {
    * therefore open and close are there to "make the camera exist in the
    * system"
    */
-  virtual void Open() = 0;
+  virtual bool Open() = 0;
 
-  virtual void Close() = 0;
+  virtual bool Close() = 0;
 
   /**
    * Starts to get images
    */
-  void StartStreaming();
+  bool StartStreaming();
 
   /**
    * Stop getting images
    */
-  void StopStreaming();
+  bool StopStreaming();
 
   /**
    * Gives the most recent image
    */
-  virtual void NextImage(cv::Mat &image) = 0;
+  virtual bool NextImage(cv::Mat &image) = 0;
 
   /**
    * Call the next image and make a deep copy of it.
@@ -110,19 +110,19 @@ class BaseMedia {
   /**
    * Starts to get images
    */
-  virtual void SetStreamingModeOn() = 0;
+  virtual bool SetStreamingModeOn() = 0;
 
   /**
    * Stop getting images
    */
-  virtual void SetStreamingModeOff() = 0;
+  virtual bool SetStreamingModeOff() = 0;
 
   //==========================================================================
   // P R O T E C T E D   M E M B E R S
 
   Status status_;
 
-  std::string name_;
+  std::string media_name_;
 };
 
 //==============================================================================
@@ -148,7 +148,7 @@ inline bool BaseMedia::HasArtificialFramerate() const { return true; }
 
 //------------------------------------------------------------------------------
 //
-inline const std::string &BaseMedia::GetName() const { return name_; }
+inline const std::string &BaseMedia::GetName() const { return media_name_; }
 
 //------------------------------------------------------------------------------
 //
@@ -166,33 +166,39 @@ inline bool BaseMedia::IsStreaming() const {
 
 //------------------------------------------------------------------------------
 //
-inline void BaseMedia::StartStreaming() {
+inline bool BaseMedia::StartStreaming() {
   if (GetStatus() == Status::OPEN) {
-    SetStreamingModeOn();
+    return SetStreamingModeOn();
   } else if (GetStatus() == Status::CLOSE) {
-    Open();
-    SetStreamingModeOn();
+    if (Open()) {
+      return SetStreamingModeOn();
+    }
+
   } else if (GetStatus() == Status::STREAMING) {
-    // throw std::logic_error("The media is already streaming");
-  } else {
-    throw std::runtime_error(
-        "The media is on an unstable status. Cannot stream.");
+    ROS_INFO("The media is already streaming");
+    return true;
   }
+  ROS_ERROR("The media is on an unstable status. Cannot stream.");
+  return false;
 }
 
 //------------------------------------------------------------------------------
 //
-inline void BaseMedia::StopStreaming() {
+inline bool BaseMedia::StopStreaming() {
   if (GetStatus() == Status::STREAMING) {
-    SetStreamingModeOff();
+    return SetStreamingModeOff();
   } else if (GetStatus() == Status::CLOSE) {
-    throw std::logic_error("The media is not opened, cannot stop stream.");
+    ROS_ERROR("The media is not opened, cannot stop stream.");
+    return false;
   } else if (GetStatus() == Status::OPEN) {
-    throw std::logic_error("The media is not streaming.");
-  } else {
-    throw std::runtime_error(
-        "The media is on an unstable status. Cannot stream.");
+    // Here the goal of the function is to stop the streaming. If not streaming
+    // the goal is still obtain, so we log the info since it may be logic
+    // error but we return true because at the end, the media is not streaming.
+    ROS_INFO("The media is not streaming.");
+    return true;
   }
+  ROS_ERROR("The media is on an unstable status. Cannot stream.");
+  return false;
 }
 
 }  // namespace provider_vision

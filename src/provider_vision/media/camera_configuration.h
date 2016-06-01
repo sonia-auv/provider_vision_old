@@ -46,7 +46,7 @@ class CameraConfiguration : public atlas::ConfigurationParser {
   // P U B L I C   C / D T O R S
 
   explicit CameraConfiguration(const ros::NodeHandle &nh,
-                               const std::string &name);
+                               const std::string &name) ATLAS_NOEXCEPT;
 
   virtual ~CameraConfiguration();
 

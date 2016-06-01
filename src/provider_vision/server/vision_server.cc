@@ -115,7 +115,10 @@ bool VisionServer::CallbackExecutionCMD(execute_cmd::Request &rqst,
 
       MediaStreamer::Ptr media =
           media_mgr_.StartStreamingMedia(rqst.media_name);
-
+      if (!media) {
+        ROS_ERROR("Failure to start the streaming.");
+        return false;
+      }
       Filterchain::Ptr filterchain =
           filterchain_mgr_.InstanciateFilterchain(rqst.filterchain_name);
 

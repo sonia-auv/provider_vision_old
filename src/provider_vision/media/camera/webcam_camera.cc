@@ -27,7 +27,8 @@ namespace provider_vision {
 
 //------------------------------------------------------------------------------
 //
-WebcamCamera::WebcamCamera() : BaseMedia("Webcam"), cv::VideoCapture() {
+WebcamCamera::WebcamCamera() noexcept : BaseMedia("Webcam"),
+                                        cv::VideoCapture() {
   if (isOpened()) {
     status_ = Status::OPEN;
   }
@@ -35,8 +36,9 @@ WebcamCamera::WebcamCamera() : BaseMedia("Webcam"), cv::VideoCapture() {
 
 //------------------------------------------------------------------------------
 //
-WebcamCamera::WebcamCamera(int webcamIdx)
-    : BaseMedia("Webcam"), cv::VideoCapture(webcamIdx) {
+WebcamCamera::WebcamCamera(int webcamIdx) noexcept
+    : BaseMedia("Webcam"),
+      cv::VideoCapture(webcamIdx) {
   if (isOpened()) {
     status_ = Status::OPEN;
   }
@@ -51,38 +53,48 @@ WebcamCamera::~WebcamCamera() {}
 
 //------------------------------------------------------------------------------
 //
-void WebcamCamera::Open() {
+bool WebcamCamera::Open() {
   // Already been open at constructor.
   if (!IsOpened()) {
     open(0);
     status_ = Status::OPEN;
   }
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-void WebcamCamera::Close() {
+bool WebcamCamera::Close() {
   if (IsOpened()) {
     release();
     status_ = Status::CLOSE;
   }
+  return true;
 }
 
 //------------------------------------------------------------------------------
 //
-void WebcamCamera::SetStreamingModeOn() { status_ = Status::STREAMING; }
+bool WebcamCamera::SetStreamingModeOn() {
+  status_ = Status::STREAMING;
+  return true;
+}
 
 //------------------------------------------------------------------------------
 //
-void WebcamCamera::SetStreamingModeOff() { status_ = Status::OPEN; }
+bool WebcamCamera::SetStreamingModeOff() {
+  status_ = Status::OPEN;
+  return true;
+}
 
 //------------------------------------------------------------------------------
 //
-void WebcamCamera::NextImage(cv::Mat &image) {
+bool WebcamCamera::NextImage(cv::Mat &image) {
   if (isOpened() && (status_ == Status::OPEN || status_ == Status::STREAMING)) {
     operator>>(image);
+    return true;
   } else {
     image = cv::Mat().clone();
+    return false;
   }
 }
 

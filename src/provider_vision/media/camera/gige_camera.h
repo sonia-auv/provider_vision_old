@@ -40,7 +40,7 @@ class GigeCamera : public BaseCamera {
   static const int DMA_BUFFER = 4;
   static constexpr float FPS = 15;
 
-  static const std::string CAM_TAG;
+  static const char *CAM_TAG;
 
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
@@ -58,15 +58,15 @@ class GigeCamera : public BaseCamera {
   // P U B L I C   M E T H O D S
 
   // BaseCamera override
-  void Open() override;
+  bool Open() override;
 
-  void Close() override;
+  bool Close() override;
 
-  void SetStreamingModeOn() override;
+  bool SetStreamingModeOn() override;
 
-  void SetStreamingModeOff() override;
+  bool SetStreamingModeOff() override;
 
-  void NextImage(cv::Mat &img) override;
+  bool NextImage(cv::Mat &img) override;
 
   double GetAcquistionTimerValue() const;
 
@@ -74,46 +74,46 @@ class GigeCamera : public BaseCamera {
   //==========================================================================
   // P R O T E C T E D   M E T H O D S
 
-  void SetGainMode(bool) override;
-  void SetGainValue(double value) override;
-  bool GetGainMode() const override;
-  double GetGainValue() const override;
+  bool SetGainMode(bool value) override;
+  bool SetGainValue(double value) override;
+  bool GetGainMode(bool &value) const override;
+  bool GetGainValue(double &value) const override;
 
-  double GetGammaValue() const override;
-  void SetGammaValue(double value) override;
+  bool GetGammaValue(double &value) const override;
+  bool SetGammaValue(double value) override;
 
-  double GetExposureValue() const override;
-  void SetExposureValue(double value) override;
-  void SetExposureMode(bool) override;
-  bool GetExposureMode() const override;
+  bool GetExposureValue(double &value) const override;
+  bool SetExposureValue(double value) override;
+  bool SetExposureMode(bool value) override;
+  bool GetExposureMode(bool &value) const override;
 
-  double GetSaturationValue() const override;
-  void SetSaturationValue(double value) override;
+  bool GetSaturationValue(double &value) const override;
+  bool SetSaturationValue(double value) override;
 
-  void SetShutterValue(double value) override;
-  void SetShutterMode(bool) override;
-  bool GetShutterMode() const override;
-  double GetShutterValue() const override;
+  bool SetShutterValue(double value) override;
+  bool SetShutterMode(bool value) override;
+  bool GetShutterMode(bool &value) const override;
+  bool GetShutterValue(double &value) const override;
 
-  void SetFrameRateValue(double value) override;
-  double GetFrameRateValue() const override;
+  bool SetFrameRateValue(double value) override;
+  bool GetFrameRateValue(double &value) const override;
 
-  void SetWhiteBalanceMode(bool) override;
-  bool GetWhiteBalanceMode() const override;
-  void SetWhiteBalanceRedValue(double value) override;
-  void SetWhiteBalanceBlueValue(double value) override;
-  double GetWhiteBalanceRed() const override;
-  double GetWhiteBalanceBlue() const override;
+  bool SetWhiteBalanceMode(bool value) override;
+  bool GetWhiteBalanceMode(bool &value) const override;
+  bool SetWhiteBalanceRedValue(double value) override;
+  bool SetWhiteBalanceBlueValue(double value) override;
+  bool GetWhiteBalanceRed(double &value) const override;
+  bool GetWhiteBalanceBlue(double &value) const override;
 
   /// Specific GigE vision features.
   /// This will be used internally only, mainly for calibration purpose.
   /// If we wished to use these feature widely, we must define them
   /// on the BaseCamera abstract class.
-  double GetWhiteBalanceRatio() const;
-  void SetWhiteBalanceRatio(double value);
-  void SetAutoBrightnessMode(int value);
-  void SetAutoBrightnessTarget(int value);
-  void SetAutoBrightnessTargetVariation(int value);
+  bool GetWhiteBalanceRatio(double &value) const;
+  bool SetWhiteBalanceRatio(double value);
+  bool SetAutoBrightnessMode(int value);
+  bool SetAutoBrightnessTarget(int value);
+  bool SetAutoBrightnessTargetVariation(int value);
 
  private:
   //==========================================================================
@@ -121,7 +121,7 @@ class GigeCamera : public BaseCamera {
 
   void BalanceWhite(cv::Mat mat);
 
-  void SetCameraParams();
+  bool SetCameraParams();
 
   std::string GetModel() const;
 
@@ -145,11 +145,12 @@ class GigeCamera : public BaseCamera {
 //------------------------------------------------------------------------------
 //
 inline std::string GigeCamera::GetModel() const {
-  if (gige_camera_ != nullptr) {
-    throw std::runtime_error("Null camera pointer");
+  if (gige_camera_) {
+    GEV_CAMERA_INFO *camera_info = GevGetCameraInfo(gige_camera_);
+    return camera_info->model;
   }
-  GEV_CAMERA_INFO *camera_info = GevGetCameraInfo(gige_camera_);
-  return camera_info->model;
+  ROS_ERROR_NAMED(CAM_TAG, "Could not retreive camera model");
+  return "";
 }
 
 //------------------------------------------------------------------------------

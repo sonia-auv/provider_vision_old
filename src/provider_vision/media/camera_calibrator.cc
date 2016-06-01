@@ -57,7 +57,8 @@ void CameraCalibrator::Calibrate(BaseCamera *camera, cv::Mat img) {
   auto l_hist = CalculateLuminanceHistogram(img);
 
   msv_lum_ = CalculateMSV(l_hist, 5);
-  double shutter = camera->GetShutterValue();
+  double shutter;
+  camera->GetShutterValue(shutter);
   try {
     if (msv_lum_ > 2.6) {
       shutter -= 100;

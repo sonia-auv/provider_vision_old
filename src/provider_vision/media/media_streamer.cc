@@ -22,7 +22,7 @@
 
 namespace provider_vision {
 
-const std::string MediaStreamer::LOOP_TAG = "[MediaStreamer]";
+const char *MediaStreamer::LOOP_TAG = "[MediaStreamer]";
 
 //==============================================================================
 // C / D T O R S   S E C T I O N
@@ -31,17 +31,8 @@ const std::string MediaStreamer::LOOP_TAG = "[MediaStreamer]";
 //
 MediaStreamer::MediaStreamer(BaseMedia::Ptr cam, int artificialFrameRateMs)
     : media_(cam),
-      artificial_framerate_(artificialFrameRateMs),
       // here 30 in case we forget to set it, so the cpu doesn't blow off.
-      framerate_mili_sec_(1000 / 30),
-      image_(),
-      video_writer_(),
-      is_recording_(false) {
-  if (media_->HasArtificialFramerate() && artificial_framerate_ != 0) {
-    framerate_mili_sec_ = 1000 / artificial_framerate_;
-  }
-  Start();
-}
+      image_() {}
 
 //------------------------------------------------------------------------------
 //
@@ -57,131 +48,92 @@ MediaStreamer::~MediaStreamer() {
 
 //------------------------------------------------------------------------------
 //
-void MediaStreamer::SetFramerate(int framePerSecond) {
-  framerate_mili_sec_ = 1000 / framePerSecond;
-}
-
-//------------------------------------------------------------------------------
-//
-void MediaStreamer::StartStreaming() {
+bool MediaStreamer::StartStreaming() {
   ROS_INFO_NAMED(LOOP_TAG, "Starting streaming on camera");
-  if (IsRunning() && !IsStreaming()) {
-    media_->StartStreaming();
+  try {
+    Start();
   }
-}
+  catch (std::exception &e) {
+    ROS_ERROR_NAMED(LOOP_TAG, "Error while starting the thread: %s", e.what());
+    return false;
+  };
 
-//------------------------------------------------------------------------------
-//
-void MediaStreamer::StopStreaming() {
-  if (IsRecording()) {
-    StopRecording();
+  // Let the thread start.
+  atlas::MilliTimer::Sleep(1);
+  if (!IsRunning()) {
+    ROS_ERROR_NAMED(LOOP_TAG, "Thread could not be started");
+    return false;
   }
   if (IsStreaming()) {
+    ROS_WARN_NAMED(LOOP_TAG,
+                   "Weird, the media is already streaming on startup...");
+    // The goal is still to start the media, so if it streams, we are happy...
+    return true;
+  }
+  return media_->StartStreaming();
+}
+
+//------------------------------------------------------------------------------
+//
+bool MediaStreamer::StopStreaming() {
+  bool result = false;
+  if (IsStreaming()) {
     ROS_INFO("Stopping streaming on camera");
-    try {
-      media_->StopStreaming();
-      Stop();
-    } catch (std::exception &e) {
-    }
-  }
-}
-
-//------------------------------------------------------------------------------
-//
-void MediaStreamer::StartRecording(const std::string &filename) {
-  if (IsRecording()) {
-    return;
-  }
-
-  std::string filepath = filename;
-  // If no filename was provided, set the default filepath
-  if (filepath.empty()) {
-    // TODO Thibaut Mattio: Save the video with the current timer.
-    filepath = atlas::kLogPath + "save_video" + ".avi";
-    ROS_INFO_NAMED(LOOP_TAG, "Starting video on %s", filepath.c_str());
-  }
-
-  // mjpg et divx fonctionnels aussi, HFYU est en lossless
-  video_writer_ =
-      cv::VideoWriter(filepath, CV_FOURCC('D', 'I', 'V', 'X'), 15.0,
-                      cv::Size(image_.size().width, image_.size().height));
-
-  if (!video_writer_.isOpened()) {
-    ROS_ERROR_NAMED(LOOP_TAG, "Video writer was not opened!");
+    result = media_->StopStreaming();
   } else {
-    is_recording_ = true;
+    ROS_WARN_NAMED(LOOP_TAG,
+                   "Weird, the media is not streaming upon closing...");
   }
-}
-
-//------------------------------------------------------------------------------
-//
-void MediaStreamer::StopRecording() {
-  if (IsRecording()) {
-    video_writer_.release();
-    is_recording_ = false;
+  try {
+    Stop();
   }
+  catch (std::exception &e) {
+    ROS_ERROR_NAMED(LOOP_TAG, "Error while stopping thread: %s", e.what());
+    result = false;
+  };
+  return result;
 }
 
 //------------------------------------------------------------------------------
 //
 void MediaStreamer::Run() {
-  bool must_set_record = false;
-
-  // If the media is a real camera, start recording the feed.
-  if (!media_->HasArtificialFramerate()) {
-    must_set_record = true;
-  }
 
   // Starting a timer for timing the acquisition of the image from the media.
   atlas::MilliTimer timer;
   timer.Start();
-
+  bool result = false;
   while (!MustStop()) {
     if (IsStreaming()) {
       image_access_.lock();
-      media_->NextImage(image_);
+      result = media_->NextImage(image_);
       image_access_.unlock();
 
-      if (!image_.empty()) {
+      // We gotta a image
+      if (!image_.empty() && result) {
         timer.Reset();
-        if (must_set_record) {
-          // StartRecording();
-          must_set_record = false;
-        }
-
-        if (IsRecording() && atlas::PercentageUsedPhysicalMemory() < .8) {
-          video_writer_.write(image_);
-        }
         Notify(image_);
-      } else {
+      } else {  // Image getting failed
+        // If we have been waiting too long for an image, we consider a failure.
         if (timer.MilliSeconds() > 100) {
           StopStreaming();
-          throw std::runtime_error(
+          ROS_ERROR_NAMED(
+              LOOP_TAG,
               "Cannot access the image from the media. Reached timeout.");
+          try {
+            Stop();
+          }
+          catch (std::exception &e) {
+            ROS_ERROR_NAMED(LOOP_TAG, "Error while stopping thread: %s",
+                            e.what());
+          };
+          return;
         }
       }
-      atlas::MilliTimer::Sleep(framerate_mili_sec_);
+      // For the files, we set a fixed framerate at 15 fps
+      if (media_->HasArtificialFramerate()) {
+        atlas::MilliTimer::Sleep(1000 / ARTIFICIAL_FRAMERATE);
+      }
     }
-  }
-
-  if (IsRecording()) {
-    StopRecording();
-  }
-}
-
-//------------------------------------------------------------------------------
-//
-void MediaStreamer::GetImage(cv::Mat &image) const {
-  if (!IsStreaming()) {
-    image_access_.lock();
-    media_->NextImage(image);
-    image_access_.unlock();
-    if (image.empty()) {
-      throw std::runtime_error("The media has returned an empty image.");
-    }
-  } else {
-    throw std::logic_error(
-        "Cannot acquire an image from a media that is streaming");
   }
 }
 
