@@ -40,22 +40,22 @@ void MediaManager::CallBackDynamicReconfigure(
 
   // In the groupDescription, there is a abstrat_parameters member
   // that contain the AbstractParamDescriptionConstPtr class
-  // this class contains the level, the value of the feature, the name of the feature,
+  // this class contains the level, the value of the feature, the name of the
+  // feature,
   // etc.
 
- for( const auto & desc : config.__getGroupDescriptions__()) {
+  for (const auto &desc : config.__getGroupDescriptions__()) {
     auto begin = desc->abstract_parameters.begin();
     auto end = desc->abstract_parameters.end();
 
     // The abstract parameter must
-    for (auto _i = begin; _i != end; ++_i)
-    {
+    for (auto _i = begin; _i != end; ++_i) {
       boost::any val;
-      if((*_i)->level == level) {
+      if ((*_i)->level == level) {
         (*_i)->getValue(config, val);
-        SetCameraFeature(level_map_[level].first,level_map_[level].second,val);
+        SetCameraFeature(level_map_[level].first, level_map_[level].second,
+                         val);
       }
-
     }
   }
 }
@@ -68,10 +68,10 @@ void MediaManager::CallBackDynamicReconfigure(
 MediaManager::MediaManager(const ros::NodeHandle &nh) noexcept
     : MEDIA_MNGR_TAG("[Media Manager]"),
       contexts_() {
-
   level_map_ = CreateMap();
 
-  dynamic_reconfigure::Server<provider_vision::Camera_Parameters_Config>::CallbackType f;
+  dynamic_reconfigure::Server<
+      provider_vision::Camera_Parameters_Config>::CallbackType f;
 
   f = boost::bind(&MediaManager::CallBackDynamicReconfigure, this, _1, _2);
   server_.setCallback(f);
@@ -128,7 +128,8 @@ bool MediaManager::OpenMedia(const std::string &media_name) {
     return context->OpenMedia(media_name);
   }
   ROS_ERROR_NAMED(MEDIA_MNGR_TAG, "The media is not part of any know context.");
-  return false;}
+  return false;
+}
 
 //------------------------------------------------------------------------------
 //
@@ -328,36 +329,35 @@ BaseCamera::Feature MediaManager::GetFeatureFromName(
   }
 }
 
-std::map<int,std::pair<std::string, std::string>> MediaManager::CreateMap() {
-  std::map<int,std::pair<std::string, std::string>> map_ =
-      boost::assign::map_list_of(101, std::make_pair("bottom_gige", "GAIN_AUTO"))
-          (102, std::make_pair("bottom_gige", "GAIN"))
-          (103, std::make_pair("bottom_gige", "GAMMA"))
-          (104, std::make_pair("bottom_gige", "EXPOSURE_AUTO"))
-          (105, std::make_pair("bottom_gige", "EXPOSURE"))
-          (106, std::make_pair("bottom_gige", "SATURATION"))
-          (107, std::make_pair("bottom_gige", "SHUTTER_AUTO"))
-          (108, std::make_pair("bottom_gige", "SHUTTER"))
-          (109, std::make_pair("bottom_gige", "FRAMERATE"))
-          (110, std::make_pair("bottom_gige", "WHITE_BALANCE_AUTO"))
-          (111, std::make_pair("bottom_gige", "WHITE_BALANCE_RED_VALUE"))
-          (112, std::make_pair("bottom_gige", "WHITE_BALANCE_BLUE_VALUE"))
-          (301, std::make_pair("front_guppy", "GAIN_AUTO"))
-          (302, std::make_pair("front_guppy", "GAIN"))
-          (303, std::make_pair("front_guppy", "GAMMA"))
-          (304, std::make_pair("front_guppy", "EXPOSURE_AUTO"))
-          (305, std::make_pair("front_guppy", "EXPOSURE"))
-          (306, std::make_pair("front_guppy", "SATURATION"))
-          (307, std::make_pair("front_guppy", "SHUTTER_AUTO"))
-          (308, std::make_pair("front_guppy", "SHUTTER"))
-          (309, std::make_pair("front_guppy", "FRAMERATE"))
-          (310, std::make_pair("front_guppy", "WHITE_BALANCE_AUTO"))
-          (311, std::make_pair("front_guppy", "WHITE_BALANCE_RED_VALUE"))
-          (312, std::make_pair("front_guppy", "WHITE_BALANCE_BLUE_VALUE"));
+std::map<int, std::pair<std::string, std::string>> MediaManager::CreateMap() {
+  std::map<int, std::pair<std::string, std::string>> map_ =
+      boost::assign::map_list_of(101,
+                                 std::make_pair("bottom_gige", "GAIN_AUTO"))(
+          102, std::make_pair("bottom_gige", "GAIN"))(
+          103, std::make_pair("bottom_gige", "GAMMA"))(
+          104, std::make_pair("bottom_gige", "EXPOSURE_AUTO"))(
+          105, std::make_pair("bottom_gige", "EXPOSURE"))(
+          106, std::make_pair("bottom_gige", "SATURATION"))(
+          107, std::make_pair("bottom_gige", "SHUTTER_AUTO"))(
+          108, std::make_pair("bottom_gige", "SHUTTER"))(
+          109, std::make_pair("bottom_gige", "FRAMERATE"))(
+          110, std::make_pair("bottom_gige", "WHITE_BALANCE_AUTO"))(
+          111, std::make_pair("bottom_gige", "WHITE_BALANCE_RED_VALUE"))(
+          112, std::make_pair("bottom_gige", "WHITE_BALANCE_BLUE_VALUE"))(
+          301, std::make_pair("front_guppy", "GAIN_AUTO"))(
+          302, std::make_pair("front_guppy", "GAIN"))(
+          303, std::make_pair("front_guppy", "GAMMA"))(
+          304, std::make_pair("front_guppy", "EXPOSURE_AUTO"))(
+          305, std::make_pair("front_guppy", "EXPOSURE"))(
+          306, std::make_pair("front_guppy", "SATURATION"))(
+          307, std::make_pair("front_guppy", "SHUTTER_AUTO"))(
+          308, std::make_pair("front_guppy", "SHUTTER"))(
+          309, std::make_pair("front_guppy", "FRAMERATE"))(
+          310, std::make_pair("front_guppy", "WHITE_BALANCE_AUTO"))(
+          311, std::make_pair("front_guppy", "WHITE_BALANCE_RED_VALUE"))(
+          312, std::make_pair("front_guppy", "WHITE_BALANCE_BLUE_VALUE"));
 
-  return  map_;
+  return map_;
 }
-
-
 
 }  // namespace provider_vision
