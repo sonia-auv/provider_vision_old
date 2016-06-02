@@ -142,6 +142,8 @@ class MediaManager {
   void CallBackDynamicReconfigure(
       provider_vision::Camera_Parameters_Config &config, uint32_t level);
 
+  std::map<int,std::pair<std::string, std::string>> CreateMap();
+
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
@@ -153,6 +155,8 @@ class MediaManager {
 
   dynamic_reconfigure::Server<provider_vision::Camera_Parameters_Config>
       server_;
+
+  std::map<int,std::pair<std::string, std::string>> level_map_;
 };
 
 //-----------------------------------------------------------------------------
@@ -197,9 +201,6 @@ inline bool MediaManager::IsMediaStreaming(const std::string &name) {
   }
   return false;
 }
-
-//-------------------------------------------------------------------------
-//
 
 }  // namespace provider_vision
 
