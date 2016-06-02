@@ -28,17 +28,6 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 
 set(provider_vision_SRC_DIR "src")
 
-
-#============================================================================
-# D Y N A M I C  R E C O N F I G U R E
-find_package(catkin REQUIRED dynamic_reconfigure)
-generate_dynamic_reconfigure_options(
-        cfg/camera_dynamic_reconf.cfg
-)
-include_directories(${dynamic_reconfigure_PACKAGE_PATH}/cmake/cfgbuild.cmake)
-#add_executable(dynamic_reconfigure_node src/dynamic_reconfigure_node.cpp)
-
-
 #===============================================================================
 # C A T K I N   C O N F I G U R A T I O N
 
@@ -51,7 +40,12 @@ find_package(catkin REQUIRED COMPONENTS
     roslaunch
     lib_atlas
     sonia_msgs
+    dynamic_reconfigure
     )
+
+generate_dynamic_reconfigure_options(
+        cfg/camera_dynamic_reconf.cfg
+)
 
 find_package(DC1394 REQUIRED)
 find_package(OpenCV REQUIRED)

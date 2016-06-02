@@ -33,6 +33,11 @@
 
 namespace provider_vision {
 
+void MediaManager::CallBackDynamicReconfigure(
+    provider_vision::Camera_Parameters_Config &config, uint32_t level) {
+  ROS_INFO("PARAM: %i", level);
+}
+
 //==============================================================================
 // C / D T O R S   S E C T I O N
 
@@ -41,6 +46,11 @@ namespace provider_vision {
 MediaManager::MediaManager(const ros::NodeHandle &nh) noexcept
     : MEDIA_MNGR_TAG("[Media Manager]"),
       contexts_() {
+  dynamic_reconfigure::Server<
+      provider_vision::Camera_Parameters_Config>::CallbackType f;
+
+  f = boost::bind(&MediaManager::CallBackDynamicReconfigure, this, _1, _2);
+  server_.setCallback(f);
   // Creating the Webcam context
   auto active_webcam = false;
   nh_.getParam("/provider_vision/active_webcam", active_webcam);

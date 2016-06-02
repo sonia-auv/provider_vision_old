@@ -28,6 +28,8 @@
 #include "provider_vision/media/camera/base_camera.h"
 #include "provider_vision/media/context/base_context.h"
 #include "provider_vision/media/media_streamer.h"
+#include <dynamic_reconfigure/server.h>
+#include "../../../cfg/cpp/provider_vision/Camera_Parameters_Config.h"
 
 namespace provider_vision {
 
@@ -137,6 +139,9 @@ class MediaManager {
 
   void RemoveMediaStreamer(const std::string &name);
 
+  void CallBackDynamicReconfigure(
+      provider_vision::Camera_Parameters_Config &config, uint32_t level);
+
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
@@ -145,6 +150,9 @@ class MediaManager {
   std::vector<BaseContext::Ptr> contexts_;
 
   std::vector<MediaStreamer::Ptr> media_streamers_;
+
+  dynamic_reconfigure::Server<provider_vision::Camera_Parameters_Config>
+      server_;
 };
 
 //-----------------------------------------------------------------------------
@@ -189,6 +197,9 @@ inline bool MediaManager::IsMediaStreaming(const std::string &name) {
   }
   return false;
 }
+
+//-------------------------------------------------------------------------
+//
 
 }  // namespace provider_vision
 
