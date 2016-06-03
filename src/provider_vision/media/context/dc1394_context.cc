@@ -32,9 +32,7 @@ namespace provider_vision {
 //
 DC1394Context::DC1394Context(
     const std::vector<CameraConfiguration> &configurations) noexcept
-    : BaseContext(),
-      DRIVER_TAG("[DC1394 Driver]"),
-      driver_(nullptr) {
+    : BaseContext(), DRIVER_TAG("[DC1394 Driver]"), driver_(nullptr) {
   InitContext(configurations);
 }
 

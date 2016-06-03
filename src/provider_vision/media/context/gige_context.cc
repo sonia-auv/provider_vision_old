@@ -38,8 +38,7 @@ namespace provider_vision {
 //
 GigeContext::GigeContext(
     const std::vector<CameraConfiguration> &configurations) noexcept
-    : BaseContext(),
-      DRIVER_TAG("[GigE Driver]") {
+    : BaseContext(), DRIVER_TAG("[GigE Driver]") {
   InitContext(configurations);
 }
 

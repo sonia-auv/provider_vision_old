@@ -32,8 +32,7 @@ const std::string WebcamContext::WEBCAM_NAME("Webcam");
 //------------------------------------------------------------------------------
 //
 WebcamContext::WebcamContext() noexcept
-    : BaseContext(),
-      webcam_(std::make_shared<WebcamCamera>()) {}
+    : BaseContext(), webcam_(std::make_shared<WebcamCamera>()) {}
 
 //------------------------------------------------------------------------------
 //

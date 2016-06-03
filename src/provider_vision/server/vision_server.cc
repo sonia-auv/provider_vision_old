@@ -125,8 +125,7 @@ bool VisionServer::CallbackExecutionCMD(execute_cmd::Request &rqst,
       rep.response = detection_task_mgr_.StartDetectionTask(media, filterchain,
                                                             rqst.node_name);
       ROS_INFO("Starting topic: %s", rep.response.c_str());
-    }
-    catch (const std::exception &e) {
+    } catch (const std::exception &e) {
       ROS_ERROR("Starting execution error: %s", e.what());
       rep.response = "";
       return false;
@@ -160,8 +159,7 @@ bool VisionServer::CallbackExecutionCMD(execute_cmd::Request &rqst,
       filterchain_mgr_.StopFilterchain(fc);
 
       detection_task_mgr_.StopDetectionTask(rqst.node_name);
-    }
-    catch (const std::exception &e) {
+    } catch (const std::exception &e) {
       ROS_ERROR("Closing execution error: %s", e.what());
       return false;
     }

@@ -22,7 +22,6 @@
 #include <ros/ros.h>
 #include "provider_vision/server/vision_server.h"
 
-
 //------------------------------------------------------------------------------
 //
 int main(int argc, char **argv) {
@@ -30,7 +29,6 @@ int main(int argc, char **argv) {
   ros::NodeHandle nh("~");
 
   provider_vision::VisionServer pv(nh);
-
 
   while (ros::ok()) {
     ros::spinOnce();

@@ -21,15 +21,15 @@
 #ifndef PROVIDER_VISION_SERVER_MEDIA_MANAGER_H_
 #define PROVIDER_VISION_SERVER_MEDIA_MANAGER_H_
 
+#include <dynamic_reconfigure/server.h>
 #include <provider_vision/media/camera/base_media.h>
 #include <memory>
 #include <string>
 #include <vector>
+#include "../cfg/cpp/provider_vision/Camera_Parameters_Config.h"
 #include "provider_vision/media/camera/base_camera.h"
 #include "provider_vision/media/context/base_context.h"
 #include "provider_vision/media/media_streamer.h"
-#include <dynamic_reconfigure/server.h>
-#include "../../../cfg/cpp/provider_vision/Camera_Parameters_Config.h"
 
 namespace provider_vision {
 
@@ -39,6 +39,7 @@ class MediaManager {
   // T Y P E D E F   A N D   E N U M
 
   using Ptr = std::shared_ptr<MediaManager>;
+  using FeatureMapType = std::map<int, std::pair<std::string, std::string>>;
   const char *MEDIA_MNGR_TAG;
 
   //==========================================================================
@@ -142,7 +143,7 @@ class MediaManager {
   void CallBackDynamicReconfigure(
       provider_vision::Camera_Parameters_Config &config, uint32_t level);
 
-  std::map<int, std::pair<std::string, std::string>> CreateMap();
+  void CreateMap();
 
   //==========================================================================
   // P R I V A T E   M E M B E R S
@@ -156,7 +157,7 @@ class MediaManager {
   dynamic_reconfigure::Server<provider_vision::Camera_Parameters_Config>
       server_;
 
-  std::map<int, std::pair<std::string, std::string>> level_map_;
+  FeatureMapType level_map_;
 };
 
 //-----------------------------------------------------------------------------

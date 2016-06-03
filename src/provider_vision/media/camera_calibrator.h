@@ -24,14 +24,14 @@
 #include <lib_atlas/macros.h>
 #include <lib_atlas/maths/pid.h>
 #include <lib_atlas/ros/configuration_parser.h>
-#include <ros/node_handle.h>
 #include <opencv/cv.h>
+#include <ros/node_handle.h>
 #include <stdlib.h>
 #include <map>
 #include <memory>
+#include <mutex>
 #include <string>
 #include <vector>
-#include <mutex>
 
 namespace provider_vision {
 

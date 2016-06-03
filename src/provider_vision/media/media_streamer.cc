@@ -52,8 +52,7 @@ bool MediaStreamer::StartStreaming() {
   ROS_INFO_NAMED(LOOP_TAG, "Starting streaming on camera");
   try {
     Start();
-  }
-  catch (std::exception &e) {
+  } catch (std::exception &e) {
     ROS_ERROR_NAMED(LOOP_TAG, "Error while starting the thread: %s", e.what());
     return false;
   };
@@ -86,8 +85,7 @@ bool MediaStreamer::StopStreaming() {
   }
   try {
     Stop();
-  }
-  catch (std::exception &e) {
+  } catch (std::exception &e) {
     ROS_ERROR_NAMED(LOOP_TAG, "Error while stopping thread: %s", e.what());
     result = false;
   };
@@ -97,7 +95,6 @@ bool MediaStreamer::StopStreaming() {
 //------------------------------------------------------------------------------
 //
 void MediaStreamer::Run() {
-
   // Starting a timer for timing the acquisition of the image from the media.
   atlas::MilliTimer timer;
   timer.Start();
@@ -121,8 +118,7 @@ void MediaStreamer::Run() {
               "Cannot access the image from the media. Reached timeout.");
           try {
             Stop();
-          }
-          catch (std::exception &e) {
+          } catch (std::exception &e) {
             ROS_ERROR_NAMED(LOOP_TAG, "Error while stopping thread: %s",
                             e.what());
           };

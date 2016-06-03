@@ -152,8 +152,7 @@ void Filterchain::ExecuteFilterChain(cv::Mat &image) {
 
         index++;
       }
-    }
-    catch (cv::Exception &e) {
+    } catch (cv::Exception &e) {
       auto filterchainID = std::string{"[FILTERCHAIN " + name_ + "]"};
       ROS_ERROR_NAMED(filterchainID.c_str(), "Error in image processing: %s",
                       e.what());

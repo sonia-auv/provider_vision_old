@@ -30,35 +30,8 @@
 #include <ros/console.h>
 #include "provider_vision/media/context/file_context.h"
 #include "provider_vision/media/context/webcam_context.h"
-#include <boost/assign.hpp>
 
 namespace provider_vision {
-
-void MediaManager::CallBackDynamicReconfigure(
-    provider_vision::Camera_Parameters_Config &config, uint32_t level) {
-  ROS_INFO("PARAM: %i", level);
-
-  // In the groupDescription, there is a abstrat_parameters member
-  // that contain the AbstractParamDescriptionConstPtr class
-  // this class contains the level, the value of the feature, the name of the
-  // feature,
-  // etc.
-
-  for (const auto &desc : config.__getGroupDescriptions__()) {
-    auto begin = desc->abstract_parameters.begin();
-    auto end = desc->abstract_parameters.end();
-
-    // The abstract parameter must
-    for (auto _i = begin; _i != end; ++_i) {
-      boost::any val;
-      if ((*_i)->level == level) {
-        (*_i)->getValue(config, val);
-        SetCameraFeature(level_map_[level].first, level_map_[level].second,
-                         val);
-      }
-    }
-  }
-}
 
 //==============================================================================
 // C / D T O R S   S E C T I O N
@@ -66,15 +39,12 @@ void MediaManager::CallBackDynamicReconfigure(
 //------------------------------------------------------------------------------
 //
 MediaManager::MediaManager(const ros::NodeHandle &nh) noexcept
-    : MEDIA_MNGR_TAG("[Media Manager]"),
-      contexts_() {
-  level_map_ = CreateMap();
+    : MEDIA_MNGR_TAG("[Media Manager]"), contexts_() {
+  CreateMap();
 
-  dynamic_reconfigure::Server<
-      provider_vision::Camera_Parameters_Config>::CallbackType f;
+  server_.setCallback(
+      boost::bind(&MediaManager::CallBackDynamicReconfigure, this, _1, _2));
 
-  f = boost::bind(&MediaManager::CallBackDynamicReconfigure, this, _1, _2);
-  server_.setCallback(f);
   // Creating the Webcam context
   auto active_webcam = false;
   nh_.getParam("/provider_vision/active_webcam", active_webcam);
@@ -329,35 +299,61 @@ BaseCamera::Feature MediaManager::GetFeatureFromName(
   }
 }
 
-std::map<int, std::pair<std::string, std::string>> MediaManager::CreateMap() {
-  std::map<int, std::pair<std::string, std::string>> map_ =
-      boost::assign::map_list_of(101,
-                                 std::make_pair("bottom_gige", "GAIN_AUTO"))(
-          102, std::make_pair("bottom_gige", "GAIN"))(
-          103, std::make_pair("bottom_gige", "GAMMA"))(
-          104, std::make_pair("bottom_gige", "EXPOSURE_AUTO"))(
-          105, std::make_pair("bottom_gige", "EXPOSURE"))(
-          106, std::make_pair("bottom_gige", "SATURATION"))(
-          107, std::make_pair("bottom_gige", "SHUTTER_AUTO"))(
-          108, std::make_pair("bottom_gige", "SHUTTER"))(
-          109, std::make_pair("bottom_gige", "FRAMERATE"))(
-          110, std::make_pair("bottom_gige", "WHITE_BALANCE_AUTO"))(
-          111, std::make_pair("bottom_gige", "WHITE_BALANCE_RED_VALUE"))(
-          112, std::make_pair("bottom_gige", "WHITE_BALANCE_BLUE_VALUE"))(
-          301, std::make_pair("front_guppy", "GAIN_AUTO"))(
-          302, std::make_pair("front_guppy", "GAIN"))(
-          303, std::make_pair("front_guppy", "GAMMA"))(
-          304, std::make_pair("front_guppy", "EXPOSURE_AUTO"))(
-          305, std::make_pair("front_guppy", "EXPOSURE"))(
-          306, std::make_pair("front_guppy", "SATURATION"))(
-          307, std::make_pair("front_guppy", "SHUTTER_AUTO"))(
-          308, std::make_pair("front_guppy", "SHUTTER"))(
-          309, std::make_pair("front_guppy", "FRAMERATE"))(
-          310, std::make_pair("front_guppy", "WHITE_BALANCE_AUTO"))(
-          311, std::make_pair("front_guppy", "WHITE_BALANCE_RED_VALUE"))(
-          312, std::make_pair("front_guppy", "WHITE_BALANCE_BLUE_VALUE"));
+//------------------------------------------------------------------------------
+//
+void MediaManager::CreateMap() {
+  level_map_[101] = std::make_pair("bottom_gige", "GAIN_AUTO");
+  level_map_[102] = std::make_pair("bottom_gige", "GAIN");
+  level_map_[103] = std::make_pair("bottom_gige", "GAMMA");
+  level_map_[104] = std::make_pair("bottom_gige", "EXPOSURE_AUTO");
+  level_map_[105] = std::make_pair("bottom_gige", "EXPOSURE");
+  level_map_[106] = std::make_pair("bottom_gige", "SATURATION");
+  level_map_[107] = std::make_pair("bottom_gige", "SHUTTER_AUTO");
+  level_map_[108] = std::make_pair("bottom_gige", "SHUTTER");
+  level_map_[109] = std::make_pair("bottom_gige", "FRAMERATE");
+  level_map_[110] = std::make_pair("bottom_gige", "WHITE_BALANCE_AUTO");
+  level_map_[111] = std::make_pair("bottom_gige", "WHITE_BALANCE_RED_VALUE");
+  level_map_[112] = std::make_pair("bottom_gige", "WHITE_BALANCE_BLUE_VALUE");
+  level_map_[301] = std::make_pair("front_guppy", "GAIN_AUTO");
+  level_map_[302] = std::make_pair("front_guppy", "GAIN");
+  level_map_[303] = std::make_pair("front_guppy", "GAMMA");
+  level_map_[304] = std::make_pair("front_guppy", "EXPOSURE_AUTO");
+  level_map_[305] = std::make_pair("front_guppy", "EXPOSURE");
+  level_map_[306] = std::make_pair("front_guppy", "SATURATION");
+  level_map_[307] = std::make_pair("front_guppy", "SHUTTER_AUTO");
+  level_map_[308] = std::make_pair("front_guppy", "SHUTTER");
+  level_map_[309] = std::make_pair("front_guppy", "FRAMERATE");
+  level_map_[310] = std::make_pair("front_guppy", "WHITE_BALANCE_AUTO");
+  level_map_[311] = std::make_pair("front_guppy", "WHITE_BALANCE_RED_VALUE");
+  level_map_[312] = std::make_pair("front_guppy", "WHITE_BALANCE_BLUE_VALUE");
+}
 
-  return map_;
+//------------------------------------------------------------------------------
+//
+void MediaManager::CallBackDynamicReconfigure(
+    provider_vision::Camera_Parameters_Config &config, uint32_t level) {
+  ROS_INFO("PARAM: %i", level);
+
+  // In the groupDescription, there is a abstrat_parameters member
+  // that contain the AbstractParamDescriptionConstPtr class
+  // this class contains the level, the value of the feature, the name of the
+  // feature,
+  // etc.
+
+  for (const auto &desc : config.__getGroupDescriptions__()) {
+    auto begin = desc->abstract_parameters.begin();
+    auto end = desc->abstract_parameters.end();
+
+    // The abstract parameter must
+    for (auto _i = begin; _i != end; ++_i) {
+      boost::any val;
+      if ((*_i)->level == level) {
+        (*_i)->getValue(config, val);
+        SetCameraFeature(level_map_[level].first, level_map_[level].second,
+                         val);
+      }
+    }
+  }
 }
 
 }  // namespace provider_vision

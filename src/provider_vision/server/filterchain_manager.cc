@@ -109,8 +109,8 @@ Filterchain::Ptr FilterchainManager::InstanciateFilterchain(
 
 //------------------------------------------------------------------------------
 //
-const std::vector<Filterchain::Ptr> &
-FilterchainManager::InstanciateAllFilterchains() {
+const std::vector<Filterchain::Ptr>
+    &FilterchainManager::InstanciateAllFilterchains() {
   for (const auto &filterchain : GetAllFilterchainName()) {
     InstanciateFilterchain(filterchain);
   }
@@ -135,8 +135,8 @@ std::string FilterchainManager::GetFilterchainPath(
 
 //------------------------------------------------------------------------------
 //
-const std::vector<Filterchain::Ptr> &
-FilterchainManager::GetRunningFilterchains() const {
+const std::vector<Filterchain::Ptr>
+    &FilterchainManager::GetRunningFilterchains() const {
   return running_filterchains_;
 }
 

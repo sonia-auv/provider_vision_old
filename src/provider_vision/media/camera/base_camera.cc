@@ -33,8 +33,7 @@ inline bool CastToBool(const boost::any &op) {
   // The type will be cast at runtime instead.
   try {
     return boost::any_cast<bool>(op);
-  }
-  catch (const boost::bad_any_cast &) {
+  } catch (const boost::bad_any_cast &) {
     throw std::runtime_error("The value for this feature must be a boolean");
   }
 }
@@ -44,8 +43,7 @@ inline double CastToDouble(const boost::any &op) {
   // The type will be cast at runtime instead.
   try {
     return boost::any_cast<double>(op);
-  }
-  catch (const boost::bad_any_cast &) {
+  } catch (const boost::bad_any_cast &) {
     throw std::runtime_error("The value for this feature must be a double");
   }
 }
@@ -168,7 +166,6 @@ bool BaseCamera::GetFeature(const Feature &feat, boost::any &value) const {
   bool bool_val;
   double dbl_val;
   switch (feat) {
-
     case Feature::SHUTTER_VALUE:
       result = GetShutterValue(dbl_val);
       value = dbl_val;
