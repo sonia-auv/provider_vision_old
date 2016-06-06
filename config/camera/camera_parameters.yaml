@@ -12,9 +12,17 @@
 /provider_vision/camera_parameters/front_guppy/shutter: 32.0
 /provider_vision/camera_parameters/front_guppy/gamma: 0
 /provider_vision/camera_parameters/front_guppy/exposure: 50
+/provider_vision/camera_parameters/front_guppy/saturation: 0
 /provider_vision/camera_parameters/front_guppy/white_balance_red: 276.0
 /provider_vision/camera_parameters/front_guppy/white_balance_blue: 568.0
-/provider_vision/camera_parameters/front_guppy/saturation: 0
+/provider_vision/camera_parameters/front_guppy/width: 0
+/provider_vision/camera_parameters/front_guppy/height: 0
+/provider_vision/camera_parameters/front_guppy/x_offset: 0
+/provider_vision/camera_parameters/front_guppy/y_offset: 0
+/provider_vision/camera_parameters/front_guppy/format: 0
+/provider_vision/camera_parameters/front_guppy/auto_brightness: true
+/provider_vision/camera_parameters/front_guppy/auto_brightness_target: 100
+/provider_vision/camera_parameters/front_guppy/auto_brightness_target_variation: 16
 
 # Parameters for the Bottom Guppy Camera
 /provider_vision/camera_parameters/bottom_guppy/name: "bottom_guppy"
@@ -27,9 +35,18 @@
 /provider_vision/camera_parameters/bottom_guppy/shutter: 32.0
 /provider_vision/camera_parameters/bottom_guppy/gamma: 0
 /provider_vision/camera_parameters/bottom_guppy/exposure: 95
+/provider_vision/camera_parameters/bottom_guppy/exposure_manual: true
 /provider_vision/camera_parameters/bottom_guppy/saturation: 0
 /provider_vision/camera_parameters/bottom_guppy/white_balance_red: 568.0
 /provider_vision/camera_parameters/bottom_guppy/white_balance_blue: 381.0
+/provider_vision/camera_parameters/bottom_guppy/width: 0
+/provider_vision/camera_parameters/bottom_guppy/height: 0
+/provider_vision/camera_parameters/bottom_guppy/x_offset: 0
+/provider_vision/camera_parameters/bottom_guppy/y_offset: 0
+/provider_vision/camera_parameters/bottom_guppy/format: 0
+/provider_vision/camera_parameters/bottom_guppy/auto_brightness: true
+/provider_vision/camera_parameters/bottom_guppy/auto_brightness_target: 100
+/provider_vision/camera_parameters/bottom_guppy/auto_brightness_target_variation: 16
 
 
 # Parameters for the Bottom GigE Camera
@@ -37,13 +54,19 @@
 /provider_vision/camera_parameters/bottom_gige/guid: "1230819763"
 /provider_vision/camera_parameters/bottom_gige/framerate: 15
 /provider_vision/camera_parameters/bottom_gige/auto_brightness: true
+/provider_vision/camera_parameters/bottom_gige/shutter_manual: false
+/provider_vision/camera_parameters/bottom_gige/shutter: 32.0
+/provider_vision/camera_parameters/bottom_gige/gamma: 0
 /provider_vision/camera_parameters/bottom_gige/auto_brightness_target: 100
 /provider_vision/camera_parameters/bottom_gige/auto_brightness_target_variation: 16
 /provider_vision/camera_parameters/bottom_gige/gain_manual: false
 /provider_vision/camera_parameters/bottom_gige/gain: 1
+/provider_vision/camera_parameters/bottom_gige/saturation: 0
 /provider_vision/camera_parameters/bottom_gige/exposure: 1000
 /provider_vision/camera_parameters/bottom_gige/exposure_manual: false
 /provider_vision/camera_parameters/bottom_gige/white_balance_manual: true
+/provider_vision/camera_parameters/bottom_gige/white_balance_red: 568.0
+/provider_vision/camera_parameters/bottom_gige/white_balance_blue: 381.0
 /provider_vision/camera_parameters/bottom_gige/width: 968
 /provider_vision/camera_parameters/bottom_gige/height: 608
 /provider_vision/camera_parameters/bottom_gige/x_offset: 484

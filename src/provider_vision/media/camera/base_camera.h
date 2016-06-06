@@ -134,7 +134,7 @@ class BaseCamera : public BaseMedia, protected CameraConfiguration {
 
   ros::Publisher feature_pub_;
 
-  CameraCalibrator calibrator_;
+  // CameraCalibrator calibrator_;
 
   CameraUndistordMatrices undistord_matrix_;
 

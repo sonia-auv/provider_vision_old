@@ -197,10 +197,10 @@ bool DC1394Camera::NextImage(cv::Mat &img) {
 
   //++calibrate_count_;
 
-  if (calibrate_count_ == 10) {
-    calibrator_.Calibrate(this, img);
-    calibrate_count_ = 0;
-  }
+  //  if (calibrate_count_ == 10) {
+  //    calibrator_.Calibrate(this, img);
+  //    calibrate_count_ = 0;
+  //  }
   return true;
 }
 

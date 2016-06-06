@@ -60,8 +60,9 @@ const float BaseCamera::INVALID_FLOAT = FLT_MIN;
 BaseCamera::BaseCamera(const CameraConfiguration &configuration)
     : BaseMedia(configuration.name_),
       CameraConfiguration(configuration),
-      feature_pub_(),
-      calibrator_(nh_, CameraConfiguration::name_) {
+      feature_pub_()
+// calibrator_(nh_, CameraConfiguration::name_)
+{
   undistord_matrix_.InitMatrices(undistortion_matrice_path_);
 
   std::string base_node_name{kRosNodeName};
@@ -100,8 +101,8 @@ void BaseCamera::PublishCameraFeatures() const {
   GetSaturationValue(tmp_val);
   msg.saturation_value = tmp_val;
 
-  msg.luminance_msv = calibrator_.GetLimunanceMSV();
-  msg.saturation_msv = calibrator_.GetSaturationMSV();
+  //  msg.luminance_msv = calibrator_.GetLimunanceMSV();
+  //  msg.saturation_msv = calibrator_.GetSaturationMSV();
 
   feature_pub_.publish(msg);
 }
