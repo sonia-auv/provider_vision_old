@@ -39,7 +39,8 @@ namespace provider_vision {
 //------------------------------------------------------------------------------
 //
 MediaManager::MediaManager(const ros::NodeHandle &nh) noexcept
-    : MEDIA_MNGR_TAG("[Media Manager]"), contexts_() {
+    : MEDIA_MNGR_TAG("[Media Manager]"),
+      contexts_() {
   CreateMap();
 
   server_.setCallback(
@@ -129,7 +130,7 @@ MediaStreamer::Ptr MediaManager::StartStreamingMedia(
       return nullptr;
     }
     // The context set the media to stream
-    if (!context->StartStreamingMedia(media_name)) {
+    if (!context->OpenMedia(media_name)) {
       ROS_ERROR_NAMED(MEDIA_MNGR_TAG, "The media cannot start streaming.");
       return nullptr;
     }
@@ -326,6 +327,18 @@ void MediaManager::CreateMap() {
   level_map_[310] = std::make_pair("front_guppy", "WHITE_BALANCE_AUTO");
   level_map_[311] = std::make_pair("front_guppy", "WHITE_BALANCE_RED_VALUE");
   level_map_[312] = std::make_pair("front_guppy", "WHITE_BALANCE_BLUE_VALUE");
+  level_map_[401] = std::make_pair("bottom_guppy", "GAIN_AUTO");
+  level_map_[402] = std::make_pair("bottom_guppy", "GAIN");
+  level_map_[403] = std::make_pair("bottom_guppy", "GAMMA");
+  level_map_[404] = std::make_pair("bottom_guppy", "EXPOSURE_AUTO");
+  level_map_[405] = std::make_pair("bottom_guppy", "EXPOSURE");
+  level_map_[406] = std::make_pair("bottom_guppy", "SATURATION");
+  level_map_[407] = std::make_pair("bottom_guppy", "SHUTTER_AUTO");
+  level_map_[408] = std::make_pair("bottom_guppy", "SHUTTER");
+  level_map_[409] = std::make_pair("bottom_guppy", "FRAMERATE");
+  level_map_[410] = std::make_pair("bottom_guppy", "WHITE_BALANCE_AUTO");
+  level_map_[411] = std::make_pair("bottom_guppy", "WHITE_BALANCE_RED_VALUE");
+  level_map_[412] = std::make_pair("bottom_guppy", "WHITE_BALANCE_BLUE_VALUE");
 }
 
 //------------------------------------------------------------------------------
