@@ -154,11 +154,12 @@ bool VisionServer::CallbackExecutionCMD(execute_cmd::Request &rqst,
 
       std::string media_name = media_streamer->GetMediaName();
 
-      media_mgr_.StopStreamingMedia(media_name);
+      detection_task_mgr_.StopDetectionTask(rqst.node_name);
 
       filterchain_mgr_.StopFilterchain(fc);
 
-      detection_task_mgr_.StopDetectionTask(rqst.node_name);
+      media_mgr_.StopStreamingMedia(media_name);
+
     } catch (const std::exception &e) {
       ROS_ERROR("Closing execution error: %s", e.what());
       return false;
