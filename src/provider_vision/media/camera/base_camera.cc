@@ -148,6 +148,15 @@ bool BaseCamera::SetFeature(const Feature &feat, const boost::any &value) {
     case Feature::EXPOSURE_MODE:
       result = SetExposureMode(CastToBool(value));
       break;
+    case Feature::AUTOBRIGHTNESS_AUTO:
+      result = SetAutoBrightnessMode(CastToBool(value));
+      break;
+    case Feature::AUTOBRIGHTNESS_TARGET:
+      result = SetAutoBrightnessTarget(CastToDouble(value));
+      break;
+    case Feature::AUTOBRIGHTNESS_VARIATION:
+      result = SetAutoBrightnessMode(CastToDouble(value));
+      break;
     default:
       ROS_ERROR("Invalid feature given.");
       result = false;
@@ -156,7 +165,7 @@ bool BaseCamera::SetFeature(const Feature &feat, const boost::any &value) {
     ROS_ERROR("Could not set the feature for the camera: %s",
               media_name_.c_str());
   }
-  PublishCameraFeatures();
+  // PublishCameraFeatures();
   return result;
 }
 
@@ -214,6 +223,18 @@ bool BaseCamera::GetFeature(const Feature &feat, boost::any &value) const {
     case Feature::EXPOSURE_MODE:
       result = GetExposureMode(bool_val);
       value = bool_val;
+      break;
+    case Feature::AUTOBRIGHTNESS_AUTO:
+      result = GetAutoBrightnessMode(dbl_val);
+      value = dbl_val;
+      break;
+    case Feature::AUTOBRIGHTNESS_TARGET:
+      result = GetAutoBrightnessTarget(dbl_val);
+      value = dbl_val;
+      break;
+    case Feature::AUTOBRIGHTNESS_VARIATION:
+      result = GetAutoBrightnessTargetVariation(dbl_val);
+      value = dbl_val;
       break;
     default:
       ROS_ERROR("Feature invalid");

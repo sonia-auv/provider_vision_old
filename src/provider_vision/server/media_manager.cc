@@ -294,6 +294,12 @@ BaseCamera::Feature MediaManager::GetFeatureFromName(
     return BaseCamera::Feature::GAMMA_VALUE;
   } else if (name == "SATURATION") {
     return BaseCamera::Feature::SATURATION_VALUE;
+  } else if (name == "AUTOBRIGHTNESS_AUTO") {
+    return BaseCamera::Feature::AUTOBRIGHTNESS_AUTO;
+  } else if (name == "AUTOBRIGHTNESS_TARGET") {
+    return BaseCamera::Feature::AUTOBRIGHTNESS_TARGET;
+  } else if (name == "AUTOBRIGHTNESS_VARIATION") {
+    return BaseCamera::Feature::AUTOBRIGHTNESS_VARIATION;
   } else {
     ROS_ERROR_NAMED(MEDIA_MNGR_TAG, "No feature with this name");
     return BaseCamera::Feature::INVALID_FEATURE;
@@ -315,6 +321,9 @@ void MediaManager::CreateMap() {
   level_map_[110] = std::make_pair("bottom_gige", "WHITE_BALANCE_AUTO");
   level_map_[111] = std::make_pair("bottom_gige", "WHITE_BALANCE_RED_VALUE");
   level_map_[112] = std::make_pair("bottom_gige", "WHITE_BALANCE_BLUE_VALUE");
+  level_map_[113] = std::make_pair("bottom_gige", "AUTOBRIGHTNESS_AUTO");
+  level_map_[114] = std::make_pair("bottom_gige", "AUTOBRIGHTNESS_TARGET");
+  level_map_[115] = std::make_pair("bottom_gige", "AUTOBRIGHTNESS_VARIATION");
   level_map_[301] = std::make_pair("front_guppy", "GAIN_AUTO");
   level_map_[302] = std::make_pair("front_guppy", "GAIN");
   level_map_[303] = std::make_pair("front_guppy", "GAMMA");

@@ -109,11 +109,15 @@ class GigeCamera : public BaseCamera {
   /// This will be used internally only, mainly for calibration purpose.
   /// If we wished to use these feature widely, we must define them
   /// on the BaseCamera abstract class.
-  bool GetWhiteBalanceRatio(double &value) const;
+  bool GetWhiteBalanceRatio(double &value) const override;
   bool SetWhiteBalanceRatio(double value);
-  bool SetAutoBrightnessMode(int value);
-  bool SetAutoBrightnessTarget(int value);
-  bool SetAutoBrightnessTargetVariation(int value);
+  bool SetAutoBrightnessMode(double value);
+
+  bool SetAutoBrightnessTarget(double value) override;
+  bool SetAutoBrightnessTargetVariation(double value) override;
+  bool GetAutoBrightnessTargetVariation(double &value) const override;
+  bool GetAutoBrightnessMode(double &value) const override;
+  bool GetAutoBrightnessTarget(double &value) const override;
 
  private:
   //==========================================================================

@@ -116,6 +116,18 @@ class DC1394Camera : public BaseCamera {
   bool GetWhiteBalanceRed(double &value) const override;
   bool GetWhiteBalanceBlue(double &value) const override;
 
+  bool GetWhiteBalanceRatio(double &value) const override { return true; };
+  bool SetWhiteBalanceRatio(double value) { return true; };
+  bool SetAutoBrightnessMode(double value) { return true; };
+
+  bool SetAutoBrightnessTarget(double value) override { return true; }
+  bool SetAutoBrightnessTargetVariation(double value) override { return true; }
+  bool GetAutoBrightnessTargetVariation(double &value) const override {
+    return true;
+  }
+  bool GetAutoBrightnessMode(double &value) const override { return true; }
+  bool GetAutoBrightnessTarget(double &value) const override { return true; }
+
  private:
   //==========================================================================
   // P R I V A T E   M E T H O D S
