@@ -67,10 +67,10 @@
 /provider_vision/camera_parameters/bottom_gige/white_balance_manual: true
 /provider_vision/camera_parameters/bottom_gige/white_balance_red: 568.0
 /provider_vision/camera_parameters/bottom_gige/white_balance_blue: 381.0
-/provider_vision/camera_parameters/bottom_gige/width: 968
-/provider_vision/camera_parameters/bottom_gige/height: 608
-/provider_vision/camera_parameters/bottom_gige/x_offset: 484
-/provider_vision/camera_parameters/bottom_gige/y_offset: 304
+/provider_vision/camera_parameters/bottom_gige/width: 1088
+/provider_vision/camera_parameters/bottom_gige/height: 780
+/provider_vision/camera_parameters/bottom_gige/x_offset: 140
+/provider_vision/camera_parameters/bottom_gige/y_offset: 130
 /provider_vision/camera_parameters/bottom_gige/format: 17301513
 
 # Parameters for the all other camera (default configurations)
