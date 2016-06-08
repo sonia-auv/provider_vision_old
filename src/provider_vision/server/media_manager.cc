@@ -163,6 +163,12 @@ bool MediaManager::StopStreamingMedia(const std::string &media) noexcept {
   MediaStreamer::Ptr streamer = GetMediaStreamer(media);
   bool result = false;
   if (streamer) {
+    if (streamer->ObserverCount() > 1) {
+      ROS_INFO(
+          "Not stopping the media because at least another observer is using "
+          "it.");
+      return true;
+    }
     // Do not use the result variables, since the remove will do the job.
     result = StopStreamingMedia(streamer);
     RemoveMediaStreamer(media);
@@ -179,11 +185,7 @@ bool MediaManager::StopStreamingMedia(const std::string &media) noexcept {
 //
 bool MediaManager::StopStreamingMedia(
     const MediaStreamer::Ptr &streamer) noexcept {
-  if (streamer->ObserverCount() > 1) {
-    ROS_INFO(
-        "Not stopping the media because at least another observer is using "
-        "it.");
-  } else if (streamer->IsStreaming()) {
+  if (streamer->IsStreaming()) {
     return streamer->StopStreaming();
   }
   return true;
