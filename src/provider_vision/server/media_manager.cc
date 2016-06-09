@@ -374,7 +374,7 @@ void MediaManager::CallBackDynamicReconfigure(
       boost::any val;
       if ((*_i)->level == level) {
         (*_i)->getValue(config, val);
-        ROS_INFO("Setting %s on ", level_map_[level].second.c_str(),
+        ROS_INFO("Setting %s on %s", level_map_[level].second.c_str(),
                  level_map_[level].first.c_str());
         SetCameraFeature(level_map_[level].first, level_map_[level].second,
                          val);
