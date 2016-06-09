@@ -57,7 +57,7 @@ bool GigeCamera::Open() {
     return true;
   }
 
-  std::lock_guard<std::mutex> guard(cam_access_);
+  cam_access_.lock();
 
   try {
     std::string str = CameraConfiguration::name_;
@@ -80,6 +80,7 @@ bool GigeCamera::Open() {
     if (status != 0) {
       ROS_ERROR_NAMED(CAM_TAG, "Error while opening the camera %s",
                       GevGetFormatString(status));
+      cam_access_.unlock();
       return false;
     }
     status = GevInitGenICamXMLFeatures(gige_camera_, TRUE);
@@ -87,14 +88,17 @@ bool GigeCamera::Open() {
     if (status != 0) {
       ROS_ERROR_NAMED(CAM_TAG, "Error while getting the camera feature %s",
                       GevGetFormatString(status));
+      cam_access_.unlock();
       return false;
     }
   } catch (std::exception &e) {
     ROS_ERROR_NAMED(CAM_TAG,
                     "Error while opening the camera. GIGE: %s EXECPTION: %s",
                     GevGetFormatString(status), e.what());
+    cam_access_.unlock();
     return false;
   }
+  cam_access_.unlock();
   UINT32 format = fMtBayerRG8;
   UINT32 width = 0;
   UINT32 height = 0;
@@ -296,7 +300,11 @@ bool GigeCamera::SetAutoBrightnessMode(double value) {
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CEnumerationPtr ptrEnumNode = Camera->_GetNode("autoBrightnessMode");
   if (ptrEnumNode) {
-    ptrEnumNode->SetIntValue(value);
+    GevStopImageTransfer(gige_camera_);
+    atlas::MilliTimer::Sleep(100);
+    ptrEnumNode->SetIntValue((int)value);
+    atlas::MilliTimer::Sleep(100);
+    GevStartImageTransfer(gige_camera_, -1);
   } else {
     ROS_WARN_NAMED(CAM_TAG,
                    "The feature Auto brightness is not available on this"
@@ -312,7 +320,7 @@ bool GigeCamera::GetAutoBrightnessMode(double &value) const {
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CEnumerationPtr ptrEnumNode = Camera->_GetNode("autoBrightnessMode");
   if (ptrEnumNode) {
-    ptrEnumNode->GetIntValue(value);
+    value = ptrEnumNode->GetCurrentEntry()->GetNumericValue();
   } else {
     ROS_WARN_NAMED(CAM_TAG,
                    "The feature Auto brightness is not available on this"
@@ -392,15 +400,31 @@ bool GigeCamera::GetAutoBrightnessTargetVariation(double &value) const {
 //------------------------------------------------------------------------------
 //
 bool GigeCamera::SetGainMode(bool mode) {
+  double value;
+  GetAutoBrightnessMode(value);
+  atlas::MilliTimer::Sleep(100);
+  if (value != 0) return true;
+
+  double ABmode;
+  GetAutoBrightnessMode(ABmode);
+  if (!ABmode) return true;
+
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CEnumerationPtr ptrEnumNode = Camera->_GetNode("GainAuto");
+
   if (ptrEnumNode) {
+    GevStopImageTransfer(gige_camera_);
+    atlas::MilliTimer::Sleep(100);
     if (mode == FeatureMode::AUTO) {
       ptrEnumNode->SetIntValue(2);
+      atlas::MilliTimer::Sleep(100);
     } else {  // Manual
       ptrEnumNode->SetIntValue(0);
+      atlas::MilliTimer::Sleep(100);
     }
+    GevStartImageTransfer(gige_camera_, -1);
+    atlas::MilliTimer::Sleep(100);
   } else {
     ROS_WARN_NAMED(CAM_TAG,
                    "The feature Gain mode is not available on this"
@@ -417,7 +441,8 @@ bool GigeCamera::GetGainMode(bool &value) const {
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CEnumerationPtr ptrEnumNode = Camera->_GetNode("GainAuto");
   if (ptrEnumNode) {
-    value = static_cast<bool>(ptrEnumNode->GetIntValue());
+    // value = static_cast<bool>(ptrEnumNode->GetIntValue());
+    value = (bool)ptrEnumNode->GetCurrentEntry()->GetNumericValue();
   } else {
     ROS_WARN_NAMED(CAM_TAG,
                    "The feature Gain mode is not available on this"
@@ -466,7 +491,12 @@ bool GigeCamera::SetExposureMode(bool mode) {
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CEnumerationPtr ptrExposureAuto = Camera->_GetNode("ExposureAuto");
   GenApi::CEnumerationPtr ptrExposureMode = Camera->_GetNode("ExposureMode");
+  double ABmode;
+  GetAutoBrightnessMode(ABmode);
+  if (!ABmode) return true;
   if (ptrExposureAuto && ptrExposureMode) {
+    GevStopImageTransfer(gige_camera_);
+    atlas::MilliTimer::Sleep(100);
     if (mode == FeatureMode::AUTO) {
       ptrExposureAuto->SetIntValue(2);
       atlas::MilliTimer::Sleep(100);
@@ -475,6 +505,8 @@ bool GigeCamera::SetExposureMode(bool mode) {
       atlas::MilliTimer::Sleep(100);
       ptrExposureMode->SetIntValue(0);
     }
+    GevStartImageTransfer(gige_camera_, -1);
+    atlas::MilliTimer::Sleep(100);
   } else {
     ROS_WARN_NAMED(CAM_TAG,
                    "The feature Exposure Mode is not available on this"
@@ -489,14 +521,15 @@ bool GigeCamera::SetExposureMode(bool mode) {
 bool GigeCamera::GetExposureMode(bool &value) const {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
-  GenApi::CEnumerationPtr ptrExposureMode = Camera->_GetNode("ExposureMode");
-  auto mode = ptrExposureMode->GetIntValue();
+  GenApi::CEnumerationPtr ptrEnumNode = Camera->_GetNode("ExposureMode");
+  // auto mode = ptrEnumNode->GetIntValue();
+  value = (bool)ptrEnumNode->GetCurrentEntry()->GetNumericValue();
 
-  if (mode == 2) {
-    value = FeatureMode::AUTO;
-  } else {
-    value = FeatureMode::MANUAL;
-  }
+  //  if (mode == 2) {
+  //    value = FeatureMode::AUTO;
+  //  } else {
+  //    value = FeatureMode::MANUAL;
+  //  }
   return true;
 }
 
@@ -513,6 +546,11 @@ bool GigeCamera::GetExposureValue(double &value) const {
 //------------------------------------------------------------------------------
 //
 bool GigeCamera::SetExposureValue(double value) {
+  bool mode;
+  double mode1;
+  GetExposureMode(mode);
+  GetAutoBrightnessMode(mode1);
+  if (!mode && mode1) return true;
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CFloatPtr ptrExposureTime = Camera->_GetNode("ExposureTime");
