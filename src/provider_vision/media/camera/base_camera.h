@@ -66,7 +66,8 @@ class BaseCamera : public BaseMedia, protected CameraConfiguration {
     INVALID_FEATURE,
     AUTOBRIGHTNESS_AUTO,
     AUTOBRIGHTNESS_TARGET,
-    AUTOBRIGHTNESS_VARIATION
+    AUTOBRIGHTNESS_VARIATION,
+    WHITE_BALANCE_EXECUTE
   };
 
   struct FeatureMode {

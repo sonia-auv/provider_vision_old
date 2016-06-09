@@ -302,6 +302,8 @@ BaseCamera::Feature MediaManager::GetFeatureFromName(
     return BaseCamera::Feature::AUTOBRIGHTNESS_TARGET;
   } else if (name == "AUTOBRIGHTNESS_VARIATION") {
     return BaseCamera::Feature::AUTOBRIGHTNESS_VARIATION;
+  } else if (name == "WHITE_BALANCE_EXECUTE") {
+    return BaseCamera::Feature::WHITE_BALANCE_EXECUTE;
   } else {
     ROS_ERROR_NAMED(MEDIA_MNGR_TAG, "No feature with this name");
     return BaseCamera::Feature::INVALID_FEATURE;
@@ -326,6 +328,7 @@ void MediaManager::CreateMap() {
   level_map_[113] = std::make_pair("bottom_gige", "AUTOBRIGHTNESS_AUTO");
   level_map_[114] = std::make_pair("bottom_gige", "AUTOBRIGHTNESS_TARGET");
   level_map_[115] = std::make_pair("bottom_gige", "AUTOBRIGHTNESS_VARIATION");
+  level_map_[121] = std::make_pair("bottom_gige", "WHITE_BALANCE_EXECUTE");
   level_map_[301] = std::make_pair("front_guppy", "GAIN_AUTO");
   level_map_[302] = std::make_pair("front_guppy", "GAIN");
   level_map_[303] = std::make_pair("front_guppy", "GAMMA");
@@ -356,8 +359,6 @@ void MediaManager::CreateMap() {
 //
 void MediaManager::CallBackDynamicReconfigure(
     provider_vision::Camera_Parameters_Config &config, uint32_t level) {
-  ROS_INFO("PARAM: %i", level);
-
   // In the groupDescription, there is a abstrat_parameters member
   // that contain the AbstractParamDescriptionConstPtr class
   // this class contains the level, the value of the feature, the name of the
@@ -373,6 +374,8 @@ void MediaManager::CallBackDynamicReconfigure(
       boost::any val;
       if ((*_i)->level == level) {
         (*_i)->getValue(config, val);
+        ROS_INFO("Setting %s on ", level_map_[level].second.c_str(),
+                 level_map_[level].first.c_str());
         SetCameraFeature(level_map_[level].first, level_map_[level].second,
                          val);
       }

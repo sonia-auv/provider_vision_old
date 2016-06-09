@@ -586,11 +586,15 @@ bool GigeCamera::SetWhiteBalanceMode(bool mode) {
   GenApi::CEnumerationPtr ptrEnumNode = Camera->_GetNode("BalanceWhiteAuto");
 
   if (mode == FeatureMode::AUTO) {
+    GevStopImageTransfer(gige_camera_);
+    atlas::MilliTimer::Sleep(100);
     ptrEnumNode->SetIntValue(1);
     atlas::MilliTimer::Sleep(100);
     GenApi::CCommandPtr ptrWhiteBalanceCmd =
         Camera->_GetNode("balanceWhiteAutoOnDemandCmd");
     ptrWhiteBalanceCmd->Execute();
+    atlas::MilliTimer::Sleep(100);
+    GevStartImageTransfer(gige_camera_, -1);
   } else if (mode == FeatureMode::MANUAL) {
     ptrEnumNode->SetIntValue(0);
   }

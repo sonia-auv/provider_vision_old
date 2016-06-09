@@ -157,6 +157,9 @@ bool BaseCamera::SetFeature(const Feature &feat, const boost::any &value) {
     case Feature::AUTOBRIGHTNESS_VARIATION:
       result = SetAutoBrightnessMode(CastToDouble(value));
       break;
+    case Feature::WHITE_BALANCE_EXECUTE:
+      result = SetWhiteBalanceMode(true);
+      break;
     default:
       ROS_ERROR("Invalid feature given.");
       result = false;
