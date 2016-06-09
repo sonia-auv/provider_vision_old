@@ -136,6 +136,9 @@ bool BaseCamera::SetFeature(const Feature &feat, const boost::any &value) {
     case Feature::WHITE_BALANCE_RED_VALUE:
       result = SetWhiteBalanceRedValue(CastToDouble(value));
       break;
+    case Feature::WHITE_BALANCE_GREEN_VALUE:
+      result = SetWhiteBalanceGreenValue(CastToDouble(value));
+      break;
     case Feature::EXPOSURE_VALUE:
       result = SetExposureValue(CastToDouble(value));
       break;

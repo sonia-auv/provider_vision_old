@@ -569,6 +569,26 @@ bool DC1394Camera::SetWhiteBalanceRedValue(double value) {
 
 //------------------------------------------------------------------------------
 //
+bool DC1394Camera::SetWhiteBalanceGreenValue(double value) {
+  (void)value;
+  ROS_WARN_NAMED(CAM_TAG,
+                 "The feature WhiteBalanceGreen is not available on DC1394 "
+                 "cameras.");
+  return true;
+}
+
+//------------------------------------------------------------------------------
+//
+bool DC1394Camera::GetWhiteBalanceGreen(double &value) const {
+  (void)value;
+  ROS_WARN_NAMED(
+      CAM_TAG,
+      "The feature WhiteBalanceGreen is not available on DC1394 cameras.");
+  return false;
+}
+
+//------------------------------------------------------------------------------
+//
 bool DC1394Camera::SetWhiteBalanceBlueValue(double value) {
   dc1394error_t error;
   double red;

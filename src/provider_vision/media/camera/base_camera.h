@@ -67,7 +67,8 @@ class BaseCamera : public BaseMedia, protected CameraConfiguration {
     AUTOBRIGHTNESS_AUTO,
     AUTOBRIGHTNESS_TARGET,
     AUTOBRIGHTNESS_VARIATION,
-    WHITE_BALANCE_EXECUTE
+    WHITE_BALANCE_EXECUTE,
+    WHITE_BALANCE_GREEN_VALUE
   };
 
   struct FeatureMode {
@@ -130,8 +131,10 @@ class BaseCamera : public BaseMedia, protected CameraConfiguration {
   virtual bool GetWhiteBalanceMode(bool &value) const = 0;
   virtual bool SetWhiteBalanceRedValue(double value) = 0;
   virtual bool SetWhiteBalanceBlueValue(double value) = 0;
+  virtual bool SetWhiteBalanceGreenValue(double value) = 0;
   virtual bool GetWhiteBalanceRed(double &value) const = 0;
   virtual bool GetWhiteBalanceBlue(double &value) const = 0;
+  virtual bool GetWhiteBalanceGreen(double &value) const = 0;
 
   virtual bool GetWhiteBalanceRatio(double &value) const = 0;
   virtual bool SetWhiteBalanceRatio(double value) = 0;

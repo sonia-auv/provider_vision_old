@@ -101,9 +101,11 @@ class GigeCamera : public BaseCamera {
   bool SetWhiteBalanceMode(bool value) override;
   bool GetWhiteBalanceMode(bool &value) const override;
   bool SetWhiteBalanceRedValue(double value) override;
+  bool SetWhiteBalanceGreenValue(double value) override;
   bool SetWhiteBalanceBlueValue(double value) override;
   bool GetWhiteBalanceRed(double &value) const override;
   bool GetWhiteBalanceBlue(double &value) const override;
+  bool GetWhiteBalanceGreen(double &value) const override;
 
   /// Specific GigE vision features.
   /// This will be used internally only, mainly for calibration purpose.

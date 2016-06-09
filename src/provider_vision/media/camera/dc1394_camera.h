@@ -113,8 +113,10 @@ class DC1394Camera : public BaseCamera {
   bool GetWhiteBalanceMode(bool &value) const override;
   bool SetWhiteBalanceRedValue(double value) override;
   bool SetWhiteBalanceBlueValue(double value) override;
+  bool SetWhiteBalanceGreenValue(double value) override;
   bool GetWhiteBalanceRed(double &value) const override;
   bool GetWhiteBalanceBlue(double &value) const override;
+  bool GetWhiteBalanceGreen(double &value) const override;
 
   bool GetWhiteBalanceRatio(double &value) const override { return true; };
   bool SetWhiteBalanceRatio(double value) { return true; };

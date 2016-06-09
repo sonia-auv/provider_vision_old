@@ -642,19 +642,72 @@ bool GigeCamera::GetWhiteBalanceRed(double &value) const {
 //------------------------------------------------------------------------------
 //
 bool GigeCamera::SetWhiteBalanceRedValue(double value) {
-  (void)value;
-  ROS_WARN_NAMED(CAM_TAG,
-                 "The feature WhiteBalance is not available on GigE cameras.");
+  GenApi::CNodeMapRef *Camera =
+      static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
+  GevStopImageTransfer(gige_camera_);
+  atlas::MilliTimer::Sleep(100);
+  GenApi::CEnumerationPtr ptrEnumNode =
+      Camera->_GetNode("BalanceRatioSelector");
+  if (ptrEnumNode) {
+    ptrEnumNode->SetIntValue(0);
+    GenApi::CFloatPtr ptrWhiteBalanceRatio = Camera->_GetNode("BalanceRatio");
+    if (ptrWhiteBalanceRatio) {
+      ptrWhiteBalanceRatio->SetValue(value);
+    }
+  }
+  GevStartImageTransfer(gige_camera_, -1);
+
   return true;
 }
 
 //------------------------------------------------------------------------------
 //
-bool GigeCamera::SetWhiteBalanceBlueValue(double value) {
+
+bool GigeCamera::SetWhiteBalanceGreenValue(double value) {
+  GenApi::CNodeMapRef *Camera =
+      static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
+  GevStopImageTransfer(gige_camera_);
+  atlas::MilliTimer::Sleep(100);
+  GenApi::CEnumerationPtr ptrEnumNode =
+      Camera->_GetNode("BalanceRatioSelector");
+  if (ptrEnumNode) {
+    ptrEnumNode->SetIntValue(1);
+    GenApi::CFloatPtr ptrWhiteBalanceRatio = Camera->_GetNode("BalanceRatio");
+    if (ptrWhiteBalanceRatio) {
+      ptrWhiteBalanceRatio->SetValue(value);
+    }
+  }
+  GevStartImageTransfer(gige_camera_, -1);
+  return true;
+}
+
+//------------------------------------------------------------------------------
+//
+bool GigeCamera::GetWhiteBalanceGreen(double &value) const {
   (void)value;
   ROS_WARN_NAMED(CAM_TAG,
                  "The feature WhiteBalance is not available on GigE cameras.");
   return false;
+}
+
+//------------------------------------------------------------------------------
+//
+bool GigeCamera::SetWhiteBalanceBlueValue(double value) {
+  GenApi::CNodeMapRef *Camera =
+      static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
+  GevStopImageTransfer(gige_camera_);
+  atlas::MilliTimer::Sleep(100);
+  GenApi::CEnumerationPtr ptrEnumNode =
+      Camera->_GetNode("BalanceRatioSelector");
+  if (ptrEnumNode) {
+    ptrEnumNode->SetIntValue(2);
+    GenApi::CFloatPtr ptrWhiteBalanceRatio = Camera->_GetNode("BalanceRatio");
+    if (ptrWhiteBalanceRatio) {
+      ptrWhiteBalanceRatio->SetValue(value);
+    }
+  }
+  GevStartImageTransfer(gige_camera_, -1);
+  return true;
 }
 
 //------------------------------------------------------------------------------

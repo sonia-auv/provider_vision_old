@@ -282,6 +282,8 @@ BaseCamera::Feature MediaManager::GetFeatureFromName(
     return BaseCamera::Feature::WHITE_BALANCE_RED_VALUE;
   } else if (name == "WHITE_BALANCE_BLUE") {
     return BaseCamera::Feature::WHITE_BALANCE_BLUE_VALUE;
+  } else if (name == "WHITE_BALANCE_GREEN") {
+    return BaseCamera::Feature::WHITE_BALANCE_GREEN_VALUE;
   } else if (name == "FRAMERATE") {
     return BaseCamera::Feature::FRAMERATE_VALUE;
   } else if (name == "GAIN_AUTO") {
@@ -323,12 +325,13 @@ void MediaManager::CreateMap() {
   level_map_[108] = std::make_pair("bottom_gige", "SHUTTER");
   level_map_[109] = std::make_pair("bottom_gige", "FRAMERATE");
   level_map_[110] = std::make_pair("bottom_gige", "WHITE_BALANCE_AUTO");
-  level_map_[111] = std::make_pair("bottom_gige", "WHITE_BALANCE_RED_VALUE");
-  level_map_[112] = std::make_pair("bottom_gige", "WHITE_BALANCE_BLUE_VALUE");
+  level_map_[111] = std::make_pair("bottom_gige", "WHITE_BALANCE_RED");
+  level_map_[112] = std::make_pair("bottom_gige", "WHITE_BALANCE_BLUE");
   level_map_[113] = std::make_pair("bottom_gige", "AUTOBRIGHTNESS_AUTO");
   level_map_[114] = std::make_pair("bottom_gige", "AUTOBRIGHTNESS_TARGET");
   level_map_[115] = std::make_pair("bottom_gige", "AUTOBRIGHTNESS_VARIATION");
   level_map_[121] = std::make_pair("bottom_gige", "WHITE_BALANCE_EXECUTE");
+  level_map_[122] = std::make_pair("bottom_gige", "WHITE_BALANCE_GREEN");
   level_map_[301] = std::make_pair("front_guppy", "GAIN_AUTO");
   level_map_[302] = std::make_pair("front_guppy", "GAIN");
   level_map_[303] = std::make_pair("front_guppy", "GAMMA");
