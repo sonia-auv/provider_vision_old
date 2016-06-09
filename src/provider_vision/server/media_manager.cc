@@ -342,8 +342,8 @@ void MediaManager::CreateMap() {
   level_map_[308] = std::make_pair("front_guppy", "SHUTTER");
   level_map_[309] = std::make_pair("front_guppy", "FRAMERATE");
   level_map_[310] = std::make_pair("front_guppy", "WHITE_BALANCE_AUTO");
-  level_map_[311] = std::make_pair("front_guppy", "WHITE_BALANCE_RED_VALUE");
-  level_map_[312] = std::make_pair("front_guppy", "WHITE_BALANCE_BLUE_VALUE");
+  level_map_[311] = std::make_pair("front_guppy", "WHITE_BALANCE_RED");
+  level_map_[312] = std::make_pair("front_guppy", "WHITE_BALANCE_BLUE");
   level_map_[401] = std::make_pair("bottom_guppy", "GAIN_AUTO");
   level_map_[402] = std::make_pair("bottom_guppy", "GAIN");
   level_map_[403] = std::make_pair("bottom_guppy", "GAMMA");
@@ -354,8 +354,8 @@ void MediaManager::CreateMap() {
   level_map_[408] = std::make_pair("bottom_guppy", "SHUTTER");
   level_map_[409] = std::make_pair("bottom_guppy", "FRAMERATE");
   level_map_[410] = std::make_pair("bottom_guppy", "WHITE_BALANCE_AUTO");
-  level_map_[411] = std::make_pair("bottom_guppy", "WHITE_BALANCE_RED_VALUE");
-  level_map_[412] = std::make_pair("bottom_guppy", "WHITE_BALANCE_BLUE_VALUE");
+  level_map_[411] = std::make_pair("bottom_guppy", "WHITE_BALANCE_RED");
+  level_map_[412] = std::make_pair("bottom_guppy", "WHITE_BALANCE_BLUE");
 }
 
 //------------------------------------------------------------------------------
