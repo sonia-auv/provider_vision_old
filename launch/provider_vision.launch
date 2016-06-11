@@ -2,7 +2,7 @@
 	<node name="provider_vision"
 	    pkg="provider_vision"
 	    type="provider_vision_node"
-	    output="log" />
+	    output="screen" />
 
   <rosparam command="load" file="$(find provider_vision)/config/camera/camera_parameters.yaml"/>
   <rosparam command="load" file="$(find provider_vision)/config/camera/provider_media_conf.yaml"/>
