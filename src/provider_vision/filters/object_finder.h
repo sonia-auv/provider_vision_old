@@ -1,21 +1,27 @@
-/// \author	Pierluc Bédard <pierlucbed@gmail.com>
-/// \author	Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
-/// \copyright Copyright (c) 2015 S.O.N.I.A. All rights reserved.
-/// \section LICENSE
-/// This file is part of S.O.N.I.A. software.
-///
-/// S.O.N.I.A. software is free software: you can redistribute it and/or modify
-/// it under the terms of the GNU General Public License as published by
-/// the Free Software Foundation, either version 3 of the License, or
-/// (at your option) any later version.
-///
-/// S.O.N.I.A. software is distributed in the hope that it will be useful,
-/// but WITHOUT ANY WARRANTY; without even the implied warranty of
-/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-/// GNU General Public License for more details.
-///
-/// You should have received a copy of the GNU General Public License
-/// along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
+/**
+ * \file	object_finder.h
+ * \author	Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
+ * \author  Pierluc Bédard <pierlucbed@gmail.com>
+ *
+ * \copyright Copyright (c) 2015 S.O.N.I.A. All rights reserved.
+ *
+ * \section LICENSE
+ *
+ * This file is part of S.O.N.I.A. software.
+ *
+ * S.O.N.I.A. software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * S.O.N.I.A. software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #ifndef PROVIDER_VISION_FILTERS_OBJECT_FINDER_H_
 #define PROVIDER_VISION_FILTERS_OBJECT_FINDER_H_
@@ -27,6 +33,7 @@
 #include <provider_vision/filters/filter.h>
 #include <provider_vision/server/target.h>
 #include <memory>
+#include <ros/ros.h>
 
 namespace provider_vision {
 
@@ -45,6 +52,9 @@ class ObjectFinder : public Filter {
         enable_("Enable", false, &parameters_),
         debug_contour_("Debug_contour", false, &parameters_),
         look_for_rectangle_("Look_for_Rectangle", false, &parameters_),
+        eliminate_same_x_targets_("Eliminate_same_x", false, &parameters_),
+        max_x_difference_for_elimination_("Min_x_difference", 50.0f, 0.0f,
+                                          1000.0f, &parameters_),
         disable_ratio_("disable_ratio_check", false, &parameters_),
         disable_angle_("disable_angle_check", false, &parameters_),
         use_convex_hull_("Use_convex_hull", false, &parameters_),
@@ -235,9 +245,8 @@ class ObjectFinder : public Filter {
         if (vote_higher_()) {
           std::sort(
               objVec.begin(), objVec.end(),
-              [this](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
-                return a->GetCenter().y < b->GetCenter().y;
-              });
+              [this](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
+                  -> bool { return a->GetCenter().y < b->GetCenter().y; });
           objVec[0]->IncrementVote();
 
           cv::circle(output_image_, cv::Point(objVec[0]->GetCenter().x,
@@ -247,9 +256,8 @@ class ObjectFinder : public Filter {
         }
 
         std::sort(objVec.begin(), objVec.end(),
-                  [](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
-                    return a->GetArea() > b->GetArea();
-                  });
+                  [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
+                      -> bool { return a->GetArea() > b->GetArea(); });
 
         objVec[0]->IncrementVote();
         cv::circle(output_image_, cv::Point(objVec[0]->GetCenter().x,
@@ -259,9 +267,12 @@ class ObjectFinder : public Filter {
       }
 
       std::sort(objVec.begin(), objVec.end(),
-                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
-                  return a->GetVoteCount() > b->GetVoteCount();
-                });
+                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
+                    -> bool { return a->GetVoteCount() > b->GetVoteCount(); });
+
+      if (eliminate_same_x_targets_() && objVec.size() > 1) {
+        EliminateSameXTarget(objVec);
+      }
 
       if (objVec.size() > 0) {
         Target target;
@@ -299,7 +310,7 @@ class ObjectFinder : public Filter {
   cv::Mat output_image_;
 
   Parameter<bool> enable_, debug_contour_, look_for_rectangle_, disable_ratio_,
-      disable_angle_, use_convex_hull_;
+      disable_angle_, use_convex_hull_, eliminate_same_x_targets_;
 
   Parameter<bool> vote_most_centered_, vote_most_upright_,
       vote_less_difference_from_targeted_ratio_, vote_length_, vote_higher_;
@@ -308,12 +319,66 @@ class ObjectFinder : public Filter {
 
   RangedParameter<double> min_area_, targeted_ratio_,
       difference_from_target_ratio_, targeted_angle_,
-      difference_from_target_angle_, min_percent_filled_;
+      difference_from_target_angle_, min_percent_filled_,
+      max_x_difference_for_elimination_;
 
   RangedParameter<int> contour_retreval_;
 
   ObjectFeatureFactory feature_factory_;
+
+  bool IsSameX(ObjectFullData::Ptr a, ObjectFullData::Ptr b);
+
+  // check if ref is higher than compared
+  bool IsHigher(ObjectFullData::Ptr ref, ObjectFullData::Ptr compared);
+
+  void EliminateSameXTarget(ObjectFullData::FullObjectPtrVec &vec);
 };
+
+//------------------------------------------------------------------------------
+//
+inline void ObjectFinder::EliminateSameXTarget(
+    ObjectFullData::FullObjectPtrVec &vec) {
+  std::vector<unsigned int> index_to_eliminate;
+  // We should not have much target, so double loop is ok...
+  for (unsigned int i = 0, size = vec.size(); i < size; i++) {
+    for (unsigned int j = 0; j < size; j++) {
+      if (i == j) {
+        continue;
+      }
+      if (IsSameX(vec[i], vec[j])) {
+        // If I is higher, eliminate it
+        if (IsHigher(vec[i], vec[j])) {
+          index_to_eliminate.push_back(i);
+        }
+      }
+    }
+  }
+  // Erase from vector
+  if (index_to_eliminate.size() > 0) {
+    for (int i = index_to_eliminate.size() - 1; i >= 0; i--) {
+      vec.erase(vec.begin() + i);
+      ROS_INFO("Eliminating same X");
+    }
+  }
+}
+
+//------------------------------------------------------------------------------
+//
+inline bool ObjectFinder::IsSameX(ObjectFullData::Ptr a,
+                                  ObjectFullData::Ptr b) {
+  double x_difference = static_cast<double>(a->GetCenter().x) -
+                        static_cast<double>(b->GetCenter().x);
+  double abs_x_difference = fabs(x_difference);
+  return abs_x_difference < max_x_difference_for_elimination_();
+}
+
+//------------------------------------------------------------------------------
+//
+// check if ref is higher than compared
+inline bool ObjectFinder::IsHigher(ObjectFullData::Ptr ref,
+                                   ObjectFullData::Ptr compared) {
+  return ref->GetCenter().y < compared->GetCenter().y;
+}
 
 }  // namespace provider_vision
 
