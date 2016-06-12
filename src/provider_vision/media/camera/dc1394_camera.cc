@@ -55,7 +55,7 @@ bool DC1394Camera::Open() {
 
   std::lock_guard<std::mutex> guard(cam_access_);
 
-  bool opening_result = SetNormalFormat();
+  bool opening_result = SetFormat7();
   err = dc1394_capture_setup(dc1394_camera_, DMA_BUFFER,
                              DC1394_CAPTURE_FLAGS_DEFAULT);
 
