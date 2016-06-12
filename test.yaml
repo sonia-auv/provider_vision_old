@@ -1,0 +1,31 @@
+!!python/object/new:dynamic_reconfigure.encoding.Config
+dictitems:
+  bottom_gige_autobrightness_mode: false
+  bottom_gige_autobrightness_target: 200.0
+  bottom_gige_autobrightness_variation: 16
+  bottom_gige_exposure_mode: true
+  bottom_gige_exposure_value: 1500.0
+  bottom_gige_gain_mode: true
+  bottom_gige_gain_value: 1.0
+  bottom_gige_whitebalance_blue_value: 1.0
+  bottom_gige_whitebalance_execute: true
+  bottom_gige_whitebalance_green_value: 1.0
+  bottom_gige_whitebalance_red_value: 1.0
+  bottom_guppy_exposure_mode: false
+  bottom_guppy_exposure_value: 100.0
+  bottom_guppy_gain_mode: true
+  bottom_guppy_gain_value: 1.0
+  bottom_guppy_shutter_mode: false
+  bottom_guppy_shutter_value: 500.0
+  bottom_guppy_whitebalance_blue_value: 276.0
+  bottom_guppy_whitebalance_mode: true
+  bottom_guppy_whitebalance_red_value: 511.0
+  front_guppy_exposure_mode: false
+  front_guppy_exposure_value: 100.0
+  front_guppy_gain_mode: true
+  front_guppy_gain_value: 1.0
+  front_guppy_shutter_mode: false
+  front_guppy_shutter_value: 500.0
+  front_guppy_whitebalance_blue_value: 276.0
+  front_guppy_whitebalance_mode: true
+  front_guppy_whitebalance_red_value: 568.0

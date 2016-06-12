@@ -47,6 +47,16 @@ inline double CastToDouble(const boost::any &op) {
     throw std::runtime_error("The value for this feature must be a double");
   }
 }
+
+inline double CastToInt(const boost::any &op) {
+  // Unfortunatly, cannot static assert the type of the value.
+  // The type will be cast at runtime instead.
+  try {
+    return boost::any_cast<int>(op);
+  } catch (const boost::bad_any_cast &) {
+    throw std::runtime_error("The value for this feature must be a int");
+  }
+}
 }
 
 const double BaseCamera::INVALID_DOUBLE = DBL_MIN;
@@ -155,10 +165,10 @@ bool BaseCamera::SetFeature(const Feature &feat, const boost::any &value) {
       result = SetAutoBrightnessMode(CastToBool(value));
       break;
     case Feature::AUTOBRIGHTNESS_TARGET:
-      result = SetAutoBrightnessTarget(CastToDouble(value));
+      result = SetAutoBrightnessTarget(CastToInt(value));
       break;
     case Feature::AUTOBRIGHTNESS_VARIATION:
-      result = SetAutoBrightnessMode(CastToDouble(value));
+      result = SetAutoBrightnessTargetVariation(CastToInt(value));
       break;
     case Feature::WHITE_BALANCE_EXECUTE:
       result = SetWhiteBalanceMode(true);

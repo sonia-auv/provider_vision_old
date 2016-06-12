@@ -97,7 +97,7 @@ class MediaManager {
    * \param value The value to set on the given feature.
    */
   bool SetCameraFeature(const std::string &media_name,
-                        const std::string &feature, boost::any &value);
+                        const std::string &feature, const boost::any &value);
 
   /**
    * If the media is a camera, get the value of the given feature.
@@ -143,8 +143,14 @@ class MediaManager {
   void CallBackDynamicReconfigure(
       provider_vision::Camera_Parameters_Config &config, uint32_t level);
 
-  void CreateMap();
+  void UpdateIfChanged(std::string camera_name, std::string feature_name,
+                       bool old_state, bool state);
 
+  void UpdateIfChanged(std::string camera_name, std::string feature_name,
+                       double old_value, double value);
+
+  void UpdateIfChanged(std::string camera_name, std::string feature_name,
+                       int old_value, int value);
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
@@ -158,6 +164,8 @@ class MediaManager {
       server_;
 
   FeatureMapType level_map_;
+
+  provider_vision::Camera_Parameters_Config old_config_;
 };
 
 //-----------------------------------------------------------------------------

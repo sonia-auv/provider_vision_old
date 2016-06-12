@@ -32,7 +32,8 @@ const std::string WebcamContext::WEBCAM_NAME("Webcam");
 //------------------------------------------------------------------------------
 //
 WebcamContext::WebcamContext() noexcept
-    : BaseContext(), webcam_(std::make_shared<WebcamCamera>()) {}
+    : BaseContext(),
+      webcam_(std::make_shared<WebcamCamera>()) {}
 
 //------------------------------------------------------------------------------
 //
@@ -48,7 +49,7 @@ void WebcamContext::CloseContext() {}
 //------------------------------------------------------------------------------
 //
 bool WebcamContext::SetFeature(const BaseCamera::Feature &feat,
-                               const std::string &name, boost::any &val) {
+                               const std::string &name, const boost::any &val) {
   // Webcam are not really supported...
   return true;
 }

@@ -178,10 +178,6 @@ bool GigeCamera::SetStreamingModeOn() {
     ROS_ERROR_NAMED(CAM_TAG, "Camera is busy. Cannot set streaming mode on.");
     return false;
   }
-  atlas::MilliTimer::Sleep(2500);
-  if (!white_balance_manual_) {
-    SetWhiteBalanceMode(1);
-  }
 
   status_ = Status::STREAMING;
   return true;
@@ -303,8 +299,9 @@ bool GigeCamera::SetAutoBrightnessMode(double value) {
     GevStopImageTransfer(gige_camera_);
     atlas::MilliTimer::Sleep(100);
     ptrEnumNode->SetIntValue((int)value);
+    ROS_INFO("%i", (int)value);
     atlas::MilliTimer::Sleep(100);
-    GevStartImageTransfer(gige_camera_, -1);
+    if (status_ == Status::STREAMING) GevStartImageTransfer(gige_camera_, -1);
   } else {
     ROS_WARN_NAMED(CAM_TAG,
                    "The feature Auto brightness is not available on this"
@@ -337,7 +334,9 @@ bool GigeCamera::SetAutoBrightnessTarget(double value) {
 
   GenApi::CIntegerPtr ptrIntNode = Camera->_GetNode("autoBrightnessTarget");
   if (ptrIntNode) {
-    ptrIntNode->SetValue(value);
+    double ab;
+    GetAutoBrightnessMode(ab);
+    if (ab) ptrIntNode->SetValue(value);
   } else {
     ROS_WARN_NAMED(CAM_TAG,
                    "The feature Auto brightness is not available on this"
@@ -371,7 +370,9 @@ bool GigeCamera::SetAutoBrightnessTargetVariation(double value) {
   GenApi::CIntegerPtr ptrIntNode =
       Camera->_GetNode("autoBrightnessTargetRangeVariation");
   if (ptrIntNode) {
-    ptrIntNode->SetValue(value);
+    double ab;
+    GetAutoBrightnessMode(ab);
+    if (ab) ptrIntNode->SetValue(value);
   } else {
     ROS_WARN_NAMED(CAM_TAG,
                    "The feature Auto brightness is not available on this"
@@ -423,7 +424,7 @@ bool GigeCamera::SetGainMode(bool mode) {
       ptrEnumNode->SetIntValue(0);
       atlas::MilliTimer::Sleep(100);
     }
-    GevStartImageTransfer(gige_camera_, -1);
+    if (status_ == Status::STREAMING) GevStartImageTransfer(gige_camera_, -1);
     atlas::MilliTimer::Sleep(100);
   } else {
     ROS_WARN_NAMED(CAM_TAG,
@@ -505,7 +506,7 @@ bool GigeCamera::SetExposureMode(bool mode) {
       atlas::MilliTimer::Sleep(100);
       ptrExposureMode->SetIntValue(0);
     }
-    GevStartImageTransfer(gige_camera_, -1);
+    if (status_ == Status::STREAMING) GevStartImageTransfer(gige_camera_, -1);
     atlas::MilliTimer::Sleep(100);
   } else {
     ROS_WARN_NAMED(CAM_TAG,
@@ -584,20 +585,16 @@ bool GigeCamera::SetWhiteBalanceMode(bool mode) {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CEnumerationPtr ptrEnumNode = Camera->_GetNode("BalanceWhiteAuto");
+  GevStopImageTransfer(gige_camera_);
+  atlas::MilliTimer::Sleep(100);
+  ptrEnumNode->SetIntValue(1);
+  atlas::MilliTimer::Sleep(100);
+  GenApi::CCommandPtr ptrWhiteBalanceCmd =
+      Camera->_GetNode("balanceWhiteAutoOnDemandCmd");
+  ptrWhiteBalanceCmd->Execute();
+  atlas::MilliTimer::Sleep(100);
+  if (status_ == Status::STREAMING) GevStartImageTransfer(gige_camera_, -1);
 
-  if (mode == FeatureMode::AUTO) {
-    GevStopImageTransfer(gige_camera_);
-    atlas::MilliTimer::Sleep(100);
-    ptrEnumNode->SetIntValue(1);
-    atlas::MilliTimer::Sleep(100);
-    GenApi::CCommandPtr ptrWhiteBalanceCmd =
-        Camera->_GetNode("balanceWhiteAutoOnDemandCmd");
-    ptrWhiteBalanceCmd->Execute();
-    atlas::MilliTimer::Sleep(100);
-    GevStartImageTransfer(gige_camera_, -1);
-  } else if (mode == FeatureMode::MANUAL) {
-    ptrEnumNode->SetIntValue(0);
-  }
   return true;
 }
 
@@ -655,7 +652,7 @@ bool GigeCamera::SetWhiteBalanceRedValue(double value) {
       ptrWhiteBalanceRatio->SetValue(value);
     }
   }
-  GevStartImageTransfer(gige_camera_, -1);
+  if (status_ == Status::STREAMING) GevStartImageTransfer(gige_camera_, -1);
 
   return true;
 }
@@ -677,7 +674,7 @@ bool GigeCamera::SetWhiteBalanceGreenValue(double value) {
       ptrWhiteBalanceRatio->SetValue(value);
     }
   }
-  GevStartImageTransfer(gige_camera_, -1);
+  if (status_ == Status::STREAMING) GevStartImageTransfer(gige_camera_, -1);
   return true;
 }
 
@@ -706,7 +703,7 @@ bool GigeCamera::SetWhiteBalanceBlueValue(double value) {
       ptrWhiteBalanceRatio->SetValue(value);
     }
   }
-  GevStartImageTransfer(gige_camera_, -1);
+  if (status_ == Status::STREAMING) GevStartImageTransfer(gige_camera_, -1);
   return true;
 }
 

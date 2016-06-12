@@ -32,7 +32,9 @@ namespace provider_vision {
 //
 DC1394Context::DC1394Context(
     const std::vector<CameraConfiguration> &configurations) noexcept
-    : BaseContext(), DRIVER_TAG("[DC1394 Driver]"), driver_(nullptr) {
+    : BaseContext(),
+      DRIVER_TAG("[DC1394 Driver]"),
+      driver_(nullptr) {
   InitContext(configurations);
 }
 
@@ -175,7 +177,7 @@ bool DC1394Context::WatchDogFunc() {
 //------------------------------------------------------------------------------
 //
 bool DC1394Context::SetFeature(const BaseCamera::Feature &feat,
-                               const std::string &name, boost::any &val) {
+                               const std::string &name, const boost::any &val) {
   DC1394Camera::Ptr cam = GetDC1394Camera(name);
   if (cam) {
     return cam->SetFeature(feat, val);

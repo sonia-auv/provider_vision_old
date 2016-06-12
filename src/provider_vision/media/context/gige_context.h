@@ -68,7 +68,8 @@ class GigeContext : public BaseContext {
                           boost::any &val) const override;
 
   virtual bool SetFeature(const BaseCamera::Feature &feat,
-                          const std::string &name, boost::any &val) override;
+                          const std::string &name,
+                          const boost::any &val) override;
 
   bool ContainsMedia(const std::string &nameMedia) const override;
 

@@ -41,11 +41,6 @@ namespace provider_vision {
 MediaManager::MediaManager(const ros::NodeHandle &nh) noexcept
     : MEDIA_MNGR_TAG("[Media Manager]"),
       contexts_() {
-  CreateMap();
-
-  server_.setCallback(
-      boost::bind(&MediaManager::CallBackDynamicReconfigure, this, _1, _2));
-
   // Creating the Webcam context
   auto active_webcam = false;
   nh_.getParam("/provider_vision/active_webcam", active_webcam);
@@ -78,6 +73,8 @@ MediaManager::MediaManager(const ros::NodeHandle &nh) noexcept
 #endif
 
   contexts_.push_back(std::make_shared<FileContext>());
+  server_.setCallback(
+      boost::bind(&MediaManager::CallBackDynamicReconfigure, this, _1, _2));
 }
 
 //------------------------------------------------------------------------------
@@ -231,7 +228,7 @@ size_t MediaManager::GetAllMediasCount() const {
 //
 bool MediaManager::SetCameraFeature(const std::string &media_name,
                                     const std::string &feature,
-                                    boost::any &value) {
+                                    const boost::any &value) {
   BaseContext::Ptr context = GetContextFromMedia(media_name);
   if (context) {
     return context->SetFeature(GetFeatureFromName(feature), media_name, value);
@@ -314,75 +311,124 @@ BaseCamera::Feature MediaManager::GetFeatureFromName(
 
 //------------------------------------------------------------------------------
 //
-void MediaManager::CreateMap() {
-  level_map_[101] = std::make_pair("bottom_gige", "GAIN_AUTO");
-  level_map_[102] = std::make_pair("bottom_gige", "GAIN");
-  level_map_[103] = std::make_pair("bottom_gige", "GAMMA");
-  level_map_[104] = std::make_pair("bottom_gige", "EXPOSURE_AUTO");
-  level_map_[105] = std::make_pair("bottom_gige", "EXPOSURE");
-  level_map_[106] = std::make_pair("bottom_gige", "SATURATION");
-  level_map_[107] = std::make_pair("bottom_gige", "SHUTTER_AUTO");
-  level_map_[108] = std::make_pair("bottom_gige", "SHUTTER");
-  level_map_[109] = std::make_pair("bottom_gige", "FRAMERATE");
-  level_map_[110] = std::make_pair("bottom_gige", "WHITE_BALANCE_AUTO");
-  level_map_[111] = std::make_pair("bottom_gige", "WHITE_BALANCE_RED");
-  level_map_[112] = std::make_pair("bottom_gige", "WHITE_BALANCE_BLUE");
-  level_map_[113] = std::make_pair("bottom_gige", "AUTOBRIGHTNESS_AUTO");
-  level_map_[114] = std::make_pair("bottom_gige", "AUTOBRIGHTNESS_TARGET");
-  level_map_[115] = std::make_pair("bottom_gige", "AUTOBRIGHTNESS_VARIATION");
-  level_map_[121] = std::make_pair("bottom_gige", "WHITE_BALANCE_EXECUTE");
-  level_map_[122] = std::make_pair("bottom_gige", "WHITE_BALANCE_GREEN");
-  level_map_[301] = std::make_pair("front_guppy", "GAIN_AUTO");
-  level_map_[302] = std::make_pair("front_guppy", "GAIN");
-  level_map_[303] = std::make_pair("front_guppy", "GAMMA");
-  level_map_[304] = std::make_pair("front_guppy", "EXPOSURE_AUTO");
-  level_map_[305] = std::make_pair("front_guppy", "EXPOSURE");
-  level_map_[306] = std::make_pair("front_guppy", "SATURATION");
-  level_map_[307] = std::make_pair("front_guppy", "SHUTTER_AUTO");
-  level_map_[308] = std::make_pair("front_guppy", "SHUTTER");
-  level_map_[309] = std::make_pair("front_guppy", "FRAMERATE");
-  level_map_[310] = std::make_pair("front_guppy", "WHITE_BALANCE_AUTO");
-  level_map_[311] = std::make_pair("front_guppy", "WHITE_BALANCE_RED");
-  level_map_[312] = std::make_pair("front_guppy", "WHITE_BALANCE_BLUE");
-  level_map_[401] = std::make_pair("bottom_guppy", "GAIN_AUTO");
-  level_map_[402] = std::make_pair("bottom_guppy", "GAIN");
-  level_map_[403] = std::make_pair("bottom_guppy", "GAMMA");
-  level_map_[404] = std::make_pair("bottom_guppy", "EXPOSURE_AUTO");
-  level_map_[405] = std::make_pair("bottom_guppy", "EXPOSURE");
-  level_map_[406] = std::make_pair("bottom_guppy", "SATURATION");
-  level_map_[407] = std::make_pair("bottom_guppy", "SHUTTER_AUTO");
-  level_map_[408] = std::make_pair("bottom_guppy", "SHUTTER");
-  level_map_[409] = std::make_pair("bottom_guppy", "FRAMERATE");
-  level_map_[410] = std::make_pair("bottom_guppy", "WHITE_BALANCE_AUTO");
-  level_map_[411] = std::make_pair("bottom_guppy", "WHITE_BALANCE_RED");
-  level_map_[412] = std::make_pair("bottom_guppy", "WHITE_BALANCE_BLUE");
-}
-
-//------------------------------------------------------------------------------
-//
 void MediaManager::CallBackDynamicReconfigure(
     provider_vision::Camera_Parameters_Config &config, uint32_t level) {
-  // In the groupDescription, there is a abstrat_parameters member
-  // that contain the AbstractParamDescriptionConstPtr class
-  // this class contains the level, the value of the feature, the name of the
-  // feature,
-  // etc.
+  UpdateIfChanged("bottom_gige", "AUTOBRIGHTNESS_AUTO",
+                  old_config_.bottom_gige_autobrightness_mode,
+                  config.bottom_gige_autobrightness_mode);
+  UpdateIfChanged("bottom_gige", "AUTOBRIGHTNESS_TARGET",
+                  old_config_.bottom_gige_autobrightness_target,
+                  config.bottom_gige_autobrightness_target);
+  UpdateIfChanged("bottom_gige", "AUTOBRIGHTNESS_VARIATION",
+                  old_config_.bottom_gige_autobrightness_variation,
+                  config.bottom_gige_autobrightness_variation);
+  UpdateIfChanged("bottom_gige", "EXPOSURE_AUTO",
+                  old_config_.bottom_gige_exposure_mode,
+                  config.bottom_gige_exposure_mode);
+  UpdateIfChanged("bottom_gige", "EXPOSURE",
+                  old_config_.bottom_gige_exposure_value,
+                  config.bottom_gige_exposure_value);
+  UpdateIfChanged("bottom_gige", "GAIN_AUTO", old_config_.bottom_gige_gain_mode,
+                  config.bottom_gige_gain_mode);
+  UpdateIfChanged("bottom_gige", "GAIN", old_config_.bottom_gige_gain_value,
+                  config.bottom_gige_gain_value);
+  // The sequence order for white balance is important
+  // since in this case it acts as a execute. i.e, the blue,
+  // green and red must be set after the white_balance_execute.
+  UpdateIfChanged("bottom_gige", "WHITE_BALANCE_AUTO",
+                  old_config_.bottom_gige_whitebalance_execute,
+                  config.bottom_gige_whitebalance_execute);
+  UpdateIfChanged("bottom_gige", "WHITE_BALANCE_BLUE",
+                  old_config_.bottom_gige_whitebalance_blue_value,
+                  config.bottom_gige_whitebalance_blue_value);
+  UpdateIfChanged("bottom_gige", "WHITE_BALANCE_GREEN",
+                  old_config_.bottom_gige_whitebalance_green_value,
+                  config.bottom_gige_whitebalance_green_value);
+  UpdateIfChanged("bottom_gige", "WHITE_BALANCE_RED",
+                  old_config_.bottom_gige_whitebalance_red_value,
+                  config.bottom_gige_whitebalance_red_value);
+  UpdateIfChanged("bottom_guppy", "EXPOSURE_AUTO",
+                  old_config_.bottom_guppy_exposure_mode,
+                  config.bottom_guppy_exposure_mode);
+  UpdateIfChanged("bottom_guppy", "EXPOSURE",
+                  old_config_.bottom_guppy_exposure_value,
+                  config.bottom_guppy_exposure_value);
+  UpdateIfChanged("bottom_guppy", "GAIN_AUTO",
+                  old_config_.bottom_guppy_gain_mode,
+                  config.bottom_guppy_gain_mode);
+  UpdateIfChanged("bottom_guppy", "GAIN", old_config_.bottom_guppy_gain_value,
+                  config.bottom_guppy_gain_value);
+  UpdateIfChanged("bottom_guppy", "SHUTTER_AUTO",
+                  old_config_.bottom_guppy_shutter_mode,
+                  config.bottom_guppy_shutter_mode);
+  UpdateIfChanged("bottom_guppy", "SHUTTER",
+                  old_config_.bottom_guppy_shutter_value,
+                  config.bottom_guppy_shutter_value);
+  UpdateIfChanged("bottom_guppy", "WHITE_BALANCE_BLUE",
+                  old_config_.bottom_guppy_whitebalance_blue_value,
+                  config.bottom_guppy_whitebalance_blue_value);
+  UpdateIfChanged("bottom_guppy", "WHITE_BALANCE_AUTO",
+                  old_config_.bottom_guppy_whitebalance_mode,
+                  config.bottom_guppy_whitebalance_mode);
+  UpdateIfChanged("bottom_guppy", "WHITE_BALANCE_RED",
+                  old_config_.bottom_guppy_whitebalance_red_value,
+                  config.bottom_guppy_whitebalance_red_value);
+  UpdateIfChanged("front_guppy", "EXPOSURE_AUTO",
+                  old_config_.front_guppy_exposure_mode,
+                  config.front_guppy_exposure_mode);
+  UpdateIfChanged("front_guppy", "EXPOSURE",
+                  old_config_.front_guppy_exposure_value,
+                  config.front_guppy_exposure_value);
+  UpdateIfChanged("front_guppy", "GAIN_AUTO", old_config_.front_guppy_gain_mode,
+                  config.front_guppy_gain_mode);
+  UpdateIfChanged("front_guppy", "GAIN", old_config_.front_guppy_gain_value,
+                  config.front_guppy_gain_value);
+  UpdateIfChanged("front_guppy", "SHUTTER_AUTO",
+                  old_config_.front_guppy_shutter_mode,
+                  config.front_guppy_shutter_mode);
+  UpdateIfChanged("front_guppy", "SHUTTER",
+                  old_config_.front_guppy_shutter_value,
+                  config.front_guppy_shutter_value);
+  UpdateIfChanged("front_guppy", "WHITE_BALANCE_BLUE",
+                  old_config_.front_guppy_whitebalance_blue_value,
+                  config.front_guppy_whitebalance_blue_value);
+  UpdateIfChanged("front_guppy", "WHITE_BALANCE_AUTO",
+                  old_config_.front_guppy_whitebalance_mode,
+                  config.front_guppy_whitebalance_mode);
+  UpdateIfChanged("front_guppy", "WHITE_BALANCE_RED",
+                  old_config_.front_guppy_whitebalance_red_value,
+                  config.front_guppy_whitebalance_red_value);
 
-  for (const auto &desc : config.__getGroupDescriptions__()) {
-    auto begin = desc->abstract_parameters.begin();
-    auto end = desc->abstract_parameters.end();
+  old_config_ = config;
+}
 
-    // The abstract parameter must
-    for (auto _i = begin; _i != end; ++_i) {
-      boost::any val;
-      if ((*_i)->level == level) {
-        (*_i)->getValue(config, val);
-        ROS_INFO("Setting %s on %s", level_map_[level].second.c_str(),
-                 level_map_[level].first.c_str());
-        SetCameraFeature(level_map_[level].first, level_map_[level].second,
-                         val);
-      }
-    }
+void MediaManager::UpdateIfChanged(std::string camera_name,
+                                   std::string feature_name, bool old_state,
+                                   bool state) {
+  if (state != old_state) {
+    SetCameraFeature(camera_name, feature_name, boost::any(state));
+    ROS_INFO("Setting %s on %s to %i", feature_name.c_str(),
+             camera_name.c_str(), state);
+  }
+}
+
+void MediaManager::UpdateIfChanged(std::string camera_name,
+                                   std::string feature_name, double old_value,
+                                   double value) {
+  if (value != old_value) {
+    SetCameraFeature(camera_name, feature_name, boost::any(value));
+    ROS_INFO("Setting %s on %s to %.2f", feature_name.c_str(),
+             camera_name.c_str(), value);
+  }
+}
+
+void MediaManager::UpdateIfChanged(std::string camera_name,
+                                   std::string feature_name, int old_value,
+                                   int value) {
+  if (value != old_value) {
+    SetCameraFeature(camera_name, feature_name, boost::any(value));
+    ROS_INFO("Setting %s on %s to %i", feature_name.c_str(),
+             camera_name.c_str(), value);
   }
 }
 

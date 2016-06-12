@@ -119,7 +119,7 @@ bool FileContext::ContainsMedia(const std::string &nameMedia) const {
 //------------------------------------------------------------------------------
 //
 bool FileContext::SetFeature(const BaseCamera::Feature &feat,
-                             const std::string &name, boost::any &val) {
+                             const std::string &name, const boost::any &val) {
   // Here we make a choice to return false, since if you try to set a parameter
   // on a file, there is something wrong...
   return false;

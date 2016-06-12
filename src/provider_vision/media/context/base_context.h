@@ -65,7 +65,7 @@ class BaseContext : public atlas::Runnable {
                           const std::string &name, boost::any &val) const = 0;
 
   virtual bool SetFeature(const BaseCamera::Feature &feat,
-                          const std::string &name, boost::any &val) = 0;
+                          const std::string &name, const boost::any &val) = 0;
 
   /**
    * Method to get all listed (connected) camera of the system

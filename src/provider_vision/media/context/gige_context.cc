@@ -38,7 +38,8 @@ namespace provider_vision {
 //
 GigeContext::GigeContext(
     const std::vector<CameraConfiguration> &configurations) noexcept
-    : BaseContext(), DRIVER_TAG("[GigE Driver]") {
+    : BaseContext(),
+      DRIVER_TAG("[GigE Driver]") {
   InitContext(configurations);
 }
 
@@ -172,7 +173,7 @@ bool GigeContext::WatchDogFunc() {
 //------------------------------------------------------------------------------
 //
 bool GigeContext::SetFeature(const BaseCamera::Feature &feat,
-                             const std::string &name, boost::any &val) {
+                             const std::string &name, const boost::any &val) {
   GigeCamera::Ptr cam = GetGigeCamera(name);
   if (cam) {
     return cam->SetFeature(feat, val);
