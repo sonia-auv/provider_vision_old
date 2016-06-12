@@ -160,7 +160,7 @@ bool MediaManager::StopStreamingMedia(const std::string &media) noexcept {
   MediaStreamer::Ptr streamer = GetMediaStreamer(media);
   bool result = false;
   if (streamer) {
-    if (streamer->ObserverCount() > 1) {
+    if (streamer->ObserverCount() >= 1) {
       ROS_INFO(
           "Not stopping the media because at least another observer is using "
           "it.");
