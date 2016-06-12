@@ -3,6 +3,8 @@ filters:
   - name: Rotate
     parameters:
       - name: enable
+        value: 1
+      - name: transpose
         value: 0
       - name: Rotation_type
-        value: 0
+        value: 3
