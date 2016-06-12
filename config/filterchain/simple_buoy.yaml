@@ -1,5 +1,11 @@
 name: simple_buoy
 filters:
+  - name: Rotate
+    parameters:
+      - name: enable
+        value: 1
+      - name: Rotation_type
+        value: 3
   - name: SubtractAllPlanes
     parameters:
       - name: enable
@@ -47,7 +53,7 @@ filters:
       - name: Threshold_type
         value: 0
       - name: Max_value
-        value: 69
+        value: 21
   - name: Dilate
     parameters:
       - name: Enable
