@@ -38,6 +38,7 @@ class Rotate : public Filter {
   explicit Rotate(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
         enable_("enable", false, &parameters_),
+        transpose_("transpose", false, &parameters_),
         rotate_type_("Rotation_type", 0, 0, 3, &parameters_,
                      "Rotate type: 0=NONE, 1=x axis, 2=y axis, 3=all axis") {
     SetName("Rotate");
@@ -50,6 +51,7 @@ class Rotate : public Filter {
 
   virtual void Execute(cv::Mat &image) {
     if (enable_()) {
+      if (transpose_()) cv::transpose(image, image);
       switch (rotate_type_()) {
         case 0:
           break;
@@ -70,7 +72,7 @@ class Rotate : public Filter {
   //============================================================================
   // P R I V A T E   M E M B E R S
 
-  Parameter<bool> enable_;
+  Parameter<bool> enable_, transpose_;
 
   RangedParameter<int> rotate_type_;
 };
