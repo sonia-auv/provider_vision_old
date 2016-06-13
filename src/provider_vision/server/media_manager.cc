@@ -270,11 +270,11 @@ BaseContext::Ptr MediaManager::GetContextFromMedia(
 BaseCamera::Feature MediaManager::GetFeatureFromName(
     const std::string &name) const {
   if (name == "SHUTTER_AUTO") {
-    return BaseCamera::Feature::SHUTTER_MODE;
+    return BaseCamera::Feature::SHUTTER_AUTO;
   } else if (name == "SHUTTER") {
     return BaseCamera::Feature::SHUTTER_VALUE;
   } else if (name == "WHITE_BALANCE_AUTO") {
-    return BaseCamera::Feature::WHITE_BALANCE_MODE;
+    return BaseCamera::Feature::WHITE_BALANCE_AUTO;
   } else if (name == "WHITE_BALANCE_RED") {
     return BaseCamera::Feature::WHITE_BALANCE_RED_VALUE;
   } else if (name == "WHITE_BALANCE_BLUE") {
@@ -284,11 +284,11 @@ BaseCamera::Feature MediaManager::GetFeatureFromName(
   } else if (name == "FRAMERATE") {
     return BaseCamera::Feature::FRAMERATE_VALUE;
   } else if (name == "GAIN_AUTO") {
-    return BaseCamera::Feature::GAIN_MODE;
+    return BaseCamera::Feature::GAIN_AUTO;
   } else if (name == "GAIN") {
     return BaseCamera::Feature::GAIN_VALUE;
   } else if (name == "EXPOSURE_AUTO") {
-    return BaseCamera::Feature::EXPOSURE_MODE;
+    return BaseCamera::Feature::EXPOSURE_AUTO;
   } else if (name == "EXPOSURE") {
     return BaseCamera::Feature::EXPOSURE_VALUE;
   } else if (name == "GAMMA") {
@@ -314,24 +314,23 @@ BaseCamera::Feature MediaManager::GetFeatureFromName(
 void MediaManager::CallBackDynamicReconfigure(
     provider_vision::Camera_Parameters_Config &config, uint32_t level) {
   UpdateIfChanged("bottom_gige", "AUTOBRIGHTNESS_AUTO",
-                  old_config_.bottom_gige_autobrightness_mode,
-                  config.bottom_gige_autobrightness_mode);
+                  old_config_.bottom_gige_auto_brightness_auto,
+                  config.bottom_gige_auto_brightness_auto);
   UpdateIfChanged("bottom_gige", "AUTOBRIGHTNESS_TARGET",
-                  old_config_.bottom_gige_autobrightness_target,
-                  config.bottom_gige_autobrightness_target);
+                  old_config_.bottom_gige_auto_brightness_target,
+                  config.bottom_gige_auto_brightness_target);
   UpdateIfChanged("bottom_gige", "AUTOBRIGHTNESS_VARIATION",
-                  old_config_.bottom_gige_autobrightness_variation,
-                  config.bottom_gige_autobrightness_variation);
+                  old_config_.bottom_gige_auto_brightness_variation,
+                  config.bottom_gige_auto_brightness_variation);
   UpdateIfChanged("bottom_gige", "EXPOSURE_AUTO",
-                  old_config_.bottom_gige_exposure_mode,
-                  config.bottom_gige_exposure_mode);
-  UpdateIfChanged("bottom_gige", "EXPOSURE",
-                  old_config_.bottom_gige_exposure_value,
-                  config.bottom_gige_exposure_value);
-  UpdateIfChanged("bottom_gige", "GAIN_AUTO", old_config_.bottom_gige_gain_mode,
-                  config.bottom_gige_gain_mode);
-  UpdateIfChanged("bottom_gige", "GAIN", old_config_.bottom_gige_gain_value,
-                  config.bottom_gige_gain_value);
+                  old_config_.bottom_gige_exposure_auto,
+                  config.bottom_gige_exposure_auto);
+  UpdateIfChanged("bottom_gige", "EXPOSURE", old_config_.bottom_gige_exposure,
+                  config.bottom_gige_exposure);
+  UpdateIfChanged("bottom_gige", "GAIN_AUTO", old_config_.bottom_gige_gain_auto,
+                  config.bottom_gige_gain_auto);
+  UpdateIfChanged("bottom_gige", "GAIN", old_config_.bottom_gige_gain,
+                  config.bottom_gige_gain);
   // The sequence order for white balance is important
   // since in this case it acts as a execute. i.e, the blue,
   // green and red must be set after the white_balance_execute.
@@ -339,65 +338,61 @@ void MediaManager::CallBackDynamicReconfigure(
                   old_config_.bottom_gige_whitebalance_execute,
                   config.bottom_gige_whitebalance_execute);
   UpdateIfChanged("bottom_gige", "WHITE_BALANCE_BLUE",
-                  old_config_.bottom_gige_whitebalance_blue_value,
-                  config.bottom_gige_whitebalance_blue_value);
+                  old_config_.bottom_gige_whitebalance_blue,
+                  config.bottom_gige_whitebalance_blue);
   UpdateIfChanged("bottom_gige", "WHITE_BALANCE_GREEN",
-                  old_config_.bottom_gige_whitebalance_green_value,
-                  config.bottom_gige_whitebalance_green_value);
+                  old_config_.bottom_gige_whitebalance_green,
+                  config.bottom_gige_whitebalance_green);
   UpdateIfChanged("bottom_gige", "WHITE_BALANCE_RED",
-                  old_config_.bottom_gige_whitebalance_red_value,
-                  config.bottom_gige_whitebalance_red_value);
+                  old_config_.bottom_gige_whitebalance_red,
+                  config.bottom_gige_whitebalance_red);
   UpdateIfChanged("bottom_guppy", "EXPOSURE_AUTO",
-                  old_config_.bottom_guppy_exposure_mode,
-                  config.bottom_guppy_exposure_mode);
-  UpdateIfChanged("bottom_guppy", "EXPOSURE",
-                  old_config_.bottom_guppy_exposure_value,
-                  config.bottom_guppy_exposure_value);
+                  old_config_.bottom_guppy_exposure_auto,
+                  config.bottom_guppy_exposure_auto);
+  UpdateIfChanged("bottom_guppy", "EXPOSURE", old_config_.bottom_guppy_exposure,
+                  config.bottom_guppy_exposure);
   UpdateIfChanged("bottom_guppy", "GAIN_AUTO",
-                  old_config_.bottom_guppy_gain_mode,
-                  config.bottom_guppy_gain_mode);
-  UpdateIfChanged("bottom_guppy", "GAIN", old_config_.bottom_guppy_gain_value,
-                  config.bottom_guppy_gain_value);
+                  old_config_.bottom_guppy_gain_auto,
+                  config.bottom_guppy_gain_auto);
+  UpdateIfChanged("bottom_guppy", "GAIN", old_config_.bottom_guppy_gain,
+                  config.bottom_guppy_gain);
   UpdateIfChanged("bottom_guppy", "SHUTTER_AUTO",
-                  old_config_.bottom_guppy_shutter_mode,
-                  config.bottom_guppy_shutter_mode);
-  UpdateIfChanged("bottom_guppy", "SHUTTER",
-                  old_config_.bottom_guppy_shutter_value,
-                  config.bottom_guppy_shutter_value);
+                  old_config_.bottom_guppy_shutter_auto,
+                  config.bottom_guppy_shutter_auto);
+  UpdateIfChanged("bottom_guppy", "SHUTTER", old_config_.bottom_guppy_shutter,
+                  config.bottom_guppy_shutter);
   UpdateIfChanged("bottom_guppy", "WHITE_BALANCE_BLUE",
-                  old_config_.bottom_guppy_whitebalance_blue_value,
-                  config.bottom_guppy_whitebalance_blue_value);
+                  old_config_.bottom_guppy_whitebalance_blue,
+                  config.bottom_guppy_whitebalance_blue);
   UpdateIfChanged("bottom_guppy", "WHITE_BALANCE_AUTO",
-                  old_config_.bottom_guppy_whitebalance_mode,
-                  config.bottom_guppy_whitebalance_mode);
+                  old_config_.bottom_guppy_whitebalance_auto,
+                  config.bottom_guppy_whitebalance_auto);
   UpdateIfChanged("bottom_guppy", "WHITE_BALANCE_RED",
-                  old_config_.bottom_guppy_whitebalance_red_value,
-                  config.bottom_guppy_whitebalance_red_value);
+                  old_config_.bottom_guppy_whitebalance_red,
+                  config.bottom_guppy_whitebalance_red);
   UpdateIfChanged("front_guppy", "EXPOSURE_AUTO",
-                  old_config_.front_guppy_exposure_mode,
-                  config.front_guppy_exposure_mode);
-  UpdateIfChanged("front_guppy", "EXPOSURE",
-                  old_config_.front_guppy_exposure_value,
-                  config.front_guppy_exposure_value);
-  UpdateIfChanged("front_guppy", "GAIN_AUTO", old_config_.front_guppy_gain_mode,
-                  config.front_guppy_gain_mode);
-  UpdateIfChanged("front_guppy", "GAIN", old_config_.front_guppy_gain_value,
-                  config.front_guppy_gain_value);
+                  old_config_.front_guppy_exposure_auto,
+                  config.front_guppy_exposure_auto);
+  UpdateIfChanged("front_guppy", "EXPOSURE", old_config_.front_guppy_exposure,
+                  config.front_guppy_exposure);
+  UpdateIfChanged("front_guppy", "GAIN_AUTO", old_config_.front_guppy_gain_auto,
+                  config.front_guppy_gain_auto);
+  UpdateIfChanged("front_guppy", "GAIN", old_config_.front_guppy_gain,
+                  config.front_guppy_gain);
   UpdateIfChanged("front_guppy", "SHUTTER_AUTO",
-                  old_config_.front_guppy_shutter_mode,
-                  config.front_guppy_shutter_mode);
-  UpdateIfChanged("front_guppy", "SHUTTER",
-                  old_config_.front_guppy_shutter_value,
-                  config.front_guppy_shutter_value);
+                  old_config_.front_guppy_shutter_auto,
+                  config.front_guppy_shutter_auto);
+  UpdateIfChanged("front_guppy", "SHUTTER", old_config_.front_guppy_shutter,
+                  config.front_guppy_shutter);
   UpdateIfChanged("front_guppy", "WHITE_BALANCE_BLUE",
-                  old_config_.front_guppy_whitebalance_blue_value,
-                  config.front_guppy_whitebalance_blue_value);
+                  old_config_.front_guppy_whitebalance_blue,
+                  config.front_guppy_whitebalance_blue);
   UpdateIfChanged("front_guppy", "WHITE_BALANCE_AUTO",
-                  old_config_.front_guppy_whitebalance_mode,
-                  config.front_guppy_whitebalance_mode);
+                  old_config_.front_guppy_whitebalance_auto,
+                  config.front_guppy_whitebalance_auto);
   UpdateIfChanged("front_guppy", "WHITE_BALANCE_RED",
-                  old_config_.front_guppy_whitebalance_red_value,
-                  config.front_guppy_whitebalance_red_value);
+                  old_config_.front_guppy_whitebalance_red,
+                  config.front_guppy_whitebalance_red);
 
   old_config_ = config;
 }

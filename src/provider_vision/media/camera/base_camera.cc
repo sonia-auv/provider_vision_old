@@ -95,21 +95,21 @@ void BaseCamera::PublishCameraFeatures() const {
 
   bool tmp_bool;
   GetShutterMode(tmp_bool);
-  msg.shutter_mode = static_cast<uint8_t>(tmp_bool);
+  msg.shutter_auto = static_cast<uint8_t>(tmp_bool);
   GetShutterMode(tmp_bool);
-  msg.white_balance_mode = static_cast<uint8_t>(tmp_bool);
+  msg.white_balance_auto = static_cast<uint8_t>(tmp_bool);
   GetShutterMode(tmp_bool);
-  msg.gain_mode = static_cast<uint8_t>(tmp_bool);
+  msg.gain_auto = static_cast<uint8_t>(tmp_bool);
 
   double tmp_val;
   GetGainValue(tmp_val);
-  msg.gain_value = tmp_val;
+  msg.gain = tmp_val;
   GetGammaValue(tmp_val);
-  msg.gamma_value = tmp_val;
+  msg.gamma = tmp_val;
   GetExposureValue(tmp_val);
-  msg.exposure_value = tmp_val;
+  msg.exposure = tmp_val;
   GetSaturationValue(tmp_val);
-  msg.saturation_value = tmp_val;
+  msg.saturation = tmp_val;
 
   //  msg.luminance_msv = calibrator_.GetLimunanceMSV();
   //  msg.saturation_msv = calibrator_.GetSaturationMSV();
@@ -125,10 +125,10 @@ bool BaseCamera::SetFeature(const Feature &feat, const boost::any &value) {
     case Feature::SHUTTER_VALUE:
       result = SetShutterValue(CastToDouble(value));
       break;
-    case Feature::SHUTTER_MODE:
+    case Feature::SHUTTER_AUTO:
       result = SetShutterMode(CastToBool(value));
       break;
-    case Feature::GAIN_MODE:
+    case Feature::GAIN_AUTO:
       result = SetGainMode(CastToBool(value));
       break;
     case Feature::GAIN_VALUE:
@@ -137,7 +137,7 @@ bool BaseCamera::SetFeature(const Feature &feat, const boost::any &value) {
     case Feature::FRAMERATE_VALUE:
       result = SetFrameRateValue(CastToDouble(value));
       break;
-    case Feature::WHITE_BALANCE_MODE:
+    case Feature::WHITE_BALANCE_AUTO:
       result = SetWhiteBalanceMode(CastToBool(value));
       break;
     case Feature::WHITE_BALANCE_BLUE_VALUE:
@@ -158,7 +158,7 @@ bool BaseCamera::SetFeature(const Feature &feat, const boost::any &value) {
     case Feature::SATURATION_VALUE:
       result = SetSaturationValue(CastToDouble(value));
       break;
-    case Feature::EXPOSURE_MODE:
+    case Feature::EXPOSURE_AUTO:
       result = SetExposureMode(CastToBool(value));
       break;
     case Feature::AUTOBRIGHTNESS_AUTO:
@@ -196,7 +196,7 @@ bool BaseCamera::GetFeature(const Feature &feat, boost::any &value) const {
       result = GetShutterValue(dbl_val);
       value = dbl_val;
       break;
-    case Feature::SHUTTER_MODE:
+    case Feature::SHUTTER_AUTO:
       result = GetShutterMode(bool_val);
       value = bool_val;
       break;
@@ -204,7 +204,7 @@ bool BaseCamera::GetFeature(const Feature &feat, boost::any &value) const {
       result = GetFrameRateValue(dbl_val);
       value = dbl_val;
       break;
-    case Feature::WHITE_BALANCE_MODE:
+    case Feature::WHITE_BALANCE_AUTO:
       result = GetWhiteBalanceMode(bool_val);
       value = bool_val;
       break;
@@ -232,11 +232,11 @@ bool BaseCamera::GetFeature(const Feature &feat, boost::any &value) const {
       result = GetSaturationValue(dbl_val);
       value = dbl_val;
       break;
-    case Feature::GAIN_MODE:
+    case Feature::GAIN_AUTO:
       result = GetGainMode(bool_val);
       value = bool_val;
       break;
-    case Feature::EXPOSURE_MODE:
+    case Feature::EXPOSURE_AUTO:
       result = GetExposureMode(bool_val);
       value = bool_val;
       break;

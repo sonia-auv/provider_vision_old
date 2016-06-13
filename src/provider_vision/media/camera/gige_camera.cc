@@ -256,29 +256,29 @@ bool GigeCamera::NextImage(cv::Mat &img) {
 //------------------------------------------------------------------------------
 //
 bool GigeCamera::SetCameraParams() {
-  SetAutoBrightnessMode(auto_brightness_);
+  SetAutoBrightnessMode(auto_brightness_auto_);
   atlas::MilliTimer::Sleep(100);
-  if (auto_brightness_) {
+  if (auto_brightness_auto_) {
     SetAutoBrightnessTarget(auto_brightness_target_);
     atlas::MilliTimer::Sleep(100);
     SetAutoBrightnessTargetVariation(auto_brightness_target_variation_);
     atlas::MilliTimer::Sleep(100);
   }
-  if (gain_manual_) {
-    if (auto_brightness_) {
+  if (!gain_auto_) {
+    if (auto_brightness_auto_) {
       SetGainMode(0);
     }
     SetGainValue((float)gain_);
-  } else if (auto_brightness_)
+  } else if (auto_brightness_auto_)
     SetGainMode(true);
   atlas::MilliTimer::Sleep(100);
-  if (exposure_manual_) {
-    if (auto_brightness_) {
+  if (!exposure_auto_) {
+    if (auto_brightness_auto_) {
       SetExposureMode(0);
     }
     atlas::MilliTimer::Sleep(100);
     SetExposureValue((float)exposure_);
-  } else if (auto_brightness_)
+  } else if (auto_brightness_auto_)
     SetExposureMode(true);
   atlas::MilliTimer::Sleep(100);
 

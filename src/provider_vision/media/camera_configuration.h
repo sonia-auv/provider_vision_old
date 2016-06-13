@@ -58,10 +58,10 @@ class CameraConfiguration : public atlas::ConfigurationParser {
   uint64_t guid_;
   std::string name_;
   double framerate_;
-  bool gain_manual_;
-  bool shutter_manual_;
-  bool exposure_manual_;
-  bool white_balance_manual_;
+  bool gain_auto_;
+  bool shutter_auto_;
+  bool exposure_auto_;
+  bool white_balance_auto_;
   double gain_;
   double shutter_;
   double gamma_;
@@ -74,7 +74,7 @@ class CameraConfiguration : public atlas::ConfigurationParser {
   int x_offset_;
   int y_offset_;
   int format_;
-  bool auto_brightness_;
+  bool auto_brightness_auto_;
   int auto_brightness_target_;
   int auto_brightness_target_variation_;
 

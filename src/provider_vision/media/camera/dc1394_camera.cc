@@ -829,27 +829,27 @@ bool DC1394Camera::SetNormalFormat() {
 bool DC1394Camera::SetCameraParams() {
   bool all_set = true;
 
-  all_set &= SetFeature(Feature::EXPOSURE_MODE, !exposure_manual_);
+  all_set &= SetFeature(Feature::EXPOSURE_AUTO, exposure_auto_);
   atlas::MilliTimer::Sleep(100);
-  if (!exposure_manual_) {
+  if (exposure_auto_) {
     all_set &= SetFeature(Feature::EXPOSURE_VALUE, exposure_);
     atlas::MilliTimer::Sleep(100);
   }
-  all_set &= SetFeature(Feature::GAIN_MODE, !gain_manual_);
+  all_set &= SetFeature(Feature::GAIN_AUTO, gain_auto_);
   atlas::MilliTimer::Sleep(100);
-  if (gain_manual_) {
+  if (!gain_auto_) {
     all_set &= SetFeature(Feature::GAIN_VALUE, gain_);
     atlas::MilliTimer::Sleep(100);
   }
-  all_set &= SetFeature(Feature::SHUTTER_MODE, !shutter_manual_);
+  all_set &= SetFeature(Feature::SHUTTER_AUTO, shutter_auto_);
   atlas::MilliTimer::Sleep(100);
-  if (shutter_manual_) {
+  if (!shutter_auto_) {
     all_set &= SetFeature(Feature::SHUTTER_VALUE, shutter_);
     atlas::MilliTimer::Sleep(100);
   }
-  all_set &= SetFeature(Feature::WHITE_BALANCE_MODE, !white_balance_manual_);
+  all_set &= SetFeature(Feature::WHITE_BALANCE_AUTO, white_balance_auto_);
   atlas::MilliTimer::Sleep(100);
-  if (white_balance_manual_) {
+  if (!white_balance_auto_) {
     all_set &=
         SetFeature(Feature::WHITE_BALANCE_BLUE_VALUE, white_balance_blue_);
     atlas::MilliTimer::Sleep(100);

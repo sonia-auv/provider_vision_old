@@ -48,18 +48,18 @@ class BaseCamera : public BaseMedia, protected CameraConfiguration {
    * the enum name, ex. "FRAMERATE" for FEATURE::FRAMERATE
    */
   enum class Feature {
-    SHUTTER_MODE = 0,
+    SHUTTER_AUTO = 0,
     SHUTTER_VALUE,
-    GAIN_MODE,
+    GAIN_AUTO,
     GAIN_VALUE,
-    WHITE_BALANCE_MODE,
+    WHITE_BALANCE_AUTO,
     WHITE_BALANCE_RED_VALUE,
     WHITE_BALANCE_BLUE_VALUE,
     // FRAMERATE_MODE,
     FRAMERATE_VALUE,
     // GAMMA_MODE,
     GAMMA_VALUE,
-    EXPOSURE_MODE,
+    EXPOSURE_AUTO,
     EXPOSURE_VALUE,
     // SATURATION_MODE,
     SATURATION_VALUE,
