@@ -1,7 +1,7 @@
 # File containing all the initial camera parameters for the /provider_vision/default camera.
 
 # Parameters for the /provider_vision/front Guppy Camera
-/provider_vision//provider_vision/front_guppy_name: "/provider_vision/front_guppy"
+/provider_vision//provider_vision/front_guppy_name: "front_guppy"
 /provider_vision/front_guppy_guid: "2892819690326160"
 /provider_vision/front_guppy_framerate: 0
 /provider_vision/front_guppy_gain_auto: false
@@ -25,7 +25,7 @@
 /provider_vision/front_guppy_auto_brightness_target_variation: 16
 
 # Parameters for the /provider_vision/bottom Guppy Camera
-/provider_vision/bottom_guppy_name: "/provider_vision/bottom_guppy"
+/provider_vision/bottom_guppy_name: "bottom_guppy"
 /provider_vision/bottom_guppy_guid: "582164340023517285"
 /provider_vision/bottom_guppy_framerate: 0
 /provider_vision/bottom_guppy_gain_auto: false
@@ -50,7 +50,7 @@
 
 
 # Parameters for the /provider_vision/bottom GigE Camera
-/provider_vision/bottom_gige_name: "/provider_vision/bottom_gige"
+/provider_vision/bottom_gige_name: "bottom_gige"
 /provider_vision/bottom_gige_guid: "1230819763"
 /provider_vision/bottom_gige_framerate: 15
 /provider_vision/bottom_gige_auto_brightness_auto: false
@@ -74,7 +74,7 @@
 /provider_vision/bottom_gige_format: 17301513
 
 # Parameters for the all other camera (/provider_vision/default configurations)
-/provider_vision/default_name: "/provider_vision/default_camera"
+/provider_vision/default_name: "default_camera"
 /provider_vision/default_framerate: 0
 /provider_vision/default_gain_auto: true
 /provider_vision/default_shutter_auto: true
