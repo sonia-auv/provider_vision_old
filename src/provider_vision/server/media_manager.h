@@ -151,6 +151,8 @@ class MediaManager {
 
   void UpdateIfChanged(std::string camera_name, std::string feature_name,
                        int old_value, int value);
+
+  bool IsContextValid(const std::string &name);
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
@@ -162,8 +164,6 @@ class MediaManager {
 
   dynamic_reconfigure::Server<provider_vision::Camera_Parameters_Config>
       server_;
-
-  FeatureMapType level_map_;
 
   provider_vision::Camera_Parameters_Config old_config_;
 };

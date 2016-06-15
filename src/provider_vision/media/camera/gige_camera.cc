@@ -106,7 +106,6 @@ bool GigeCamera::Open() {
   UINT32 y_offset = 0;
 
   try {
-    SetCameraParams();
     status = GevSetImageParameters(gige_camera_, (UINT32)width_,
                                    (UINT32)height_, (UINT32)x_offset_,
                                    (UINT32)y_offset_, (UINT32)format_);
@@ -585,15 +584,23 @@ bool GigeCamera::SetWhiteBalanceMode(bool mode) {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CEnumerationPtr ptrEnumNode = Camera->_GetNode("BalanceWhiteAuto");
-  GevStopImageTransfer(gige_camera_);
-  atlas::MilliTimer::Sleep(100);
-  ptrEnumNode->SetIntValue(1);
-  atlas::MilliTimer::Sleep(100);
-  GenApi::CCommandPtr ptrWhiteBalanceCmd =
-      Camera->_GetNode("balanceWhiteAutoOnDemandCmd");
-  ptrWhiteBalanceCmd->Execute();
-  atlas::MilliTimer::Sleep(100);
-  if (status_ == Status::STREAMING) GevStartImageTransfer(gige_camera_, -1);
+  if (mode) {
+    GevStopImageTransfer(gige_camera_);
+    atlas::MilliTimer::Sleep(100);
+    ptrEnumNode->SetIntValue(1);
+    atlas::MilliTimer::Sleep(100);
+    GenApi::CCommandPtr ptrWhiteBalanceCmd =
+        Camera->_GetNode("balanceWhiteAutoOnDemandCmd");
+    ptrWhiteBalanceCmd->Execute();
+    atlas::MilliTimer::Sleep(100);
+    if (status_ == Status::STREAMING) GevStartImageTransfer(gige_camera_, -1);
+  } else {
+    GevStopImageTransfer(gige_camera_);
+    atlas::MilliTimer::Sleep(100);
+    ptrEnumNode->SetIntValue(0);
+    atlas::MilliTimer::Sleep(100);
+    if (status_ == Status::STREAMING) GevStartImageTransfer(gige_camera_, -1);
+  }
 
   return true;
 }
