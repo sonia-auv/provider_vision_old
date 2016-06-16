@@ -118,6 +118,8 @@ void DrawSquares(cv::Mat &image,
 
 bool CompareYX(const cv::Point &p1, const cv::Point &p2);
 
+float Median(std::vector<float> values);
+
 //==============================================================================
 // I N L I N E   F U N C T I O N S   D E F I N I T I O N S
 
@@ -141,6 +143,10 @@ inline float EucledianPointDistance(const cv::Point2f &pt1,
                                     const cv::Point2f &pt2) {
   return sqrt(pow((pt1.x - pt2.x), 2) + pow((pt1.y - pt2.y), 2));
 }
+//------------------------------------------------------------------------------
+//
+
+
 
 }  // namespace provider_vision
 

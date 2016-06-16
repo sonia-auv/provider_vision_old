@@ -602,4 +602,22 @@ bool CompareYX(const cv::Point &p1, const cv::Point &p2) {
   return std::tie(p1.x, p1.y) < std::tie(p2.x, p2.y);
 }
 
+//------------------------------------------------------------------------------
+//
+float Median(std::vector<float> values) {
+  float median;
+  size_t size = values.size();
+
+  std::sort(values.begin(), values.end());
+
+  if (size % 2 == 0) {
+    median = (values[size / 2 - 1] + values[size / 2]) / 2;
+  }
+  else {
+    median = values[size / 2];
+  }
+
+  return median;
+};
+
 }  // namespace provider_vision

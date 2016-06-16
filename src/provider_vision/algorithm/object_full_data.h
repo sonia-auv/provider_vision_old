@@ -27,6 +27,7 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 #include "provider_vision/algorithm/object_feature.h"
+#include "provider_vision/algorithm/general_function.h"
 
 namespace provider_vision {
 
@@ -74,6 +75,8 @@ inline bool AreaSorts(ObjectFullData::Ptr a, ObjectFullData::Ptr b) {
 inline bool RatioSorts(ObjectFullData::Ptr a, ObjectFullData::Ptr b) {
   return a->GetRatio() < b->GetRatio();
 }
+
+cv::Point ObjectVecMedian(ObjectFullData::FullObjectPtrVec);
 
 }  // namespace provider_vision
 
