@@ -355,9 +355,14 @@ inline void ObjectFinder::EliminateSameXTarget(
   }
   // Erase from vector
   if (index_to_eliminate.size() > 0) {
+    // Erase same indexes
+    std::sort(index_to_eliminate.begin(), index_to_eliminate.end());
+    index_to_eliminate.erase(
+        std::unique(index_to_eliminate.begin(), index_to_eliminate.end()),
+        index_to_eliminate.end());
+    // Erase the values from the vector.
     for (int i = index_to_eliminate.size() - 1; i >= 0; i--) {
       vec.erase(vec.begin() + i);
-      ROS_INFO("Eliminating same X");
     }
   }
 }
