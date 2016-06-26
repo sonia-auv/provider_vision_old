@@ -337,17 +337,17 @@ void MediaManager::CallBackDynamicReconfigure(
     // since in this case it acts as a execute. i.e, the blue,
     // green and red must be set after the white_balance_execute.
     UpdateIfChanged("bottom_gige", "WHITE_BALANCE_AUTO",
-                    old_config_.bottom_gige_whitebalance_execute,
-                    config.bottom_gige_whitebalance_execute);
+                    old_config_.bottom_gige_white_balance_execute,
+                    config.bottom_gige_white_balance_execute);
     UpdateIfChanged("bottom_gige", "WHITE_BALANCE_BLUE",
-                    old_config_.bottom_gige_whitebalance_blue,
-                    config.bottom_gige_whitebalance_blue);
+                    old_config_.bottom_gige_white_balance_blue,
+                    config.bottom_gige_white_balance_blue);
     UpdateIfChanged("bottom_gige", "WHITE_BALANCE_GREEN",
-                    old_config_.bottom_gige_whitebalance_green,
-                    config.bottom_gige_whitebalance_green);
+                    old_config_.bottom_gige_white_balance_green,
+                    config.bottom_gige_white_balance_green);
     UpdateIfChanged("bottom_gige", "WHITE_BALANCE_RED",
-                    old_config_.bottom_gige_whitebalance_red,
-                    config.bottom_gige_whitebalance_red);
+                    old_config_.bottom_gige_white_balance_red,
+                    config.bottom_gige_white_balance_red);
   }
 
   if (IsContextValid("bottom_guppy")) {
@@ -368,14 +368,14 @@ void MediaManager::CallBackDynamicReconfigure(
     UpdateIfChanged("bottom_guppy", "SHUTTER", old_config_.bottom_guppy_shutter,
                     config.bottom_guppy_shutter);
     UpdateIfChanged("bottom_guppy", "WHITE_BALANCE_BLUE",
-                    old_config_.bottom_guppy_whitebalance_blue,
-                    config.bottom_guppy_whitebalance_blue);
+                    old_config_.bottom_guppy_white_balance_blue,
+                    config.bottom_guppy_white_balance_blue);
     UpdateIfChanged("bottom_guppy", "WHITE_BALANCE_AUTO",
-                    old_config_.bottom_guppy_whitebalance_auto,
-                    config.bottom_guppy_whitebalance_auto);
+                    old_config_.bottom_guppy_white_balance_auto,
+                    config.bottom_guppy_white_balance_auto);
     UpdateIfChanged("bottom_guppy", "WHITE_BALANCE_RED",
-                    old_config_.bottom_guppy_whitebalance_red,
-                    config.bottom_guppy_whitebalance_red);
+                    old_config_.bottom_guppy_white_balance_red,
+                    config.bottom_guppy_white_balance_red);
   }
 
   if (IsContextValid("front_guppy")) {
@@ -395,14 +395,14 @@ void MediaManager::CallBackDynamicReconfigure(
     UpdateIfChanged("front_guppy", "SHUTTER", old_config_.front_guppy_shutter,
                     config.front_guppy_shutter);
     UpdateIfChanged("front_guppy", "WHITE_BALANCE_BLUE",
-                    old_config_.front_guppy_whitebalance_blue,
-                    config.front_guppy_whitebalance_blue);
+                    old_config_.front_guppy_white_balance_blue,
+                    config.front_guppy_white_balance_blue);
     UpdateIfChanged("front_guppy", "WHITE_BALANCE_AUTO",
-                    old_config_.front_guppy_whitebalance_auto,
-                    config.front_guppy_whitebalance_auto);
+                    old_config_.front_guppy_white_balance_auto,
+                    config.front_guppy_white_balance_auto);
     UpdateIfChanged("front_guppy", "WHITE_BALANCE_RED",
-                    old_config_.front_guppy_whitebalance_red,
-                    config.front_guppy_whitebalance_red);
+                    old_config_.front_guppy_white_balance_red,
+                    config.front_guppy_white_balance_red);
   }
 
   old_config_ = config;
