@@ -173,10 +173,10 @@ bool DC1394Camera::NextImage(cv::Mat &img) {
       width_ = frame->size[1];
     if (height_ + y_offset_ > frame->size[0] | width_ == 0)
       height_ = frame->size[0];
-    if (x_offset_ > frame->size[1]) x_offset_ = 0;
-    if (y_offset_ > frame->size[0]) y_offset_ = 0;
+    if (x_offset_ + width_ > frame->size[1]) x_offset_ = 0;
+    if (y_offset_ + height_ > frame->size[0]) y_offset_ = 0;
     cv::Mat croppedImage = tmp(cv::Rect(x_offset_, y_offset_, width_, height_));
-    cv::cvtColor(tmp, tmp, CV_YUV2BGR_Y422);
+    cv::cvtColor(croppedImage, croppedImage, CV_YUV2BGR_Y422);
     undistord_matrix_.CorrectInmage(croppedImage, img);
   } catch (cv::Exception &e) {
     status_ = Status::ERROR;
