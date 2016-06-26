@@ -30,11 +30,8 @@ int main(int argc, char **argv) {
 
   provider_vision::VisionServer pv(nh);
 
-  ros::Rate loop_rate(60);
-
   while (ros::ok()) {
     ros::spinOnce();
-    loop_rate.sleep();
   }
 
   return 0;

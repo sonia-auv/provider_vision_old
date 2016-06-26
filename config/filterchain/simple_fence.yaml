@@ -3,17 +3,17 @@ filters:
   - name: Blurr
     parameters:
       - name: Enable
-        value: 0
+        value: 1
       - name: Type
         value: 2
       - name: Kernel_size
-        value: 1
+        value: 3
   - name: SubtractAllPlanes
     parameters:
       - name: enable
-        value: 0
-      - name: Plane_1
         value: 1
+      - name: Plane_1
+        value: 2
       - name: Plane_2
         value: 1
       - name: Plane_3
@@ -30,46 +30,18 @@ filters:
         value: 1.000000
       - name: Weight_Plane_3
         value: 1.000000
-  - name: InRange
-    parameters:
-      - name: Enable
-        value: 0
-      - name: HSVLowH
-        value: 0
-      - name: HSVHighH
-        value: 255
-      - name: HSVLowS
-        value: 0
-      - name: HSVHighS
-        value: 255
-      - name: HSVLowV
-        value: 0
-      - name: HSVHighV
-        value: 255
-      - name: LUVlowL
-        value: 0
-      - name: LUVhighL
-        value: 255
-      - name: LUVlowU
-        value: 0
-      - name: LUVhighU
-        value: 255
-      - name: LUVlowV
-        value: 0
-      - name: LUVhighV
-        value: 255
   - name: Threshold
     parameters:
       - name: Enable
-        value: 0
-      - name: Threshold_type
         value: 1
+      - name: Threshold_type
+        value: 0
       - name: Max_value
-        value: 100
+        value: 60
   - name: Erode
     parameters:
       - name: Enable
-        value: 0
+        value: 1
       - name: Square_kernel
         value: 1
       - name: Kernel_type
@@ -83,7 +55,7 @@ filters:
   - name: Dilate
     parameters:
       - name: Enable
-        value: 0
+        value: 1
       - name: Square_kernel
         value: 1
       - name: Kernel_type
@@ -105,44 +77,48 @@ filters:
   - name: ObjectFinder
     parameters:
       - name: Enable
-        value: 0
+        value: 1
       - name: Debug_contour
+        value: 1
+      - name: "4.1 Look_for_Rectangle : green"
         value: 0
-      - name: Look_for_Rectangle
+      - name: "2. disable_ratio_check : blue"
         value: 0
-      - name: disable_ratio_check
-        value: 0
-      - name: disable_angle_check
+      - name: "4.2 disable_angle_check : green"
         value: 0
       - name: Use_convex_hull
+        value: 0
+      - name: 5. Eliminate_same_x
         value: 0
       - name: Vote_most_centered
         value: 0
       - name: Vote_most_upright
         value: 0
       - name: Vote_less_diff_from_target_ratio
-        value: 0
+        value: 1
       - name: Vote_length
-        value: 0
+        value: 1
       - name: Vote_higher
-        value: 0
+        value: 1
       - name: ID
         value: buoy
       - name: spec1
         value: red
       - name: spec2
         value: blue
-      - name: Min_area
-        value: 200.000000
-      - name: Ratio_target
-        value: 0.500000
-      - name: Diff_from_ratio_target
+      - name: "1. Min_area : red"
+        value: 100.000000
+      - name: 2. Ratio_target
         value: 0.100000
-      - name: angle_target
-        value: 0.000000
-      - name: Diff_from_angle_target
+      - name: 2. Diff_from_ratio_target
+        value: 0.100000
+      - name: 4.2 angle_target
+        value: 90.000000
+      - name: 4.2 Diff_from_angle_target
         value: 30.000000
-      - name: Min_percent_filled
+      - name: "3. Min_percent_filled : yellow"
+        value: 10.000000
+      - name: 5. Min_x_difference
         value: 50.000000
       - name: Contour_retreval
         value: 0
