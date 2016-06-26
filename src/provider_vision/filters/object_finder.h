@@ -51,15 +51,28 @@ class ObjectFinder : public Filter {
       : Filter(globalParams),
         enable_("Enable", false, &parameters_),
         debug_contour_("Debug_contour", false, &parameters_),
-        look_for_rectangle_("Look_for_Rectangle", false, &parameters_),
-        eliminate_same_x_targets_("Eliminate_same_x", false, &parameters_),
-        max_x_difference_for_elimination_("Min_x_difference", 50.0f, 0.0f,
-                                          1000.0f, &parameters_),
-        disable_ratio_("disable_ratio_check", false, &parameters_),
-        disable_angle_("disable_angle_check", false, &parameters_),
+        contour_retreval_("Contour_retreval", 0, 0, 4, &parameters_,
+                          "0=All, 1=Out, 2=Inner, 3=InnerMost, 4=OutNoChild"),
         use_convex_hull_("Use_convex_hull", false, &parameters_),
+        min_area_("1. Min_area : red", 200, 0, 10000, &parameters_),
+        disable_ratio_("2. disable_ratio_check : blue", false, &parameters_),
+        targeted_ratio_("2. Ratio_target", 0.5f, 0.0f, 1.0f, &parameters_),
+        difference_from_target_ratio_("2. Diff_from_ratio_target", 0.10f, 0.0f,
+                                      1.0f, &parameters_),
+        min_percent_filled_("3. Min_percent_filled : yellow", 50, 0, 100,
+                            &parameters_),
+        look_for_rectangle_("4.1 Look_for_Rectangle : green", false,
+                            &parameters_),
+        disable_angle_("4.2 disable_angle_check : green", false, &parameters_),
+        targeted_angle_("4.2 angle_target", 0.0f, 0.0f, 90.0f, &parameters_),
+        difference_from_target_angle_("4.2 Diff_from_angle_target", 30.0f, 0.0f,
+                                      90.0f, &parameters_),
+        eliminate_same_x_targets_("5. Eliminate_same_x", false, &parameters_),
+        max_x_difference_for_elimination_("5. Min_x_difference", 50.0f, 0.0f,
+                                          1000.0f, &parameters_),
         vote_most_centered_("Vote_most_centered", false, &parameters_),
         vote_most_upright_("Vote_most_upright", false, &parameters_),
+        vote_most_horizontal_("Vote most horizontal", false, &parameters_),
         vote_less_difference_from_targeted_ratio_(
             "Vote_less_diff_from_target_ratio", false, &parameters_),
         vote_length_("Vote_length", false, &parameters_),
@@ -67,16 +80,6 @@ class ObjectFinder : public Filter {
         id_("ID", "buoy", &parameters_),
         spec_1_("spec1", "red", &parameters_),
         spec_2_("spec2", "blue", &parameters_),
-        min_area_("Min_area", 200, 0, 10000, &parameters_),
-        targeted_ratio_("Ratio_target", 0.5f, 0.0f, 1.0f, &parameters_),
-        difference_from_target_ratio_("Diff_from_ratio_target", 0.10f, 0.0f,
-                                      1.0f, &parameters_),
-        targeted_angle_("angle_target", 0.0f, 0.0f, 90.0f, &parameters_),
-        difference_from_target_angle_("Diff_from_angle_target", 30.0f, 0.0f,
-                                      90.0f, &parameters_),
-        min_percent_filled_("Min_percent_filled", 50, 0, 100, &parameters_),
-        contour_retreval_("Contour_retreval", 0, 0, 4, &parameters_,
-                          "0=All, 1=Out, 2=Inner, 3=InnerMost, 4=OutNoChild"),
         feature_factory_(5) {
     SetName("ObjectFinder");
     // Little goodies for cvs
@@ -127,6 +130,8 @@ class ObjectFinder : public Filter {
 
         ObjectFullData::Ptr object =
             std::make_shared<ObjectFullData>(originalImage, image, contours[i]);
+        feature_factory_.ComputeAllFeature(object);
+
         if (object.get() == nullptr) {
           continue;
         }
@@ -228,6 +233,19 @@ class ObjectFinder : public Filter {
                      6, CV_RGB(255, 0, 255), -1);
         }
 
+        if (vote_most_horizontal_()) {
+          std::sort(objVec.begin(), objVec.end(),
+                    [](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
+                      return fabs(a->GetRotatedRect().angle) >
+                             fabs(b->GetRotatedRect().angle);
+                    });
+          objVec[0]->IncrementVote();
+          cv::circle(output_image_, cv::Point(objVec[0]->GetCenter().x,
+                                              objVec[0]->GetCenter().y) -
+                                        cv::Point(12, 0),
+                     6, CV_RGB(255, 0, 255), -1);
+        }
+
         if (vote_less_difference_from_targeted_ratio_()) {
           std::sort(
               objVec.begin(), objVec.end(),
@@ -313,7 +331,8 @@ class ObjectFinder : public Filter {
       disable_angle_, use_convex_hull_, eliminate_same_x_targets_;
 
   Parameter<bool> vote_most_centered_, vote_most_upright_,
-      vote_less_difference_from_targeted_ratio_, vote_length_, vote_higher_;
+      vote_less_difference_from_targeted_ratio_, vote_length_, vote_higher_,
+      vote_most_horizontal_;
 
   Parameter<std::string> id_, spec_1_, spec_2_;
 
