@@ -1,5 +1,17 @@
 name: simple_fence
 filters:
+  - name: ImageCropper
+    parameters:
+      - name: Enable
+        value: 1
+      - name: X Offset
+        value: 0
+      - name: Y Offset
+        value: 300
+      - name: X Reduction
+        value: 0
+      - name: Y Reduction
+        value: 0
   - name: Blurr
     parameters:
       - name: Enable
@@ -49,15 +61,15 @@ filters:
   - name: Erode
     parameters:
       - name: Enable
-        value: 1
+        value: 0
       - name: Square_kernel
         value: 1
       - name: Kernel_type
-        value: 0
+        value: 2
       - name: Width
         value: 1
       - name: Height
-        value: 1
+        value: 5
       - name: Iteration
         value: 1
   - name: Dilate
@@ -67,13 +79,13 @@ filters:
       - name: Square_kernel
         value: 1
       - name: Kernel_type
-        value: 0
+        value: 2
       - name: Width
         value: 1
       - name: Height
         value: 1
       - name: Iteration
-        value: 1
+        value: 2
   - name: ConvexHull
     parameters:
       - name: Enable

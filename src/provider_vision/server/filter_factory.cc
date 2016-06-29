@@ -96,7 +96,10 @@ Filter *FilterFactory::createInstance(const std::string &name,
     return new BilateralFilter(globalParams);
   } else if (name == "BackgroundSubstract") {
     return new BackgroundSubstract(globalParams);
-  } else {
+  } else if (name == "ImageCropper") {
+    return new ImageCropper(globalParams);
+  }
+  else {
     return nullptr;
   }
 }
@@ -110,7 +113,7 @@ std::string FilterFactory::GetFilterList() {
          "DeloreanDetector;SubmarineFrameMasker;InRange;ConvexHull;"
          "TorpedoesDetector;Laplacian;Canny;HoughLine;AdaptiveThreshold;"
          "HandleDetector;WhiteNoiseTakedown;BilateralFilter;"
-         "BackgroundSubstract";
+         "BackgroundSubstract;ImageCropper";
 }
 
 }  // namespace provider_vision
