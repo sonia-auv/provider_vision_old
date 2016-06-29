@@ -169,15 +169,8 @@ bool DC1394Camera::NextImage(cv::Mat &img) {
   try {
     cv::Mat tmp =
         cv::Mat(frame->size[1], frame->size[0], CV_8UC2, frame->image);
-    if (width_ + x_offset_ > frame->size[1] | width_ == 0)
-      width_ = frame->size[1];
-    if (height_ + y_offset_ > frame->size[0] | width_ == 0)
-      height_ = frame->size[0];
-    if (x_offset_ + width_ > frame->size[1]) x_offset_ = 0;
-    if (y_offset_ + height_ > frame->size[0]) y_offset_ = 0;
-    cv::Mat croppedImage = tmp(cv::Rect(x_offset_, y_offset_, width_, height_));
-    cv::cvtColor(croppedImage, croppedImage, CV_YUV2BGR_Y422);
-    undistord_matrix_.CorrectInmage(croppedImage, img);
+    cv::cvtColor(tmp, tmp, CV_YUV2BGR_Y422);
+    undistord_matrix_.CorrectInmage(tmp, img);
   } catch (cv::Exception &e) {
     status_ = Status::ERROR;
     ROS_ERROR_NAMED(CAM_TAG, "Error on OpenCV image transformation %s",
