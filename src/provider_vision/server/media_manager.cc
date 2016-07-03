@@ -409,32 +409,62 @@ void MediaManager::CallBackDynamicReconfigure(
 }
 
 void MediaManager::UpdateIfChanged(std::string camera_name,
-                                   std::string feature_name, bool old_state,
-                                   bool state) {
+                                   std::string feature_name, bool &old_state,
+                                   bool &state) {
   if (state != old_state) {
     SetCameraFeature(camera_name, feature_name, boost::any(state));
     ROS_INFO("Setting %s on %s to %i", feature_name.c_str(),
              camera_name.c_str(), state);
   }
+
+  atlas::MilliTimer::Sleep(100);
+
+  boost::any real_state;
+  GetCameraFeature(camera_name, feature_name, real_state);
+  try {
+    state = boost::any_cast<bool>(real_state);
+  } catch (std::exception &e) {
+    ROS_INFO("Trouble casting to bool");
+  }
 }
 
 void MediaManager::UpdateIfChanged(std::string camera_name,
-                                   std::string feature_name, double old_value,
-                                   double value) {
+                                   std::string feature_name, double &old_value,
+                                   double &value) {
   if (value != old_value) {
     SetCameraFeature(camera_name, feature_name, boost::any(value));
     ROS_INFO("Setting %s on %s to %.2f", feature_name.c_str(),
              camera_name.c_str(), value);
   }
+
+  atlas::MilliTimer::Sleep(100);
+
+  boost::any real_state;
+  GetCameraFeature(camera_name, feature_name, real_state);
+  try {
+    value = boost::any_cast<double>(real_state);
+  } catch (std::exception &e) {
+    ROS_INFO("Trouble casting to double");
+  }
 }
 
 void MediaManager::UpdateIfChanged(std::string camera_name,
-                                   std::string feature_name, int old_value,
-                                   int value) {
+                                   std::string feature_name, int &old_value,
+                                   int &value) {
   if (value != old_value) {
     SetCameraFeature(camera_name, feature_name, boost::any(value));
     ROS_INFO("Setting %s on %s to %i", feature_name.c_str(),
              camera_name.c_str(), value);
+  }
+
+  atlas::MilliTimer::Sleep(100);
+
+  boost::any real_state;
+  GetCameraFeature(camera_name, feature_name, real_state);
+  try {
+    value = boost::any_cast<int>(real_state);
+  } catch (std::exception &e) {
+    ROS_INFO("Trouble casting to int");
   }
 }
 

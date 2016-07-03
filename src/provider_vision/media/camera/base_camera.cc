@@ -191,6 +191,7 @@ bool BaseCamera::GetFeature(const Feature &feat, boost::any &value) const {
   bool result;
   bool bool_val;
   double dbl_val;
+  int int_val;
   switch (feat) {
     case Feature::SHUTTER_VALUE:
       result = GetShutterValue(dbl_val);
@@ -214,6 +215,10 @@ bool BaseCamera::GetFeature(const Feature &feat, boost::any &value) const {
       break;
     case Feature::WHITE_BALANCE_RED_VALUE:
       result = GetWhiteBalanceRed(dbl_val);
+      value = dbl_val;
+      break;
+    case Feature::WHITE_BALANCE_GREEN_VALUE:
+      result = GetWhiteBalanceGreen(dbl_val);
       value = dbl_val;
       break;
     case Feature::GAIN_VALUE:
@@ -241,16 +246,16 @@ bool BaseCamera::GetFeature(const Feature &feat, boost::any &value) const {
       value = bool_val;
       break;
     case Feature::AUTOBRIGHTNESS_AUTO:
-      result = GetAutoBrightnessMode(dbl_val);
-      value = dbl_val;
+      result = GetAutoBrightnessMode(bool_val);
+      value = bool_val;
       break;
     case Feature::AUTOBRIGHTNESS_TARGET:
-      result = GetAutoBrightnessTarget(dbl_val);
-      value = dbl_val;
+      result = GetAutoBrightnessTarget(int_val);
+      value = int_val;
       break;
     case Feature::AUTOBRIGHTNESS_VARIATION:
-      result = GetAutoBrightnessTargetVariation(dbl_val);
-      value = dbl_val;
+      result = GetAutoBrightnessTargetVariation(int_val);
+      value = int_val;
       break;
     default:
       ROS_ERROR("Feature invalid");

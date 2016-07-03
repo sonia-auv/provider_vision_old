@@ -141,9 +141,9 @@ class BaseCamera : public BaseMedia, protected CameraConfiguration {
   virtual bool SetAutoBrightnessMode(double value) = 0;
   virtual bool SetAutoBrightnessTarget(double value) = 0;
   virtual bool SetAutoBrightnessTargetVariation(double value) = 0;
-  virtual bool GetAutoBrightnessTargetVariation(double &value) const = 0;
-  virtual bool GetAutoBrightnessMode(double &value) const = 0;
-  virtual bool GetAutoBrightnessTarget(double &value) const = 0;
+  virtual bool GetAutoBrightnessTargetVariation(int &value) const = 0;
+  virtual bool GetAutoBrightnessMode(bool &value) const = 0;
+  virtual bool GetAutoBrightnessTarget(int &value) const = 0;
 
   //==========================================================================
   // P R O T E C T E D   M E M B E R S

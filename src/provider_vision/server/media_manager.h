@@ -144,13 +144,13 @@ class MediaManager {
       provider_vision::Camera_Parameters_Config &config, uint32_t level);
 
   void UpdateIfChanged(std::string camera_name, std::string feature_name,
-                       bool old_state, bool state);
+                       bool &old_state, bool &state);
 
   void UpdateIfChanged(std::string camera_name, std::string feature_name,
-                       double old_value, double value);
+                       double &old_value, double &value);
 
   void UpdateIfChanged(std::string camera_name, std::string feature_name,
-                       int old_value, int value);
+                       int &old_value, int &value);
 
   bool IsContextValid(const std::string &name);
   //==========================================================================

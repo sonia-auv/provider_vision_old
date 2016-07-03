@@ -311,12 +311,12 @@ bool GigeCamera::SetAutoBrightnessMode(double value) {
 
 //------------------------------------------------------------------------------
 //
-bool GigeCamera::GetAutoBrightnessMode(double &value) const {
+bool GigeCamera::GetAutoBrightnessMode(bool &value) const {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CEnumerationPtr ptrEnumNode = Camera->_GetNode("autoBrightnessMode");
   if (ptrEnumNode) {
-    value = ptrEnumNode->GetCurrentEntry()->GetNumericValue();
+    value = (bool)(ptrEnumNode->GetCurrentEntry()->GetNumericValue());
   } else {
     ROS_WARN_NAMED(CAM_TAG,
                    "The feature Auto brightness is not available on this"
@@ -333,7 +333,7 @@ bool GigeCamera::SetAutoBrightnessTarget(double value) {
 
   GenApi::CIntegerPtr ptrIntNode = Camera->_GetNode("autoBrightnessTarget");
   if (ptrIntNode) {
-    double ab;
+    bool ab;
     GetAutoBrightnessMode(ab);
     if (ab) ptrIntNode->SetValue(value);
   } else {
@@ -346,7 +346,7 @@ bool GigeCamera::SetAutoBrightnessTarget(double value) {
 
 //------------------------------------------------------------------------------
 //
-bool GigeCamera::GetAutoBrightnessTarget(double &value) const {
+bool GigeCamera::GetAutoBrightnessTarget(int &value) const {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
 
@@ -369,7 +369,7 @@ bool GigeCamera::SetAutoBrightnessTargetVariation(double value) {
   GenApi::CIntegerPtr ptrIntNode =
       Camera->_GetNode("autoBrightnessTargetRangeVariation");
   if (ptrIntNode) {
-    double ab;
+    bool ab;
     GetAutoBrightnessMode(ab);
     if (ab) ptrIntNode->SetValue(value);
   } else {
@@ -382,7 +382,7 @@ bool GigeCamera::SetAutoBrightnessTargetVariation(double value) {
 
 //------------------------------------------------------------------------------
 //
-bool GigeCamera::GetAutoBrightnessTargetVariation(double &value) const {
+bool GigeCamera::GetAutoBrightnessTargetVariation(int &value) const {
   GenApi::CNodeMapRef *Camera =
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CIntegerPtr ptrIntNode =
@@ -400,12 +400,12 @@ bool GigeCamera::GetAutoBrightnessTargetVariation(double &value) const {
 //------------------------------------------------------------------------------
 //
 bool GigeCamera::SetGainMode(bool mode) {
-  double value;
+  bool value;
   GetAutoBrightnessMode(value);
   atlas::MilliTimer::Sleep(100);
   if (value != 0) return true;
 
-  double ABmode;
+  bool ABmode;
   GetAutoBrightnessMode(ABmode);
   if (!ABmode) return true;
 
@@ -491,7 +491,7 @@ bool GigeCamera::SetExposureMode(bool mode) {
       static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
   GenApi::CEnumerationPtr ptrExposureAuto = Camera->_GetNode("ExposureAuto");
   GenApi::CEnumerationPtr ptrExposureMode = Camera->_GetNode("ExposureMode");
-  double ABmode;
+  bool ABmode;
   GetAutoBrightnessMode(ABmode);
   if (!ABmode) return true;
   if (ptrExposureAuto && ptrExposureMode) {
@@ -547,7 +547,7 @@ bool GigeCamera::GetExposureValue(double &value) const {
 //
 bool GigeCamera::SetExposureValue(double value) {
   bool mode;
-  double mode1;
+  bool mode1;
   GetExposureMode(mode);
   GetAutoBrightnessMode(mode1);
   if (!mode && mode1) return true;
@@ -600,6 +600,8 @@ bool GigeCamera::SetWhiteBalanceMode(bool mode) {
     ptrEnumNode->SetIntValue(0);
     atlas::MilliTimer::Sleep(100);
     if (status_ == Status::STREAMING) GevStartImageTransfer(gige_camera_, -1);
+    GetWhiteBalanceBlue(white_balance_blue_);
+    GetWhiteBalanceRed(white_balance_red_);
   }
 
   return true;
@@ -638,9 +640,18 @@ bool GigeCamera::SetWhiteBalanceRatio(double value) {
 //------------------------------------------------------------------------------
 //
 bool GigeCamera::GetWhiteBalanceRed(double &value) const {
-  ROS_WARN_NAMED(CAM_TAG,
-                 "The feature WhiteBalance is not available on GigE cameras.");
-  return INVALID_DOUBLE;
+  GenApi::CNodeMapRef *Camera =
+      static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
+  GenApi::CEnumerationPtr ptrEnumNode =
+      Camera->_GetNode("BalanceRatioSelector");
+  if (ptrEnumNode) {
+    ptrEnumNode->SetIntValue(2);
+    GenApi::CFloatPtr ptrWhiteBalanceRatio = Camera->_GetNode("BalanceRatio");
+    if (ptrWhiteBalanceRatio) {
+      value = ptrWhiteBalanceRatio->GetValue();
+    }
+  }
+  return true;
 }
 
 //------------------------------------------------------------------------------
@@ -688,10 +699,18 @@ bool GigeCamera::SetWhiteBalanceGreenValue(double value) {
 //------------------------------------------------------------------------------
 //
 bool GigeCamera::GetWhiteBalanceGreen(double &value) const {
-  (void)value;
-  ROS_WARN_NAMED(CAM_TAG,
-                 "The feature WhiteBalance is not available on GigE cameras.");
-  return false;
+  GenApi::CNodeMapRef *Camera =
+      static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
+  GenApi::CEnumerationPtr ptrEnumNode =
+      Camera->_GetNode("BalanceRatioSelector");
+  if (ptrEnumNode) {
+    ptrEnumNode->SetIntValue(1);
+    GenApi::CFloatPtr ptrWhiteBalanceRatio = Camera->_GetNode("BalanceRatio");
+    if (ptrWhiteBalanceRatio) {
+      value = ptrWhiteBalanceRatio->GetValue();
+    }
+  }
+  return true;
 }
 
 //------------------------------------------------------------------------------
@@ -717,10 +736,18 @@ bool GigeCamera::SetWhiteBalanceBlueValue(double value) {
 //------------------------------------------------------------------------------
 //
 bool GigeCamera::GetWhiteBalanceBlue(double &value) const {
-  (void)value;
-  ROS_WARN_NAMED(CAM_TAG,
-                 "The feature WhiteBalance is not available on GigE cameras.");
-  return false;
+  GenApi::CNodeMapRef *Camera =
+      static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
+  GenApi::CEnumerationPtr ptrEnumNode =
+      Camera->_GetNode("BalanceRatioSelector");
+  if (ptrEnumNode) {
+    ptrEnumNode->SetIntValue(2);
+    GenApi::CFloatPtr ptrWhiteBalanceRatio = Camera->_GetNode("BalanceRatio");
+    if (ptrWhiteBalanceRatio) {
+      value = ptrWhiteBalanceRatio->GetValue();
+    }
+  }
+  return true;
 }
 
 //------------------------------------------------------------------------------
