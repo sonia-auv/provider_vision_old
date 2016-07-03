@@ -1,5 +1,17 @@
 name: simple_fence
 filters:
+  - name: ImageCropper
+    parameters:
+      - name: Enable
+        value: 1
+      - name: X Offset
+        value: 0
+      - name: Y Offset
+        value: 300
+      - name: X Reduction
+        value: 0
+      - name: Y Reduction
+        value: 0
   - name: Blurr
     parameters:
       - name: Enable
@@ -8,6 +20,14 @@ filters:
         value: 2
       - name: Kernel_size
         value: 3
+  - name: ImageAccumulator
+    parameters:
+      - name: Enable
+        value: 0
+      - name: NB_of_images
+        value: 5
+      - name: Method_to_use
+        value: 0
   - name: SubtractAllPlanes
     parameters:
       - name: enable
@@ -37,7 +57,7 @@ filters:
       - name: Threshold_type
         value: 0
       - name: Max_value
-        value: 60
+        value: 39
   - name: Erode
     parameters:
       - name: Enable
@@ -45,11 +65,11 @@ filters:
       - name: Square_kernel
         value: 1
       - name: Kernel_type
-        value: 0
+        value: 2
       - name: Width
         value: 1
       - name: Height
-        value: 1
+        value: 5
       - name: Iteration
         value: 1
   - name: Dilate
@@ -59,13 +79,13 @@ filters:
       - name: Square_kernel
         value: 1
       - name: Kernel_type
-        value: 0
+        value: 2
       - name: Width
         value: 1
       - name: Height
         value: 1
       - name: Iteration
-        value: 1
+        value: 2
   - name: ConvexHull
     parameters:
       - name: Enable
@@ -87,11 +107,11 @@ filters:
       - name: "4.2 disable_angle_check : green"
         value: 0
       - name: Use_convex_hull
-        value: 0
+        value: 1
       - name: 5. Eliminate_same_x
-        value: 0
+        value: 1
       - name: Vote_most_centered
-        value: 0
+        value: 1
       - name: Vote_most_upright
         value: 0
       - name: Vote_less_diff_from_target_ratio
@@ -99,6 +119,8 @@ filters:
       - name: Vote_length
         value: 1
       - name: Vote_higher
+        value: 1
+      - name: Vote most horizontal
         value: 1
       - name: ID
         value: buoy

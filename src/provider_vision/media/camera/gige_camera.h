@@ -117,9 +117,9 @@ class GigeCamera : public BaseCamera {
 
   bool SetAutoBrightnessTarget(double value) override;
   bool SetAutoBrightnessTargetVariation(double value) override;
-  bool GetAutoBrightnessTargetVariation(double &value) const override;
-  bool GetAutoBrightnessMode(double &value) const override;
-  bool GetAutoBrightnessTarget(double &value) const override;
+  bool GetAutoBrightnessTargetVariation(int &value) const override;
+  bool GetAutoBrightnessMode(bool &value) const override;
+  bool GetAutoBrightnessTarget(int &value) const override;
 
  private:
   //==========================================================================

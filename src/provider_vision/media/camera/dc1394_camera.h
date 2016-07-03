@@ -124,11 +124,11 @@ class DC1394Camera : public BaseCamera {
 
   bool SetAutoBrightnessTarget(double value) override { return true; }
   bool SetAutoBrightnessTargetVariation(double value) override { return true; }
-  bool GetAutoBrightnessTargetVariation(double &value) const override {
+  bool GetAutoBrightnessTargetVariation(int &value) const override {
     return true;
   }
-  bool GetAutoBrightnessMode(double &value) const override { return true; }
-  bool GetAutoBrightnessTarget(double &value) const override { return true; }
+  bool GetAutoBrightnessMode(bool &value) const override { return true; }
+  bool GetAutoBrightnessTarget(int &value) const override { return true; }
 
  private:
   //==========================================================================

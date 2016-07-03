@@ -169,6 +169,7 @@ bool DC1394Camera::NextImage(cv::Mat &img) {
   try {
     cv::Mat tmp =
         cv::Mat(frame->size[1], frame->size[0], CV_8UC2, frame->image);
+<<<<<<< HEAD
     // if (width_ + x_offset_ > frame->size[0] | width_ == 0)
     //  width_ = frame->size[0];
     // if (height_ + y_offset_ > frame->size[1] | height_ == 0)
@@ -179,6 +180,10 @@ bool DC1394Camera::NextImage(cv::Mat &img) {
     // height_));
     cv::cvtColor(tmp, img, CV_YUV2BGR_Y422);
     // undistord_matrix_.CorrectInmage(tmp, img);
+=======
+    cv::cvtColor(tmp, tmp, CV_YUV2BGR_Y422);
+    undistord_matrix_.CorrectInmage(tmp, img);
+>>>>>>> cae3e5974eb0f813267b181b6deba95d4a7e7187
   } catch (cv::Exception &e) {
     status_ = Status::ERROR;
     ROS_ERROR_NAMED(CAM_TAG, "Error on OpenCV image transformation %s",
