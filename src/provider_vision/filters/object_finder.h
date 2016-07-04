@@ -80,6 +80,9 @@ class ObjectFinder : public Filter {
         id_("ID", "buoy", &parameters_),
         spec_1_("spec1", "red", &parameters_),
         spec_2_("spec2", "blue", &parameters_),
+        offset_y_for_fence_("Offset Y for fence", false, &parameters_),
+        offset_y_for_fence_fraction("Offset Y for fence fraction", 0.3f, 0.0f,
+                                    1.0f, &parameters_),
         feature_factory_(5) {
     SetName("ObjectFinder");
     // Little goodies for cvs
@@ -296,15 +299,23 @@ class ObjectFinder : public Filter {
         Target target;
         ObjectFullData::Ptr object = objVec[0];
         cv::Point center = object->GetCenter();
-        target.SetTarget(id_(), center.x, center.y, object->GetLength(),
-                         object->GetLength(), object->GetRotatedRect().angle,
-                         image.rows, image.cols);
+        int y = 0;
+        if (offset_y_for_fence_()) {
+          y = (int)round(center.y -
+                         object->GetLength() * offset_y_for_fence_fraction());
+        } else
+          y = center.y;
+        target.SetTarget(id_(), center.x, y, object->GetLength(),
+                         object->GetRatio() * object->GetLength(),
+                         object->GetRotatedRect().angle, image.rows,
+                         image.cols);
         target.SetSpecField_1(spec_1_());
         target.SetSpecField_2(spec_2_());
         NotifyTarget(target);
         if (debug_contour_()) {
-          cv::circle(output_image_, objVec[0]->GetCenter(), 3,
-                     CV_RGB(0, 255, 0), 3);
+          cv::circle(output_image_,
+                     cv::Point(static_cast<int>(objVec[0]->GetCenter().x), y),
+                     3, CV_RGB(0, 255, 0), 3);
         }
       }
       if (debug_contour_()) {
@@ -333,6 +344,9 @@ class ObjectFinder : public Filter {
   Parameter<bool> vote_most_centered_, vote_most_upright_,
       vote_less_difference_from_targeted_ratio_, vote_length_, vote_higher_,
       vote_most_horizontal_;
+
+  Parameter<bool> offset_y_for_fence_;
+  RangedParameter<double> offset_y_for_fence_fraction;
 
   Parameter<std::string> id_, spec_1_, spec_2_;
 

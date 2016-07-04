@@ -122,6 +122,10 @@ filters:
         value: 1
       - name: Vote most horizontal
         value: 1
+      - name: Offset Y for fence
+        value: 1
+      - name: Offset Y for fence fraction
+        value: 0.300000
       - name: ID
         value: buoy
       - name: spec1
