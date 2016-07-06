@@ -461,6 +461,7 @@ void MediaManager::UpdateIfChanged(std::string camera_name,
 
   boost::any real_state;
   GetCameraFeature(camera_name, feature_name, real_state);
+
   try {
     value = boost::any_cast<int>(real_state);
   } catch (std::exception &e) {

@@ -347,16 +347,20 @@ bool GigeCamera::SetAutoBrightnessTarget(double value) {
 //------------------------------------------------------------------------------
 //
 bool GigeCamera::GetAutoBrightnessTarget(int &value) const {
-  GenApi::CNodeMapRef *Camera =
-      static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
+  bool ab;
+  GetAutoBrightnessMode(ab);
+  if (ab) {
+    GenApi::CNodeMapRef *Camera =
+        static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
 
-  GenApi::CIntegerPtr ptrIntNode = Camera->_GetNode("autoBrightnessTarget");
-  if (ptrIntNode) {
-    ptrIntNode->GetValue(value);
-  } else {
-    ROS_WARN_NAMED(CAM_TAG,
-                   "The feature Auto brightness is not available on this"
-                   " cameras.");
+    GenApi::CIntegerPtr ptrIntNode = Camera->_GetNode("autoBrightnessTarget");
+    if (ptrIntNode) {
+      value = (int)ptrIntNode->GetValue();
+    } else {
+      ROS_WARN_NAMED(CAM_TAG,
+                     "The feature Auto brightness is not available on this"
+                     " cameras.");
+    }
   }
   return true;
 }
@@ -364,18 +368,22 @@ bool GigeCamera::GetAutoBrightnessTarget(int &value) const {
 //------------------------------------------------------------------------------
 //
 bool GigeCamera::SetAutoBrightnessTargetVariation(double value) {
-  GenApi::CNodeMapRef *Camera =
-      static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
-  GenApi::CIntegerPtr ptrIntNode =
-      Camera->_GetNode("autoBrightnessTargetRangeVariation");
-  if (ptrIntNode) {
-    bool ab;
-    GetAutoBrightnessMode(ab);
-    if (ab) ptrIntNode->SetValue(value);
-  } else {
-    ROS_WARN_NAMED(CAM_TAG,
-                   "The feature Auto brightness is not available on this"
-                   " cameras.");
+  bool ab;
+  GetAutoBrightnessMode(ab);
+  if (ab) {
+    GenApi::CNodeMapRef *Camera =
+        static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
+    GenApi::CIntegerPtr ptrIntNode =
+        Camera->_GetNode("autoBrightnessTargetRangeVariation");
+    if (ptrIntNode) {
+      bool ab;
+      GetAutoBrightnessMode(ab);
+      if (ab) ptrIntNode->SetValue(value);
+    } else {
+      ROS_WARN_NAMED(CAM_TAG,
+                     "The feature Auto brightness is not available on this"
+                     " cameras.");
+    }
   }
   return true;
 }
@@ -383,16 +391,20 @@ bool GigeCamera::SetAutoBrightnessTargetVariation(double value) {
 //------------------------------------------------------------------------------
 //
 bool GigeCamera::GetAutoBrightnessTargetVariation(int &value) const {
-  GenApi::CNodeMapRef *Camera =
-      static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
-  GenApi::CIntegerPtr ptrIntNode =
-      Camera->_GetNode("autoBrightnessTargetRangeVariation");
-  if (ptrIntNode) {
-    ptrIntNode->GetValue(value);
-  } else {
-    ROS_WARN_NAMED(CAM_TAG,
-                   "The feature Auto brightness is not available on this"
-                   " cameras.");
+  bool ab;
+  GetAutoBrightnessMode(ab);
+  if (ab) {
+    GenApi::CNodeMapRef *Camera =
+        static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
+    GenApi::CIntegerPtr ptrIntNode =
+        Camera->_GetNode("autoBrightnessTargetRangeVariation");
+    if (ptrIntNode) {
+      value = (int)ptrIntNode->GetValue();
+    } else {
+      ROS_WARN_NAMED(CAM_TAG,
+                     "The feature Auto brightness is not available on this"
+                     " cameras.");
+    }
   }
   return true;
 }
@@ -400,11 +412,6 @@ bool GigeCamera::GetAutoBrightnessTargetVariation(int &value) const {
 //------------------------------------------------------------------------------
 //
 bool GigeCamera::SetGainMode(bool mode) {
-  bool value;
-  GetAutoBrightnessMode(value);
-  atlas::MilliTimer::Sleep(100);
-  if (value != 0) return true;
-
   bool ABmode;
   GetAutoBrightnessMode(ABmode);
   if (!ABmode) return true;
@@ -416,7 +423,7 @@ bool GigeCamera::SetGainMode(bool mode) {
   if (ptrEnumNode) {
     GevStopImageTransfer(gige_camera_);
     atlas::MilliTimer::Sleep(100);
-    if (mode == FeatureMode::AUTO) {
+    if (mode) {
       ptrEnumNode->SetIntValue(2);
       atlas::MilliTimer::Sleep(100);
     } else {  // Manual
@@ -437,17 +444,22 @@ bool GigeCamera::SetGainMode(bool mode) {
 //------------------------------------------------------------------------------
 //
 bool GigeCamera::GetGainMode(bool &value) const {
-  GenApi::CNodeMapRef *Camera =
-      static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
-  GenApi::CEnumerationPtr ptrEnumNode = Camera->_GetNode("GainAuto");
-  if (ptrEnumNode) {
-    // value = static_cast<bool>(ptrEnumNode->GetIntValue());
-    value = (bool)ptrEnumNode->GetCurrentEntry()->GetNumericValue();
-  } else {
-    ROS_WARN_NAMED(CAM_TAG,
-                   "The feature Gain mode is not available on this"
-                   " cameras.");
-  }
+  bool ab;
+  GetAutoBrightnessMode(ab);
+  if (ab) {
+    GenApi::CNodeMapRef *Camera =
+        static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
+    GenApi::CEnumerationPtr ptrEnumNode = Camera->_GetNode("GainAuto");
+    if (ptrEnumNode) {
+      // value = static_cast<bool>(ptrEnumNode->GetIntValue());
+      value = (bool)ptrEnumNode->GetIntValue();
+    } else {
+      ROS_WARN_NAMED(CAM_TAG,
+                     "The feature Gain mode is not available on this"
+                     " cameras.");
+    }
+  } else
+    value = false;
 
   return true;
 }
@@ -519,17 +531,16 @@ bool GigeCamera::SetExposureMode(bool mode) {
 //------------------------------------------------------------------------------
 //
 bool GigeCamera::GetExposureMode(bool &value) const {
-  GenApi::CNodeMapRef *Camera =
-      static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
-  GenApi::CEnumerationPtr ptrEnumNode = Camera->_GetNode("ExposureMode");
-  // auto mode = ptrEnumNode->GetIntValue();
-  value = (bool)ptrEnumNode->GetCurrentEntry()->GetNumericValue();
+  bool ab;
+  GetAutoBrightnessMode(ab);
+  if (ab) {
+    GenApi::CNodeMapRef *Camera =
+        static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
+    GenApi::CEnumerationPtr ptrEnumNode = Camera->_GetNode("ExposureAuto");
+    value = (bool)ptrEnumNode->GetIntValue();
 
-  //  if (mode == 2) {
-  //    value = FeatureMode::AUTO;
-  //  } else {
-  //    value = FeatureMode::MANUAL;
-  //  }
+  } else
+    value = false;
   return true;
 }
 
@@ -547,14 +558,13 @@ bool GigeCamera::GetExposureValue(double &value) const {
 //
 bool GigeCamera::SetExposureValue(double value) {
   bool mode;
-  bool mode1;
   GetExposureMode(mode);
-  GetAutoBrightnessMode(mode1);
-  if (!mode && mode1) return true;
-  GenApi::CNodeMapRef *Camera =
-      static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
-  GenApi::CFloatPtr ptrExposureTime = Camera->_GetNode("ExposureTime");
-  ptrExposureTime->SetValue(value);
+  if (!mode) {
+    GenApi::CNodeMapRef *Camera =
+        static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
+    GenApi::CFloatPtr ptrExposureTime = Camera->_GetNode("ExposureTime");
+    ptrExposureTime->SetValue(value);
+  }
   return true;
 }
 
@@ -645,7 +655,7 @@ bool GigeCamera::GetWhiteBalanceRed(double &value) const {
   GenApi::CEnumerationPtr ptrEnumNode =
       Camera->_GetNode("BalanceRatioSelector");
   if (ptrEnumNode) {
-    ptrEnumNode->SetIntValue(2);
+    ptrEnumNode->SetIntValue(0);
     GenApi::CFloatPtr ptrWhiteBalanceRatio = Camera->_GetNode("BalanceRatio");
     if (ptrWhiteBalanceRatio) {
       value = ptrWhiteBalanceRatio->GetValue();
