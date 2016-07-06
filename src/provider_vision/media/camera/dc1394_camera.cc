@@ -169,7 +169,7 @@ bool DC1394Camera::NextImage(cv::Mat &img) {
   try {
     cv::Mat tmp =
         cv::Mat(frame->size[1], frame->size[0], CV_8UC2, frame->image);
-    cv::cvtColor(tmp, tmp, CV_YUV2BGR_Y422);
+    cv::cvtColor(tmp, img, CV_YUV2BGR_Y422);
   } catch (cv::Exception &e) {
     status_ = Status::ERROR;
     ROS_ERROR_NAMED(CAM_TAG, "Error on OpenCV image transformation %s",
