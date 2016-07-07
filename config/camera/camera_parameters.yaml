@@ -13,7 +13,7 @@ bottom_gige_gain: 1.0
 bottom_gige_gain_auto: true
 bottom_gige_gamma: 0
 bottom_gige_guid: '1230819763'
-bottom_gige_height: 780
+bottom_gige_height: 1024
 bottom_gige_name: bottom_gige
 bottom_gige_saturation: 0
 bottom_gige_shutter: 32.0
@@ -27,9 +27,9 @@ bottom_gige_whitebalance_blue: 1.0
 bottom_gige_whitebalance_execute: true
 bottom_gige_whitebalance_green: 1.0
 bottom_gige_whitebalance_red: 1.0
-bottom_gige_width: 1088
-bottom_gige_x_offset: 140
-bottom_gige_y_offset: 130
+bottom_gige_width: 1280
+bottom_gige_x_offset: 0
+bottom_gige_y_offset: 0
 bottom_guppy_auto_brightness_auto: true
 bottom_guppy_auto_brightness_target: 100
 bottom_guppy_auto_brightness_target_variation: 16
