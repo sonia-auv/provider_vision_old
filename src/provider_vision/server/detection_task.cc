@@ -83,7 +83,6 @@ void DetectionTask::StopDetectionTask() {
     throw std::logic_error("This detection task is not running.");
   }
   Stop();
-  std::lock_guard<std::mutex> guard(newest_image_mutex_);
   result_publisher_.shutdown();
   media_streamer_->Detach(*this);
   image_publisher_.Stop();
