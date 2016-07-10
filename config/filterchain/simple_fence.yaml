@@ -1,5 +1,13 @@
 name: simple_fence
 filters:
+  - name: Rotate
+    parameters:
+      - name: enable
+        value: 1
+      - name: transpose
+        value: 0
+      - name: Rotation_type
+        value: 3
   - name: ImageCropper
     parameters:
       - name: Enable
@@ -7,11 +15,11 @@ filters:
       - name: X Offset
         value: 0
       - name: Y Offset
-        value: 300
+        value: 150
       - name: X Reduction
         value: 0
       - name: Y Reduction
-        value: 0
+        value: 150
   - name: Blurr
     parameters:
       - name: Enable
@@ -122,6 +130,8 @@ filters:
         value: 1
       - name: Vote most horizontal
         value: 1
+      - name: Check max y
+        value: 1
       - name: Offset Y for fence
         value: 1
       - name: Offset Y for fence fraction
@@ -146,5 +156,7 @@ filters:
         value: 10.000000
       - name: 5. Min_x_difference
         value: 50.000000
+      - name: Maximum y coordinate
+        value: 200.000000
       - name: Contour_retreval
         value: 0

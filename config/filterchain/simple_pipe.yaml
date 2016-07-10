@@ -5,9 +5,9 @@ filters:
       - name: enable
         value: 1
       - name: transpose
-        value: 1
+        value: 0
       - name: Rotation_type
-        value: 2
+        value: 3
   - name: SubtractAllPlanes
     parameters:
       - name: enable
@@ -55,7 +55,7 @@ filters:
       - name: Threshold_type
         value: 0
       - name: Max_value
-        value: 110
+        value: 106
   - name: Erode
     parameters:
       - name: Enable
@@ -93,4 +93,4 @@ filters:
       - name: Look_for_Rectangle
         value: 0
       - name: Min_area
-        value: 200.000000
+        value: 400.000000

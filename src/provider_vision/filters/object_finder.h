@@ -83,6 +83,8 @@ class ObjectFinder : public Filter {
         offset_y_for_fence_("Offset Y for fence", false, &parameters_),
         offset_y_for_fence_fraction("Offset Y for fence fraction", 0.3f, 0.0f,
                                     1.0f, &parameters_),
+        max_y_("Maximum y coordinate", 0.0f, 0.0f, 2000.0f, &parameters_),
+        check_max_y_("Check max y", false, &parameters_),
         feature_factory_(5) {
     SetName("ObjectFinder");
     // Little goodies for cvs
@@ -141,6 +143,11 @@ class ObjectFinder : public Filter {
         //
         // AREA
         //
+
+        if (object->GetCenter().y < max_y_() && check_max_y_()) {
+          continue;
+        }
+
         if (object->GetArea() < min_area_()) {
           continue;
         }
@@ -176,7 +183,7 @@ class ObjectFinder : public Filter {
         // ANGLE
         //
         if (!disable_angle_() &&
-            (fabs(object->GetRotatedRect().angle - targeted_angle_()) >
+            (fabs(fabs(object->GetRotatedRect().angle) - targeted_angle_()) >
              fabs(difference_from_target_angle_()))) {
           continue;
         }
@@ -305,10 +312,10 @@ class ObjectFinder : public Filter {
                          object->GetLength() * offset_y_for_fence_fraction());
         } else
           y = center.y;
-        target.SetTarget(id_(), center.x, y, object->GetLength(),
-                         object->GetRatio() * object->GetLength(),
-                         object->GetRotatedRect().angle, image.rows,
-                         image.cols);
+        target.SetTarget(
+            id_(), center.x, y, object->GetRotatedRect().size.width,
+            object->GetRotatedRect().size.height,
+            object->GetRotatedRect().angle, image.rows, image.cols);
         target.SetSpecField_1(spec_1_());
         target.SetSpecField_2(spec_2_());
         NotifyTarget(target);
@@ -343,7 +350,7 @@ class ObjectFinder : public Filter {
 
   Parameter<bool> vote_most_centered_, vote_most_upright_,
       vote_less_difference_from_targeted_ratio_, vote_length_, vote_higher_,
-      vote_most_horizontal_;
+      vote_most_horizontal_, check_max_y_;
 
   Parameter<bool> offset_y_for_fence_;
   RangedParameter<double> offset_y_for_fence_fraction;
@@ -353,7 +360,7 @@ class ObjectFinder : public Filter {
   RangedParameter<double> min_area_, targeted_ratio_,
       difference_from_target_ratio_, targeted_angle_,
       difference_from_target_angle_, min_percent_filled_,
-      max_x_difference_for_elimination_;
+      max_x_difference_for_elimination_, max_y_;
 
   RangedParameter<int> contour_retreval_;
 
