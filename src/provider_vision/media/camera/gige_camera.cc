@@ -232,10 +232,8 @@ bool GigeCamera::NextImage(cv::Mat &img) {
   if (frame != NULL) {
     try {
       cv::Mat tmp = cv::Mat(frame->h, frame->w, CV_8UC1, frame->address);
-      //      undistord_matrix_.CorrectInmage(tmp, img);
       tmp.copyTo(img);
       cv::cvtColor(tmp, img, CV_BayerRG2RGB);
-      BalanceWhite(img);
     } catch (cv::Exception &e) {
       status_ = Status::ERROR;
       ROS_ERROR_NAMED(CAM_TAG, "Error on opencv image transformation %s",
@@ -297,7 +295,7 @@ bool GigeCamera::SetAutoBrightnessMode(double value) {
   if (ptrEnumNode) {
     GevStopImageTransfer(gige_camera_);
     atlas::MilliTimer::Sleep(100);
-    ptrEnumNode->SetIntValue((int)value);
+    ptrEnumNode->SetIntValue(static_cast<int>(value));
     ROS_INFO("%i", (int)value);
     atlas::MilliTimer::Sleep(100);
     if (status_ == Status::STREAMING) GevStartImageTransfer(gige_camera_, -1);
@@ -829,50 +827,6 @@ bool GigeCamera::GetShutterValue(double &value) const {
   ROS_WARN_NAMED(CAM_TAG,
                  "The feature ShutterValue is not available on GigE cameras.");
   return false;
-}
-
-//------------------------------------------------------------------------------
-//
-void GigeCamera::BalanceWhite(cv::Mat mat) {
-  double discard_ratio = 0.05;
-  int hists[3][256];
-  memset(hists, 0, 3 * 256 * sizeof(int));
-
-  for (int y = 0; y < mat.rows; ++y) {
-    uchar *ptr = mat.ptr<uchar>(y);
-    for (int x = 0; x < mat.cols; ++x) {
-      for (int j = 0; j < 3; ++j) {
-        hists[j][ptr[x * 3 + j]] += 1;
-      }
-    }
-  }
-
-  // cumulative hist
-  int total = mat.cols * mat.rows;
-  int vmin[3], vmax[3];
-  for (int i = 0; i < 3; ++i) {
-    for (int j = 0; j < 255; ++j) {
-      hists[i][j + 1] += hists[i][j];
-    }
-    vmin[i] = 0;
-    vmax[i] = 255;
-    while (hists[i][vmin[i]] < discard_ratio * total) vmin[i] += 1;
-    while (hists[i][vmax[i]] > (1 - discard_ratio) * total) vmax[i] -= 1;
-    if (vmax[i] < 255 - 1) vmax[i] += 1;
-  }
-
-  for (int y = 0; y < mat.rows; ++y) {
-    uchar *ptr = mat.ptr<uchar>(y);
-    for (int x = 0; x < mat.cols; ++x) {
-      for (int j = 0; j < 3; ++j) {
-        int val = ptr[x * 3 + j];
-        if (val < vmin[j]) val = vmin[j];
-        if (val > vmax[j]) val = vmax[j];
-        ptr[x * 3 + j] =
-            static_cast<uchar>((val - vmin[j]) * 255.0 / (vmax[j] - vmin[j]));
-      }
-    }
-  }
 }
 
 }  // namespace provider_vision

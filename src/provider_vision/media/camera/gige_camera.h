@@ -125,8 +125,6 @@ class GigeCamera : public BaseCamera {
   //==========================================================================
   // P R I V A T E   M E T H O D S
 
-  void BalanceWhite(cv::Mat mat);
-
   bool SetCameraParams();
 
   std::string GetModel() const;
