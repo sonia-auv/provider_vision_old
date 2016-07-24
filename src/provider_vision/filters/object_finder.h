@@ -51,9 +51,12 @@ class ObjectFinder : public Filter {
       : Filter(globalParams),
         enable_("Enable", false, &parameters_),
         debug_contour_("Debug_contour", false, &parameters_),
-        contour_retreval_("Contour_retreval", 0, 0, 4, &parameters_,
-                          "0=All, 1=Out, 2=Inner, 3=InnerMost, 4=OutNoChild"),
         use_convex_hull_("Use_convex_hull", false, &parameters_),
+        offset_y_for_fence_("Offset Y for fence", false, &parameters_),
+        offset_y_for_fence_fraction("Offset Y for fence fraction", 0.3f, 0.0f,
+                                    1.0f, &parameters_),
+        check_max_y_("0. Check max y", false, &parameters_),
+        max_y_("0. Maximum y coordinate", 0.0f, 0.0f, 2000.0f, &parameters_),
         min_area_("1. Min_area : red", 200, 0, 10000, &parameters_),
         disable_ratio_("2. disable_ratio_check : blue", false, &parameters_),
         targeted_ratio_("2. Ratio_target", 0.5f, 0.0f, 1.0f, &parameters_),
@@ -72,19 +75,16 @@ class ObjectFinder : public Filter {
                                           1000.0f, &parameters_),
         vote_most_centered_("Vote_most_centered", false, &parameters_),
         vote_most_upright_("Vote_most_upright", false, &parameters_),
-        vote_most_horizontal_("Vote most horizontal", false, &parameters_),
         vote_less_difference_from_targeted_ratio_(
             "Vote_less_diff_from_target_ratio", false, &parameters_),
         vote_length_("Vote_length", false, &parameters_),
         vote_higher_("Vote_higher", false, &parameters_),
+        vote_most_horizontal_("Vote most horizontal", false, &parameters_),
         id_("ID", "buoy", &parameters_),
         spec_1_("spec1", "red", &parameters_),
         spec_2_("spec2", "blue", &parameters_),
-        offset_y_for_fence_("Offset Y for fence", false, &parameters_),
-        offset_y_for_fence_fraction("Offset Y for fence fraction", 0.3f, 0.0f,
-                                    1.0f, &parameters_),
-        max_y_("Maximum y coordinate", 0.0f, 0.0f, 2000.0f, &parameters_),
-        check_max_y_("Check max y", false, &parameters_),
+        contour_retreval_("Contour_retreval", 0, 0, 4, &parameters_,
+                          "0=All, 1=Out, 2=Inner, 3=InnerMost, 4=OutNoChild"),
         feature_factory_(5) {
     SetName("ObjectFinder");
     // Little goodies for cvs
@@ -345,22 +345,34 @@ class ObjectFinder : public Filter {
 
   cv::Mat output_image_;
 
-  Parameter<bool> enable_, debug_contour_, look_for_rectangle_, disable_ratio_,
-      disable_angle_, use_convex_hull_, eliminate_same_x_targets_;
+  Parameter<bool> enable_, debug_contour_
+      , use_convex_hull_, offset_y_for_fence_;
+
+  RangedParameter<double> offset_y_for_fence_fraction;
+
+  Parameter<bool> check_max_y_;
+
+  RangedParameter<double> max_y_,
+  min_area_;
+
+  Parameter<bool> disable_ratio_;
+
+  RangedParameter<double> targeted_ratio_,
+      difference_from_target_ratio_, min_percent_filled_;
+
+  Parameter<bool> look_for_rectangle_, disable_angle_;
+
+  RangedParameter<double> targeted_angle_, difference_from_target_angle_;
+
+  Parameter<bool> eliminate_same_x_targets_;
+
+  RangedParameter<double> max_x_difference_for_elimination_;
 
   Parameter<bool> vote_most_centered_, vote_most_upright_,
       vote_less_difference_from_targeted_ratio_, vote_length_, vote_higher_,
-      vote_most_horizontal_, check_max_y_;
-
-  Parameter<bool> offset_y_for_fence_;
-  RangedParameter<double> offset_y_for_fence_fraction;
+      vote_most_horizontal_;
 
   Parameter<std::string> id_, spec_1_, spec_2_;
-
-  RangedParameter<double> min_area_, targeted_ratio_,
-      difference_from_target_ratio_, targeted_angle_,
-      difference_from_target_angle_, min_percent_filled_,
-      max_x_difference_for_elimination_, max_y_;
 
   RangedParameter<int> contour_retreval_;
 

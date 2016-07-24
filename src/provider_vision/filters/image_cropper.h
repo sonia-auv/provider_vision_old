@@ -51,8 +51,8 @@ class ImageCropper : public Filter {
 
   virtual void Execute(cv::Mat &image) {
     if (enable_()) {
-      if (x_offset_() + x_reduction_() < image.size[1] |
-          y_offset_() + y_reduction_() < image.size[0]) {
+      if ((x_offset_() + x_reduction_() < image.size[1]) |
+            (y_offset_() + y_reduction_() < image.size[0])) {
         image = image(cv::Rect(x_offset_(), y_offset_(),
                                image.size[1] - x_reduction_() - x_offset_(),
                                image.size[0] - y_reduction_() - y_offset_()));
