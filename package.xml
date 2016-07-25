@@ -1,9 +1,23 @@
 <?xml version="1.0"?>
 <package>
   <name>provider_vision</name>
-  <version>0.0.0</version>
-  <description>The vision_server package</description>
-  <maintainer email="jeremie.st.jules.prevost@gmail.com">jeremie</maintainer>
+  <version>1.0.0</version>
+  <description>
+    The vision_server package is responsible for acquiring the images from
+    the cameras and applying filter and return information on those image.
+  </description>
+
+  <author>Thibaut Mattio</author>
+  <author>Jérémie St-Jules Prévost</author>
+  <author>Pierluc Bédard</author>
+  <author>Antoine Dozois</author>
+
+
+  <maintainer email="jeremie.st.jules.prevost@gmail.com">Jérémie St-Jules Prévost</maintainer>
+  <maintainer email="thibaut.mattio@gmail.com">Thibaut Mattio</maintainer>
+  <maintainer email="pierlucbed@gmail.com">Pierluc Bédard</maintainer>
+  <maintainer email="dozois.a@gmail.com">Antoine Dozois</maintainer>
+
 
   <license>GPLv3</license>
 

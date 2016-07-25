@@ -347,6 +347,7 @@ bool GigeCamera::SetAutoBrightnessTarget(double value) {
 bool GigeCamera::GetAutoBrightnessTarget(int &value) const {
   bool ab;
   GetAutoBrightnessMode(ab);
+  value = -1;
   if (ab) {
     GenApi::CNodeMapRef *Camera =
         static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
@@ -354,6 +355,7 @@ bool GigeCamera::GetAutoBrightnessTarget(int &value) const {
     GenApi::CIntegerPtr ptrIntNode = Camera->_GetNode("autoBrightnessTarget");
     if (ptrIntNode) {
       value = (int)ptrIntNode->GetValue();
+
     } else {
       ROS_WARN_NAMED(CAM_TAG,
                      "The feature Auto brightness is not available on this"
@@ -391,6 +393,7 @@ bool GigeCamera::SetAutoBrightnessTargetVariation(double value) {
 bool GigeCamera::GetAutoBrightnessTargetVariation(int &value) const {
   bool ab;
   GetAutoBrightnessMode(ab);
+  value = -1;
   if (ab) {
     GenApi::CNodeMapRef *Camera =
         static_cast<GenApi::CNodeMapRef *>(GevGetFeatureNodeMap(gige_camera_));
