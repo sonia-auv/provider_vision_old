@@ -464,6 +464,7 @@ void MediaManager::UpdateIfChanged(std::string camera_name,
 
   try {
     value = boost::any_cast<int>(real_state);
+    if (value == -1) value = old_value;
   } catch (std::exception &e) {
     ROS_INFO("Trouble casting to int");
   }
