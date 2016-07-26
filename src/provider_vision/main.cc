@@ -31,6 +31,7 @@ int main(int argc, char **argv) {
   provider_vision::VisionServer pv(nh);
 
   while (ros::ok()) {
+    usleep(20000);
     ros::spinOnce();
   }
 
