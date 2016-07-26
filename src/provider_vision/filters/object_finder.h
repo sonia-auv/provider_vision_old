@@ -135,7 +135,7 @@ class ObjectFinder : public Filter {
 
         ObjectFullData::Ptr object =
             std::make_shared<ObjectFullData>(originalImage, image, contours[i]);
-        feature_factory_.ComputeAllFeature(object);
+
 
         if (object.get() == nullptr) {
           continue;
@@ -200,7 +200,7 @@ class ObjectFinder : public Filter {
         if (debug_contour_()) {
           cv::drawContours(output_image_, contours, i, CV_RGB(0, 255, 0), 2);
         }
-
+        feature_factory_.ComputeAllFeature(object);
         objVec.push_back(object);
       }
 
