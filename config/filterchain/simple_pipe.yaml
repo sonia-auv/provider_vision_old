@@ -55,7 +55,7 @@ filters:
       - name: Threshold_type
         value: 0
       - name: Max_value
-        value: 106
+        value: 59
   - name: Erode
     parameters:
       - name: Enable

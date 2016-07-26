@@ -108,16 +108,38 @@ filters:
         value: 1
       - name: Debug_contour
         value: 1
-      - name: "4.1 Look_for_Rectangle : green"
+      - name: Use_convex_hull
+        value: 1
+      - name: Offset Y for fence
+        value: 1
+      - name: Offset Y for fence fraction
+        value: 0.300000
+      - name: 0. Check max y
         value: 0
+      - name: 0. Maximum y coordinate
+        value: 0.000000
+      - name: "1. Min_area : red"
+        value: 100.000000
       - name: "2. disable_ratio_check : blue"
+        value: 0
+      - name: 2. Ratio_target
+        value: 0.100000
+      - name: 2. Diff_from_ratio_target
+        value: 0.100000
+      - name: "3. Min_percent_filled : yellow"
+        value: 10.000000
+      - name: "4.1 Look_for_Rectangle : green"
         value: 0
       - name: "4.2 disable_angle_check : green"
         value: 0
-      - name: Use_convex_hull
-        value: 1
+      - name: 4.2 angle_target
+        value: 90.000000
+      - name: 4.2 Diff_from_angle_target
+        value: 30.000000
       - name: 5. Eliminate_same_x
         value: 1
+      - name: 5. Min_x_difference
+        value: 50.000000
       - name: Vote_most_centered
         value: 1
       - name: Vote_most_upright
@@ -130,33 +152,11 @@ filters:
         value: 1
       - name: Vote most horizontal
         value: 1
-      - name: Check max y
-        value: 1
-      - name: Offset Y for fence
-        value: 1
-      - name: Offset Y for fence fraction
-        value: 0.300000
       - name: ID
         value: buoy
       - name: spec1
         value: red
       - name: spec2
         value: blue
-      - name: "1. Min_area : red"
-        value: 100.000000
-      - name: 2. Ratio_target
-        value: 0.100000
-      - name: 2. Diff_from_ratio_target
-        value: 0.100000
-      - name: 4.2 angle_target
-        value: 90.000000
-      - name: 4.2 Diff_from_angle_target
-        value: 30.000000
-      - name: "3. Min_percent_filled : yellow"
-        value: 10.000000
-      - name: 5. Min_x_difference
-        value: 50.000000
-      - name: Maximum y coordinate
-        value: 200.000000
       - name: Contour_retreval
         value: 0
