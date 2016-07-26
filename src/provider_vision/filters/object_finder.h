@@ -158,6 +158,7 @@ class ObjectFinder : public Filter {
         //
         // RATIO
         //
+        feature_factory_.ComputeAllFeature(object);
         if (!disable_ratio_() && (fabs(object->GetRatio() - targeted_ratio_()) >
                                   fabs(difference_from_target_ratio_()))) {
           continue;
@@ -200,7 +201,7 @@ class ObjectFinder : public Filter {
         if (debug_contour_()) {
           cv::drawContours(output_image_, contours, i, CV_RGB(0, 255, 0), 2);
         }
-        feature_factory_.ComputeAllFeature(object);
+
         objVec.push_back(object);
       }
 

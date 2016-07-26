@@ -3,7 +3,7 @@ filters:
   - name: Rotate
     parameters:
       - name: enable
-        value: 1
+        value: 0
       - name: transpose
         value: 0
       - name: Rotation_type
@@ -103,13 +103,13 @@ filters:
       - name: "1. Min_area : red"
         value: 50.000000
       - name: "2. disable_ratio_check : blue"
-        value: 0
+        value: 1
       - name: 2. Ratio_target
-        value: 0.500000
+        value: 1.000000
       - name: 2. Diff_from_ratio_target
         value: 0.300000
       - name: "3. Min_percent_filled : yellow"
-        value: 50.000000
+        value: 60.000000
       - name: "4.1 Look_for_Rectangle : green"
         value: 0
       - name: "4.2 disable_angle_check : green"
@@ -121,17 +121,17 @@ filters:
       - name: 5. Eliminate_same_x
         value: 1
       - name: 5. Min_x_difference
-        value: 500.000000
+        value: 50.000000
       - name: Vote_most_centered
         value: 0
       - name: Vote_most_upright
         value: 0
       - name: Vote_less_diff_from_target_ratio
-        value: 0
+        value: 1
       - name: Vote_length
         value: 0
       - name: Vote_higher
-        value: 0
+        value: 1
       - name: Vote most horizontal
         value: 0
       - name: ID
