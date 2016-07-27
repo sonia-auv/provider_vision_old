@@ -1,4 +1,4 @@
-name: simple_buoy
+name: simple_buoy_yellow
 filters:
   - name: Rotate
     parameters:
@@ -13,9 +13,9 @@ filters:
       - name: enable
         value: 1
       - name: Plane_1
-        value: 3
+        value: 7
       - name: Plane_2
-        value: 2
+        value: 1
       - name: Plane_3
         value: 1
       - name: Invert_plane_1
@@ -25,7 +25,7 @@ filters:
       - name: Invert_plane_3
         value: 0
       - name: Weight_Plane_1
-        value: 1.000000
+        value: 0.600000
       - name: Weight_Plane_2
         value: 1.000000
       - name: Weight_Plane_3
@@ -37,7 +37,7 @@ filters:
       - name: Type
         value: 2
       - name: Kernel_size
-        value: 1
+        value: 4
   - name: StatsThreshold
     parameters:
       - name: Enable
@@ -79,11 +79,11 @@ filters:
       - name: Kernel_type
         value: 0
       - name: Width
-        value: 1
+        value: 2
       - name: Height
-        value: 1
+        value: 2
       - name: Iteration
-        value: 1
+        value: 2
   - name: ObjectFinder
     parameters:
       - name: Enable
