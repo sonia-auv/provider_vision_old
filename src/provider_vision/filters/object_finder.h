@@ -158,7 +158,8 @@ class ObjectFinder : public Filter {
         //
         // RATIO
         //
-        feature_factory_.ComputeAllFeature(object);
+        //feature_factory_.ComputeAllFeature(object);
+        feature_factory_.RatioFeature(object);
         if (!disable_ratio_() && (fabs(object->GetRatio() - targeted_ratio_()) >
                                   fabs(difference_from_target_ratio_()))) {
           continue;
@@ -170,7 +171,7 @@ class ObjectFinder : public Filter {
         //
         // PERCENT FILLED
         //
-
+        feature_factory_.PercentFilledFeature(object);
         float percent_filled =
             CalculatePourcentFilled(image, object->GetUprightRect());
         if ((percent_filled) < min_percent_filled_()) {
