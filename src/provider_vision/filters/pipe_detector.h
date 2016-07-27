@@ -69,7 +69,7 @@ class PipeDetector : public Filter {
       timer.UpdateStartTime();
 
       contourList_t contours;
-      RetrieveAllContours(image, contours);
+      RetrieveOuterContours(image, contours);
       ObjectFullData::FullObjectPtrVec objVec;
       for (int i = 0, size = contours.size(); i < size; i++) {
         ObjectFullData::Ptr object =

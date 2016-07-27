@@ -3,7 +3,7 @@ filters:
   - name: Rotate
     parameters:
       - name: enable
-        value: 1
+        value: 0
       - name: transpose
         value: 0
       - name: Rotation_type
@@ -109,7 +109,7 @@ filters:
       - name: 2. Diff_from_ratio_target
         value: 0.300000
       - name: "3. Min_percent_filled : yellow"
-        value: 60.000000
+        value: 50.000000
       - name: "4.1 Look_for_Rectangle : green"
         value: 0
       - name: "4.2 disable_angle_check : green"
