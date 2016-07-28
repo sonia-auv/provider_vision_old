@@ -58,6 +58,7 @@
 #include <provider_vision/filters/train_detector.h>
 #include <provider_vision/filters/white_noise_takedown.h>
 #include <provider_vision/filters/image_cropper.h>
+#include <provider_vision/filters/gate_finder.h>
 #include <memory>
 #include <string>
 

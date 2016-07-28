@@ -98,6 +98,8 @@ Filter *FilterFactory::createInstance(const std::string &name,
     return new BackgroundSubstract(globalParams);
   } else if (name == "ImageCropper") {
     return new ImageCropper(globalParams);
+  } else if (name == "GateFinder") {
+    return new GateFinder(globalParams);
   } else {
     return nullptr;
   }
@@ -112,7 +114,7 @@ std::string FilterFactory::GetFilterList() {
          "DeloreanDetector;SubmarineFrameMasker;InRange;ConvexHull;"
          "TorpedoesDetector;Laplacian;Canny;HoughLine;AdaptiveThreshold;"
          "HandleDetector;WhiteNoiseTakedown;BilateralFilter;"
-         "BackgroundSubstract;ImageCropper";
+         "BackgroundSubstract;ImageCropper;GateFinder";
 }
 
 }  // namespace provider_vision
