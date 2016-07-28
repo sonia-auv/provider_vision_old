@@ -27,7 +27,7 @@ filters:
       - name: Weight_Plane_1
         value: 1.000000
       - name: Weight_Plane_2
-        value: 1.000000
+        value: 1.200000
       - name: Weight_Plane_3
         value: 1.000000
   - name: Blurr
