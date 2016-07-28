@@ -22,7 +22,7 @@ bottom_gige_saturation: 0
 bottom_gige_shutter: 32.0
 bottom_gige_shutter_auto: false
 bottom_gige_white_balance_auto: true
-bottom_gige_white_balance_blue: 1.90625
+bottom_gige_white_balance_blue: 1.6
 bottom_gige_white_balance_execute: false
 bottom_gige_white_balance_green: 1.0
 bottom_gige_white_balance_red: 2.296875
