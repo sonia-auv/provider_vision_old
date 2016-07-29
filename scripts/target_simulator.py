@@ -11,11 +11,24 @@ from sonia_msgs.msg import VisionTarget
 import sys, select, termios, tty
 
 msg = """
-Reading from the keyboard  and Publishing to Twist!
+Reading from the keyboard and publishing to:
+%s
 ---------------------------
 Moving around:
         w
    a    s    d
+
+Angle:
+---------------------------
+CCW: Shift+W
+CQ:  Shift+S
+
+Size:
+---------------------------
+Right Arrow : Increase Width (+width)
+Left Arrow  : Decrease Width (-width)
+Up Arrow    : Increase Height (+height)
+Down Arrow  : Decrease Height (-height)
 
 CTRL-C to quit
 """
@@ -86,7 +99,7 @@ if __name__ == "__main__":
     height = 0
     width = 0
 
-    print msg
+    print(msg % ('/provider_vision/' + detection_task_name + '_result'))
     while True:
         get_odom_from_key()
 
