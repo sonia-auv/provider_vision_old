@@ -1,30 +1,9 @@
-/**
- * \file	object_finder.h
- * \author	Jérémie St-Jules Prévôt <jeremie.st.jules.prevost@gmail.com>
- * \author  Pierluc Bédard <pierlucbed@gmail.com>
- *
- * \copyright Copyright (c) 2015 S.O.N.I.A. All rights reserved.
- *
- * \section LICENSE
- *
- * This file is part of S.O.N.I.A. software.
- *
- * S.O.N.I.A. software is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * S.O.N.I.A. software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
- */
+//
+// Created by sonia on 7/27/16.
+//
 
-#ifndef PROVIDER_VISION_FILTERS_OBJECT_FINDER_H_
-#define PROVIDER_VISION_FILTERS_OBJECT_FINDER_H_
+#ifndef PROVIDER_VISION_GATE_FINDER_H
+#define PROVIDER_VISION_GATE_FINDER_H
 
 #include <provider_vision/algorithm/general_function.h>
 #include <provider_vision/algorithm/object_feature_factory.h>
@@ -37,17 +16,17 @@
 
 namespace provider_vision {
 
-class ObjectFinder : public Filter {
+class GateFinder : public Filter {
  public:
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
 
-  using Ptr = std::shared_ptr<ObjectFinder>;
+  using Ptr = std::shared_ptr<GateFinder>;
 
   //============================================================================
   // P U B L I C   C / D T O R S
 
-  explicit ObjectFinder(const GlobalParamHandler &globalParams)
+  explicit GateFinder(const GlobalParamHandler &globalParams)
       : Filter(globalParams),
         enable_("Enable", false, &parameters_),
         debug_contour_("Debug_contour", false, &parameters_),
@@ -86,12 +65,12 @@ class ObjectFinder : public Filter {
         contour_retreval_("Contour_retreval", 0, 0, 4, &parameters_,
                           "0=All, 1=Out, 2=Inner, 3=InnerMost, 4=OutNoChild"),
         feature_factory_(5) {
-    SetName("ObjectFinder");
+    SetName("GateFinder");
     // Little goodies for cvs
     // area_rank,length_rank,circularity,convexity,ratio,presence,percent_filled,hueMean,
   }
 
-  virtual ~ObjectFinder() {}
+  virtual ~GateFinder() {}
 
   //============================================================================
   // P U B L I C   M E T H O D S
@@ -144,7 +123,7 @@ class ObjectFinder : public Filter {
         // AREA
         //
 
-        if (object->GetCenter().y < max_y_() && check_max_y_()) {
+        if (object->GetCenter().y > max_y_() && check_max_y_()) {
           continue;
         }
 
@@ -161,7 +140,7 @@ class ObjectFinder : public Filter {
         //feature_factory_.ComputeAllFeature(object);
         feature_factory_.RatioFeature(object);
         if (!disable_ratio_() && (fabs(object->GetRatio() - targeted_ratio_()) >
-                                  fabs(difference_from_target_ratio_()))) {
+            fabs(difference_from_target_ratio_()))) {
           continue;
         }
         if (debug_contour_()) {
@@ -186,7 +165,7 @@ class ObjectFinder : public Filter {
         //
         if (!disable_angle_() &&
             (fabs(fabs(object->GetRotatedRect().angle) - targeted_angle_()) >
-             fabs(difference_from_target_angle_()))) {
+                fabs(difference_from_target_angle_()))) {
           continue;
         }
 
@@ -206,7 +185,9 @@ class ObjectFinder : public Filter {
         objVec.push_back(object);
       }
 
-      if (objVec.size() > 1) {
+      int num_of_objects = objVec.size();
+
+      if (num_of_objects > 1) {
         if (vote_most_centered_()) {
           std::sort(
               objVec.begin(), objVec.end(),
@@ -214,9 +195,12 @@ class ObjectFinder : public Filter {
                 return GetDistanceFromCenter(a) < GetDistanceFromCenter(b);
               });
           objVec[0]->IncrementVote();
+          if (num_of_objects > 2) {
+            objVec[1]->IncrementVote();
+          }
           cv::circle(output_image_, cv::Point(objVec[0]->GetCenter().x,
                                               objVec[0]->GetCenter().y) -
-                                        cv::Point(12, 12),
+                         cv::Point(12, 12),
                      6, CV_RGB(255, 0, 0), -1);
         }
 
@@ -226,9 +210,12 @@ class ObjectFinder : public Filter {
                       return fabs(a->GetLength()) > fabs(b->GetLength());
                     });
           objVec[0]->IncrementVote();
+          if (num_of_objects > 2) {
+            objVec[1]->IncrementVote();
+          }
           cv::circle(output_image_, cv::Point(objVec[0]->GetCenter().x,
                                               objVec[0]->GetCenter().y) -
-                                        cv::Point(12, 6),
+                         cv::Point(12, 6),
                      6, CV_RGB(0, 0, 255), -1);
         }
 
@@ -236,12 +223,15 @@ class ObjectFinder : public Filter {
           std::sort(objVec.begin(), objVec.end(),
                     [](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
                       return fabs(a->GetRotatedRect().angle) <
-                             fabs(b->GetRotatedRect().angle);
+                          fabs(b->GetRotatedRect().angle);
                     });
           objVec[0]->IncrementVote();
+          if (num_of_objects > 2) {
+            objVec[1]->IncrementVote();
+          }
           cv::circle(output_image_, cv::Point(objVec[0]->GetCenter().x,
                                               objVec[0]->GetCenter().y) -
-                                        cv::Point(12, 0),
+                         cv::Point(12, 0),
                      6, CV_RGB(255, 0, 255), -1);
         }
 
@@ -249,12 +239,15 @@ class ObjectFinder : public Filter {
           std::sort(objVec.begin(), objVec.end(),
                     [](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
                       return fabs(a->GetRotatedRect().angle) >
-                             fabs(b->GetRotatedRect().angle);
+                          fabs(b->GetRotatedRect().angle);
                     });
           objVec[0]->IncrementVote();
+          if (num_of_objects > 2) {
+            objVec[1]->IncrementVote();
+          }
           cv::circle(output_image_, cv::Point(objVec[0]->GetCenter().x,
                                               objVec[0]->GetCenter().y) -
-                                        cv::Point(12, 0),
+                         cv::Point(12, 0),
                      6, CV_RGB(255, 0, 255), -1);
         }
 
@@ -263,12 +256,15 @@ class ObjectFinder : public Filter {
               objVec.begin(), objVec.end(),
               [this](ObjectFullData::Ptr a, ObjectFullData::Ptr b) -> bool {
                 return fabs(a->GetRatio() - targeted_ratio_()) <
-                       fabs(b->GetRatio() - targeted_ratio_());
+                    fabs(b->GetRatio() - targeted_ratio_());
               });
           objVec[0]->IncrementVote();
+          if (num_of_objects > 2) {
+            objVec[1]->IncrementVote();
+          }
           cv::circle(output_image_, cv::Point(objVec[0]->GetCenter().x,
                                               objVec[0]->GetCenter().y) -
-                                        cv::Point(12, -6),
+                         cv::Point(12, -6),
                      6, CV_RGB(0, 255, 255), -1);
         }
 
@@ -278,10 +274,13 @@ class ObjectFinder : public Filter {
               [this](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
                   -> bool { return a->GetCenter().y < b->GetCenter().y; });
           objVec[0]->IncrementVote();
+          if (num_of_objects > 2) {
+            objVec[1]->IncrementVote();
+          }
 
           cv::circle(output_image_, cv::Point(objVec[0]->GetCenter().x,
                                               objVec[0]->GetCenter().y) -
-                                        cv::Point(12, -12),
+                         cv::Point(12, -12),
                      6, CV_RGB(255, 255, 0), -1);
         }
 
@@ -290,9 +289,12 @@ class ObjectFinder : public Filter {
                       -> bool { return a->GetArea() > b->GetArea(); });
 
         objVec[0]->IncrementVote();
+        if (num_of_objects > 2) {
+          objVec[1]->IncrementVote();
+        }
         cv::circle(output_image_, cv::Point(objVec[0]->GetCenter().x,
                                             objVec[0]->GetCenter().y) -
-                                      cv::Point(12, -18),
+                       cv::Point(12, -18),
                    6, CV_RGB(255, 150, 150), -1);
       }
 
@@ -300,30 +302,48 @@ class ObjectFinder : public Filter {
                 [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
                     -> bool { return a->GetVoteCount() > b->GetVoteCount(); });
 
+
       if (eliminate_same_x_targets_() && objVec.size() > 1) {
         EliminateSameXTarget(objVec);
       }
 
+      ObjectFullData::FullObjectPtrVec finalists;
       if (objVec.size() > 0) {
+        finalists.push_back(objVec[0]);
+        if (objVec.size() > 1) {
+          finalists.push_back(objVec[1]);
+        }
+      }
+
+      std::sort(finalists.begin(), finalists.end(),
+                [](ObjectFullData::Ptr a, ObjectFullData::Ptr b)
+                    -> bool { return a->GetCenter().y < b->GetCenter().y; });
+
+      if (finalists.size() > 0) {
         Target target;
-        ObjectFullData::Ptr object = objVec[0];
-        cv::Point center = object->GetCenter();
-        int y = 0;
-        if (offset_y_for_fence_()) {
-          y = (int)round(center.y -
-                         object->GetLength() * offset_y_for_fence_fraction());
-        } else
-          y = center.y;
+//        ObjectFullData::Ptr object = objVec[0];
+        float x;
+        for (size_t i = 0; i < finalists.size(); i++)
+          x = x + finalists[i]->GetCenter().x;
+        x = x/finalists.size();
+        float y;
+        int y_count = 0;
+        for (size_t j = 0; j < 2 && j < finalists.size(); j++) {
+          y = y + finalists[j]->GetCenter().y;
+          y_count++;
+        }
+
+        y = y/y_count;
+
+        cv::Point center((int)round(x), (int)round(y));
         target.SetTarget(
-            id_(), center.x, y, object->GetRotatedRect().size.width,
-            object->GetRotatedRect().size.height,
-            object->GetRotatedRect().angle, image.rows, image.cols);
+            id_(), center.x, center.y, 0, 0, 0, image.rows, image.cols);
         target.SetSpecField_1(spec_1_());
         target.SetSpecField_2(spec_2_());
         NotifyTarget(target);
         if (debug_contour_()) {
           cv::circle(output_image_,
-                     cv::Point(static_cast<int>(objVec[0]->GetCenter().x), y),
+                     cv::Point((int)round(x), (int)round(y)),
                      3, CV_RGB(0, 255, 0), 3);
         }
       }
@@ -348,14 +368,14 @@ class ObjectFinder : public Filter {
   cv::Mat output_image_;
 
   Parameter<bool> enable_, debug_contour_
-      , use_convex_hull_, offset_y_for_fence_;
+  , use_convex_hull_, offset_y_for_fence_;
 
   RangedParameter<double> offset_y_for_fence_fraction;
 
   Parameter<bool> check_max_y_;
 
   RangedParameter<double> max_y_,
-  min_area_;
+      min_area_;
 
   Parameter<bool> disable_ratio_;
 
@@ -390,7 +410,7 @@ class ObjectFinder : public Filter {
 
 //------------------------------------------------------------------------------
 //
-inline void ObjectFinder::EliminateSameXTarget(
+inline void GateFinder::EliminateSameXTarget(
     ObjectFullData::FullObjectPtrVec &vec) {
   std::vector<unsigned int> index_to_eliminate;
   // We should not have much target, so double loop is ok...
@@ -423,10 +443,10 @@ inline void ObjectFinder::EliminateSameXTarget(
 
 //------------------------------------------------------------------------------
 //
-inline bool ObjectFinder::IsSameX(ObjectFullData::Ptr a,
+inline bool GateFinder::IsSameX(ObjectFullData::Ptr a,
                                   ObjectFullData::Ptr b) {
   double x_difference = static_cast<double>(a->GetCenter().x) -
-                        static_cast<double>(b->GetCenter().x);
+      static_cast<double>(b->GetCenter().x);
   double abs_x_difference = fabs(x_difference);
   return abs_x_difference < max_x_difference_for_elimination_();
 }
@@ -434,11 +454,11 @@ inline bool ObjectFinder::IsSameX(ObjectFullData::Ptr a,
 //------------------------------------------------------------------------------
 //
 // check if ref is higher than compared
-inline bool ObjectFinder::IsHigher(ObjectFullData::Ptr ref,
+inline bool GateFinder::IsHigher(ObjectFullData::Ptr ref,
                                    ObjectFullData::Ptr compared) {
   return ref->GetCenter().y < compared->GetCenter().y;
 }
 
 }  // namespace provider_vision
 
-#endif  // PROVIDER_VISION_FILTERS_OBJECT_FINDER_H_
+#endif //PROVIDER_VISION_GATE_FINDER_H

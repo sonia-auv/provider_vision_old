@@ -1,4 +1,4 @@
-name: simple_buoy
+name: gate
 filters:
   - name: Rotate
     parameters:
@@ -15,9 +15,9 @@ filters:
       - name: Plane_1
         value: 3
       - name: Plane_2
-        value: 2
-      - name: Plane_3
         value: 1
+      - name: Plane_3
+        value: 4
       - name: Invert_plane_1
         value: 0
       - name: Invert_plane_2
@@ -75,16 +75,16 @@ filters:
       - name: Enable
         value: 1
       - name: Square_kernel
-        value: 1
-      - name: Kernel_type
         value: 0
+      - name: Kernel_type
+        value: 1
       - name: Width
         value: 1
       - name: Height
-        value: 1
+        value: 5
       - name: Iteration
-        value: 1
-  - name: ObjectFinder
+        value: 2
+  - name: GateFinder
     parameters:
       - name: Enable
         value: 1
@@ -99,46 +99,46 @@ filters:
       - name: 0. Check max y
         value: 1
       - name: 0. Maximum y coordinate
-        value: 200.000000
+        value: 400.000000
       - name: "1. Min_area : red"
-        value: 50.000000
+        value: 100.000000
       - name: "2. disable_ratio_check : blue"
         value: 1
       - name: 2. Ratio_target
-        value: 1.000000
+        value: 0.100000
       - name: 2. Diff_from_ratio_target
-        value: 0.300000
+        value: 0.150000
       - name: "3. Min_percent_filled : yellow"
-        value: 40.000000
+        value: 30.000000
       - name: "4.1 Look_for_Rectangle : green"
         value: 0
       - name: "4.2 disable_angle_check : green"
         value: 1
       - name: 4.2 angle_target
-        value: 0.000000
+        value: 90.000000
       - name: 4.2 Diff_from_angle_target
-        value: 30.000000
+        value: 20.000000
       - name: 5. Eliminate_same_x
-        value: 1
+        value: 0
       - name: 5. Min_x_difference
         value: 50.000000
       - name: Vote_most_centered
-        value: 0
+        value: 1
       - name: Vote_most_upright
-        value: 0
+        value: 1
       - name: Vote_less_diff_from_target_ratio
         value: 1
       - name: Vote_length
-        value: 0
+        value: 1
       - name: Vote_higher
         value: 1
       - name: Vote most horizontal
         value: 0
       - name: ID
-        value: buoy
+        value: gate
       - name: spec1
         value: red
       - name: spec2
-        value: blue
+        value: red
       - name: Contour_retreval
-        value: 0
+        value: 1
