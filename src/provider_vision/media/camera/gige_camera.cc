@@ -227,7 +227,6 @@ bool GigeCamera::NextImage(cv::Mat &img) {
   try {
     status = GevWaitForNextImage(gige_camera_, &frame, 1000);
   } CATCH_GENAPI_ERROR(status) {
-    ROS_INFO("Exception catched in GevWaitForNextImage %d", status);
   }
 
   cam_access_.unlock();
