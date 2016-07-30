@@ -133,10 +133,10 @@ filters:
       - name: Vote most horizontal
         value: 1
       - name: ID
-        value: buoy
+        value: fence
       - name: spec1
-        value: red
+        value: yellow
       - name: spec2
-        value: blue
+        value: yellow
       - name: Contour_retreval
         value: 0
