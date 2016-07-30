@@ -186,12 +186,12 @@ bool GigeCamera::SetStreamingModeOn() {
 //
 bool GigeCamera::SetStreamingModeOff() {
   std::lock_guard<std::mutex> guard(cam_access_);
-  GEV_STATUS status;
+  int status;
   try {
     status = GevStopImageTransfer(gige_camera_);
-  }catch (GenericException &e)
-  {
-    ROS_ERROR("Exception on closing image transfer :%s ", e.what());
+  } CATCH_GENAPI_ERROR(status)
+  if (status) {
+    ROS_ERROR("Exception on closing image transfer");
   }
 
   if (status != GEVLIB_OK) {
@@ -223,7 +223,13 @@ bool GigeCamera::NextImage(cv::Mat &img) {
   timer_access_.unlock();
 
   cam_access_.lock();
-  GEV_STATUS status = GevWaitForNextImage(gige_camera_, &frame, 1000);
+  GEV_STATUS status;
+  try {
+    status = GevWaitForNextImage(gige_camera_, &frame, 1000);
+  } CATCH_GENAPI_ERROR(status) {
+    ROS_INFO("Exception catched in GevWaitForNextImage %d", status);
+  }
+
   cam_access_.unlock();
   timer_access_.lock();
   atlas::MilliTimer::Sleep(3);
