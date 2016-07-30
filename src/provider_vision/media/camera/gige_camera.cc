@@ -186,8 +186,14 @@ bool GigeCamera::SetStreamingModeOn() {
 //
 bool GigeCamera::SetStreamingModeOff() {
   std::lock_guard<std::mutex> guard(cam_access_);
+  GEV_STATUS status;
+  try {
+    status = GevStopImageTransfer(gige_camera_);
+  }catch (GenericException &e)
+  {
+    ROS_ERROR("Exception on closing image transfer :%s ", e.what());
+  }
 
-  GEV_STATUS status = GevStopImageTransfer(gige_camera_);
   if (status != GEVLIB_OK) {
     status_ = Status::ERROR;
     ROS_ERROR_NAMED(CAM_TAG,
@@ -223,9 +229,9 @@ bool GigeCamera::NextImage(cv::Mat &img) {
   atlas::MilliTimer::Sleep(3);
   timer_access_.unlock();
 
-  if (status != 0 || frame == nullptr) {
+  if (status != GEV_STATUS_SUCCESS || frame == nullptr) {
     status_ = Status::ERROR;
-    ROS_ERROR_NAMED(CAM_TAG, "Cannot get next image.");
+    ROS_ERROR_NAMED(CAM_TAG, "Cannot get next image. Status is: %d", status);
     return false;
   }
 
