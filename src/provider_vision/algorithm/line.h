@@ -23,7 +23,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <memory>
-#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc.hpp>
 
 namespace provider_vision {
 

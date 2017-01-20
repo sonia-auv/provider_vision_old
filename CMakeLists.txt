@@ -84,12 +84,10 @@ include_directories(
     ${OpenCV_INCLUDE_DIRS}
 )
 
-if(NOT APPLE)
   include_directories(
       $ENV{GENICAM_ROOT_V3_0}/library/CPP/include/
       $ENV{GIGEV_DIR}/include/
       )
-endif()
 
 #===============================================================================
 # C R E A T E   E X E C U T A B L E
@@ -103,7 +101,6 @@ target_link_libraries(provider_vision_node
     yaml-cpp
 )
 
-if(NOT APPLE)
   target_link_libraries(provider_vision_node
       $ENV{GIGEV_DIR}/lib/libGevApi.so.2.0
       $ENV{GENICAM_ROOT}/bin/Linux64_x64/libNodeMapData_gcc421_v3_0.so
@@ -111,7 +108,6 @@ if(NOT APPLE)
       $ENV{GENICAM_ROOT}/bin/Linux64_x64/libGenApi_gcc421_v3_0.so
       $ENV{GENICAM_ROOT}/bin/Linux64_x64/libGCBase_gcc421_v3_0.so
       )
-endif()
 
 add_dependencies(${PROJECT_NAME}_node sonia_msgs_generate_messages_cpp ${PROJECT_NAME}_gencfg)
 

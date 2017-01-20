@@ -84,15 +84,15 @@ class ConvexHull : public Filter {
           method = char(CV_CHAIN_APPROX_TC89_KCOS);
           break;
       }
-      cv::vector<cv::vector<cv::Point>> contours;
-      cv::vector<cv::Vec4i> hierarchy;
+      std::vector<std::vector<cv::Point>> contours;
+      std::vector<cv::Vec4i> hierarchy;
 
       // Find contours
       cv::findContours(image, contours, hierarchy, mode, method,
                        cv::Point(0, 0));
 
       // Find the convex hull object for each contour
-      cv::vector<cv::vector<cv::Point>> hull(contours.size());
+      std::vector<std::vector<cv::Point>> hull(contours.size());
       for (size_t i = 0; i < contours.size(); i++) {
         cv::convexHull(cv::Mat(contours[i]), hull[i], false);
       }
