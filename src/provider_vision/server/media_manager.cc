@@ -30,6 +30,7 @@
 #include <ros/console.h>
 #include "provider_vision/media/context/file_context.h"
 #include "provider_vision/media/context/webcam_context.h"
+#include "provider_vision/media/context/topic_context.h"
 
 namespace provider_vision {
 
@@ -72,7 +73,9 @@ MediaManager::MediaManager(const ros::NodeHandle &nh) noexcept
   }
 #endif
 
+  contexts_.push_back(std::make_shared<TopicContext>());
   contexts_.push_back(std::make_shared<FileContext>());
+
   server_.setCallback(
       boost::bind(&MediaManager::CallBackDynamicReconfigure, this, _1, _2));
 }
