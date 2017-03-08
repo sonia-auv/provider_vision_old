@@ -117,6 +117,11 @@ private:
 
   MediaStreamer::Ptr GetMediaStreamer(const std::string &name);
 
+
+  // Handles the creation and destruction of new streamer
+  bool StartStreaming(const std::string &media_name);
+  bool StopStreaming(const std::string &media_name);
+
   // Handles the list of current streamer
   void AddMediaStreamer(MediaStreamer::Ptr media_streamer);
   void RemoveMediaStreamer(const std::string &name);
@@ -168,7 +173,7 @@ private:
 
   provider_vision::Camera_Parameters_Config old_config_;
 
-
+  std::string FormatNameForTopic(const std::string &media_name) const;
 };
 
 //-----------------------------------------------------------------------------

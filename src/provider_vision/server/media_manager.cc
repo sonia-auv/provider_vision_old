@@ -384,71 +384,79 @@ bool MediaManager::StartStopMediaCallback(
   // This function need to be cleaned.
   if( request.action == request.START)
   {
+    response.action_accomplished = (uint8_t)StartStreaming(request.camera_name);
 
-    // If the media is already streaming, return the streamer
-    if (IsMediaStreaming(request.camera_name)) {
-      response.action_accomplished = true;
-      return true;
-    } else {
-      // Find which context to owns the media.
-      BaseContext::Ptr context = GetContextFromMedia(request.camera_name);
-      if (!context) {
-        ROS_ERROR("The requested media is not part of a context.");
-        response.action_accomplished = false;
-        return true;
-      }
-      // The context set the media to stream
-      if (!context->OpenMedia(request.camera_name)) {
-        ROS_ERROR("The media cannot start streaming.");
-        response.action_accomplished = false;
-        return true;
-      }
-
-      // Get the media to create a streamer
-      BaseMedia::Ptr media = context->GetMedia(request.camera_name);
-      if (media) {
-        // if the media is valid, create the streamer
-        // But why not simply use the name from the cam? well if it is a file, it has a . in it (.png) and this
-        // crashes the program : Character [.] at element [27] is not valid in Graph Resource Name
-        // [/home/jeremie/Pictures/test.png].  Valid characters are a-z, A-Z, 0-9, / and _.
-        std::string new_name = request.camera_name;
-        new_name.erase(std::remove(new_name.begin(), new_name.end(), '.'), new_name.end());
-        auto streamer = std::make_shared<MediaStreamer>(media, nh_, kRosNodeName + new_name, 30);
-        if (streamer) {
-          // Keep it in the list of Streaming media
-          AddMediaStreamer(streamer);
-          response.action_accomplished = true;
-          return true;
-        } else {
-          ROS_ERROR("Streamer failed to be created");
-          response.action_accomplished = false;
-          return true;
-        }
-      } else {
-        ROS_ERROR("Camera failed to be created");
-        response.action_accomplished = false;
-        return true;
-      }
-    }
-    ROS_INFO("Media is ready.");
   }else if (request.action == request.STOP)
   {
-    MediaStreamer::Ptr streamer = GetMediaStreamer(request.camera_name);
-    if (streamer) {
-      // Do not use the result variables, since the remove will do the job.
-      RemoveMediaStreamer(request.camera_name);
-      response.action_accomplished = true;
-      ROS_INFO("Media is stopped.");
-    } else {
-      ROS_ERROR("Media streamer could not be found");
-      response.action_accomplished = false;
-    }
+    response.action_accomplished = (uint8_t)StopStreaming(request.camera_name);
   }else
   {
     ROS_ERROR("Action is neither stop or start. Cannot proceed.");
-    response.action_accomplished = false;
+    response.action_accomplished = (uint8_t)false;
   }
   return true;
+}
+
+bool MediaManager::StopStreaming(const std::string &camera_name) {
+  bool action_accomplished = false;
+  MediaStreamer::Ptr streamer = GetMediaStreamer(camera_name);
+  if (streamer) {
+    // Do not use the result variables, since the remove will do the job.
+    RemoveMediaStreamer(camera_name);
+    action_accomplished = true;
+    ROS_INFO("Media is stopped.");
+  } else {
+    ROS_ERROR("Media streamer could not be found");
+  }
+  return action_accomplished;
+}
+
+bool MediaManager::StartStreaming(const std::string &media_name) {// If the media is already streaming, return the streamer
+  bool action_accomplished = false;
+
+  if (IsMediaStreaming(media_name)) {
+    return action_accomplished;
+  }
+  // Find which context to owns the media.
+  BaseContext::Ptr context = GetContextFromMedia(media_name);
+  if (!context) {
+    ROS_ERROR("The requested media is not part of a context.");
+    return action_accomplished;
+  }
+  // The context set the media to stream
+  if (!context->OpenMedia(media_name)) {
+    ROS_ERROR("The media cannot start streaming.");
+    return action_accomplished;
+  }
+
+  // Get the media to create a streamer
+  BaseMedia::Ptr media = context->GetMedia(media_name);
+  if (!media) {
+    ROS_ERROR("Camera failed to be created");
+    return action_accomplished;
+  }
+
+  std::string new_name = FormatNameForTopic(media_name);
+
+  auto streamer = std::make_shared<MediaStreamer>(media, nh_, kRosNodeName + new_name, 30);
+  if (!streamer) {
+    ROS_ERROR("Streamer failed to be created");
+    return action_accomplished;
+  }
+  // Keep it in the list of Streaming media
+  AddMediaStreamer(streamer);
+  action_accomplished = true;
+  return action_accomplished;
+}
+
+std::string MediaManager::FormatNameForTopic(const std::string &media_name) const {
+// if the media is valid, create the streamer
+  // But why not simply use the name from the cam? well if it is a file, it has a . in it (.png) and this
+  // crashes the program : Character [.] at element [27] is not valid in Graph Resource Name
+  // [/home/jeremie/Pictures/test.png].  Valid characters are a-z, A-Z, 0-9, / and _.
+  std::string new_name = media_name;
+  new_name.erase(std::remove(new_name.begin(), new_name.end(), '.'), new_name.end());
+  return new_name;
 }
 
 //------------------------------------------------------------------------------
@@ -458,7 +466,7 @@ bool MediaManager::GetCameraFeatureCallback(
     provider_vision::get_camera_feature::Response &rep) {
   boost::any feature_value;
   GetCameraFeature(rqst.camera_name, rqst.camera_feature,
-                              feature_value);
+                   feature_value);
   std::stringstream ss;
   if (feature_value.type() == typeid(bool)) {
     rep.feature_type = rqst.FEATURE_BOOL;
