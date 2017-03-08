@@ -164,3 +164,4 @@ crashlytics-build.properties
 # Removing the cfg generated files from ROS
 /src/provider_vision/cfg
 /src/provider_vision/__init__.py
+cmake-build-debug/
