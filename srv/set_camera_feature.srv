@@ -1,0 +1,13 @@
+# List of the feature types supported by the vision server.
+uint32 FEATURE_BOOL = 0
+uint32 FEATURE_INT = 1
+uint32 FEATURE_DOUBLE = 2
+
+string camera_name
+string camera_feature
+string feature_value
+# The feature type help the vision server to convert the type of the feature.
+# this will be converted depending on the type of the macro previously 
+# declared.
+uint32 feature_type
+

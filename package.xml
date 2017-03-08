@@ -39,6 +39,7 @@
   <run_depend>roslaunch</run_depend>
   <run_depend>std_msgs</run_depend>
   <run_depend>message_runtime</run_depend>
+  <run_depend>message_generation</run_depend>
   <run_depend>image_transport</run_depend>
   <run_depend>cv_bridge</run_depend>
   <run_depend>libdc1394-dev</run_depend>

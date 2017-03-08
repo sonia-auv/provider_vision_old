@@ -18,29 +18,40 @@
 /// You should have received a copy of the GNU General Public License
 /// along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
 
+#include <thread>
+
 #include "provider_vision/media/media_streamer.h"
 
 namespace provider_vision {
 
-const char *MediaStreamer::LOOP_TAG = "[MediaStreamer]";
 
 //==============================================================================
 // C / D T O R S   S E C T I O N
 
 //------------------------------------------------------------------------------
 //
-MediaStreamer::MediaStreamer(BaseMedia::Ptr cam, int artificialFrameRateMs)
+MediaStreamer::MediaStreamer(BaseMedia::Ptr cam, ros::NodeHandle &node_handle, const std::string &topic_name,
+                             int artificialFrameRateMs)
     : media_(cam),
-      // here 30 in case we forget to set it, so the cpu doesn't blow off.
-      image_() {}
+      stop_thread_(false),
+      thread_(std::bind(&MediaStreamer::BroadcastThread, this)),
+      image_publisher_(),
+      it_(node_handle),
+      frame_rate_(artificialFrameRateMs)
+{
+  // Create the broadcast topic.
+  image_publisher_ = it_.advertise(topic_name, 100);
+}
 
 //------------------------------------------------------------------------------
 //
 MediaStreamer::~MediaStreamer() {
-  if (IsStreaming()) {
-    StopStreaming();
-  }
-  ROS_INFO_NAMED(LOOP_TAG, "Destroying MediaStreamer");
+  // Set the flag to stop the thread and wait for it to stop
+  stop_thread_ = true;
+  thread_.join();
+  // Shutdown the topic
+  image_publisher_.shutdown();
+  ROS_INFO("%s closed", media_->GetName().c_str());
 }
 
 //==============================================================================
@@ -48,95 +59,46 @@ MediaStreamer::~MediaStreamer() {
 
 //------------------------------------------------------------------------------
 //
-bool MediaStreamer::StartStreaming() {
-  ROS_INFO_NAMED(LOOP_TAG, "Starting streaming on camera");
-  try {
-    Start();
-  } catch (std::exception &e) {
-    ROS_ERROR_NAMED(LOOP_TAG, "Error while starting the thread: %s", e.what());
-    return false;
-  };
-
-  // Let the thread start.
-  atlas::MilliTimer::Sleep(1);
-  if (!IsRunning()) {
-    ROS_ERROR_NAMED(LOOP_TAG, "Thread could not be started");
-    return false;
-  }
-  if (IsStreaming()) {
-    ROS_WARN_NAMED(LOOP_TAG,
-                   "Weird, the media is already streaming on startup...");
-    // The goal is still to start the media, so if it streams, we are happy...
-    return true;
-  }
-  return media_->StartStreaming();
-}
-
-//------------------------------------------------------------------------------
-//
-bool MediaStreamer::StopStreaming() {
-  bool result = false;
-  if (IsStreaming()) {
-    ROS_INFO("Stopping streaming on camera");
-    result = media_->StopStreaming();
-  } else {
-    ROS_WARN_NAMED(LOOP_TAG,
-                   "Weird, the media is not streaming upon closing...");
-  }
-  try {
-    Stop();
-  } catch (std::exception &e) {
-    ROS_ERROR_NAMED(LOOP_TAG, "Error while stopping thread: %s", e.what());
-    result = false;
-  };
-  return result;
-}
-
-//------------------------------------------------------------------------------
-//
-void MediaStreamer::Run() {
+void MediaStreamer::BroadcastThread() {
   // Starting a timer for timing the acquisition of the image from the media.
   atlas::MilliTimer timer;
   timer.Start();
-  bool result = false;
-  while (!MustStop()) {
-    if (IsStreaming()) {
-      image_access_.lock();
-      result = media_->NextImage(image_);
-      image_access_.unlock();
+  cv::Mat image;
+  cv_bridge::CvImage ros_image;
+
+  while (!stop_thread_) {
+    bool result = false;
+    try
+    {
+      result = media_->NextImage(image);
 
       // We gotta a image
-      if (!image_.empty() && result) {
+      if (!image.empty() && result) {
+        //publish image
+        ros_image.image = image;
+        ros_image.encoding = sensor_msgs::image_encodings::BGR8;
+        image_publisher_.publish(ros_image.toImageMsg());
+        // Reset the timer for next acquisition
         timer.Reset();
-        Notify(image_);
-      } else {  // Image getting failed
-        // If we have been waiting too long for an image, we consider a failure.
-        if (timer.MilliSeconds() > 100) {
-          StopStreaming();
-          ROS_ERROR_NAMED(
-              LOOP_TAG,
-              "Cannot access the image from the media. Reached timeout.");
-          try {
-            Stop();
-          } catch (std::exception &e) {
-            ROS_ERROR_NAMED(LOOP_TAG, "Error while stopping thread: %s",
-                            e.what());
-          };
-          return;
+
+      } else {
+        // if we have received any images in 1 sec, there is a problem
+        if( timer.Seconds() > 1) {
+          ROS_ERROR("Media streamer %s haven't broadcast new image for 1 sec.",
+                    media_->GetName().c_str());
+          timer.Reset();
         }
       }
+
       // For the files, we set a fixed framerate at 15 fps
       if (media_->HasArtificialFramerate()) {
-        atlas::MilliTimer::Sleep(1000 / ARTIFICIAL_FRAMERATE);
+        usleep(int(1000000.0f * (1.0f/frame_rate_)));
       }
+    }catch (std::exception &e)
+    {
+      ROS_ERROR("Exception caught in thread of %s : %s",
+                media_->GetName().c_str(), e.what());
     }
   }
 }
-
-//------------------------------------------------------------------------------
-//
-BaseMedia::Status MediaStreamer::GetMediaStatus() const {
-  return media_->GetStatus();
-}
-
 }  // namespace provider_vision

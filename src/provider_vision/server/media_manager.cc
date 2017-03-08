@@ -19,18 +19,10 @@
 /// along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
 
 #include "provider_vision/server/media_manager.h"
-#include <lib_atlas/macros.h>
-#include <stdexcept>
-#include <vector>
-#include "provider_vision/config.h"
 #include "provider_vision/media/context/dc1394_context.h"
-#ifndef OS_DARWIN
 #include "provider_vision/media/context/gige_context.h"
-#endif  // OS_DARWIN
-#include <ros/console.h>
 #include "provider_vision/media/context/file_context.h"
 #include "provider_vision/media/context/webcam_context.h"
-#include "provider_vision/media/context/topic_context.h"
 
 namespace provider_vision {
 
@@ -39,9 +31,10 @@ namespace provider_vision {
 
 //------------------------------------------------------------------------------
 //
-MediaManager::MediaManager(const ros::NodeHandle &nh) noexcept
-    : MEDIA_MNGR_TAG("[Media Manager]"),
-      contexts_() {
+MediaManager::MediaManager(ros::NodeHandle &nh) noexcept
+    : nh_(nh),
+      contexts_(){
+
   // Creating the Webcam context
   auto active_webcam = false;
   nh_.getParam("/provider_vision/active_webcam", active_webcam);
@@ -60,7 +53,6 @@ MediaManager::MediaManager(const ros::NodeHandle &nh) noexcept
     contexts_.push_back(std::make_shared<DC1394Context>(configurations));
   }
 
-#ifndef OS_DARWIN
   // Creating the GigE context
   std::vector<std::string> camera_names_gige;
   nh_.getParam("/provider_vision/active_gige", camera_names_gige);
@@ -71,13 +63,17 @@ MediaManager::MediaManager(const ros::NodeHandle &nh) noexcept
     }
     contexts_.push_back(std::make_shared<GigeContext>(configurations));
   }
-#endif
-
-  contexts_.push_back(std::make_shared<TopicContext>());
+  // Creating the files context
   contexts_.push_back(std::make_shared<FileContext>());
 
-  server_.setCallback(
-      boost::bind(&MediaManager::CallBackDynamicReconfigure, this, _1, _2));
+
+  // Setting the callbacks
+  server_.setCallback(boost::bind(&MediaManager::CallBackDynamicReconfigure, this, _1, _2));
+
+  get_available_camera_ = nh_.advertiseService(kRosNodeName + "get_available_camera", &MediaManager::GetAvailableCameraCallback, this);
+  start_stop_media_ = nh_.advertiseService(kRosNodeName + "start_stop_camera", &MediaManager::StartStopMediaCallback, this);
+  set_camera_feature_= nh_.advertiseService(kRosNodeName + "set_camera_feature", &MediaManager::SetCameraFeatureCallback, this);
+  get_camera_feature_ = nh_.advertiseService(kRosNodeName + "get_camera_feature", &MediaManager::GetCameraFeatureCallback, this);
 }
 
 //------------------------------------------------------------------------------
@@ -90,106 +86,6 @@ MediaManager::~MediaManager() {
 
 //==============================================================================
 // M E T H O D   S E C T I O N
-
-//------------------------------------------------------------------------------
-//
-bool MediaManager::OpenMedia(const std::string &media_name) {
-  BaseContext::Ptr context = GetContextFromMedia(media_name);
-  if (context) {
-    return context->OpenMedia(media_name);
-  }
-  ROS_ERROR_NAMED(MEDIA_MNGR_TAG, "The media is not part of any know context.");
-  return false;
-}
-
-//------------------------------------------------------------------------------
-//
-bool MediaManager::CloseMedia(const std::string &media_name) {
-  BaseContext::Ptr context = GetContextFromMedia(media_name);
-  if (context) {
-    return context->CloseMedia(media_name);
-  }
-  ROS_ERROR_NAMED(MEDIA_MNGR_TAG, "The media is not part of any know context.");
-  return false;
-}
-
-//------------------------------------------------------------------------------
-//
-MediaStreamer::Ptr MediaManager::StartStreamingMedia(
-    const std::string &media_name) {
-  MediaStreamer::Ptr streamer(nullptr);
-
-  // If the media is already streaming, return the streamer
-  if (IsMediaStreaming(media_name)) {
-    streamer = GetMediaStreamer(media_name);
-  } else {
-    // Find which context to owns the media.
-    BaseContext::Ptr context = GetContextFromMedia(media_name);
-    if (!context) {
-      ROS_ERROR_NAMED(MEDIA_MNGR_TAG, "The media is not part of a context.");
-      return nullptr;
-    }
-    // The context set the media to stream
-    if (!context->OpenMedia(media_name)) {
-      ROS_ERROR_NAMED(MEDIA_MNGR_TAG, "The media cannot start streaming.");
-      return nullptr;
-    }
-
-    // Get the media to create a streamer
-    BaseMedia::Ptr media = context->GetMedia(media_name);
-    if (media) {
-      // if the media is valid, create the streamer
-      streamer = std::make_shared<MediaStreamer>(media, 30);
-      if (streamer) {
-        streamer->StartStreaming();
-        // Keep it in the list of Streaming media
-        AddMediaStreamer(streamer);
-      } else {
-        ROS_ERROR_NAMED(MEDIA_MNGR_TAG, "Streamer failed to be created");
-        return nullptr;
-      }
-    } else {
-      ROS_ERROR_NAMED(MEDIA_MNGR_TAG, "Camera failed to be created");
-      return nullptr;
-    }
-  }
-  ROS_INFO("Media is ready.");
-  return streamer;
-}
-
-//------------------------------------------------------------------------------
-//
-bool MediaManager::StopStreamingMedia(const std::string &media) noexcept {
-  MediaStreamer::Ptr streamer = GetMediaStreamer(media);
-  bool result = false;
-  if (streamer) {
-    if (streamer->ObserverCount() >= 1) {
-      ROS_INFO(
-          "Not stopping the media because at least another observer is using "
-          "it.");
-      return true;
-    }
-    // Do not use the result variables, since the remove will do the job.
-    result = StopStreamingMedia(streamer);
-    RemoveMediaStreamer(media);
-    ROS_INFO("Media is stopped.");
-  } else {
-    ROS_ERROR_NAMED(MEDIA_MNGR_TAG, "Media streamer could not be found");
-  }
-  // Still return false if stopping failed, mainly for test/debug purpose, to
-  // know if some fuck-ups occured.
-  return result;
-}
-
-//------------------------------------------------------------------------------
-//
-bool MediaManager::StopStreamingMedia(
-    const MediaStreamer::Ptr &streamer) noexcept {
-  if (streamer->IsStreaming()) {
-    return streamer->StopStreaming();
-  }
-  return true;
-}
 
 //------------------------------------------------------------------------------
 //
@@ -219,16 +115,6 @@ std::vector<std::string> MediaManager::GetAllMediasName() const {
 
 //------------------------------------------------------------------------------
 //
-size_t MediaManager::GetAllMediasCount() const {
-  size_t size = 0;
-  for (auto &context : contexts_) {
-    size += context->GetMediaList().size();
-  }
-  return size;
-}
-
-//------------------------------------------------------------------------------
-//
 bool MediaManager::SetCameraFeature(const std::string &media_name,
                                     const std::string &feature,
                                     const boost::any &value) {
@@ -236,7 +122,7 @@ bool MediaManager::SetCameraFeature(const std::string &media_name,
   if (context) {
     return context->SetFeature(GetFeatureFromName(feature), media_name, value);
   } else {
-    ROS_INFO_NAMED(MEDIA_MNGR_TAG, "Context not found for this media");
+    ROS_INFO("MediaManager: Context not found for this media");
     return false;
   }
 }
@@ -250,7 +136,7 @@ bool MediaManager::GetCameraFeature(const std::string &media_name,
   if (context) {
     return context->GetFeature(GetFeatureFromName(feature), media_name, value);
   } else {
-    ROS_INFO_NAMED(MEDIA_MNGR_TAG, "Context not found for this media");
+    ROS_INFO("MediaManager: Context not found for this media");
     return false;
   }
 }
@@ -307,7 +193,7 @@ BaseCamera::Feature MediaManager::GetFeatureFromName(
   } else if (name == "WHITE_BALANCE_EXECUTE") {
     return BaseCamera::Feature::WHITE_BALANCE_EXECUTE;
   } else {
-    ROS_ERROR_NAMED(MEDIA_MNGR_TAG, "No feature with this name");
+    ROS_ERROR("MediaManager: No feature with this name");
     return BaseCamera::Feature::INVALID_FEATURE;
   }
 }
@@ -316,6 +202,7 @@ BaseCamera::Feature MediaManager::GetFeatureFromName(
 //
 void MediaManager::CallBackDynamicReconfigure(
     provider_vision::Camera_Parameters_Config &config, uint32_t level) {
+  (void)level;
   if (IsContextValid("bottom_gige")) {
     UpdateIfChanged("bottom_gige", "AUTOBRIGHTNESS_AUTO",
                     old_config_.bottom_gige_auto_brightness_auto,
@@ -480,6 +367,135 @@ bool MediaManager::IsContextValid(const std::string &name) {
     }
   }
   return false;
+}
+
+bool MediaManager::GetAvailableCameraCallback(
+    provider_vision::get_available_cameraRequest &request,
+    provider_vision::get_available_cameraResponse &response)
+{
+  response.available_media = GetAllMediasName();
+  return true;
+}
+
+bool MediaManager::StartStopMediaCallback(
+    provider_vision::start_stop_mediaRequest &request,
+    provider_vision::start_stop_mediaResponse &response)
+{
+  // This function need to be cleaned.
+  if( request.action == request.START)
+  {
+
+    // If the media is already streaming, return the streamer
+    if (IsMediaStreaming(request.camera_name)) {
+      response.action_accomplished = true;
+      return true;
+    } else {
+      // Find which context to owns the media.
+      BaseContext::Ptr context = GetContextFromMedia(request.camera_name);
+      if (!context) {
+        ROS_ERROR("The requested media is not part of a context.");
+        response.action_accomplished = false;
+        return true;
+      }
+      // The context set the media to stream
+      if (!context->OpenMedia(request.camera_name)) {
+        ROS_ERROR("The media cannot start streaming.");
+        response.action_accomplished = false;
+        return true;
+      }
+
+      // Get the media to create a streamer
+      BaseMedia::Ptr media = context->GetMedia(request.camera_name);
+      if (media) {
+        // if the media is valid, create the streamer
+        // But why not simply use the name from the cam? well if it is a file, it has a . in it (.png) and this
+        // crashes the program : Character [.] at element [27] is not valid in Graph Resource Name
+        // [/home/jeremie/Pictures/test.png].  Valid characters are a-z, A-Z, 0-9, / and _.
+        std::string new_name = request.camera_name;
+        new_name.erase(std::remove(new_name.begin(), new_name.end(), '.'), new_name.end());
+        auto streamer = std::make_shared<MediaStreamer>(media, nh_, kRosNodeName + new_name, 30);
+        if (streamer) {
+          // Keep it in the list of Streaming media
+          AddMediaStreamer(streamer);
+          response.action_accomplished = true;
+          return true;
+        } else {
+          ROS_ERROR("Streamer failed to be created");
+          response.action_accomplished = false;
+          return true;
+        }
+      } else {
+        ROS_ERROR("Camera failed to be created");
+        response.action_accomplished = false;
+        return true;
+      }
+    }
+    ROS_INFO("Media is ready.");
+  }else if (request.action == request.STOP)
+  {
+    MediaStreamer::Ptr streamer = GetMediaStreamer(request.camera_name);
+    if (streamer) {
+      // Do not use the result variables, since the remove will do the job.
+      RemoveMediaStreamer(request.camera_name);
+      response.action_accomplished = true;
+      ROS_INFO("Media is stopped.");
+    } else {
+      ROS_ERROR("Media streamer could not be found");
+      response.action_accomplished = false;
+    }
+  }else
+  {
+    ROS_ERROR("Action is neither stop or start. Cannot proceed.");
+    response.action_accomplished = false;
+  }
+  return true;
+}
+
+//------------------------------------------------------------------------------
+//
+bool MediaManager::GetCameraFeatureCallback(
+    provider_vision::get_camera_feature::Request &rqst,
+    provider_vision::get_camera_feature::Response &rep) {
+  boost::any feature_value;
+  GetCameraFeature(rqst.camera_name, rqst.camera_feature,
+                              feature_value);
+  std::stringstream ss;
+  if (feature_value.type() == typeid(bool)) {
+    rep.feature_type = rqst.FEATURE_BOOL;
+    ss << boost::any_cast<bool>(feature_value);
+  } else if (feature_value.type() == typeid(int)) {
+    rep.feature_type = rqst.FEATURE_INT;
+    ss << boost::any_cast<int>(feature_value);
+  } else if (feature_value.type() == typeid(double)) {
+    rep.feature_type = rqst.FEATURE_DOUBLE;
+    ss << boost::any_cast<double>(feature_value);
+  } else {
+    ROS_ERROR("The feature type is not supported.");
+    return false;
+  }
+  rep.feature_value = ss.str();
+  return true;
+}
+
+//------------------------------------------------------------------------------
+//
+bool MediaManager::SetCameraFeatureCallback(
+    provider_vision::set_camera_feature::Request &rqst,
+    provider_vision::set_camera_feature::Response &rep) {
+  if (rqst.feature_type == rqst.FEATURE_BOOL) {
+    boost::any value = boost::lexical_cast<bool>(rqst.feature_value);
+    SetCameraFeature(rqst.camera_name, rqst.camera_feature, value);
+  } else if (rqst.feature_type == rqst.FEATURE_DOUBLE) {
+    boost::any value = boost::lexical_cast<double>(rqst.feature_value);
+    SetCameraFeature(rqst.camera_name, rqst.camera_feature, value);
+  } else if (rqst.feature_type == rqst.FEATURE_INT) {
+    boost::any value = boost::lexical_cast<int>(rqst.feature_value);
+    SetCameraFeature(rqst.camera_name, rqst.camera_feature, value);
+  } else {
+    ROS_ERROR("The feature type is not supported.");
+    return false;
+  }
+  return true;
 }
 
 }  // namespace provider_vision

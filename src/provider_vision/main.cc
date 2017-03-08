@@ -20,7 +20,7 @@
 
 #include <lib_atlas/ros/service_server_manager.h>
 #include <ros/ros.h>
-#include "provider_vision/server/vision_server.h"
+#include "provider_vision/server/media_manager.h"
 
 //------------------------------------------------------------------------------
 //
@@ -28,8 +28,7 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "provider_vision");
   ros::NodeHandle nh("~");
 
-  provider_vision::VisionServer pv(nh);
-
+  provider_vision::MediaManager mng(nh);
   while (ros::ok()) {
     usleep(20000);
     ros::spinOnce();

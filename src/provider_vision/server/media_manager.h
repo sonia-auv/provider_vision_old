@@ -26,6 +26,12 @@
 #include <memory>
 #include <string>
 #include <vector>
+
+#include "provider_vision/get_available_camera.h"
+#include "provider_vision/start_stop_media.h"
+#include "provider_vision/get_camera_feature.h"
+#include "provider_vision/set_camera_feature.h"
+
 #include "../cfg/cpp/provider_vision/Camera_Parameters_Config.h"
 #include "provider_vision/media/camera/base_camera.h"
 #include "provider_vision/media/context/base_context.h"
@@ -33,39 +39,25 @@
 
 namespace provider_vision {
 
+/*
+ * Class to handle media context and create/delete mediastreamers
+ */
 class MediaManager {
- public:
+public:
   //==========================================================================
   // T Y P E D E F   A N D   E N U M
 
   using Ptr = std::shared_ptr<MediaManager>;
-  using FeatureMapType = std::map<int, std::pair<std::string, std::string>>;
-  const char *MEDIA_MNGR_TAG;
 
   //==========================================================================
   // P U B L I C   C / D T O R S
 
-  explicit MediaManager(const ros::NodeHandle &nh) noexcept;
+  explicit MediaManager(ros::NodeHandle &nh) noexcept;
 
   ~MediaManager();
 
   //==========================================================================
   // P U B L I C   M E T H O D S
-
-  bool OpenMedia(const std::string &media_name);
-
-  bool CloseMedia(const std::string &media_name);
-
-  /**
-   * Start the acquisition of the images on the given media.
-   *
-   * By default, the media streamer will not be streaming, if the stream flag
-   * is set to true, it will start a thread and notify all observers whenever
-   * there is an image. See MediaStreamer class for more informations.
-   */
-  MediaStreamer::Ptr StartStreamingMedia(const std::string &media_name);
-
-  bool StopStreamingMedia(const std::string &media) noexcept;
 
   /**
    * Get the name of all existing medias in the system.
@@ -76,15 +68,6 @@ class MediaManager {
    * \return The name of all medias in the system.
    */
   std::vector<std::string> GetAllMediasName() const;
-
-  /**
-   * Get the number of all medias in the system.
-   *
-   * This will iterate through all media list in order to have the total count.
-   *
-   * \return The total count of all medias.
-   */
-  size_t GetAllMediasCount() const;
 
   /**
    * If the media is a camera, set the feature to a specific value.
@@ -112,7 +95,7 @@ class MediaManager {
   bool GetCameraFeature(const std::string &media_name,
                         const std::string &feature, boost::any &value) const;
 
- private:
+private:
   //==========================================================================
   // P R I V A T E   M E T H O D S
   /**
@@ -126,8 +109,6 @@ class MediaManager {
    */
   bool IsMediaStreaming(const std::string &name);
 
-  bool StopStreamingMedia(const MediaStreamer::Ptr &streamer) noexcept;
-
   BaseMedia::Ptr GetMedia(const std::string &name) const;
 
   BaseContext::Ptr GetContextFromMedia(const std::string &name) const;
@@ -136,10 +117,13 @@ class MediaManager {
 
   MediaStreamer::Ptr GetMediaStreamer(const std::string &name);
 
+  // Handles the list of current streamer
   void AddMediaStreamer(MediaStreamer::Ptr media_streamer);
-
   void RemoveMediaStreamer(const std::string &name);
 
+  // dynamic reconfigure handlers
+  // Update if changed is needed since we do not want to re-write all the parameter to the cameras, since
+  // it will take time, so we only re-write if they were change in the dynamic reconfigure
   void CallBackDynamicReconfigure(
       provider_vision::Camera_Parameters_Config &config, uint32_t level);
 
@@ -153,10 +137,27 @@ class MediaManager {
                        int &old_value, int &value);
 
   bool IsContextValid(const std::string &name);
+
+  // All the callbacks
+  bool GetAvailableCameraCallback( provider_vision::get_available_cameraRequest &request,
+                                   provider_vision::get_available_cameraResponse &response);
+
+  bool StartStopMediaCallback( provider_vision::start_stop_mediaRequest &request,
+                               provider_vision::start_stop_mediaResponse &response);
+
+  bool SetCameraFeatureCallback( provider_vision::set_camera_feature::Request &rqst,
+                                 provider_vision::set_camera_feature::Response &rep);
+
+  bool GetCameraFeatureCallback( provider_vision::get_camera_feature::Request &rqst,
+                                 provider_vision::get_camera_feature::Response &rep);
+
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
   ros::NodeHandle nh_;
+
+  ros::ServiceServer get_available_camera_, start_stop_media_,
+      set_camera_feature_, get_camera_feature_;
 
   std::vector<BaseContext::Ptr> contexts_;
 
@@ -166,6 +167,8 @@ class MediaManager {
       server_;
 
   provider_vision::Camera_Parameters_Config old_config_;
+
+
 };
 
 //-----------------------------------------------------------------------------

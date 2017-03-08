@@ -1,0 +1,9 @@
+uint8 START = 1
+uint8 STOP = 2
+
+string camera_name
+uint8 action
+
+---
+
+bool action_accomplished
