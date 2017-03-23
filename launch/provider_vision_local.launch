@@ -1,0 +1,5 @@
+<launch>
+	<node name="provider_vision" pkg="provider_vision" type="provider_vision_node" output="screen">
+  </node>
+
+</launch>
