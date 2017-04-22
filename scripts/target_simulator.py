@@ -6,7 +6,7 @@ import math
 roslib.load_manifest('provider_vision')
 import rospy
 
-from sonia_msgs.msg import VisionTarget
+from proc_image_processing.msg import VisionTarget
 
 import sys, select, termios, tty
 
