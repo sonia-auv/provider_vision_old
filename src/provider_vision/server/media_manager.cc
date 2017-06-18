@@ -203,41 +203,41 @@ BaseCamera::Feature MediaManager::GetFeatureFromName(
 void MediaManager::CallBackDynamicReconfigure(
     provider_vision::Camera_Parameters_Config &config, uint32_t level) {
   (void)level;
-  if (IsContextValid("bottom_gige")) {
-    UpdateIfChanged("bottom_gige", "AUTOBRIGHTNESS_AUTO",
-                    old_config_.bottom_gige_auto_brightness_auto,
-                    config.bottom_gige_auto_brightness_auto);
-    UpdateIfChanged("bottom_gige", "AUTOBRIGHTNESS_TARGET",
-                    old_config_.bottom_gige_auto_brightness_target,
-                    config.bottom_gige_auto_brightness_target);
-    UpdateIfChanged("bottom_gige", "AUTOBRIGHTNESS_VARIATION",
-                    old_config_.bottom_gige_auto_brightness_variation,
-                    config.bottom_gige_auto_brightness_variation);
-    UpdateIfChanged("bottom_gige", "EXPOSURE_AUTO",
-                    old_config_.bottom_gige_exposure_auto,
-                    config.bottom_gige_exposure_auto);
-    UpdateIfChanged("bottom_gige", "EXPOSURE", old_config_.bottom_gige_exposure,
-                    config.bottom_gige_exposure);
-    UpdateIfChanged("bottom_gige", "GAIN_AUTO",
-                    old_config_.bottom_gige_gain_auto,
-                    config.bottom_gige_gain_auto);
-    UpdateIfChanged("bottom_gige", "GAIN", old_config_.bottom_gige_gain,
-                    config.bottom_gige_gain);
+  if (IsContextValid("Front_Gige")) {
+    UpdateIfChanged("Front_Gige", "AUTOBRIGHTNESS_AUTO",
+                    old_config_.Front_Gige_auto_brightness_auto,
+                    config.Front_Gige_auto_brightness_auto);
+    UpdateIfChanged("Front_Gige", "AUTOBRIGHTNESS_TARGET",
+                    old_config_.Front_Gige_auto_brightness_target,
+                    config.Front_Gige_auto_brightness_target);
+    UpdateIfChanged("Front_Gige", "AUTOBRIGHTNESS_VARIATION",
+                    old_config_.Front_Gige_auto_brightness_variation,
+                    config.Front_Gige_auto_brightness_variation);
+    UpdateIfChanged("Front_Gige", "EXPOSURE_AUTO",
+                    old_config_.Front_Gige_exposure_auto,
+                    config.Front_Gige_exposure_auto);
+    UpdateIfChanged("Front_Gige", "EXPOSURE", old_config_.Front_Gige_exposure,
+                    config.Front_Gige_exposure);
+    UpdateIfChanged("Front_Gige", "GAIN_AUTO",
+                    old_config_.Front_Gige_gain_auto,
+                    config.Front_Gige_gain_auto);
+    UpdateIfChanged("Front_Gige", "GAIN", old_config_.Front_Gige_gain,
+                    config.Front_Gige_gain);
     // The sequence order for white balance is important
     // since in this case it acts as a execute. i.e, the blue,
     // green and red must be set after the white_balance_execute.
-    UpdateIfChanged("bottom_gige", "WHITE_BALANCE_AUTO",
-                    old_config_.bottom_gige_white_balance_execute,
-                    config.bottom_gige_white_balance_execute);
-    UpdateIfChanged("bottom_gige", "WHITE_BALANCE_BLUE",
-                    old_config_.bottom_gige_white_balance_blue,
-                    config.bottom_gige_white_balance_blue);
-    UpdateIfChanged("bottom_gige", "WHITE_BALANCE_GREEN",
-                    old_config_.bottom_gige_white_balance_green,
-                    config.bottom_gige_white_balance_green);
-    UpdateIfChanged("bottom_gige", "WHITE_BALANCE_RED",
-                    old_config_.bottom_gige_white_balance_red,
-                    config.bottom_gige_white_balance_red);
+    UpdateIfChanged("Front_Gige", "WHITE_BALANCE_AUTO",
+                    old_config_.Front_Gige_white_balance_execute,
+                    config.Front_Gige_white_balance_execute);
+    UpdateIfChanged("Front_Gige", "WHITE_BALANCE_BLUE",
+                    old_config_.Front_Gige_white_balance_blue,
+                    config.Front_Gige_white_balance_blue);
+    UpdateIfChanged("Front_Gige", "WHITE_BALANCE_GREEN",
+                    old_config_.Front_Gige_white_balance_green,
+                    config.Front_Gige_white_balance_green);
+    UpdateIfChanged("Front_Gige", "WHITE_BALANCE_RED",
+                    old_config_.Front_Gige_white_balance_red,
+                    config.Front_Gige_white_balance_red);
   }
 
   if (IsContextValid("bottom_guppy")) {
