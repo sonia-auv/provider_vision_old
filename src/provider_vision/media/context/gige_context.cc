@@ -79,7 +79,7 @@ void GigeContext::InitContext(
       if (cam_config.name_ == name) {
         std::shared_ptr<GigeCamera> cam(new GigeCamera(cam_config));
 
-        cam->Open();
+        //cam->Open();
         // cam->SetCameraParams();
         media_list_.push_back(cam);
       }

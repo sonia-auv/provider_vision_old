@@ -435,7 +435,7 @@ bool MediaManager::StartStreaming(const std::string &media_name) {// If the medi
     ROS_ERROR("Camera failed to be created");
     return action_accomplished;
   }
-
+  context->StartStreamingMedia(media_name);
   std::string new_name = FormatNameForTopic(media_name);
 
   auto streamer = std::make_shared<MediaStreamer>(media, nh_, kRosNodeName + new_name, 30);
