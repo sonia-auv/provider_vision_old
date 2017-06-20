@@ -61,7 +61,8 @@ MediaManager::MediaManager(ros::NodeHandle &nh) noexcept
     for (const auto &camera_gige : camera_names_gige) {
       configurations.push_back(CameraConfiguration(nh_, camera_gige));
     }
-    contexts_.push_back(std::make_shared<GigeContext>(configurations));
+      const std::shared_ptr<GigeContext> &gige_context = std::make_shared<GigeContext>(configurations);
+      contexts_.push_back(gige_context);
   }
   // Creating the files context
   contexts_.push_back(std::make_shared<FileContext>());
@@ -424,6 +425,7 @@ bool MediaManager::StartStreaming(const std::string &media_name) {// If the medi
     return action_accomplished;
   }
   // The context set the media to stream
+    //Media is already started
   if (!context->OpenMedia(media_name)) {
     ROS_ERROR("The media cannot start streaming.");
     return action_accomplished;
