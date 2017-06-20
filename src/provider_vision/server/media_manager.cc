@@ -203,41 +203,41 @@ BaseCamera::Feature MediaManager::GetFeatureFromName(
 void MediaManager::CallBackDynamicReconfigure(
     provider_vision::Camera_Parameters_Config &config, uint32_t level) {
   (void)level;
-  if (IsContextValid("Front_Gige")) {
-    UpdateIfChanged("Front_Gige", "AUTOBRIGHTNESS_AUTO",
-                    old_config_.Front_Gige_auto_brightness_auto,
-                    config.Front_Gige_auto_brightness_auto);
-    UpdateIfChanged("Front_Gige", "AUTOBRIGHTNESS_TARGET",
-                    old_config_.Front_Gige_auto_brightness_target,
-                    config.Front_Gige_auto_brightness_target);
-    UpdateIfChanged("Front_Gige", "AUTOBRIGHTNESS_VARIATION",
-                    old_config_.Front_Gige_auto_brightness_variation,
-                    config.Front_Gige_auto_brightness_variation);
-    UpdateIfChanged("Front_Gige", "EXPOSURE_AUTO",
-                    old_config_.Front_Gige_exposure_auto,
-                    config.Front_Gige_exposure_auto);
-    UpdateIfChanged("Front_Gige", "EXPOSURE", old_config_.Front_Gige_exposure,
-                    config.Front_Gige_exposure);
-    UpdateIfChanged("Front_Gige", "GAIN_AUTO",
-                    old_config_.Front_Gige_gain_auto,
-                    config.Front_Gige_gain_auto);
-    UpdateIfChanged("Front_Gige", "GAIN", old_config_.Front_Gige_gain,
-                    config.Front_Gige_gain);
+  if (IsContextValid("Front_GigE")) {
+    UpdateIfChanged("Front_GigE", "AUTOBRIGHTNESS_AUTO",
+                    old_config_.Front_GigE_auto_brightness_auto,
+                    config.Front_GigE_auto_brightness_auto);
+    UpdateIfChanged("Front_GigE", "AUTOBRIGHTNESS_TARGET",
+                    old_config_.Front_GigE_auto_brightness_target,
+                    config.Front_GigE_auto_brightness_target);
+    UpdateIfChanged("Front_GigE", "AUTOBRIGHTNESS_VARIATION",
+                    old_config_.Front_GigE_auto_brightness_variation,
+                    config.Front_GigE_auto_brightness_variation);
+    UpdateIfChanged("Front_GigE", "EXPOSURE_AUTO",
+                    old_config_.Front_GigE_exposure_auto,
+                    config.Front_GigE_exposure_auto);
+    UpdateIfChanged("Front_GigE", "EXPOSURE", old_config_.Front_GigE_exposure,
+                    config.Front_GigE_exposure);
+    UpdateIfChanged("Front_GigE", "GAIN_AUTO",
+                    old_config_.Front_GigE_gain_auto,
+                    config.Front_GigE_gain_auto);
+    UpdateIfChanged("Front_GigE", "GAIN", old_config_.Front_GigE_gain,
+                    config.Front_GigE_gain);
     // The sequence order for white balance is important
     // since in this case it acts as a execute. i.e, the blue,
     // green and red must be set after the white_balance_execute.
-    UpdateIfChanged("Front_Gige", "WHITE_BALANCE_AUTO",
-                    old_config_.Front_Gige_white_balance_execute,
-                    config.Front_Gige_white_balance_execute);
-    UpdateIfChanged("Front_Gige", "WHITE_BALANCE_BLUE",
-                    old_config_.Front_Gige_white_balance_blue,
-                    config.Front_Gige_white_balance_blue);
-    UpdateIfChanged("Front_Gige", "WHITE_BALANCE_GREEN",
-                    old_config_.Front_Gige_white_balance_green,
-                    config.Front_Gige_white_balance_green);
-    UpdateIfChanged("Front_Gige", "WHITE_BALANCE_RED",
-                    old_config_.Front_Gige_white_balance_red,
-                    config.Front_Gige_white_balance_red);
+    UpdateIfChanged("Front_GigE", "WHITE_BALANCE_AUTO",
+                    old_config_.Front_GigE_white_balance_execute,
+                    config.Front_GigE_white_balance_execute);
+    UpdateIfChanged("Front_GigE", "WHITE_BALANCE_BLUE",
+                    old_config_.Front_GigE_white_balance_blue,
+                    config.Front_GigE_white_balance_blue);
+    UpdateIfChanged("Front_GigE", "WHITE_BALANCE_GREEN",
+                    old_config_.Front_GigE_white_balance_green,
+                    config.Front_GigE_white_balance_green);
+    UpdateIfChanged("Front_GigE", "WHITE_BALANCE_RED",
+                    old_config_.Front_GigE_white_balance_red,
+                    config.Front_GigE_white_balance_red);
   }
 
   if (IsContextValid("bottom_guppy")) {
