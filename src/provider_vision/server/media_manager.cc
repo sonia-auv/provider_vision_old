@@ -63,6 +63,11 @@ MediaManager::MediaManager(ros::NodeHandle &nh) noexcept
     }
       const std::shared_ptr<GigeContext> &gige_context = std::make_shared<GigeContext>(configurations);
       contexts_.push_back(gige_context);
+
+      for(const auto &camera_gige : camera_names_gige)
+      {
+          StartStreaming(camera_gige);
+      }
   }
   // Creating the files context
   contexts_.push_back(std::make_shared<FileContext>());
