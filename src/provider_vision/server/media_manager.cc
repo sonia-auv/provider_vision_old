@@ -23,6 +23,7 @@
 #include "provider_vision/media/context/gige_context.h"
 #include "provider_vision/media/context/file_context.h"
 #include "provider_vision/media/context/webcam_context.h"
+#include "provider_vision/media/camera/base_media.h"
 
 namespace provider_vision {
 
@@ -66,7 +67,10 @@ MediaManager::MediaManager(ros::NodeHandle &nh) noexcept
 
       for(const auto &camera_gige : camera_names_gige)
       {
-          StartStreaming(camera_gige);
+          if(gige_context->GetMedia(camera_gige)->GetStatus() == BaseMedia::Status::OPEN)
+          {
+              StartStreaming(camera_gige);
+          }
       }
   }
   // Creating the files context
