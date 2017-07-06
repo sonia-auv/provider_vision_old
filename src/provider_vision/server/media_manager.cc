@@ -249,41 +249,41 @@ void MediaManager::CallBackDynamicReconfigure(
                         old_config_.Front_GigE_white_balance_red,
                         config.Front_GigE_white_balance_red);
       }
-      if (IsContextValid("Bottom_Gige")) {
-        UpdateIfChanged("Bottom_Gige", "AUTOBRIGHTNESS_AUTO",
-                        old_config_.Bottom_Gige_auto_brightness_auto,
-                        config.Bottom_Gige_auto_brightness_auto);
-        UpdateIfChanged("Bottom_Gige", "AUTOBRIGHTNESS_TARGET",
-                        old_config_.Bottom_Gige_auto_brightness_target,
-                        config.Bottom_Gige_auto_brightness_target);
-        UpdateIfChanged("Bottom_Gige", "AUTOBRIGHTNESS_VARIATION",
-                        old_config_.Bottom_Gige_auto_brightness_variation,
-                        config.Bottom_Gige_auto_brightness_variation);
-        UpdateIfChanged("Bottom_Gige", "EXPOSURE_AUTO",
-                        old_config_.Bottom_Gige_exposure_auto,
-                        config.Bottom_Gige_exposure_auto);
-        UpdateIfChanged("Bottom_Gige", "EXPOSURE", old_config_.Bottom_Gige_exposure,
-                        config.Bottom_Gige_exposure);
-        UpdateIfChanged("Bottom_Gige", "GAIN_AUTO",
-                        old_config_.Bottom_Gige_gain_auto,
-                        config.Bottom_Gige_gain_auto);
-        UpdateIfChanged("Bottom_Gige", "GAIN", old_config_.Bottom_Gige_gain,
-                        config.Bottom_Gige_gain);
+      if (IsContextValid("Bottom_GigE")) {
+        UpdateIfChanged("Bottom_GigE", "AUTOBRIGHTNESS_AUTO",
+                        old_config_.Bottom_GigE_auto_brightness_auto,
+                        config.Bottom_GigE_auto_brightness_auto);
+        UpdateIfChanged("Bottom_GigE", "AUTOBRIGHTNESS_TARGET",
+                        old_config_.Bottom_GigE_auto_brightness_target,
+                        config.Bottom_GigE_auto_brightness_target);
+        UpdateIfChanged("Bottom_GigE", "AUTOBRIGHTNESS_VARIATION",
+                        old_config_.Bottom_GigE_auto_brightness_variation,
+                        config.Bottom_GigE_auto_brightness_variation);
+        UpdateIfChanged("Bottom_GigE", "EXPOSURE_AUTO",
+                        old_config_.Bottom_GigE_exposure_auto,
+                        config.Bottom_GigE_exposure_auto);
+        UpdateIfChanged("Bottom_GigE", "EXPOSURE", old_config_.Bottom_GigE_exposure,
+                        config.Bottom_GigE_exposure);
+        UpdateIfChanged("Bottom_GigE", "GAIN_AUTO",
+                        old_config_.Bottom_GigE_gain_auto,
+                        config.Bottom_GigE_gain_auto);
+        UpdateIfChanged("Bottom_GigE", "GAIN", old_config_.Bottom_GigE_gain,
+                        config.Bottom_GigE_gain);
         // The sequence order for white balance is important
         // since in this case it acts as a execute. i.e, the blue,
         // green and red must be set after the white_balance_execute.
-        UpdateIfChanged("Bottom_Gige", "WHITE_BALANCE_AUTO",
-                        old_config_.Bottom_Gige_white_balance_execute,
-                        config.Bottom_Gige_white_balance_execute);
-        UpdateIfChanged("Bottom_Gige", "WHITE_BALANCE_BLUE",
-                        old_config_.Bottom_Gige_white_balance_blue,
-                        config.Bottom_Gige_white_balance_blue);
-        UpdateIfChanged("Bottom_Gige", "WHITE_BALANCE_GREEN",
-                        old_config_.Bottom_Gige_white_balance_green,
-                        config.Bottom_Gige_white_balance_green);
-        UpdateIfChanged("Bottom_Gige", "WHITE_BALANCE_RED",
-                        old_config_.Bottom_Gige_white_balance_red,
-                        config.Bottom_Gige_white_balance_red);
+        UpdateIfChanged("Bottom_GigE", "WHITE_BALANCE_AUTO",
+                        old_config_.Bottom_GigE_white_balance_execute,
+                        config.Bottom_GigE_white_balance_execute);
+        UpdateIfChanged("Bottom_GigE", "WHITE_BALANCE_BLUE",
+                        old_config_.Bottom_GigE_white_balance_blue,
+                        config.Bottom_GigE_white_balance_blue);
+        UpdateIfChanged("Bottom_GigE", "WHITE_BALANCE_GREEN",
+                        old_config_.Bottom_GigE_white_balance_green,
+                        config.Bottom_GigE_white_balance_green);
+        UpdateIfChanged("Bottom_GigE", "WHITE_BALANCE_RED",
+                        old_config_.Bottom_GigE_white_balance_red,
+                        config.Bottom_GigE_white_balance_red);
       }
 
   if (IsContextValid("bottom_guppy")) {
