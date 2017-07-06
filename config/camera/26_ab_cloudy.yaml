@@ -1,5 +1,5 @@
-active_dc1394: [front_guppy, bottom_guppy]
-active_gige: [Front_GigE]
+active_dc1394: []
+active_gige: [Front_GigE, Bottom_GigE]
 active_webcam: false
 bottom1_image:
   compressed: {format: jpeg, jpeg_quality: 80, png_level: 9}
@@ -16,90 +16,52 @@ Front_GigE_gain: 1.0
 Front_GigE_gain_auto: true
 Front_GigE_gamma: 0
 Front_GigE_guid: '1230819763'
-Front_GigE_height: 1024
+Front_GigE_height: 1544
 Front_GigE_name: Front_GigE
 Front_GigE_saturation: 0
 Front_GigE_shutter: 32.0
 Front_GigE_shutter_auto: false
-Front_GigE_white_balance_auto: true
-Front_GigE_white_balance_blue: 1.6
+Front_GigE_white_balance_auto: false 
+Front_GigE_white_balance_blue: 1.6015625
 Front_GigE_white_balance_execute: false
 Front_GigE_white_balance_green: 1.0
 Front_GigE_white_balance_red: 2.296875
-Front_GigE_whitebalance_blue: 1.0
-Front_GigE_whitebalance_execute: true
+Front_GigE_whitebalance_blue: 1.6015625
+Front_GigE_whitebalance_execute: false
 Front_GigE_whitebalance_green: 1.0
-Front_GigE_whitebalance_red: 1.0
-Front_GigE_width: 1280
+Front_GigE_whitebalance_red: 2.296875
+Front_GigE_width: 2064
 Front_GigE_x_offset: 0
 Front_GigE_y_offset: 0
-bottom_guppy_auto_brightness_auto: true
-bottom_guppy_auto_brightness_target: 100
-bottom_guppy_auto_brightness_target_variation: 16
-bottom_guppy_exposure: 95.0
-bottom_guppy_exposure_auto: false
-bottom_guppy_format: 0
-bottom_guppy_framerate: 0
-bottom_guppy_gain: 1.0
-bottom_guppy_gain_auto: false
-bottom_guppy_gamma: 0
-bottom_guppy_guid: '582164340023517285'
-bottom_guppy_height: 0
-bottom_guppy_name: bottom_guppy
-bottom_guppy_saturation: 0
-bottom_guppy_shutter: 32.0
-bottom_guppy_shutter_auto: false
-bottom_guppy_white_balance_auto: true
-bottom_guppy_white_balance_blue: 381.0
-bottom_guppy_white_balance_red: 511.0
-bottom_guppy_whitebalance_auto: true
-bottom_guppy_whitebalance_blue: 276.0
-bottom_guppy_whitebalance_red: 511.0
-bottom_guppy_width: 0
-bottom_guppy_x_offset: 0
-bottom_guppy_y_offset: 0
-bottom_image:
-  compressed: {format: jpeg, jpeg_quality: 80, png_level: 9}
-  theora: {keyframe_frequency: 64, optimize_for: 1, quality: 31, target_bitrate: 800000}
-default_exposure: 0
-default_framerate: 0
-default_gain: 350.0
-default_gain_auto: true
-default_gamma: 0
-default_name: default_camera
-default_shutter: 500.0
-default_shutter_auto: true
-default_white_balance_auto: true
-default_white_balance_blue: 412.0
-default_white_balance_red: 511.0
-front1_image:
-  compressed: {format: jpeg, jpeg_quality: 80, png_level: 9}
-  theora: {keyframe_frequency: 64, optimize_for: 1, quality: 31, target_bitrate: 800000}
-front_guppy_auto_brightness_auto: true
-front_guppy_auto_brightness_target: 100
-front_guppy_auto_brightness_target_variation: 16
-front_guppy_exposure: 72.0
-front_guppy_exposure_auto: true
-front_guppy_format: 0
-front_guppy_framerate: 15
-front_guppy_gain: 0.0
-front_guppy_gain_auto: true
-front_guppy_gamma: 0
-front_guppy_guid: '2892819690326160'
-front_guppy_height: 720
-front_guppy_name: front_guppy
-front_guppy_saturation: 0
-front_guppy_shutter: 46.0
-front_guppy_shutter_auto: true
-front_guppy_white_balance_auto: false
-front_guppy_white_balance_blue: 388.0
-front_guppy_white_balance_red: 537.0
-front_guppy_whitebalance_auto: true
-front_guppy_whitebalance_blue: 276.0
-front_guppy_whitebalance_red: 568.0
-front_guppy_width: 1080
-front_guppy_x_offset: 0
-front_guppy_y_offset: 0
+Bottom_GigE_auto_brightness_auto: true
+Bottom_GigE_auto_brightness_target: 50
+Bottom_GigE_auto_brightness_target_variation: 16
+Bottom_GigE_auto_brightness_variation: 16
+Bottom_GigE_exposure: 573.0
+Bottom_GigE_exposure_auto: true
+Bottom_GigE_format: 17301513
+Bottom_GigE_framerate: 15
+Bottom_GigE_gain: 1.0
+Bottom_GigE_gain_auto: true
+Bottom_GigE_gamma: 0
+Bottom_GigE_guid: '1230819763'
+Bottom_GigE_height: 1544
+Bottom_GigE_name: Bottom_GigE
+Bottom_GigE_saturation: 0
+Bottom_GigE_shutter: 32.0
+Bottom_GigE_shutter_auto: false
+Bottom_GigE_white_balance_auto: false 
+Bottom_GigE_white_balance_blue: 1.6015625
+Bottom_GigE_white_balance_execute: false
+Bottom_GigE_white_balance_green: 1.0
+Bottom_GigE_white_balance_red: 2.296875
+Bottom_GigE_whitebalance_blue: 1.6015625
+Bottom_GigE_whitebalance_execute: false
+Bottom_GigE_whitebalance_green: 1.0
+Bottom_GigE_whitebalance_red: 2.296875
+Bottom_GigE_width: 2064
+Bottom_GigE_x_offset: 0
+Bottom_GigE_y_offset: 0
 front_image:
   compressed: {format: jpeg, jpeg_quality: 80, png_level: 9}
   theora: {keyframe_frequency: 64, optimize_for: 1, quality: 31, target_bitrate: 800000}
