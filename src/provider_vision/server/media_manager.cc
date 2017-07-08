@@ -65,13 +65,13 @@ MediaManager::MediaManager(ros::NodeHandle &nh) noexcept
       const std::shared_ptr<GigeContext> &gige_context = std::make_shared<GigeContext>(configurations);
       contexts_.push_back(gige_context);
 
-      for(const auto &camera_gige : camera_names_gige)
+      /*or(const auto &camera_gige : camera_names_gige)
       {
           if(gige_context->GetMedia(camera_gige)->GetStatus() == BaseMedia::Status::OPEN)
           {
               StartStreaming(camera_gige);
           }
-      }
+      }*/
   }
   // Creating the files context
   contexts_.push_back(std::make_shared<FileContext>());
@@ -450,6 +450,8 @@ bool MediaManager::StopStreaming(const std::string &camera_name) {
     // Do not use the result variables, since the remove will do the job.
     RemoveMediaStreamer(camera_name);
     action_accomplished = true;
+    BaseMedia::Ptr media = GetMedia(camera_name);
+    media->StopStreaming();
     ROS_INFO("Media is stopped.");
   } else {
     ROS_ERROR("Media streamer could not be found");
