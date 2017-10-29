@@ -1,0 +1,6 @@
+<launch>
+ <node pkg="rosbag" type="play" name="rosbag" args="-d 2 /home/olavoie/Downloads/2017-07-06-23-50-11.bag"/>
+ <node name="extract" pkg="image_view" type="extract_images" respawn="false" output="screen" cwd="ROS_HOME">
+   <remap from="image" to="/provider_vision/Front_GigE"/>
+ </node>
+</launch>
