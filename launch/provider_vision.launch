@@ -3,7 +3,7 @@
 
   <!--rosparam command="load" file="$(find provider_vision)/config/camera/camera_parameters.yaml"/-->
   <!--rosparam command="load" file="$(find provider_vision)/config/camera/h_inn_25_night.yaml"/-->
-  <rosparam command="load" file="$(find provider_vision)/config/camera/26_ab_cloudy.yaml"/>
+  <rosparam command="load" file="$(find provider_vision)/config/camera/camera_config_piscine_cvm.yaml"/>
   </node>
 
 </launch>
