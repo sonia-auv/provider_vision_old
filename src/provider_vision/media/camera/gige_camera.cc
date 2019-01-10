@@ -99,7 +99,7 @@ bool GigeCamera::Open() {
     return false;
   }
   cam_access_.unlock();
-  UINT32 format = fMtBayerRG8;
+  UINT32 format = 0X01080009;
   UINT32 width = 0;
   UINT32 height = 0;
   UINT32 x_offset = 0;
