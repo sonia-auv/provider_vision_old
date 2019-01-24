@@ -99,7 +99,7 @@ include_directories(
 
 include_directories(
         /opt/genicam_v3_0/library/CPP/include/
-        /opt/genicam_v3_0/include/
+	/usr/dalsa/GigeV/include/
 )
 																						
 
@@ -113,7 +113,7 @@ target_link_libraries(provider_vision_node
         ${OpenCV_LIBRARIES}
         yaml-cpp
         dc1394
-        /opt/genicam_v3_0/lib/libGevApi.so.2.0
+        /usr/dalsa/GigeV/lib/libGevApi.so.2.0
         /opt/genicam_v3_0/bin/Linux64_ARM/libNodeMapData_gcc54_v3_0.so
         /opt/genicam_v3_0/bin/Linux64_ARM/libXmlParser_gcc54_v3_0.so
         /opt/genicam_v3_0/bin/Linux64_ARM/libGenApi_gcc54_v3_0.so
