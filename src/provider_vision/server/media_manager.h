@@ -95,6 +95,9 @@ public:
   bool GetCameraFeature(const std::string &media_name,
                         const std::string &feature, boost::any &value) const;
 
+  bool StartStopMediaCallback(provider_vision::start_stop_mediaRequest &request,
+                              provider_vision::start_stop_mediaResponse &response);
+
 private:
   //==========================================================================
   // P R I V A T E   M E T H O D S
@@ -146,9 +149,6 @@ private:
   // All the callbacks
   bool GetAvailableCameraCallback( provider_vision::get_available_cameraRequest &request,
                                    provider_vision::get_available_cameraResponse &response);
-
-  bool StartStopMediaCallback( provider_vision::start_stop_mediaRequest &request,
-                               provider_vision::start_stop_mediaResponse &response);
 
   bool SetCameraFeatureCallback( provider_vision::set_camera_feature::Request &rqst,
                                  provider_vision::set_camera_feature::Response &rep);

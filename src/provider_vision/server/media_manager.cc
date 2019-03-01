@@ -440,6 +440,8 @@ bool MediaManager::StartStopMediaCallback(
     ROS_ERROR("Action is neither stop or start. Cannot proceed.");
     response.action_accomplished = (uint8_t)false;
   }
+
+  nh_.setParam("/loadCam", request.camera_name);
   return true;
 }
 

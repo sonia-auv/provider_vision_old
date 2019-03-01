@@ -237,6 +237,7 @@ bool GigeCamera::NextImage(cv::Mat &img) {
   if (status != GEV_STATUS_SUCCESS || frame == nullptr) {
     status_ = Status::ERROR;
     ROS_ERROR_NAMED(CAM_TAG, "Cannot get next image. Status is: %d", status);
+    throw std::exception();
     return false;
   }
 

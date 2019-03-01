@@ -21,18 +21,55 @@
 #include <lib_atlas/ros/service_server_manager.h>
 #include <ros/ros.h>
 #include "provider_vision/server/media_manager.h"
+#include "provider_vision/start_stop_media.h"
 
 //------------------------------------------------------------------------------
 //
 int main(int argc, char **argv) {
-  ros::init(argc, argv, "provider_vision");
-  ros::NodeHandle nh("~");
+    ros::init(argc, argv, "provider_vision");
+    ros::NodeHandle nh("~");
 
-  provider_vision::MediaManager mng(nh);
-  while (ros::ok()) {
-    usleep(20000);
-    ros::spinOnce();
-  }
+    while (ros::ok())
+    {
+        try
+        {
+
+            std::string loadCam;
+            if (nh.getParam("/loadCam", loadCam))
+            {
+                provider_vision::MediaManager mng(nh);
+                if (loadCam == "Front_GigE")
+                {
+                    provider_vision::start_stop_mediaRequest req;
+                    provider_vision::start_stop_mediaResponse res;
+                    req.action = provider_vision::start_stop_mediaRequest::START;
+                    req.camera_name = "Front_GigE";
+                    mng.StartStopMediaCallback(req, res);
+                }
+                else if (loadCam == "Bottom_GigE")
+                {
+                    provider_vision::start_stop_mediaRequest req;
+                    provider_vision::start_stop_mediaResponse res;
+                    req.action = provider_vision::start_stop_mediaRequest::START;
+                    req.camera_name = "Bottom_GigE";
+                    mng.StartStopMediaCallback(req, res);
+                }
+
+                while (ros::ok()) {
+                    usleep(20000);
+                    ros::spinOnce();
+                }
+
+            }
+        }
+        catch (...)
+        {
+            ROS_ERROR("Camera restart");
+        }
+    }
+
+
+
 
   return 0;
 }
