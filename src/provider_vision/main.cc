@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
         {
 
             std::string loadCam;
-            if (nh.getParam("/loadCam", loadCam))
+            if (nh.getParam("/provider_vision/loadCam", loadCam))
             {
                 provider_vision::MediaManager mng(nh);
                 if (loadCam == "Front_GigE")
