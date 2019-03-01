@@ -81,7 +81,7 @@ catkin_package(
 roslaunch_add_file_check(launch)
 
 #===============================================================================
-# I N C L U D E   F I L E S
+# I N C L U D E   F I L E S																																																																																										
 
 file(GLOB_RECURSE provider_vision_FILES
         "${provider_vision_SRC_DIR}/*.cc"
@@ -98,9 +98,10 @@ include_directories(
 )
 
 include_directories(
-        $ENV{GENICAM_ROOT_V3_0}/library/CPP/include/
-        $ENV{GIGEV_DIR}/include/
+        /opt/genicam_v3_0/library/CPP/include/
+	/usr/dalsa/GigeV/include/
 )
+																						
 
 #===============================================================================
 # C R E A T E   E X E C U T A B L E
@@ -112,11 +113,11 @@ target_link_libraries(provider_vision_node
         ${OpenCV_LIBRARIES}
         yaml-cpp
         dc1394
-        $ENV{GIGEV_DIR}/lib/libGevApi.so.2.0
-        $ENV{GENICAM_ROOT}/bin/Linux64_x64/libNodeMapData_gcc421_v3_0.so
-        $ENV{GENICAM_ROOT}/bin/Linux64_x64/libXmlParser_gcc421_v3_0.so
-        $ENV{GENICAM_ROOT}/bin/Linux64_x64/libGenApi_gcc421_v3_0.so
-        $ENV{GENICAM_ROOT}/bin/Linux64_x64/libGCBase_gcc421_v3_0.so
+        /usr/dalsa/GigeV/lib/libGevApi.so.2.0
+        /opt/genicam_v3_0/bin/Linux64_ARM/libNodeMapData_gcc54_v3_0.so
+        /opt/genicam_v3_0/bin/Linux64_ARM/libXmlParser_gcc54_v3_0.so
+        /opt/genicam_v3_0/bin/Linux64_ARM/libGenApi_gcc54_v3_0.so
+        /opt/genicam_v3_0/bin/Linux64_ARM/libGCBase_gcc54_v3_0.so
         )
 add_dependencies(${PROJECT_NAME}_node ${PROJECT_NAME}_generate_messages_cpp ${PROJECT_NAME}_generate_messages_cpp
         ${PROJECT_NAME}_gencfg)
