@@ -9,4 +9,7 @@ from provider_vision.srv import *
 
 if __name__ == "__main__":
     while True:
-        os.system("roslaunch provider_vision provider_vision.launch")
+        value = os.system("roslaunch provider_vision provider_vision.launch")
+        print "Return value : {}".format(value)
+        if value != 0:
+            break
