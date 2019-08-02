@@ -73,6 +73,15 @@ MediaManager::MediaManager(ros::NodeHandle &nh) noexcept
           }
       }*/
   }
+
+        std::string camera_name;
+
+        if (nh_.getParam("active_camera", camera_name))
+        {
+            ROS_INFO_STREAM("Starting " << camera_name << " camera");
+            StartStreaming(camera_name);
+        }
+
   // Creating the files context
   contexts_.push_back(std::make_shared<FileContext>());
 
@@ -431,10 +440,12 @@ bool MediaManager::StartStopMediaCallback(
   if( request.action == request.START)
   {
     response.action_accomplished = (uint8_t)StartStreaming(request.camera_name);
+      nh_.setParam("active_camera", request.camera_name);
 
   }else if (request.action == request.STOP)
   {
     response.action_accomplished = (uint8_t)StopStreaming(request.camera_name);
+      nh_.setParam("active_camera", 0);
   }else
   {
     ROS_ERROR("Action is neither stop or start. Cannot proceed.");
