@@ -1,4 +1,4 @@
-active_dc1394: []
+#active_dc1394: []
 active_gige: [Front_GigE, Bottom_GigE]
 active_webcam: false
 bottom1_image:
@@ -8,7 +8,7 @@ Front_GigE_auto_brightness_auto: true
 Front_GigE_auto_brightness_target: 50
 Front_GigE_auto_brightness_target_variation: 16
 Front_GigE_auto_brightness_variation: 16
-Front_GigE_exposure: 7000.0
+Front_GigE_exposure: 8000.0
 Front_GigE_exposure_auto: false
 Front_GigE_format: 17301513
 Front_GigE_framerate: 15

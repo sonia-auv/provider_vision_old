@@ -8,7 +8,7 @@ Front_GigE_auto_brightness_auto: true
 Front_GigE_auto_brightness_target: 50
 Front_GigE_auto_brightness_target_variation: 16
 Front_GigE_auto_brightness_variation: 16
-Front_GigE_exposure: 500.0
+Front_GigE_exposure: 700.0
 Front_GigE_exposure_auto: false
 Front_GigE_format: 17301513
 Front_GigE_framerate: 15
@@ -37,7 +37,7 @@ Bottom_GigE_auto_brightness_auto: true
 Bottom_GigE_auto_brightness_target: 50
 Bottom_GigE_auto_brightness_target_variation: 16
 Bottom_GigE_auto_brightness_variation: 16
-Bottom_GigE_exposure: 200.0
+Bottom_GigE_exposure: 250.0
 Bottom_GigE_exposure_auto: false
 Bottom_GigE_format: 17301513
 Bottom_GigE_framerate: 15
