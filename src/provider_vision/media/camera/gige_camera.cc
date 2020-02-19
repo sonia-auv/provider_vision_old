@@ -867,8 +867,6 @@ bool GigeCamera::GetShutterValue(double &value) const {
   return false;
 }
 
-}  // namespace provider_vision
-
 bool GigeCamera::IsTurboAvailable()
 {
   int type;
@@ -894,5 +892,7 @@ bool GigeCamera::IsTurboAvailable()
 	}
 	return false;
 }
+
+}  // namespace provider_vision
 
 #endif  // OS_DARWIN
