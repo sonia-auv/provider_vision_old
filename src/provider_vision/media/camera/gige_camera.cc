@@ -131,6 +131,29 @@ bool GigeCamera::Open() {
                     GevGetFormatString(status), e.what());
     return false;
   }
+
+  try
+  {
+    //enable turbo mode
+    if(IsTurboAvailable())
+    {
+      UINT32 val = 1;
+      GevSetFeatureValue(gige_camera_, "transferTurboMode", sizeof(UINT32), &val);
+      ROS_INFO_NAMED(CAM_TAG, "turbo enabled for %s", CameraConfiguration::name_.c_str());
+    }
+    else
+    {
+      ROS_INFO_NAMED(CAM_TAG, "turbo not available for %s", CameraConfiguration::name_.c_str());
+    }
+  }
+  catch(const std::exception& e)
+  {
+    ROS_ERROR_NAMED(CAM_TAG,
+                    "Error while enabling turbo. GIGE: %s EXECPTION: %s",
+                    GevGetFormatString(status), e.what());
+    return false;
+  }
+  
   status_ = Status::OPEN;
   return true;
 }
@@ -842,6 +865,32 @@ bool GigeCamera::GetShutterValue(double &value) const {
   ROS_WARN_NAMED(CAM_TAG,
                  "The feature ShutterValue is not available on GigE cameras.");
   return false;
+}
+
+bool GigeCamera::IsTurboAvailable()
+{
+  int type;
+	UINT32 val = 0;
+	
+	if ( 0 == GevGetFeatureValue( gige_camera_, "transferTurboCurrentlyAbailable",  &type, sizeof(UINT32), &val) )
+	{
+		return (val != 0);
+	}
+	else
+	{
+		char pxlfmt_str[64] = {0};
+
+		GevGetFeatureValueAsString( gige_camera_, "PixelFormat", &type, sizeof(pxlfmt_str), pxlfmt_str);
+		if ( 0 != GevSetFeatureValueAsString( gige_camera_, "transferTurboCapabilitySelector", pxlfmt_str) )
+		{
+			return false; 
+		}
+		else
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 }  // namespace provider_vision

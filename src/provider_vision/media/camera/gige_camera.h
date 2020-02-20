@@ -151,6 +151,7 @@ namespace provider_vision {
         // P R I V A T E   M E T H O D S
 
         bool SetCameraParams();
+        bool IsTurboAvailable();
 
         std::string GetModel() const;
 
