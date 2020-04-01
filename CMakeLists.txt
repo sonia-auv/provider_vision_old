@@ -44,7 +44,7 @@ find_package(catkin REQUIRED COMPONENTS
         )
 
 generate_dynamic_reconfigure_options(
-        cfg/camera_dynamic_reconf.cfg
+        cfg/Camera.cfg
 )
 
 find_package(DC1394 REQUIRED)
