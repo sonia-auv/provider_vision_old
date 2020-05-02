@@ -22,6 +22,8 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++11 -Wall -Wno-unknow
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++11 -O3 -s -Wno-unknown-pragmas")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(PROJECT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include" CACHE PATH "Project Include Directory")
+set(PROVIDER_VISION_INCLUDE_DIR "/usr/include/provider_vision" CACHE PATH "Provider Vision Include Directory")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
@@ -45,6 +47,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 generate_dynamic_reconfigure_options(
         cfg/camera_dynamic_reconf.cfg
+        cfg/spinnaker_cam.cfg
 )
 
 find_package(DC1394 REQUIRED)
@@ -100,6 +103,11 @@ include_directories(
 include_directories(
         /opt/genicam_v3_0/library/CPP/include/
 	/usr/dalsa/GigeV/include/
+)
+
+install(DIRECTORY include
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h"
 )
 																						
 
