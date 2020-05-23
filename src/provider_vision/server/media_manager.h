@@ -27,10 +27,10 @@
 #include <string>
 #include <vector>
 
-#include "provider_vision/get_available_camera.h"
-#include "provider_vision/start_stop_media.h"
-#include "provider_vision/get_camera_feature.h"
-#include "provider_vision/set_camera_feature.h"
+#include "sonia_msgs/GetAvailableCameras.h"
+#include "sonia_msgs/StartStopMedia.h"
+#include "sonia_msgs/GetCameraFeatures.h"
+#include "sonia_msgs/SetCameraFeatures.h"
 
 #include "../cfg/cpp/provider_vision/Camera_Parameters_Config.h"
 #include "provider_vision/media/camera/base_camera.h"
@@ -144,17 +144,17 @@ private:
   bool IsContextValid(const std::string &name);
 
   // All the callbacks
-  bool GetAvailableCameraCallback( provider_vision::get_available_cameraRequest &request,
-                                   provider_vision::get_available_cameraResponse &response);
+  bool GetAvailableCameraCallback( sonia_msgs::GetAvailableCameras::Request &request,
+                                   sonia_msgs::GetAvailableCameras::Response &response);
 
-  bool StartStopMediaCallback( provider_vision::start_stop_mediaRequest &request,
-                               provider_vision::start_stop_mediaResponse &response);
+  bool StartStopMediaCallback( sonia_msgs::StartStopMedia::Request &request,
+                               sonia_msgs::StartStopMedia::Response &response);
 
-  bool SetCameraFeatureCallback( provider_vision::set_camera_feature::Request &rqst,
-                                 provider_vision::set_camera_feature::Response &rep);
+  bool SetCameraFeatureCallback( sonia_msgs::SetCameraFeatures::Request &rqst,
+                                 sonia_msgs::SetCameraFeatures::Response &rep);
 
-  bool GetCameraFeatureCallback( provider_vision::get_camera_feature::Request &rqst,
-                                 provider_vision::get_camera_feature::Response &rep);
+  bool GetCameraFeatureCallback( sonia_msgs::GetCameraFeatures::Request &rqst,
+                                 sonia_msgs::GetCameraFeatures::Response &rep);
 
   //==========================================================================
   // P R I V A T E   M E M B E R S

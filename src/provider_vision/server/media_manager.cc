@@ -416,16 +416,16 @@ bool MediaManager::IsContextValid(const std::string &name) {
 }
 
 bool MediaManager::GetAvailableCameraCallback(
-    provider_vision::get_available_cameraRequest &request,
-    provider_vision::get_available_cameraResponse &response)
+    sonia_msgs::GetAvailableCameras::Request &request,
+    sonia_msgs::GetAvailableCameras::Response &response)
 {
   response.available_media = GetAllMediasName();
   return true;
 }
 
 bool MediaManager::StartStopMediaCallback(
-    provider_vision::start_stop_mediaRequest &request,
-    provider_vision::start_stop_mediaResponse &response)
+    sonia_msgs::StartStopMedia::Request &request,
+    sonia_msgs::StartStopMedia::Response &response)
 {
   // This function need to be cleaned.
   if( request.action == request.START)
@@ -511,8 +511,8 @@ std::string MediaManager::FormatNameForTopic(const std::string &media_name) cons
 //------------------------------------------------------------------------------
 //
 bool MediaManager::GetCameraFeatureCallback(
-    provider_vision::get_camera_feature::Request &rqst,
-    provider_vision::get_camera_feature::Response &rep) {
+    sonia_msgs::GetCameraFeatures::Request &rqst,
+    sonia_msgs::GetCameraFeatures::Response &rep) {
   boost::any feature_value;
   GetCameraFeature(rqst.camera_name, rqst.camera_feature,
                    feature_value);
@@ -537,8 +537,8 @@ bool MediaManager::GetCameraFeatureCallback(
 //------------------------------------------------------------------------------
 //
 bool MediaManager::SetCameraFeatureCallback(
-    provider_vision::set_camera_feature::Request &rqst,
-    provider_vision::set_camera_feature::Response &rep) {
+    sonia_msgs::SetCameraFeatures::Request &rqst,
+    sonia_msgs::SetCameraFeatures::Response &rep) {
   if (rqst.feature_type == rqst.FEATURE_BOOL) {
     boost::any value = boost::lexical_cast<bool>(rqst.feature_value);
     SetCameraFeature(rqst.camera_name, rqst.camera_feature, value);
