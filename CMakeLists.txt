@@ -50,18 +50,6 @@ generate_dynamic_reconfigure_options(
 find_package(DC1394 REQUIRED)
 find_package(OpenCV REQUIRED)
 
-# CMake does not detect new file when globbing.
-# Please, regenerate your CMake solution if you add a file.
-file(GLOB srv_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/srv/"
-        "${CMAKE_CURRENT_SOURCE_DIR}/srv/*.srv")
-# add_service_files(DIRECTORY srv FILES ${srv_files})
-
-#file(GLOB msg_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/srv/"
-#        "${CMAKE_CURRENT_SOURCE_DIR}/msg/*.msg")
-#add_message_files(DIRECTORY msg FILES ${msg_files})
-
-# generate_messages(DEPENDENCIES std_msgs )
-
 
 catkin_package(
         INCLUDE_DIRS ${provider_vision_SRC_DIR}
@@ -69,7 +57,6 @@ catkin_package(
         CATKIN_DEPENDS
         roscpp
         std_msgs
-        message_runtime message_generation
         image_transport
         cv_bridge
         roslaunch
