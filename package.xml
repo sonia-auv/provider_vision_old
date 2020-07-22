@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>provider_vision</name>
-  <version>1.0.0</version>
+  <version>3.0.1</version>
   <description>
     The vision_server package is responsible for acquiring the images from
     the cameras and applying filter and return information on those image.
