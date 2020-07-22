@@ -32,7 +32,7 @@
 #include "sonia_msgs/GetCameraFeatures.h"
 #include "sonia_msgs/SetCameraFeatures.h"
 
-#include "../cfg/cpp/provider_vision/Camera_Parameters_Config.h"
+#include <provider_vision/Camera_Parameters_Config.h>
 #include "provider_vision/media/camera/base_camera.h"
 #include "provider_vision/media/context/base_context.h"
 #include "provider_vision/media/media_streamer.h"
